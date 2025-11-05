@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: darwin-pbpk-platform
+  namespace: darwin-pbpk-platform
+  labels:
+    app: darwin-pbpk-platform
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - pbpk.agourakis.med.br
+    secretName: darwin-pbpk-platform-tls
+  rules:
+  - host: pbpk.agourakis.med.br
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: darwin-pbpk-platform
+            port:
+              number: 8000
+
