@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 title: "Darwin PBPK Platform: AI-Powered Pharmacokinetic Prediction"
 version: 1.0.0
 date-released: 2025-11-05
-doi: 10.5281/zenodo.XXXXXX
+doi: 10.5281/zenodo.17536674
 repository-code: "https://github.com/agourakis82/darwin-pbpk-platform"
 license: MIT
 type: software
