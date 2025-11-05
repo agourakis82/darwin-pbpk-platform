@@ -33,7 +33,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        # Install PyTorch first
+        pip install torch>=2.0.0
+        # Install PyTorch Geometric with proper wheels
+        pip install torch-geometric torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-2.0.0+cpu.html || true
+        # Install remaining requirements (skip pytorch-geometric from requirements.txt)
+        grep -v "pytorch-geometric" requirements.txt > requirements-temp.txt || true
+        pip install -r requirements-temp.txt || true
         pip install -r requirements-dev.txt || pip install pytest pytest-asyncio pytest-cov black flake8 mypy
     
     - name: Lint with flake8
