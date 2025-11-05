@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Large Data Files (use Zenodo!)
+data/processed/**/*.parquet
+data/processed/**/*.npz
+data/processed/**/*.pkl
+data/external/**/*
+*.csv
+*.tsv
+*.tab
+
+# Models (large files)
+models/**/*.pt
+models/**/*.pth
+models/baseline_mlp/best_model.pt
+models/gnn_model/best_model.pt
+*.h5
+*.ckpt
+
+# Keep demo models
+!models/demo/*.pt
+
+# Results
+results/
+outputs/
+figures/
+*.png
+*.jpg
+
+# Logs
+logs/
+*.log
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary
+*.tmp
+*.bak
+temp/
+
