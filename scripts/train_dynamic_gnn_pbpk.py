@@ -143,6 +143,19 @@ def train_epoch(
         true_conc = batch["concentrations"].to(device)  # [B, NUM_ORGANS, T]
         time_points = batch["time_points"].to(device)
         
+        # DataLoader pode criar batch de time_points incorretamente se for 1D
+        # Garantir que time_points é 1D (mesmo para todas as amostras)
+        if time_points.dim() > 1:
+            time_points = time_points[0]  # Pegar primeira amostra (todas são iguais)
+        
+        # Debug na primeira iteração
+        if num_batches == 1:
+            print(f"\n   🔍 Debug batch (primeiro batch):")
+            print(f"      batch_size: {len(dose)}")
+            print(f"      time_points shape: {time_points.shape}")
+            print(f"      time_points len: {len(time_points)}")
+            print(f"      true_conc shape: {true_conc.shape}")
+        
         batch_size = len(dose)
         batch_loss = 0.0
         
@@ -233,6 +246,11 @@ def validate(
             partition_coeffs = batch["partition_coeffs"].to(device)
             true_conc = batch["concentrations"].to(device)
             time_points = batch["time_points"].to(device)
+            
+            # DataLoader pode criar batch de time_points incorretamente se for 1D
+            # Garantir que time_points é 1D (mesmo para todas as amostras)
+            if time_points.dim() > 1:
+                time_points = time_points[0]  # Pegar primeira amostra (todas são iguais)
             
             batch_size = len(dose)
             batch_loss = 0.0
