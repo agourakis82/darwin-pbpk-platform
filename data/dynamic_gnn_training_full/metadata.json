@@ -1,0 +1,27 @@
+{
+  "num_samples": 1000,
+  "dose_range": [
+    10.0,
+    1000.0
+  ],
+  "t_max": 24.0,
+  "num_time_points": 100,
+  "num_organs": 14,
+  "organs": [
+    "blood",
+    "liver",
+    "kidney",
+    "brain",
+    "heart",
+    "lung",
+    "muscle",
+    "adipose",
+    "gut",
+    "skin",
+    "bone",
+    "spleen",
+    "pancreas",
+    "other"
+  ],
+  "seed": 42
+}
