@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dynamic-gnn-training-maria
+  namespace: default
+  labels:
+    app: darwin-pbpk-platform
+    component: training
+    gpu: l4
+spec:
+  # Não recriar automaticamente
+  backoffLimit: 0
+  # Limpar job após completar (opcional)
+  ttlSecondsAfterFinished: 86400  # 24 horas
+  template:
+    metadata:
+      labels:
+        app: darwin-pbpk-platform
+        component: training
+        gpu: l4
+    spec:
+      # Node selector para forçar execução no node maria
+      nodeSelector:
+        kubernetes.io/hostname: maria
+      restartPolicy: Never
+      containers:
+      - name: training
+        image: python:3.12-slim
+        command: ["/bin/bash"]
+        args:
+          - -c
+          - |
+            set -e
+            echo "================================================================================"
+            echo "TREINAMENTO DYNAMIC GNN - Node Maria (L4 24GB)"
+            echo "================================================================================"
+            echo ""
+            echo "📍 Node: $(hostname)"
+            echo "📍 GPU: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo 'Verificando...')"
+            echo ""
+            
+            # Instalar dependências
+            echo "📦 Instalando dependências..."
+            apt-get update -qq
+            apt-get install -y -qq git python3-pip nvidia-cuda-toolkit > /dev/null 2>&1 || true
+            
+            pip install --quiet torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+            pip install --quiet torch-geometric numpy scipy matplotlib tqdm pydantic
+            
+            # Clonar ou usar código existente
+            echo "📥 Preparando código..."
+            if [ -d "/workspace" ]; then
+                cd /workspace/darwin-pbpk-platform || cd /app
+            else
+                git clone --depth 1 https://github.com/agourakis82/darwin-pbpk-platform.git /app
+                cd /app
+            fi
+            
+            # Verificar dataset
+            DATA_PATH="data/dynamic_gnn_training_full/training_data.npz"
+            if [ ! -f "$DATA_PATH" ]; then
+                echo "📊 Gerando dataset..."
+                python3 scripts/generate_dynamic_gnn_training_data.py \
+                    --num-samples 1000 \
+                    --output-dir data/dynamic_gnn_training_full \
+                    --seed 42
+            fi
+            
+            # Executar treinamento
+            echo "🚀 Iniciando treinamento..."
+            python3 scripts/train_dynamic_gnn_pbpk.py \
+                --data "$DATA_PATH" \
+                --output models/dynamic_gnn_maria \
+                --epochs 50 \
+                --batch-size 32 \
+                --lr 1e-3 \
+                --device cuda
+            
+            echo ""
+            echo "✅ Treinamento concluído!"
+            echo "   Modelos salvos em: models/dynamic_gnn_maria/"
+        
+        env:
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: "4000m"
+          limits:
+            memory: "24Gi"
+            cpu: "8000m"
+        # GPU via device plugin (se disponível)
+        # nvidia.com/gpu será alocado automaticamente se device plugin estiver configurado
+        
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+          readOnly: false
+      
+      volumes:
+      - name: workspace
+        hostPath:
+          path: /home/agourakis82/workspace
+          type: Directory
+
