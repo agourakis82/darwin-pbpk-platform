@@ -362,7 +362,19 @@ def train(
         dt=0.1
     ).to(device)
     
-    num_params = sum(p.numel() for p in model.parameters())
+    # Multi-GPU support (se disponível)
+    if device.type == "cuda" and torch.cuda.device_count() > 1:
+        print(f"   🚀 Usando {torch.cuda.device_count()} GPUs (DataParallel)")
+        model = nn.DataParallel(model)
+        # Aumentar batch size proporcionalmente
+        effective_batch_size = batch_size * torch.cuda.device_count()
+        print(f"   Effective batch size: {effective_batch_size} (batch_size {batch_size} × {torch.cuda.device_count()} GPUs)")
+    
+    # Contar parâmetros (considerando DataParallel)
+    if hasattr(model, 'module'):
+        num_params = sum(p.numel() for p in model.module.parameters())
+    else:
+        num_params = sum(p.numel() for p in model.parameters())
     print(f"   Parâmetros: {num_params:,}")
     
     # Organ weights (dar mais peso a órgãos críticos)
@@ -468,9 +480,19 @@ if __name__ == "__main__":
     
     # Auto-detect device
     if args.device == "auto":
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            device = "cuda"
+            print(f"✅ CUDA disponível: {torch.cuda.device_count()} GPU(s)")
+            for i in range(torch.cuda.device_count()):
+                print(f"   GPU {i}: {torch.cuda.get_device_name(i)}")
+        else:
+            device = "cpu"
+            print("⚠️  CUDA não disponível, usando CPU")
     else:
         device = args.device
+        if device == "cuda" and not torch.cuda.is_available():
+            print("⚠️  CUDA solicitado mas não disponível, usando CPU")
+            device = "cpu"
     
     train(
         data_path=Path(args.data),
