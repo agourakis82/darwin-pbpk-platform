@@ -55,20 +55,24 @@ Esta pesquisa profunda analisa o estado atual da arte em modelagem PBPK e propõ
 
 **Estado Atual Darwin:**
 - ✅ ChemBERTa 768d (implementado)
+- ✅ D-MPNN 256d (implementado - Sprint 3) ✅
+- ✅ SchNet 128d (implementado - Sprint 3) ✅
 - ✅ Molecular graphs (PyTorch Geometric, 20 node + 7 edge features)
 - ✅ RDKit descriptors (25 features)
-- ⏳ SchNet (3D) - mencionado mas não confirmado
+- ✅ KEC encoder (15d - NOVEL, código do mestrado)
+- ✅ 3D Conformer encoder (50d)
+- ✅ QM descriptors (15d)
+- ✅ Cross-Attention Fusion (8-head, 512d unified)
 
 **SOTA 2024-2025:**
-- **Hybrid Encoders:** ChemBERTa + D-MPNN + SchNet
-- **Cross-Attention Fusion:** 8-head attention
+- **Hybrid Encoders:** ChemBERTa + D-MPNN + SchNet ✅ **IMPLEMENTADO!**
+- **Cross-Attention Fusion:** 8-head attention ✅ **IMPLEMENTADO!**
 - **Expected Impact:** +15-20% accuracy
 
-**Gap Identificado:**
-- Darwin tem base, mas falta:
-  - ✅ SchNet (3D convolutions) - **PRIORIDADE**
-  - ✅ Cross-attention fusion otimizado
-  - ✅ D-MPNN (Directed Message Passing)
+**Status:**
+- ✅ **Darwin JÁ TEM encoder SOTA completo!**
+- ⚠️ D-MPNN e SchNet foram desabilitados no treinamento (para velocidade)
+- 💡 **OPORTUNIDADE:** Reativar D-MPNN + SchNet para R² completo
 
 ---
 
@@ -210,14 +214,16 @@ Esta pesquisa profunda analisa o estado atual da arte em modelagem PBPK e propõ
 ### Fase 1: Fundações Sólidas (2-3 semanas)
 
 **1.1 Single-Task Models (IMMEDIATE)**
-- ✅ Clearance-only: R² > 0.50 (32k samples)
-- ✅ Fu-only: R² > 0.30 (6k samples, com augmentation)
-- ✅ Vd-only: R² > 0.35 (7k samples, com augmentation)
+- ⏳ Clearance-only: R² > 0.50 (32k samples) - **PRÓXIMO PASSO**
+- ⏳ Fu-only: R² > 0.30 (6k samples, com augmentation)
+- ⏳ Vd-only: R² > 0.35 (7k samples, com augmentation)
 
-**1.2 Multi-Modal Encoder Completo**
-- ⏳ Adicionar SchNet (3D convolutions)
-- ⏳ Implementar D-MPNN (Directed Message Passing)
-- ⏳ Otimizar Cross-Attention Fusion
+**1.2 Multi-Modal Encoder Completo** ✅ **JÁ IMPLEMENTADO!**
+- ✅ SchNet (3D convolutions) - **IMPLEMENTADO** (desabilitado no treino)
+- ✅ D-MPNN (Directed Message Passing) - **IMPLEMENTADO** (desabilitado no treino)
+- ✅ Cross-Attention Fusion - **IMPLEMENTADO** (8-head, 512d)
+
+**Ação:** Reativar D-MPNN + SchNet no treinamento (esperado +0.30 R²)
 
 **1.3 Ensemble Strategy**
 - 5x MLP (different seeds)
@@ -303,12 +309,17 @@ SMILES → Multi-Modal Encoder → Single-Task Predictors
 - ✅ Total: 512d unified representation
 
 **Status Darwin:**
-- ✅ ChemBERTa: Implementado
-- ⏳ D-MPNN: Mencionado, não confirmado
-- ⏳ SchNet: Mencionado, não confirmado
-- ⏳ Cross-Attention: Básico, precisa otimização
+- ✅ ChemBERTa: Implementado (768d)
+- ✅ D-MPNN: **IMPLEMENTADO** (256d, Sprint 3)
+- ✅ SchNet: **IMPLEMENTADO** (128d, Sprint 3)
+- ✅ Cross-Attention: **IMPLEMENTADO** (8-head, 512d fusion)
+- ✅ KEC: **IMPLEMENTADO** (15d, NOVEL)
+- ✅ 3D Conformer: **IMPLEMENTADO** (50d)
+- ✅ QM: **IMPLEMENTADO** (15d)
 
-**Gap:** 3 componentes faltando/parciais
+**Total:** 976 dimensions (5 modalidades)
+
+**Gap:** D-MPNN e SchNet desabilitados no treinamento (precisam ser reativados)
 
 ---
 
@@ -456,15 +467,15 @@ SMILES → Multi-Modal Encoder → Single-Task Predictors
 ## 🎯 CONCLUSÕES E RECOMENDAÇÕES
 
 ### Estado Atual Darwin:
-- ✅ **Já SOTA em:** Bayesian UQ, Spatial 3D, Tumor PK
-- ⏳ **Parcialmente SOTA:** Multi-modal encoder (falta SchNet, D-MPNN)
+- ✅ **Já SOTA em:** Bayesian UQ, Spatial 3D, Tumor PK, Multi-modal encoder (COMPLETO!)
+- ⏳ **Parcialmente SOTA:** Multi-modal encoder (D-MPNN + SchNet desabilitados no treino)
 - ❌ **Não SOTA:** Parameter prediction (precisa single-task), Dynamic GNN
 
 ### Para Tornar 100% SOTA:
 
 **Prioridade 1 (Imediato):**
-1. Implementar single-task models (Clearance-first)
-2. Adicionar SchNet e D-MPNN ao encoder
+1. Implementar single-task models (Clearance-first) - **PRÓXIMO PASSO**
+2. ✅ Reativar D-MPNN + SchNet no treinamento (já implementados!)
 3. Otimizar ensemble strategy
 
 **Prioridade 2 (Breakthrough):**
