@@ -34,20 +34,38 @@
 
 ---
 
-## ⏳ PENDENTE (MANUAL)
+## ⏳ PENDENTE (AGORA AUTOMÁTICO VIA API!)
 
 ### 1. Upload Datasets no Zenodo ⭐ **PRÓXIMO PASSO**
 
-**Tempo estimado:** 20-30 minutos
+**Tempo estimado:** 5-10 minutos (com API!)
 
-**Passos:**
+**Opção A: Via API (RECOMENDADO - Automático!)**
+
+```bash
+# 1. Obter token: https://zenodo.org/account/settings/applications/tokens/new/
+export ZENODO_TOKEN='seu_token'
+
+# 2. Preparar arquivos (se ainda não fez)
+bash scripts/prepare_zenodo_upload.sh
+
+# 3. Upload automático!
+python scripts/upload_to_zenodo.py
+
+# 4. Atualizar README com DOI retornado
+python scripts/update_readme_with_doi.py --doi 10.5281/zenodo.XXXXXX
+```
+
+**Opção B: Manual (via interface web)**
+
 1. Acesse: https://zenodo.org/deposit/new
 2. Faça upload dos arquivos de `/tmp/darwin-pbpk-datasets-v1.0.0/`
-   - OU use o ZIP: `darwin-pbpk-datasets-v1.0.0.zip`
 3. Preencha metadados conforme `docs/ZENODO_UPLOAD_GUIDE.md`
 4. Publique e copie o DOI
 
-**Guia completo:** Ver `docs/ZENODO_UPLOAD_GUIDE.md`
+**Guias:**
+- Quick Start API: `docs/ZENODO_API_QUICKSTART.md`
+- Guia completo: `docs/ZENODO_UPLOAD_GUIDE.md`
 
 ---
 
@@ -132,6 +150,8 @@ git push origin main
 
 ### Scripts
 - `scripts/prepare_zenodo_upload.sh` - Prepara arquivos
+- `scripts/upload_to_zenodo.py` - **Upload automático via API do Zenodo** ⭐
+- `scripts/update_readme_with_doi.py` - Atualiza READMEs com DOI
 - `scripts/update_github_release.py` - Atualiza release
 
 ### Documentação

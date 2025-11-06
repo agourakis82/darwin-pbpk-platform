@@ -1,7 +1,7 @@
 # 📤 Guia Completo: Upload Datasets no Zenodo
 
-**Data:** 05 de Novembro de 2025  
-**Status:** Preparado para upload
+**Data:** 06 de Novembro de 2025  
+**Status:** Preparado para upload (API disponível!)
 
 ---
 
@@ -13,7 +13,77 @@
 
 ---
 
-## 📋 PASSO A PASSO
+## 🚀 OPÇÃO 1: UPLOAD VIA API (RECOMENDADO - AUTOMÁTICO!)
+
+### Passo 1: Obter Token do Zenodo
+
+1. Acesse: https://zenodo.org/account/settings/applications/tokens/new/
+   - (Sandbox para testes: https://sandbox.zenodo.org/account/settings/applications/tokens/new/)
+2. Crie um token com permissões:
+   - ✅ `deposit:write`
+   - ✅ `deposit:actions`
+3. Configure o token (escolha uma opção):
+
+**Opção A: Variável de ambiente**
+```bash
+export ZENODO_TOKEN='seu_token_aqui'
+```
+
+**Opção B: Arquivo de configuração**
+```bash
+echo 'seu_token_aqui' > ~/.zenodo_token
+chmod 600 ~/.zenodo_token
+```
+
+**Opção C: Passar via linha de comando**
+```bash
+python scripts/upload_to_zenodo.py --token seu_token_aqui
+```
+
+### Passo 2: Preparar Arquivos
+
+```bash
+cd ~/workspace/darwin-pbpk-platform
+bash scripts/prepare_zenodo_upload.sh
+```
+
+### Passo 3: Fazer Upload (AUTOMÁTICO!)
+
+**Produção:**
+```bash
+python scripts/upload_to_zenodo.py
+```
+
+**Sandbox (para testes):**
+```bash
+python scripts/upload_to_zenodo.py --sandbox
+```
+
+**Dry-run (simular sem fazer upload):**
+```bash
+python scripts/upload_to_zenodo.py --dry-run
+```
+
+O script irá:
+1. ✅ Criar depósito no Zenodo
+2. ✅ Fazer upload de todos os arquivos
+3. ✅ Preencher metadados automaticamente
+4. ✅ Publicar o depósito
+5. ✅ Retornar o DOI
+
+### Passo 4: Atualizar README com DOI
+
+Após obter o DOI, atualize automaticamente:
+
+```bash
+python scripts/update_readme_with_doi.py --doi 10.5281/zenodo.XXXXXX
+```
+
+Ou manualmente (veja Opção 2 abaixo).
+
+---
+
+## 📋 OPÇÃO 2: UPLOAD MANUAL (VIA INTERFACE WEB)
 
 ### PASSO 1: Preparar Arquivos (2 min)
 
