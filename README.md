@@ -56,7 +56,7 @@ https://doi.org/10.5281/zenodo.17536674
 ### 📖 Dataset
 
 Large datasets (embeddings, graphs, ~1.7 GB) available at:
-- **DOI:** https://doi.org/10.5281/zenodo.zenodo.17541874 (to be published)
+- **DOI:** https://doi.org/10.5281/zenodo.17541874 (to be published)
 - **Contents:** ChemBERTa embeddings, molecular graphs, processed parquets
 
 ### 🚀 Quick Start
