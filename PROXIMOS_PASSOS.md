@@ -214,12 +214,12 @@ git push origin main
 - [x] Tag v1.0.0 criada
 
 ### Para Fazer (Manual)
-- [ ] Verificar GitHub (Passo 1)
-- [ ] Criar GitHub Release (Passo 2)
-- [ ] Conectar Zenodo (Passo 3)
-- [ ] Aguardar DOI software (Passo 4)
-- [ ] Upload datasets Zenodo (Passo 5)
-- [ ] Atualizar READMEs (Passo 6)
+- [x] Verificar GitHub (Passo 1) ✅
+- [x] Criar GitHub Release (Passo 2) ✅ (já existe, pode atualizar descrição manualmente se necessário)
+- [x] Conectar Zenodo (Passo 3) ✅ (DOI software já obtido: 10.5281/zenodo.17536674)
+- [x] Aguardar DOI software (Passo 4) ✅
+- [ ] Upload datasets Zenodo (Passo 5) ⏳ **PRÓXIMO PASSO**
+- [ ] Atualizar READMEs (Passo 6) ⏳ (aguardando DOI datasets)
 
 ---
 

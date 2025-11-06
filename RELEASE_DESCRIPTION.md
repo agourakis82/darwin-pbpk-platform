@@ -75,7 +75,7 @@ If you use this software in your research, please cite:
 ```
 Agourakis, D.C. (2025). Darwin PBPK Platform: AI-Powered Pharmacokinetic 
 Prediction. Version 1.0.0 [Software]. Zenodo. 
-https://doi.org/10.5281/zenodo.XXXXXX
+https://doi.org/10.5281/zenodo.17536674
 ```
 
 ## 📖 Data Availability
