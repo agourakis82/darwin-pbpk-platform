@@ -23,6 +23,11 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: maria
       restartPolicy: Never
+      # Tolerar taints se houver
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: training
         image: python:3.12-slim
@@ -41,11 +46,15 @@ spec:
             
             # Instalar dependências
             echo "📦 Instalando dependências..."
-            apt-get update -qq
-            apt-get install -y -qq git python3-pip nvidia-cuda-toolkit > /dev/null 2>&1 || true
+            apt-get update -qq > /dev/null 2>&1
+            apt-get install -y -qq git python3-pip curl > /dev/null 2>&1 || true
             
-            pip install --quiet torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-            pip install --quiet torch-geometric numpy scipy matplotlib tqdm pydantic
+            # Instalar PyTorch com CUDA
+            pip install --no-cache-dir --quiet torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 || \
+            pip install --no-cache-dir --quiet torch torchvision torchaudio
+            
+            # Instalar outras dependências
+            pip install --no-cache-dir --quiet torch-geometric numpy scipy matplotlib tqdm pydantic || true
             
             # Clonar ou usar código existente
             echo "📥 Preparando código..."
