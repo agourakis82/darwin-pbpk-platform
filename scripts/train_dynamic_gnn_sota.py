@@ -128,13 +128,22 @@ def train_epoch_sota(
         
         # Mixed precision training
         with autocast():
-            pred_conc = model(
-                dose=dose,
-                clearance_hepatic=clearance_hepatic,
-                clearance_renal=clearance_renal,
-                partition_coeffs=partition_coeffs,
-                time_points=time_points
-            )
+            # Criar parâmetros fisiológicos para cada amostra do batch
+            batch_size = len(dose)
+            pred_conc_list = []
+            
+            for i in range(batch_size):
+                from apps.pbpk_core.simulation.dynamic_gnn_pbpk import PBPKPhysiologicalParams
+                params = PBPKPhysiologicalParams(
+                    dose=dose[i].item(),
+                    clearance_hepatic=clearance_hepatic[i].item(),
+                    clearance_renal=clearance_renal[i].item(),
+                    partition_coeffs=partition_coeffs[i].cpu().numpy()
+                )
+                pred_conc = model(params, time_points)
+                pred_conc_list.append(pred_conc)
+            
+            pred_conc = torch.stack(pred_conc_list, dim=0)  # [B, NUM_ORGANS, T]
             
             loss, organ_losses = compute_loss(pred_conc, true_conc, organ_weights)
         
@@ -186,13 +195,22 @@ def validate_sota(
                 time_points = time_points[0]
             
             with autocast():
-                pred_conc = model(
-                    dose=dose,
-                    clearance_hepatic=clearance_hepatic,
-                    clearance_renal=clearance_renal,
-                    partition_coeffs=partition_coeffs,
-                    time_points=time_points
-                )
+                # Criar parâmetros fisiológicos para cada amostra do batch
+                batch_size = len(dose)
+                pred_conc_list = []
+                
+                for i in range(batch_size):
+                    from apps.pbpk_core.simulation.dynamic_gnn_pbpk import PBPKPhysiologicalParams
+                    params = PBPKPhysiologicalParams(
+                        dose=dose[i].item(),
+                        clearance_hepatic=clearance_hepatic[i].item(),
+                        clearance_renal=clearance_renal[i].item(),
+                        partition_coeffs=partition_coeffs[i].cpu().numpy()
+                    )
+                    pred_conc = model(params, time_points)
+                    pred_conc_list.append(pred_conc)
+                
+                pred_conc = torch.stack(pred_conc_list, dim=0)  # [B, NUM_ORGANS, T]
                 
                 loss, organ_losses = compute_loss(pred_conc, true_conc, organ_weights)
             
@@ -286,9 +304,12 @@ def train_sota(
     # Modelo
     print(f"\n🏗️  Criando modelo...")
     model = DynamicPBPKGNN(
+        node_dim=16,
+        edge_dim=4,
         hidden_dim=64,
-        num_layers=3,
-        num_heads=4
+        num_gnn_layers=3,
+        num_temporal_steps=100,
+        dt=0.1
     ).to(device)
     
     # Multi-GPU support
