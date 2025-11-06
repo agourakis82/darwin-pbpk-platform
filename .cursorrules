@@ -1,0 +1,260 @@
+# DARWIN PBPK-PLATFORM - AGENT RULES
+
+## 🧠 CONTEXTO DO REPO
+
+**Tipo:** Plataforma PBPK (Physiologically-Based Pharmacokinetic)
+**Foco:** Modelagem farmacocinética fisiológica integrada com biomateriais
+**Conexões:** kec-biomaterials (scaffolds), darwin-core (base comum)
+
+---
+
+## 📋 WORKFLOW OBRIGATÓRIO
+
+### ANTES DE AGIR:
+1. Executar: `~/.darwin-global/darwin-omniscient-agent.sh`
+2. Ler SYNC_STATE.json (verificar locks e agentes ativos)
+3. Verificar Darwin RAG++ (memórias do projeto)
+4. NÃO fazer web_search sem consultar código/memórias primeiro
+
+### AO PESQUISAR:
+1. **Primeiro:** Darwin RAG++ (memórias do projeto)
+2. **Segundo:** Codebase existente (11,283 chunks indexados)
+3. **Terceiro:** Papers via Semantic Scholar API
+4. **ÚLTIMO RECURSO:** web_search (apenas papers 2024/2025)
+
+---
+
+## 🔍 QUANDO USAR WEB SEARCH
+
+### ✅ PERMITIDO:
+- Papers PBPK de 2024/2025 não indexados
+- Métodos farmacocinéticos recentes (< 6 meses)
+- Guidelines regulatórias atualizadas (FDA, EMA)
+- Novos modelos fisiológicos
+
+### ❌ PROIBIDO:
+- Conceitos básicos PBPK (já na codebase)
+- Papers antigos (já indexados)
+- Código que pode ser consultado localmente
+- Perguntas sobre scaffolds (consulte kec-biomaterials)
+
+---
+
+## 🎯 ESPECIALIDADE DESTE REPO
+
+### PBPK Modeling:
+- Compartmental models (absorção, distribuição, metabolismo, excreção)
+- Integration com biomateriais porosos
+- Drug release kinetics de scaffolds
+- Tissue-specific pharmacokinetics
+- Scaffold degradation → drug release
+
+### Computational:
+- ODE solvers para PBPK
+- Parameter estimation (Bayesian, MCMC)
+- Sensitivity analysis
+- Monte Carlo simulations
+- GPU acceleration para simulações
+
+### Regulatory:
+- FDA guidelines compliance
+- EMA standards
+- Q1 scientific rigor
+- Reproducibilidade total
+
+---
+
+## 🔗 INTEGRAÇÃO MULTI-REPO
+
+### Compartilha com:
+- **kec-biomaterials:** Scaffold properties (porosity, pore size, degradation)
+- **darwin-core:** Base comum (database, GPU utils, metrics)
+- **pcs-meta-repo:** Análise de coerência em modelos PBPK
+
+### Dados compartilhados:
+- Parâmetros fisiológicos
+- Propriedades de biomateriais
+- Drug release profiles
+- Validação experimental
+
+---
+
+## 📝 SALVAR DESCOBERTAS
+
+### Sempre use `update_memory` para:
+- Novos modelos PBPK validados
+- Parâmetros otimizados
+- Insights sobre drug release de scaffolds
+- Validações experimentais
+- Comparações com literatura
+- Bugs/soluções importantes
+
+### Tags úteis:
+- `pbpk-model`, `drug-release`, `scaffold-integration`
+- `parameter-estimation`, `validation`, `regulatory`
+
+---
+
+## 🚀 CLUSTER
+
+**Namespace:** darwin-pbpk (15% quota)
+**Recursos:** 8 cores, 64Gi RAM, 0.3 GPU
+**Prioridade:** medium
+
+### Usar darwin-cluster CLI:
+```bash
+# Submeter simulação PBPK
+darwin-cluster submit --job analysis --script pbpk_simulation.py
+
+# Ver fila
+darwin-cluster queue status
+
+# Alterar prioridade
+darwin-cluster queue priority <job-id> high
+```
+
+---
+
+## 🧪 PADRÃO Q1 CIENTÍFICO
+
+### HONESTIDADE CIENTÍFICA (OBRIGATÓRIA):
+- ✅ NUNCA reivindicar "validado" sem dados experimentais
+- ✅ SEMPRE distinguir "modelo implementado" vs "modelo validado"
+- ✅ SEMPRE incluir limitações do modelo
+- ✅ SEMPRE incluir incertezas nos parâmetros
+- ✅ Usar qualificadores: "estimado", "esperado", "pendente validação"
+
+### Exemplo ERRADO:
+❌ "Implementamos modelo PBPK validado para drug release"
+
+### Exemplo CORRETO:
+✅ "Implementamos modelo PBPK para drug release. Parâmetros estimados de literatura.
+   Validação experimental pendente com dados de scaffold X."
+
+---
+
+## 🔧 COMANDOS ÚTEIS
+
+### Ver estado multi-repo:
+```bash
+~/.darwin-global/darwin-omniscient-agent.sh
+```
+
+### Buscar memórias PBPK:
+```bash
+grep -r "pbpk\|drug-release" ~/.darwin-sync/memories/
+```
+
+### Ver jobs rodando:
+```bash
+darwin-cluster status --namespace darwin-pbpk
+```
+
+### Testar modelo PBPK:
+```bash
+cd /home/agourakis82/workspace/darwin-pbpk-platform
+python -m pytest tests/ -v
+```
+
+---
+
+## 📊 MÉTRICAS IMPORTANTES
+
+### Validação de Modelos:
+- MAPE (Mean Absolute Percentage Error) < 15%
+- R² > 0.95 para curvas drug release
+- Residuals normalmente distribuídos
+- Sensitivity analysis completa
+
+### Performance:
+- Simulações Monte Carlo: < 5min (1000 samples)
+- Parameter estimation: < 30min (MCMC)
+- GPU acceleration: > 10x speedup vs CPU
+
+---
+
+## 🎓 PAPERS CHAVE (no contexto)
+
+- Compartmental PBPK models (Rowland & Tozer)
+- Drug release from porous scaffolds (Baker et al)
+- Bayesian parameter estimation (Gelman)
+- FDA PBPK guidance (2018, 2020)
+
+---
+
+## ⚠️ AVISOS
+
+1. **NÃO misturar código PBPK com biomaterials**
+   - PBPK → este repo
+   - Scaffolds → kec-biomaterials
+   - Integração → via API/database
+
+2. **SEMPRE validar unidades**
+   - Concentrações: mg/L ou μM
+   - Volumes: L (não mL!)
+   - Taxas: 1/h (não 1/min!)
+
+3. **Git commits específicos**
+   - Commits vão para darwin-pbpk-platform
+   - Não misturar com outros repos
+
+4. **Namespace isolado**
+   - Jobs vão para darwin-pbpk namespace
+   - Não interferem com kec-biomaterials
+
+---
+
+## 🔄 COORDENAÇÃO AUTOMÁTICA
+
+O Darwin Omniscient Agent coordena automaticamente:
+- Locks entre repos
+- Sharing de dados
+- Prioridades de recursos
+- Mensagens entre agentes
+
+Você só precisa executar o agent no início da sessão!
+
+---
+
+## 📞 PROBLEMAS COMUNS
+
+**"Parameter estimation não converge"**
+- Verificar prior distributions
+- Aumentar iterations (MCMC)
+- Verificar dados experimentais (outliers?)
+
+**"Simulação muito lenta"**
+- Usar GPU acceleration (set USE_GPU=true)
+- Reduzir Monte Carlo samples
+- Paralelizar no cluster
+
+**"Drug release não match experimental"**
+- Revisar scaffold properties (kec-biomaterials)
+- Verificar degradation kinetics
+- Ajustar diffusion coefficients
+
+---
+
+**SIGA ESTAS REGRAS RIGOROSAMENTE!**
+
+**Última atualização:** 2025-11-06 15:40:00 -03
+**Próxima revisão:** Após feedback de uso
+
+---
+
+## 🚀 QUICK START
+
+```bash
+# 1. Carregar contexto
+~/.darwin-global/darwin-omniscient-agent.sh
+
+# 2. Ver estrutura
+ls -la packages/
+
+# 3. Rodar testes
+pytest tests/ -v
+
+# 4. Submeter simulação
+darwin-cluster submit --job analysis --script simulate_pbpk.py
+```
+
