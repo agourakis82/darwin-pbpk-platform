@@ -101,15 +101,30 @@
 - ✅ **Bug de shapes corrigido** (time_points batch)
 - ✅ **Treinamento funcionando** (shapes [14, 100] corretos)
 - ✅ **Teste rápido concluído** (2 épocas, Val Loss: 36.43)
-- ⏳ **Treinamento completo pendente** (50 épocas, GPU recomendado)
+- ✅ **Treinamento completo em andamento** (50 épocas, 1000 amostras)
 
 **Resultados do teste:**
 - Train Loss: 13.05 → 10.90 (melhoria)
 - Val Loss: 50.25 → 36.43 (27% redução)
 - Modelo gerando 100 pontos temporais corretamente ✅
 
-**Próximo passo:**
-- Treinamento completo (50 épocas, dataset 1000 amostras, GPU)
+**Treinamentos em andamento:**
+1. **Node DemetriosPCS (RTX 4000 Ada):**
+   - Status: ✅ Rodando (Época 2, Val Loss: 9.82)
+   - Batch size: 16
+   - Tempo estimado: ~12-13 horas
+   - Output: `models/dynamic_gnn_full/`
+
+2. **Node Maria (L4 24GB) - K8s Job:**
+   - Status: ✅ Job K8s rodando
+   - Batch size: 32 (otimizado para L4)
+   - Tempo estimado: ~6-7 horas
+   - Output: `models/dynamic_gnn_maria/`
+   - Job: `dynamic-gnn-training-maria`
+
+**Monitoramento:**
+- Node atual: `tail -f training.log`
+- Node maria: `kubectl logs <pod-name>` ou `./scripts/monitor_k8s_training.sh`
 
 ---
 
