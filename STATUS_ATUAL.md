@@ -55,36 +55,13 @@
 
 ---
 
-1. Acesse: https://zenodo.org/deposit/new
-2. Faça upload dos arquivos de `/tmp/darwin-pbpk-datasets-v1.0.0/`
-3. Preencha metadados conforme `docs/ZENODO_UPLOAD_GUIDE.md`
-4. Publique e copie o DOI
+### 2. Atualizar README com DOI Datasets ✅ **CONCLUÍDO!**
 
-**Guias:**
-- Quick Start API: `docs/ZENODO_API_QUICKSTART.md`
-- Guia completo: `docs/ZENODO_UPLOAD_GUIDE.md`
+**Status:** ✅ README.md e RELEASE_DESCRIPTION.md atualizados com DOI
 
----
-
-### 2. Atualizar README com DOI Datasets
-
-Após obter o DOI dos datasets:
-
-```bash
-cd ~/workspace/darwin-pbpk-platform
-
-# Atualizar README.md (linha 59)
-# Substituir: zenodo.YYYYYY
-# Por: zenodo.XXXXXX (DOI real)
-
-# Atualizar RELEASE_DESCRIPTION.md (linha 84)
-# Mesma substituição
-
-# Commit
-git add README.md RELEASE_DESCRIPTION.md
-git commit -m "docs: Add Zenodo dataset DOI"
-git push origin main
-```
+**DOI configurado:**
+- README.md: `10.5281/zenodo.17541874`
+- RELEASE_DESCRIPTION.md: `10.5281/zenodo.17541874`
 
 ---
 
