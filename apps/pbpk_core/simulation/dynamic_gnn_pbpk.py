@@ -421,6 +421,13 @@ class DynamicPBPKGNN(nn.Module):
         
         num_time_points = len(time_points)
         
+        # Ajustar num_temporal_steps para match time_points fornecido
+        if time_points is not None and len(time_points) > 1:
+            # Usar número de pontos fornecido (menos 1 porque começamos do t=0)
+            actual_steps = len(time_points) - 1
+        else:
+            actual_steps = self.num_temporal_steps
+        
         # Evolução temporal
         concentrations = []
         current_node_state = node_emb  # [num_organs, hidden_dim]
@@ -428,7 +435,14 @@ class DynamicPBPKGNN(nn.Module):
         # Estado oculto do GRU (2 layers)
         h_0 = torch.zeros(2, 1, self.hidden_dim, device=device)  # [num_layers, batch, hidden]
         
-        for t_idx in range(num_time_points - 1):
+        # Número de steps de evolução (num_time_points - 1 porque já temos o inicial)
+        num_evolution_steps = num_time_points - 1
+        
+        # Debug: verificar se está correto
+        if num_evolution_steps < 1:
+            raise ValueError(f"num_evolution_steps deve ser >= 1, mas é {num_evolution_steps} (num_time_points={num_time_points})")
+        
+        for t_idx in range(num_evolution_steps):
             # Aplicar GNN layers
             x = current_node_state  # [num_organs, hidden_dim]
             
@@ -461,10 +475,26 @@ class DynamicPBPKGNN(nn.Module):
         # Adicionar concentração inicial
         initial_conc = torch.zeros(NUM_ORGANS, device=device)
         initial_conc[blood_idx] = initial_concentration
+        
+        # Stack: [initial] + [predicted] = [num_time_points, num_organs]
         concentrations = torch.stack([initial_conc] + concentrations, dim=0)  # [num_time_points, num_organs]
         
+        # Transpor para [num_organs, num_time_points]
+        concentrations = concentrations.t()
+        
+        # Se time_points foi fornecido externamente, garantir que shapes batem
+        if time_points is not None and len(time_points) != concentrations.shape[1]:
+            # Truncar ou interpolar para match
+            target_len = len(time_points)
+            if concentrations.shape[1] > target_len:
+                concentrations = concentrations[:, :target_len]
+            elif concentrations.shape[1] < target_len:
+                # Interpolar (simples: repetir último valor)
+                last_conc = concentrations[:, -1:].expand(-1, target_len - concentrations.shape[1])
+                concentrations = torch.cat([concentrations, last_conc], dim=1)
+        
         return {
-            "concentrations": concentrations.t(),  # [num_organs, num_time_points]
+            "concentrations": concentrations,  # [num_organs, num_time_points]
             "time_points": time_points,
             "organ_names": PBPK_ORGANS
         }

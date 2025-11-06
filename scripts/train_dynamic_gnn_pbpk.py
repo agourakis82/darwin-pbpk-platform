@@ -160,20 +160,34 @@ def train_epoch(
             
             # Forward pass
             results = model(dose[i].item(), params, time_points)
-            pred_conc = results["concentrations"]  # [NUM_ORGANS, T]
-            true_conc_i = true_conc[i]  # [NUM_ORGANS, T]
+            pred_conc = results["concentrations"]  # Esperado: [NUM_ORGANS, T]
+            true_conc_i = true_conc[i]  # Esperado: [NUM_ORGANS, T]
             
-            # Debug shapes (primeira iteração)
+            # Debug na primeira iteração
             if i == 0 and num_batches == 1:
-                print(f"   Debug shapes:")
+                print(f"\n   🔍 Debug shapes (primeira amostra):")
                 print(f"      pred_conc: {pred_conc.shape}")
                 print(f"      true_conc_i: {true_conc_i.shape}")
-                print(f"      time_points: {time_points.shape}")
+                print(f"      time_points shape: {time_points.shape}")
+                print(f"      time_points len: {len(time_points)}")
                 print(f"      NUM_ORGANS: {NUM_ORGANS}")
             
-            # Garantir que shapes batem
+            # Garantir shape correto: [NUM_ORGANS, T]
+            if pred_conc.shape[0] != NUM_ORGANS:
+                # Se está transposto, transpor de volta
+                if pred_conc.shape[1] == NUM_ORGANS:
+                    pred_conc = pred_conc.t()
+                else:
+                    raise ValueError(f"pred_conc shape incorreto: {pred_conc.shape}, esperado [NUM_ORGANS, T] ou [T, NUM_ORGANS]")
+            
+            if true_conc_i.shape[0] != NUM_ORGANS:
+                if true_conc_i.shape[1] == NUM_ORGANS:
+                    true_conc_i = true_conc_i.t()
+                else:
+                    raise ValueError(f"true_conc_i shape incorreto: {true_conc_i.shape}, esperado [NUM_ORGANS, T] ou [T, NUM_ORGANS]")
+            
+            # Se número de time points não bater, truncar ao menor
             if pred_conc.shape[1] != true_conc_i.shape[1]:
-                # Interpolar ou truncar se necessário
                 min_t = min(pred_conc.shape[1], true_conc_i.shape[1])
                 pred_conc = pred_conc[:, :min_t]
                 true_conc_i = true_conc_i[:, :min_t]
@@ -190,12 +204,8 @@ def train_epoch(
         total_loss += batch_loss.item()
         num_batches += 1
         
-        # Per-organ losses (último batch)
-        if num_batches == len(dataloader):
-            with torch.no_grad():
-                for j, organ in enumerate(PBPK_ORGANS):
-                    organ_loss = torch.mean((pred_conc[j] - true_conc[-1, j]) ** 2).item()
-                    losses_per_organ[organ] = organ_loss
+        # Per-organ losses (simplificado - usar média geral)
+        # Nota: Cálculo detalhado por órgão pode ser adicionado depois se necessário
     
     avg_loss = total_loss / num_batches
     
@@ -236,9 +246,25 @@ def validate(
                 )
                 
                 results = model(dose[i].item(), params, time_points)
-                pred_conc = results["concentrations"]
+                pred_conc = results["concentrations"]  # Esperado: [NUM_ORGANS, T]
+                true_conc_i = true_conc[i]  # Esperado: [NUM_ORGANS, T]
                 
-                loss = compute_loss(pred_conc, true_conc[i], organ_weights)
+                # Garantir shape correto: [NUM_ORGANS, T]
+                if pred_conc.shape[0] != NUM_ORGANS:
+                    if pred_conc.shape[1] == NUM_ORGANS:
+                        pred_conc = pred_conc.t()
+                
+                if true_conc_i.shape[0] != NUM_ORGANS:
+                    if true_conc_i.shape[1] == NUM_ORGANS:
+                        true_conc_i = true_conc_i.t()
+                
+                # Se número de time points não bater, truncar ao menor
+                if pred_conc.shape[1] != true_conc_i.shape[1]:
+                    min_t = min(pred_conc.shape[1], true_conc_i.shape[1])
+                    pred_conc = pred_conc[:, :min_t]
+                    true_conc_i = true_conc_i[:, :min_t]
+                
+                loss = compute_loss(pred_conc, true_conc_i, organ_weights)
                 batch_loss += loss
             
             batch_loss = batch_loss / batch_size
