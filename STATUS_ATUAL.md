@@ -1,7 +1,7 @@
 # 📊 Status Atual - Darwin PBPK Platform
 
 **Data:** 06 de Novembro de 2025  
-**Última atualização:** 06:40
+**Última atualização:** 16:30
 
 ---
 
