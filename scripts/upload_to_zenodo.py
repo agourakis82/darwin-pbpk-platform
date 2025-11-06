@@ -100,6 +100,29 @@ def get_zenodo_token(sandbox: bool = False) -> Optional[str]:
             if token:
                 return token
     
+    # Tentar procurar em repositórios Darwin
+    workspace = Path.home() / "workspace"
+    darwin_repos = [
+        "kec-biomaterials-scaffolds",
+        "pcs-meta-repo",
+        "darwin-pbpk-platform"
+    ]
+    
+    for repo_name in darwin_repos:
+        repo_path = workspace / repo_name
+        if repo_path.exists():
+            # Verificar .zenodo_token no repo
+            repo_token = repo_path / ".zenodo_token"
+            if repo_token.exists():
+                try:
+                    with open(repo_token, 'r') as f:
+                        token = f.read().strip()
+                        if token and len(token) > 10:
+                            print(f"✅ Token encontrado em: {repo_token}")
+                            return token
+                except:
+                    pass
+    
     return None
 
 
@@ -238,7 +261,12 @@ def main():
     if not token:
         print("❌ Token do Zenodo não encontrado!")
         print()
-        print("Para obter um token:")
+        print("🔍 Procurado em:")
+        print("   - Variável de ambiente ZENODO_TOKEN")
+        print("   - ~/.zenodo_token")
+        print("   - Repositórios Darwin (kec-biomaterials-scaffolds, pcs-meta-repo)")
+        print()
+        print("📋 Para obter um token:")
         print("1. Acesse: https://zenodo.org/account/settings/applications/tokens/new/")
         if args.sandbox:
             print("   (Sandbox: https://sandbox.zenodo.org/account/settings/applications/tokens/new/)")
@@ -247,6 +275,9 @@ def main():
         print("   - Variável de ambiente: export ZENODO_TOKEN='seu_token'")
         print("   - Arquivo: echo 'seu_token' > ~/.zenodo_token")
         print("   - Ou passe via --token")
+        print()
+        print("💡 Dica: Use o script get_token_from_darwin.py para ajuda interativa:")
+        print("   python scripts/get_token_from_darwin.py")
         print()
         sys.exit(1)
     

@@ -34,26 +34,34 @@
 
 ---
 
-## ⏳ PENDENTE (AGORA AUTOMÁTICO VIA API!)
+## ✅ TOKEN CONFIGURADO - PRONTO PARA UPLOAD!
 
 ### 1. Upload Datasets no Zenodo ⭐ **PRÓXIMO PASSO**
 
 **Tempo estimado:** 5-10 minutos (com API!)
 
-**Opção A: Via API (RECOMENDADO - Automático!)**
+**Status:** ✅ Token salvo em `~/.zenodo_token`
+
+**Para fazer upload:**
 
 ```bash
-# 1. Obter token: https://zenodo.org/account/settings/applications/tokens/new/
-export ZENODO_TOKEN='seu_token'
-
-# 2. Preparar arquivos (se ainda não fez)
+# 1. Preparar arquivos (se ainda não fez)
 bash scripts/prepare_zenodo_upload.sh
 
-# 3. Upload automático!
+# 2. Upload automático!
 python scripts/upload_to_zenodo.py
 
-# 4. Atualizar README com DOI retornado
+# 3. Atualizar README com DOI retornado
 python scripts/update_readme_with_doi.py --doi 10.5281/zenodo.XXXXXX
+```
+
+**Teste primeiro (opcional):**
+```bash
+# Sandbox para testar
+python scripts/upload_to_zenodo.py --sandbox
+
+# OU dry-run para verificar
+python scripts/upload_to_zenodo.py --dry-run
 ```
 
 **Opção B: Manual (via interface web)**
