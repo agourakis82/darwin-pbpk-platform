@@ -51,29 +51,9 @@
 
 **Total:** 409.3 MB
 
-**Para fazer upload:**
+**Data do Upload:** 06 de Novembro de 2025
 
-```bash
-# 1. Preparar arquivos (se ainda não fez)
-bash scripts/prepare_zenodo_upload.sh
-
-# 2. Upload automático!
-python scripts/upload_to_zenodo.py
-
-# 3. Atualizar README com DOI retornado
-python scripts/update_readme_with_doi.py --doi 10.5281/zenodo.XXXXXX
-```
-
-**Teste primeiro (opcional):**
-```bash
-# Sandbox para testar
-python scripts/upload_to_zenodo.py --sandbox
-
-# OU dry-run para verificar
-python scripts/upload_to_zenodo.py --dry-run
-```
-
-**Opção B: Manual (via interface web)**
+---
 
 1. Acesse: https://zenodo.org/deposit/new
 2. Faça upload dos arquivos de `/tmp/darwin-pbpk-datasets-v1.0.0/`
