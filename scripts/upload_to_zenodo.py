@@ -147,31 +147,85 @@ def create_deposition(api_url: str, token: str) -> Dict:
 
 
 def upload_file(api_url: str, token: str, deposition_id: int, file_path: Path) -> Dict:
-    """Faz upload de um arquivo para o depósito"""
+    """Faz upload de um arquivo para o depósito usando bucket de upload"""
     print(f"📤 Fazendo upload: {file_path.name} ({file_path.stat().st_size / (1024**2):.1f} MB)...")
     
-    # Criar bucket de upload
-    bucket_url = f"{api_url}/deposit/depositions/{deposition_id}/files"
+    # Obter informações do depósito para pegar o bucket URL
+    deposition_url = f"{api_url}/deposit/depositions/{deposition_id}"
     headers = {"Authorization": f"Bearer {token}"}
     
-    with open(file_path, 'rb') as f:
-        files = {'file': (file_path.name, f)}
-        data = {'name': file_path.name}
-        
-        response = requests.post(
-            bucket_url,
-            files=files,
-            data=data,
-            headers=headers,
-            params={"access_token": token}
-        )
+    response = requests.get(
+        deposition_url,
+        headers=headers,
+        params={"access_token": token}
+    )
     
     if response.status_code not in [200, 201]:
-        raise Exception(f"Erro ao fazer upload: {response.status_code} - {response.text}")
+        raise Exception(f"Erro ao obter depósito: {response.status_code} - {response.text}")
     
-    file_info = response.json()
+    deposition = response.json()
+    bucket_url = deposition.get("links", {}).get("bucket")
+    
+    if not bucket_url:
+        raise Exception("Bucket URL não encontrado no depósito")
+    
+    # Upload usando PUT direto no bucket (método correto para arquivos grandes)
+    file_name = file_path.name
+    upload_url = f"{bucket_url}/{file_name}"
+    
+    headers_upload = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/octet-stream"
+    }
+    
+    # Fazer upload do arquivo com retry para arquivos grandes
+    max_retries = 3
+    retry_delay = 5  # segundos
+    
+    for attempt in range(max_retries):
+        try:
+            with open(file_path, 'rb') as f:
+                response = requests.put(
+                    upload_url,
+                    data=f,
+                    headers=headers_upload,
+                    timeout=900  # 15 minutos timeout para arquivos grandes
+                )
+            
+            if response.status_code in [200, 201]:
+                break
+            elif response.status_code == 502 and attempt < max_retries - 1:
+                print(f"   ⚠️  Erro 502 (Bad Gateway), tentando novamente em {retry_delay}s... (tentativa {attempt + 1}/{max_retries})")
+                time.sleep(retry_delay)
+                retry_delay *= 2  # Backoff exponencial
+                continue
+            else:
+                raise Exception(f"Erro ao fazer upload: {response.status_code} - {response.text}")
+        except requests.exceptions.Timeout:
+            if attempt < max_retries - 1:
+                print(f"   ⚠️  Timeout, tentando novamente em {retry_delay}s... (tentativa {attempt + 1}/{max_retries})")
+                time.sleep(retry_delay)
+                retry_delay *= 2
+                continue
+            else:
+                raise Exception("Timeout após múltiplas tentativas")
+    
+    if response.status_code not in [200, 201]:
+        raise Exception(f"Erro ao fazer upload após {max_retries} tentativas: {response.status_code} - {response.text}")
+    
+    # Obter informações do arquivo após upload
+    files_url = f"{api_url}/deposit/depositions/{deposition_id}/files"
+    response = requests.get(files_url, headers=headers, params={"access_token": token})
+    
+    if response.status_code == 200:
+        files = response.json()
+        for file_info in files:
+            if file_info.get("filename") == file_name:
+                print(f"✅ Upload concluído: {file_path.name}")
+                return file_info
+    
     print(f"✅ Upload concluído: {file_path.name}")
-    return file_info
+    return {"filename": file_name}
 
 
 def update_metadata(api_url: str, token: str, deposition_id: int, metadata: Dict) -> Dict:
@@ -205,7 +259,8 @@ def publish_deposition(api_url: str, token: str, deposition_id: int) -> Dict:
         params={"access_token": token}
     )
     
-    if response.status_code not in [200, 201]:
+    # 202 Accepted também é sucesso no Zenodo
+    if response.status_code not in [200, 201, 202]:
         raise Exception(f"Erro ao publicar: {response.status_code} - {response.text}")
     
     deposition = response.json()
@@ -243,6 +298,11 @@ def main():
         type=str,
         default="/tmp/darwin-pbpk-datasets-v1.0.0",
         help="Diretório com os arquivos para upload"
+    )
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        help="Pular confirmação e fazer upload automaticamente"
     )
     
     args = parser.parse_args()
@@ -322,14 +382,22 @@ def main():
         print(json.dumps(METADATA, indent=2, ensure_ascii=False))
         return
     
-    # Confirmar
-    print(f"⚠️  Você está prestes a fazer upload para Zenodo {env_name}")
-    if not args.sandbox:
-        print("⚠️  ATENÇÃO: Isso publicará os dados em PRODUÇÃO!")
-    response = input("Continuar? (yes/no): ")
-    if response.lower() not in ['yes', 'y', 'sim', 's']:
-        print("❌ Cancelado pelo usuário")
-        return
+    # Confirmar (a menos que --yes seja usado)
+    if not args.yes:
+        print(f"⚠️  Você está prestes a fazer upload para Zenodo {env_name}")
+        if not args.sandbox:
+            print("⚠️  ATENÇÃO: Isso publicará os dados em PRODUÇÃO!")
+        try:
+            response = input("Continuar? (yes/no): ")
+            if response.lower() not in ['yes', 'y', 'sim', 's']:
+                print("❌ Cancelado pelo usuário")
+                return
+        except EOFError:
+            print("⚠️  Input não disponível. Use --yes para pular confirmação.")
+            print("   Exemplo: python scripts/upload_to_zenodo.py --yes")
+            return
+    else:
+        print(f"🚀 Fazendo upload para Zenodo {env_name} (confirmação automática)...")
     
     try:
         # 1. Criar depósito
@@ -349,12 +417,18 @@ def main():
         
         # 4. Publicar
         if not args.sandbox:
-            publish_response = input("Publicar o depósito agora? (yes/no): ")
-            if publish_response.lower() not in ['yes', 'y', 'sim', 's']:
-                print("⚠️  Depósito criado mas NÃO publicado")
-                print(f"   URL: {api_url.replace('/api', '')}/deposit/{deposition_id}")
-                print("   Você pode publicar manualmente depois")
-                return
+            if not args.yes:
+                try:
+                    publish_response = input("Publicar o depósito agora? (yes/no): ")
+                    if publish_response.lower() not in ['yes', 'y', 'sim', 's']:
+                        print("⚠️  Depósito criado mas NÃO publicado")
+                        print(f"   URL: {api_url.replace('/api', '')}/deposit/{deposition_id}")
+                        print("   Você pode publicar manualmente depois")
+                        return
+                except EOFError:
+                    print("⚠️  Input não disponível. Publicando automaticamente...")
+            else:
+                print("📢 Publicando automaticamente (--yes)...")
         
         deposition = publish_deposition(api_url, token, deposition_id)
         print()

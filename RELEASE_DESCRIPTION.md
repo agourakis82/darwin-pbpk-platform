@@ -81,7 +81,7 @@ https://doi.org/10.5281/zenodo.17536674
 ## 📖 Data Availability
 
 Large training datasets (1.7 GB) available at separate Zenodo record:
-- **DOI:** https://doi.org/10.5281/zenodo.YYYYYY
+- **DOI:** https://doi.org/10.5281/zenodo.zenodo.17541874
 - **Contents:** 
   - ChemBERTa embeddings (1 GB, 44,779 molecules × 768d)
   - Molecular graphs (500 MB, PyG format)
