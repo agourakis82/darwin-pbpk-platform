@@ -96,8 +96,20 @@
 - PK-Sim: ❌ Não tem
 - **Darwin: ✅ IMPLEMENTADO!**
 
-### Próximo Passo:
-- ⏳ **Treinamento** do modelo em dados PBPK (ODE solver como ground truth)
+### Status do Treinamento:
+- ✅ **Pipeline completo implementado**
+- ✅ **Bug de shapes corrigido** (time_points batch)
+- ✅ **Treinamento funcionando** (shapes [14, 100] corretos)
+- ✅ **Teste rápido concluído** (2 épocas, Val Loss: 36.43)
+- ⏳ **Treinamento completo pendente** (50 épocas, GPU recomendado)
+
+**Resultados do teste:**
+- Train Loss: 13.05 → 10.90 (melhoria)
+- Val Loss: 50.25 → 36.43 (27% redução)
+- Modelo gerando 100 pontos temporais corretamente ✅
+
+**Próximo passo:**
+- Treinamento completo (50 épocas, dataset 1000 amostras, GPU)
 
 ---
 
