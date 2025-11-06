@@ -34,13 +34,22 @@
 
 ---
 
-## ✅ TOKEN CONFIGURADO - PRONTO PARA UPLOAD!
+## 🎉 UPLOAD CONCLUÍDO COM SUCESSO!
 
-### 1. Upload Datasets no Zenodo ⭐ **PRÓXIMO PASSO**
+### 1. Upload Datasets no Zenodo ✅ **CONCLUÍDO!**
 
-**Tempo estimado:** 5-10 minutos (com API!)
+**Status:** ✅ Upload completo e publicado!
 
-**Status:** ✅ Token salvo em `~/.zenodo_token`
+**DOI dos Datasets:** `10.5281/zenodo.17541874`
+**URL:** https://doi.org/10.5281/zenodo.17541874
+
+**Arquivos enviados:**
+- ✅ consolidated_pbpk_v1.parquet (1.4 MB)
+- ✅ chemberta_embeddings_consolidated.npz (122.2 MB)
+- ✅ molecular_graphs.pkl (285.7 MB)
+- ✅ README.md (2.9 KB)
+
+**Total:** 409.3 MB
 
 **Para fazer upload:**
 
