@@ -1,59 +1,30 @@
 {
-  "title": "Darwin PBPK Platform: AI-Powered Pharmacokinetic Prediction",
-  "description": "State-of-the-art deep learning platform for PBPK parameter prediction (fraction unbound, volume of distribution, clearance) using multi-modal molecular representations. Features ChemBERTa embeddings (768d), molecular graphs (PyTorch Geometric with 20 node and 7 edge features), and RDKit descriptors (25 features). Employs advanced GNN architectures (GAT + TransformerConv with 4 attention heads) and multi-task learning with weighted loss. Trained on 44,779 compounds from ChEMBL and Therapeutics Data Commons (TDC). Integrates PhysioQM physics-informed constraints for interpretable and physically-plausible predictions. Target performance: R² > 0.55 for clearance prediction, suitable for drug discovery pipelines and Nature-level publications.",
+  "title": "Darwin PBPK Platform - Rigorous Validation Release v0.2.0",
+  "description": "Complete rigorous validation of Dynamic GNN PBPK model with systematic parameter validation against scientific literature, detailed investigation of Cmax scale issues, and expanded dataset creation.",
   "creators": [
     {
-      "name": "Agourakis, Demetrios Chiuratto",
-      "affiliation": "Pontifícia Universidade Católica do Rio Grande do Sul (PUCRS)",
-      "orcid": ""
+      "name": "Agourakis, Demetrios",
+      "affiliation": "Darwin Biomaterials"
     }
+  ],
+  "keywords": [
+    "PBPK modeling",
+    "Graph Neural Networks",
+    "Pharmacokinetics",
+    "Machine Learning",
+    "Drug Discovery",
+    "Parameter Validation",
+    "Scientific Validation"
   ],
   "license": {
     "id": "MIT"
   },
-  "keywords": [
-    "PBPK",
-    "pharmacokinetics",
-    "drug discovery",
-    "deep learning",
-    "graph neural networks",
-    "ChemBERTa",
-    "multi-task learning",
-    "ADMET",
-    "clearance prediction",
-    "volume of distribution",
-    "fraction unbound",
-    "computational chemistry",
-    "molecular representation",
-    "PyTorch Geometric",
-    "GAT",
-    "TransformerConv",
-    "ChEMBL",
-    "TDC",
-    "PhysioQM",
-    "AI drug discovery"
-  ],
-  "upload_type": "software",
-  "access_right": "open",
-  "language": "eng",
+  "version": "0.2.0",
+  "publication_date": "2025-11-18",
   "related_identifiers": [
     {
-      "identifier": "10.5281/zenodo.YYYYYY",
-      "relation": "isSupplementedBy",
-      "resource_type": "dataset",
-      "scheme": "doi"
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/darwin-biomaterials/darwin-pbpk-platform"
     }
-  ],
-  "communities": [
-    {
-      "identifier": "zenodo"
-    }
-  ],
-  "grants": [],
-  "references": [
-    "Therapeutics Data Commons (TDC): Machine learning datasets for drug discovery. Available at: https://tdcommons.ai",
-    "ChEMBL Database: Manually curated database of bioactive molecules with drug-like properties. Available at: https://www.ebi.ac.uk/chembl/",
-    "Chithrananda S, Grand G, Ramsundar B. ChemBERTa: Large-Scale Self-Supervised Pretraining for Molecular Property Prediction. arXiv:2010.09885; 2020."
   ]
 }
-
