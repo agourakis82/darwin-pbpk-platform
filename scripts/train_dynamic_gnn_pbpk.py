@@ -26,46 +26,60 @@ from apps.pbpk_core.simulation.dynamic_gnn_pbpk import (
     DynamicPBPKGNN,
     PBPKPhysiologicalParams,
     PBPK_ORGANS,
-    NUM_ORGANS
+    NUM_ORGANS,
 )
 
 
 class PBPKDataset(Dataset):
     """Dataset para treinamento do Dynamic GNN."""
-    
+
     def __init__(self, data_path: Path):
         """
         Args:
             data_path: Caminho para arquivo .npz com dados
         """
         data = np.load(data_path)
-        
+
         self.doses = torch.tensor(data["doses"], dtype=torch.float32)
-        self.clearances_hepatic = torch.tensor(data["clearances_hepatic"], dtype=torch.float32)
-        self.clearances_renal = torch.tensor(data["clearances_renal"], dtype=torch.float32)
-        self.partition_coeffs = torch.tensor(data["partition_coeffs"], dtype=torch.float32)
-        self.concentrations = torch.tensor(data["concentrations"], dtype=torch.float32)  # [N, NUM_ORGANS, T]
+        self.clearances_hepatic = torch.tensor(
+            data["clearances_hepatic"], dtype=torch.float32
+        )
+        self.clearances_renal = torch.tensor(
+            data["clearances_renal"], dtype=torch.float32
+        )
+        self.partition_coeffs = torch.tensor(
+            data["partition_coeffs"], dtype=torch.float32
+        )
+        self.concentrations = torch.tensor(
+            data["concentrations"], dtype=torch.float32
+        )  # [N, NUM_ORGANS, T]
         self.time_points = torch.tensor(data["time_points"], dtype=torch.float32)
-        
+        # opcional: compound_ids (para split por composto)
+        self.compound_ids = None
+        if "compound_ids" in data.files:
+            comp = data["compound_ids"]
+            # garantir dtype str
+            self.compound_ids = [str(x) for x in comp.tolist()]
+
         self.num_samples = len(self.doses)
         self.num_time_points = len(self.time_points)
-    
+
     def __len__(self) -> int:
         return self.num_samples
-    
+
     def __getitem__(self, idx: int) -> Dict[str, torch.Tensor]:
         # Garantir shape correto: [NUM_ORGANS, T]
         conc = self.concentrations[idx]  # [NUM_ORGANS, T] do dataset
         if conc.shape[0] != NUM_ORGANS:
             conc = conc.t()  # Transpor se necessário
-        
+
         return {
             "dose": self.doses[idx],
             "clearance_hepatic": self.clearances_hepatic[idx],
             "clearance_renal": self.clearances_renal[idx],
             "partition_coeffs": self.partition_coeffs[idx],  # [NUM_ORGANS]
             "concentrations": conc,  # [NUM_ORGANS, T]
-            "time_points": self.time_points
+            "time_points": self.time_points,
         }
 
 
@@ -73,51 +87,39 @@ def create_physiological_params(
     dose: float,
     clearance_hepatic: float,
     clearance_renal: float,
-    partition_coeffs: torch.Tensor
+    partition_coeffs: torch.Tensor,
 ) -> PBPKPhysiologicalParams:
     """Cria PBPKPhysiologicalParams a partir de tensores."""
-    partition_dict = {organ: float(partition_coeffs[i]) for i, organ in enumerate(PBPK_ORGANS)}
-    
+    partition_dict = {
+        organ: float(partition_coeffs[i]) for i, organ in enumerate(PBPK_ORGANS)
+    }
+
     return PBPKPhysiologicalParams(
         clearance_hepatic=float(clearance_hepatic),
         clearance_renal=float(clearance_renal),
-        partition_coeffs=partition_dict
+        partition_coeffs=partition_dict,
     )
 
 
 def compute_loss(
     pred_conc: torch.Tensor,
     true_conc: torch.Tensor,
-    organ_weights: Optional[torch.Tensor] = None
+    organ_weights: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     """
     Computa loss (MSE com pesos opcionais por órgão).
-    
-    Args:
-        pred_conc: [NUM_ORGANS, T] ou [T, NUM_ORGANS]
-        true_conc: [NUM_ORGANS, T] ou [T, NUM_ORGANS]
-        organ_weights: [NUM_ORGANS] (opcional)
-    
-    Returns:
-        Loss escalar
     """
-    # Garantir shape correto: [NUM_ORGANS, T]
-    if pred_conc.shape[0] != NUM_ORGANS:
-        pred_conc = pred_conc.t()  # Transpor se necessário
-    if true_conc.shape[0] != NUM_ORGANS:
-        true_conc = true_conc.t()
-    
-    # MSE por órgão (média sobre tempo)
-    mse_per_organ = torch.mean((pred_conc - true_conc) ** 2, dim=1)  # [NUM_ORGANS]
-    
-    # Aplicar pesos se fornecidos
+    if pred_conc.dim() == 2:
+        pred_conc = pred_conc.unsqueeze(0)
+    if true_conc.dim() == 2:
+        true_conc = true_conc.unsqueeze(0)
+
+    mse_per_organ = torch.mean((pred_conc - true_conc) ** 2, dim=-1)
+
     if organ_weights is not None:
-        mse_per_organ = mse_per_organ * organ_weights
-    
-    # Loss total
-    loss = torch.mean(mse_per_organ)
-    
-    return loss
+        mse_per_organ = mse_per_organ * organ_weights.view(1, -1)
+
+    return mse_per_organ.mean()
 
 
 def train_epoch(
@@ -125,119 +127,76 @@ def train_epoch(
     dataloader: DataLoader,
     optimizer: optim.Optimizer,
     device: torch.device,
-    organ_weights: Optional[torch.Tensor] = None
+    organ_weights: Optional[torch.Tensor] = None,
 ) -> Tuple[float, Dict[str, float]]:
-    """Treina por uma época."""
+    """Treina por uma época (batch vectorizado)."""
     model.train()
     total_loss = 0.0
     num_batches = 0
-    
     losses_per_organ = {organ: 0.0 for organ in PBPK_ORGANS}
-    
+
     for batch in tqdm(dataloader, desc="Training", leave=False):
-        # Mover para device
         dose = batch["dose"].to(device)
         clearance_hepatic = batch["clearance_hepatic"].to(device)
         clearance_renal = batch["clearance_renal"].to(device)
         partition_coeffs = batch["partition_coeffs"].to(device)
-        true_conc = batch["concentrations"].to(device)  # [B, NUM_ORGANS, T]
+        true_conc = batch["concentrations"].to(device)
         time_points = batch["time_points"].to(device)
-        
-        # DataLoader pode criar batch de time_points incorretamente se for 1D
-        # Garantir que time_points é 1D (mesmo para todas as amostras)
+
         if time_points.dim() > 1:
-            time_points = time_points[0]  # Pegar primeira amostra (todas são iguais)
-        
-        # Debug na primeira iteração
-        if num_batches == 1:
-            print(f"\n   🔍 Debug batch (primeiro batch):")
-            print(f"      batch_size: {len(dose)}")
-            print(f"      time_points shape: {time_points.shape}")
-            print(f"      time_points len: {len(time_points)}")
-            print(f"      true_conc shape: {true_conc.shape}")
-        
-        batch_size = len(dose)
-        batch_loss = 0.0
-        
-        optimizer.zero_grad()
-        
-        # Processar cada amostra do batch
-        for i in range(batch_size):
-            # Criar parâmetros fisiológicos
-            params = create_physiological_params(
-                dose[i].item(),
-                clearance_hepatic[i].item(),
-                clearance_renal[i].item(),
-                partition_coeffs[i]
+            time_points = time_points[0]
+
+        params_batch = [
+            create_physiological_params(
+                dose=0.0,
+                clearance_hepatic=clearance_hepatic[i].item(),
+                clearance_renal=clearance_renal[i].item(),
+                partition_coeffs=partition_coeffs[i].detach().cpu(),
             )
-            
-            # Forward pass
-            results = model(dose[i].item(), params, time_points)
-            pred_conc = results["concentrations"]  # Esperado: [NUM_ORGANS, T]
-            true_conc_i = true_conc[i]  # Esperado: [NUM_ORGANS, T]
-            
-            # Debug na primeira iteração
-            if i == 0 and num_batches == 1:
-                print(f"\n   🔍 Debug shapes (primeira amostra):")
-                print(f"      pred_conc: {pred_conc.shape}")
-                print(f"      true_conc_i: {true_conc_i.shape}")
-                print(f"      time_points shape: {time_points.shape}")
-                print(f"      time_points len: {len(time_points)}")
-                print(f"      NUM_ORGANS: {NUM_ORGANS}")
-            
-            # Garantir shape correto: [NUM_ORGANS, T]
-            if pred_conc.shape[0] != NUM_ORGANS:
-                # Se está transposto, transpor de volta
-                if pred_conc.shape[1] == NUM_ORGANS:
-                    pred_conc = pred_conc.t()
-                else:
-                    raise ValueError(f"pred_conc shape incorreto: {pred_conc.shape}, esperado [NUM_ORGANS, T] ou [T, NUM_ORGANS]")
-            
-            if true_conc_i.shape[0] != NUM_ORGANS:
-                if true_conc_i.shape[1] == NUM_ORGANS:
-                    true_conc_i = true_conc_i.t()
-                else:
-                    raise ValueError(f"true_conc_i shape incorreto: {true_conc_i.shape}, esperado [NUM_ORGANS, T] ou [T, NUM_ORGANS]")
-            
-            # Se número de time points não bater, truncar ao menor
-            if pred_conc.shape[1] != true_conc_i.shape[1]:
-                min_t = min(pred_conc.shape[1], true_conc_i.shape[1])
-                pred_conc = pred_conc[:, :min_t]
-                true_conc_i = true_conc_i[:, :min_t]
-            
-            # Loss
-            loss = compute_loss(pred_conc, true_conc_i, organ_weights)
-            batch_loss += loss
-        
-        # Backward
-        batch_loss = batch_loss / batch_size
-        batch_loss.backward()
+            for i in range(len(dose))
+        ]
+
+        optimizer.zero_grad()
+        results = model.forward_batch(dose, params_batch, time_points)
+        pred_conc = results["concentrations"]
+
+        if pred_conc.shape[-1] != true_conc.shape[-1]:
+            min_t = min(pred_conc.shape[-1], true_conc.shape[-1])
+            pred_conc = pred_conc[..., :min_t]
+            true_conc = true_conc[..., :min_t]
+
+        loss = compute_loss(pred_conc, true_conc, organ_weights)
+        loss.backward()
         optimizer.step()
-        
-        total_loss += batch_loss.item()
+
+        total_loss += loss.item()
         num_batches += 1
-        
-        # Per-organ losses (simplificado - usar média geral)
-        # Nota: Cálculo detalhado por órgão pode ser adicionado depois se necessário
-    
-    avg_loss = total_loss / num_batches
-    
-    return avg_loss, losses_per_organ
+
+        mse_org = torch.mean((pred_conc - true_conc) ** 2, dim=-1).mean(dim=0)
+        for organ, value in zip(PBPK_ORGANS, mse_org.detach().cpu().tolist()):
+            losses_per_organ[organ] += value
+
+    if num_batches == 0:
+        return 0.0, losses_per_organ
+
+    losses_per_organ = {
+        organ: value / num_batches for organ, value in losses_per_organ.items()
+    }
+    return total_loss / num_batches, losses_per_organ
 
 
 def validate(
     model: DynamicPBPKGNN,
     dataloader: DataLoader,
     device: torch.device,
-    organ_weights: Optional[torch.Tensor] = None
+    organ_weights: Optional[torch.Tensor] = None,
 ) -> Tuple[float, Dict[str, float]]:
-    """Valida o modelo."""
+    """Valida o modelo com forward batched."""
     model.eval()
     total_loss = 0.0
     num_batches = 0
-    
     losses_per_organ = {organ: 0.0 for organ in PBPK_ORGANS}
-    
+
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Validation", leave=False):
             dose = batch["dose"].to(device)
@@ -246,52 +205,43 @@ def validate(
             partition_coeffs = batch["partition_coeffs"].to(device)
             true_conc = batch["concentrations"].to(device)
             time_points = batch["time_points"].to(device)
-            
-            # DataLoader pode criar batch de time_points incorretamente se for 1D
-            # Garantir que time_points é 1D (mesmo para todas as amostras)
+
             if time_points.dim() > 1:
-                time_points = time_points[0]  # Pegar primeira amostra (todas são iguais)
-            
-            batch_size = len(dose)
-            batch_loss = 0.0
-            
-            for i in range(batch_size):
-                params = create_physiological_params(
-                    dose[i].item(),
-                    clearance_hepatic[i].item(),
-                    clearance_renal[i].item(),
-                    partition_coeffs[i]
+                time_points = time_points[0]
+
+            params_batch = [
+                create_physiological_params(
+                    dose=0.0,
+                    clearance_hepatic=clearance_hepatic[i].item(),
+                    clearance_renal=clearance_renal[i].item(),
+                    partition_coeffs=partition_coeffs[i].detach().cpu(),
                 )
-                
-                results = model(dose[i].item(), params, time_points)
-                pred_conc = results["concentrations"]  # Esperado: [NUM_ORGANS, T]
-                true_conc_i = true_conc[i]  # Esperado: [NUM_ORGANS, T]
-                
-                # Garantir shape correto: [NUM_ORGANS, T]
-                if pred_conc.shape[0] != NUM_ORGANS:
-                    if pred_conc.shape[1] == NUM_ORGANS:
-                        pred_conc = pred_conc.t()
-                
-                if true_conc_i.shape[0] != NUM_ORGANS:
-                    if true_conc_i.shape[1] == NUM_ORGANS:
-                        true_conc_i = true_conc_i.t()
-                
-                # Se número de time points não bater, truncar ao menor
-                if pred_conc.shape[1] != true_conc_i.shape[1]:
-                    min_t = min(pred_conc.shape[1], true_conc_i.shape[1])
-                    pred_conc = pred_conc[:, :min_t]
-                    true_conc_i = true_conc_i[:, :min_t]
-                
-                loss = compute_loss(pred_conc, true_conc_i, organ_weights)
-                batch_loss += loss
-            
-            batch_loss = batch_loss / batch_size
-            total_loss += batch_loss.item()
+                for i in range(len(dose))
+            ]
+
+            results = model.forward_batch(dose, params_batch, time_points)
+            pred_conc = results["concentrations"]
+
+            if pred_conc.shape[-1] != true_conc.shape[-1]:
+                min_t = min(pred_conc.shape[-1], true_conc.shape[-1])
+                pred_conc = pred_conc[..., :min_t]
+                true_conc = true_conc[..., :min_t]
+
+            loss = compute_loss(pred_conc, true_conc, organ_weights)
+            total_loss += loss.item()
             num_batches += 1
-    
-    avg_loss = total_loss / num_batches
-    
-    return avg_loss, losses_per_organ
+
+            mse_org = torch.mean((pred_conc - true_conc) ** 2, dim=-1).mean(dim=0)
+            for organ, value in zip(PBPK_ORGANS, mse_org.detach().cpu().tolist()):
+                losses_per_organ[organ] += value
+
+    if num_batches == 0:
+        return 0.0, losses_per_organ
+
+    losses_per_organ = {
+        organ: value / num_batches for organ, value in losses_per_organ.items()
+    }
+    return total_loss / num_batches, losses_per_organ
 
 
 def train(
@@ -302,11 +252,18 @@ def train(
     learning_rate: float = 1e-3,
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
     train_split: float = 0.8,
-    weight_organs: bool = True
+    weight_organs: bool = True,
+    node_dim: int = 16,
+    edge_dim: int = 4,
+    hidden_dim: int = 64,
+    num_gnn_layers: int = 3,
+    num_temporal_steps: int = 100,
+    dt: float = 0.1,
+    split_strategy: str = "group",  # "group" (default) ou "random"
 ) -> None:
     """
     Treina o Dynamic GNN.
-    
+
     Args:
         data_path: Caminho para dataset
         output_dir: Diretório de saída
@@ -316,12 +273,18 @@ def train(
         device: Device (cuda/cpu)
         train_split: Fração de treinamento
         weight_organs: Se True, dá mais peso a órgãos críticos
+        node_dim: Dimensão das features de cada órgão
+        edge_dim: Dimensão das features de cada aresta
+        hidden_dim: Dimensão interna (GNN/GRU)
+        num_gnn_layers: Número de camadas de message passing
+        num_temporal_steps: Passos temporais simulados
+        dt: Delta t em horas
     """
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     device = torch.device(device)
-    
+
     print("=" * 80)
     print("TREINAMENTO: Dynamic GNN para PBPK")
     print("=" * 80)
@@ -332,51 +295,90 @@ def train(
     print(f"   Batch size: {batch_size}")
     print(f"   Learning rate: {learning_rate}")
     print(f"   Device: {device}")
+    print(f"   Node dim: {node_dim}")
+    print(f"   Edge dim: {edge_dim}")
+    print(f"   Hidden dim: {hidden_dim}")
+    print(f"   GNN layers: {num_gnn_layers}")
+    print(f"   Temporal steps: {num_temporal_steps}")
+    print(f"   Δt: {dt}")
     print()
-    
+
     # Carregar dataset
     print("📦 Carregando dataset...")
     full_dataset = PBPKDataset(data_path)
-    
+
     # Split train/val
-    train_size = int(train_split * len(full_dataset))
-    val_size = len(full_dataset) - train_size
-    train_dataset, val_dataset = torch.utils.data.random_split(
-        full_dataset, [train_size, val_size]
-    )
-    
+    if split_strategy == "group":
+        # Split por grupos de parâmetros (evita leak)
+        def make_hash(idx: int) -> str:
+            ch = float(full_dataset.clearances_hepatic[idx])
+            cr = float(full_dataset.clearances_renal[idx])
+            pc = full_dataset.partition_coeffs[idx].numpy()
+            key = f"{round(ch,6)}|{round(cr,6)}|" + ",".join(f"{float(x):.6f}" for x in pc.tolist())
+            return key
+        hashes = [make_hash(i) for i in range(len(full_dataset))]
+        uniq = list(dict.fromkeys(hashes))
+        rng = torch.Generator().manual_seed(42)
+        perm = torch.randperm(len(uniq), generator=rng).tolist()
+        num_train_groups = int(train_split * len(uniq))
+        train_groups = set(uniq[i] for i in perm[:num_train_groups])
+        train_indices = [i for i, h in enumerate(hashes) if h in train_groups]
+        val_indices = [i for i, h in enumerate(hashes) if h not in train_groups]
+        train_dataset = torch.utils.data.Subset(full_dataset, train_indices)
+        val_dataset = torch.utils.data.Subset(full_dataset, val_indices)
+    elif split_strategy == "compound" and getattr(full_dataset, "compound_ids", None):
+        # Split por compound_ids se disponíveis
+        comp_ids = full_dataset.compound_ids
+        uniq = list(dict.fromkeys(comp_ids))
+        rng = torch.Generator().manual_seed(42)
+        perm = torch.randperm(len(uniq), generator=rng).tolist()
+        num_train_groups = int(train_split * len(uniq))
+        train_groups = set(uniq[i] for i in perm[:num_train_groups])
+        train_indices = [i for i, cid in enumerate(comp_ids) if cid in train_groups]
+        val_indices = [i for i, cid in enumerate(comp_ids) if cid not in train_groups]
+        train_dataset = torch.utils.data.Subset(full_dataset, train_indices)
+        val_dataset = torch.utils.data.Subset(full_dataset, val_indices)
+    else:
+        train_size = int(train_split * len(full_dataset))
+        val_size = len(full_dataset) - train_size
+        train_dataset, val_dataset = torch.utils.data.random_split(
+            full_dataset, [train_size, val_size]
+        )
+
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-    
+
     print(f"   Train: {len(train_dataset):,} amostras")
     print(f"   Val: {len(val_dataset):,} amostras")
-    
+
     # Criar modelo
     print("\n🏗️  Criando modelo...")
     model = DynamicPBPKGNN(
-        node_dim=16,
-        edge_dim=4,
-        hidden_dim=64,
-        num_gnn_layers=3,
-        num_temporal_steps=100,
-        dt=0.1
+        node_dim=node_dim,
+        edge_dim=edge_dim,
+        hidden_dim=hidden_dim,
+        num_gnn_layers=num_gnn_layers,
+        num_temporal_steps=num_temporal_steps,
+        dt=dt,
     ).to(device)
-    
+
     # Multi-GPU support (se disponível)
     if device.type == "cuda" and torch.cuda.device_count() > 1:
         print(f"   🚀 Usando {torch.cuda.device_count()} GPUs (DataParallel)")
         model = nn.DataParallel(model)
         # Aumentar batch size proporcionalmente
         effective_batch_size = batch_size * torch.cuda.device_count()
-        print(f"   Effective batch size: {effective_batch_size} (batch_size {batch_size} × {torch.cuda.device_count()} GPUs)")
-    
+        print(
+            f"   Effective batch size: {effective_batch_size} (batch_size {batch_size} × {torch.cuda.device_count()} GPUs)"
+        )
+
     # Contar parâmetros (considerando DataParallel)
-    if hasattr(model, 'module'):
+    if hasattr(model, "module"):
         num_params = sum(p.numel() for p in model.module.parameters())
     else:
         num_params = sum(p.numel() for p in model.parameters())
     print(f"   Parâmetros: {num_params:,}")
-    
+
     # Organ weights (dar mais peso a órgãos críticos)
     if weight_organs:
         organ_weights = torch.ones(NUM_ORGANS, device=device)
@@ -386,64 +388,70 @@ def train(
             organ_weights[idx] = 2.0  # 2x peso
     else:
         organ_weights = None
-    
+
     # Optimizer
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode="min", factor=0.5, patience=5
     )
-    
+
     # Training loop
     print("\n🚀 Iniciando treinamento...")
     print()
-    
+
     train_losses = []
     val_losses = []
     best_val_loss = float("inf")
-    
+
     for epoch in range(num_epochs):
         print(f"Epoch {epoch+1}/{num_epochs}")
-        
+
         # Train
         train_loss, train_org_losses = train_epoch(
             model, train_loader, optimizer, device, organ_weights
         )
         train_losses.append(train_loss)
-        
+
         # Validate
         val_loss, val_org_losses = validate(model, val_loader, device, organ_weights)
         val_losses.append(val_loss)
-        
+
         # Scheduler
         scheduler.step(val_loss)
-        
+
         # Print
         print(f"   Train Loss: {train_loss:.6f}")
         print(f"   Val Loss: {val_loss:.6f}")
-        
+
         # Salvar melhor modelo
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save({
-                "epoch": epoch,
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "train_loss": train_loss,
-                "val_loss": val_loss,
-            }, output_dir / "best_model.pt")
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "train_loss": train_loss,
+                    "val_loss": val_loss,
+                },
+                output_dir / "best_model.pt",
+            )
             print(f"   ✅ Novo melhor modelo salvo! (Val Loss: {val_loss:.6f})")
-        
+
         print()
-    
+
     # Salvar modelo final
-    torch.save({
-        "epoch": num_epochs,
-        "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(),
-        "train_losses": train_losses,
-        "val_losses": val_losses,
-    }, output_dir / "final_model.pt")
-    
+    torch.save(
+        {
+            "epoch": num_epochs,
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "train_losses": train_losses,
+            "val_losses": val_losses,
+        },
+        output_dir / "final_model.pt",
+    )
+
     # Plot losses
     plt.figure(figsize=(10, 6))
     plt.plot(train_losses, label="Train Loss")
@@ -454,7 +462,7 @@ def train(
     plt.title("Training Progress")
     plt.savefig(output_dir / "training_curve.png", dpi=150)
     plt.close()
-    
+
     print("=" * 80)
     print("✅ TREINAMENTO CONCLUÍDO!")
     print("=" * 80)
@@ -467,17 +475,59 @@ def train(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Treina Dynamic GNN para PBPK")
-    parser.add_argument("--data", type=str, required=True, help="Caminho para dataset .npz")
-    parser.add_argument("--output", type=str, default="models/dynamic_gnn", help="Diretório de saída")
+    parser.add_argument(
+        "--data", type=str, required=True, help="Caminho para dataset .npz"
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="models/dynamic_gnn",
+        help="Diretório de saída",
+    )
     parser.add_argument("--epochs", type=int, default=50, help="Número de épocas")
     parser.add_argument("--batch-size", type=int, default=8, help="Batch size")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
-    parser.add_argument("--device", type=str, default="auto", help="Device (cuda/cpu/auto)")
-    parser.add_argument("--train-split", type=float, default=0.8, help="Fração de treinamento")
-    parser.add_argument("--no-organ-weights", action="store_true", help="Não usar pesos por órgão")
-    
+    parser.add_argument(
+        "--device", type=str, default="auto", help="Device (cuda/cpu/auto)"
+    )
+    parser.add_argument(
+        "--node-dim", type=int, default=16, help="Dimensão das features de cada órgão"
+    )
+    parser.add_argument(
+        "--edge-dim", type=int, default=4, help="Dimensão das features das arestas"
+    )
+    parser.add_argument(
+        "--hidden-dim", type=int, default=64, help="Dimensão interna da GNN/GRU"
+    )
+    parser.add_argument(
+        "--num-gnn-layers",
+        type=int,
+        default=3,
+        help="Número de camadas de message passing",
+    )
+    parser.add_argument(
+        "--num-temporal-steps", type=int, default=100, help="Número de passos temporais"
+    )
+    parser.add_argument("--dt", type=float, default=0.1, help="Delta t em horas")
+    parser.add_argument(
+        "--split-strategy",
+        type=str,
+        default="group",
+        choices=["group", "random", "compound"],
+        help="Estratégia de split train/val (default: group, evita leak; compound usa compound_ids)",
+    )
+
+    parser.add_argument(
+        "--train-split", type=float, default=0.8, help="Fração de treinamento"
+    )
+    parser.add_argument(
+        "--no-organ-weights",
+        action="store_true",
+        help="Não usar pesos por órgão",
+    )
+
     args = parser.parse_args()
-    
+
     # Auto-detect device
     if args.device == "auto":
         if torch.cuda.is_available():
@@ -493,7 +543,7 @@ if __name__ == "__main__":
         if device == "cuda" and not torch.cuda.is_available():
             print("⚠️  CUDA solicitado mas não disponível, usando CPU")
             device = "cpu"
-    
+
     train(
         data_path=Path(args.data),
         output_dir=Path(args.output),
@@ -502,6 +552,12 @@ if __name__ == "__main__":
         learning_rate=args.lr,
         device=device,
         train_split=args.train_split,
-        weight_organs=not args.no_organ_weights
+        weight_organs=not args.no_organ_weights,
+        node_dim=args.node_dim,
+        edge_dim=args.edge_dim,
+        hidden_dim=args.hidden_dim,
+        num_gnn_layers=args.num_gnn_layers,
+        num_temporal_steps=args.num_temporal_steps,
+        dt=args.dt,
+        split_strategy=args.split_strategy,
     )
-

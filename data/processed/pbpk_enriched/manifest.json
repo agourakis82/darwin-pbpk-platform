@@ -1,0 +1,19 @@
+{
+  "source_parameters": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/pbpk_parameters_wide_enriched_v3.csv",
+  "source_embeddings": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/pbpk_chemberta_embeddings_enriched_v3.npz",
+  "num_samples": 1495,
+  "embedding_dim": 768,
+  "primary_target": "target_clearance",
+  "primary_target_cols": [
+    "clearance_hepatic_l_h",
+    "clearance_l_h",
+    "microsome_hepatic_l_h"
+  ],
+  "auxiliary_targets": [
+    "microsome_clint_l_h",
+    "fu_frac",
+    "vd_l_kg",
+    "bioavailability_frac"
+  ],
+  "output": "/home/agourakis82/workspace/darwin-pbpk-platform/data/processed/pbpk_enriched/pbpk_enriched_v3.npz"
+}

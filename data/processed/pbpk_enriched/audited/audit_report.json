@@ -1,0 +1,23 @@
+{
+  "n_original": 150,
+  "n_after_range_filter": 145,
+  "n_after_outlier_removal": 129,
+  "dose_outliers_grubbs": 0,
+  "dose_outliers_tukey": 8,
+  "cl_outliers_grubbs": 7,
+  "cl_outliers_tukey": 8,
+  "filtered_stats": {
+    "doses": {
+      "min": 0.10000000149011612,
+      "max": 500.0,
+      "mean": 140.2375946044922,
+      "median": 100.0
+    },
+    "clearances_hepatic": {
+      "min": 0.03455507010221481,
+      "max": 56.0,
+      "mean": 14.229655265808105,
+      "median": 8.399999618530273
+    }
+  }
+}

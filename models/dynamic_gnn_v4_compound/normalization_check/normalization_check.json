@@ -1,0 +1,15 @@
+{
+  "dose": 100.0,
+  "clearance_hepatic": 10.0,
+  "clearance_renal": 5.0,
+  "ode_cmax": 20.0,
+  "gnn_cmax": 20.0,
+  "cmax_ratio": 1.0,
+  "ode_auc": 8.364758177561942,
+  "gnn_auc": 11.157327088442715,
+  "auc_ratio": 1.3338493297238052,
+  "expected_initial_conc": 20.0,
+  "ode_initial": 20.0,
+  "gnn_initial": 20.0,
+  "normalization_ok": false
+}

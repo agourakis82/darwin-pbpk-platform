@@ -1,0 +1,15 @@
+{
+  "num_compounds": 150,
+  "num_with_cmax": 10,
+  "num_with_auc": 10,
+  "cmax_fe_mean": 296.21961169367006,
+  "cmax_fe_median": 67.49983200660118,
+  "cmax_fe_p67": 162.51707317073172,
+  "cmax_gmfe": 61.06804209420467,
+  "auc_fe_mean": 48.77543039296701,
+  "auc_fe_median": 16.67445314845074,
+  "auc_fe_p67": 48.013656735607135,
+  "auc_gmfe": 16.605411781492364,
+  "cmax_percent_within_2x": 0.0,
+  "auc_percent_within_2x": 10.0
+}

@@ -1,0 +1,135 @@
+{
+  "n_compounds_validated": 17,
+  "fold_error_stats": {
+    "fe_cl_hepatic": {
+      "mean": 224.19271303076465,
+      "median": 73.33333114782975,
+      "min": 1.2826679102834442,
+      "max": 1199.9999709427364,
+      "n": 17,
+      "pct_within_2x": 29.41176470588235
+    },
+    "fe_cl_renal": {
+      "mean": 243.68735131526665,
+      "median": 47.225502719212734,
+      "min": 1.1544011829965508,
+      "max": 1319.9999606609356,
+      "n": 17,
+      "pct_within_2x": 23.529411764705884
+    },
+    "fe_cl_total": {
+      "mean": 228.68237781184015,
+      "median": 96.25,
+      "min": 1.0688899325001862,
+      "max": 1124.9999727588154,
+      "n": 17,
+      "pct_within_2x": 35.294117647058826
+    },
+    "fe_kp_liver": {
+      "mean": 5.647268855191719,
+      "median": 3.3374999364217124,
+      "min": 1.1750000317891438,
+      "max": 13.33333280351429,
+      "n": 17,
+      "pct_within_2x": 23.529411764705884
+    },
+    "fe_kp_kidney": {
+      "mean": 4.670910403176167,
+      "median": 4.761904910578484,
+      "min": 1.1749999721844993,
+      "max": 8.333333519597852,
+      "n": 17,
+      "pct_within_2x": 35.294117647058826
+    },
+    "fe_kp_brain": {
+      "mean": 13.883448490303309,
+      "median": 4.005000114440918,
+      "min": 1.9047619642313935,
+      "max": 50.00000111758712,
+      "n": 17,
+      "pct_within_2x": 11.764705882352942
+    }
+  },
+  "critical_issues": [
+    {
+      "compound": "Atorvastatin",
+      "dose": 10.0,
+      "issues": [
+        "CL total: 126.9\u00d7 (est: 0.236, lit: 30.000 L/h)"
+      ]
+    },
+    {
+      "compound": "Rivaroxaban",
+      "dose": 10.0,
+      "issues": [
+        "CL total: 1040.0\u00d7 (est: 0.010, lit: 10.000 L/h)"
+      ]
+    },
+    {
+      "compound": "Metformin",
+      "dose": 500.0,
+      "issues": [
+        "CL total: 385.0\u00d7 (est: 0.091, lit: 35.000 L/h)",
+        "Kp liver: 11.1\u00d7 (est: 11.14, lit: 1.00)"
+      ]
+    },
+    {
+      "compound": "Midazolam",
+      "dose": 5.0,
+      "issues": [
+        "CL total: 446.5\u00d7 (est: 0.056, lit: 25.000 L/h)",
+        "Kp liver: 13.3\u00d7 (est: 0.15, lit: 2.00)"
+      ]
+    },
+    {
+      "compound": "Caffeine",
+      "dose": 200.0,
+      "issues": [
+        "CL total: 300.0\u00d7 (est: 0.007, lit: 2.000 L/h)"
+      ]
+    },
+    {
+      "compound": "Ibuprofen",
+      "dose": 400.0,
+      "issues": [
+        "CL total: 1125.0\u00d7 (est: 0.004, lit: 5.000 L/h)"
+      ]
+    },
+    {
+      "compound": "Propranolol",
+      "dose": 40.0,
+      "issues": [
+        "CL total: 250.0\u00d7 (est: 0.200, lit: 50.000 L/h)"
+      ]
+    },
+    {
+      "compound": "Midazolam",
+      "dose": 7.5,
+      "issues": [
+        "CL total: 98.4\u00d7 (est: 0.254, lit: 25.000 L/h)",
+        "Kp liver: 13.3\u00d7 (est: 0.15, lit: 2.00)"
+      ]
+    },
+    {
+      "compound": "Digoxin",
+      "dose": 0.5,
+      "issues": [
+        "CL total: 96.2\u00d7 (est: 9.625, lit: 0.100 L/h)"
+      ]
+    },
+    {
+      "compound": "Metformin",
+      "dose": 500.0,
+      "issues": [
+        "Kp liver: 11.1\u00d7 (est: 11.14, lit: 1.00)"
+      ]
+    }
+  ],
+  "validation_summary": {
+    "cl_hepatic_ok": false,
+    "cl_renal_ok": false,
+    "cl_total_ok": false,
+    "kp_liver_ok": false,
+    "kp_kidney_ok": false
+  }
+}

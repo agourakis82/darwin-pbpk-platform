@@ -2,14 +2,14 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: dynamic-gnn-training-sota
-  namespace: default
+  namespace: darwin-pbpk-platform
   labels:
     app: darwin-pbpk-platform
     component: training
     version: sota
     gpu: l4
 spec:
-  backoffLimit: 1
+  backoffLimit: 0
   ttlSecondsAfterFinished: 86400  # 24 horas
   template:
     metadata:
@@ -31,13 +31,19 @@ spec:
       containers:
       - name: training
         # Usar imagem com CUDA support
-        image: nvidia/cuda:12.1.0-runtime-ubuntu22.04
+        image: pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
+        imagePullPolicy: IfNotPresent
         command: ["/bin/bash"]
         args:
           - -c
           - |
             set -e
+            set -o pipefail
             export DEBIAN_FRONTEND=noninteractive
+            LOG_DIR="/workspace/darwin-pbpk-platform/logs"
+            mkdir -p "$LOG_DIR"
+            LOG_FILE="$LOG_DIR/dynamic_gnn_sota_maria.log"
+            exec > >(tee -a "$LOG_FILE") 2>&1
             
             echo "================================================================================"
             echo "TREINAMENTO SOTA: Dynamic GNN para PBPK"
@@ -45,25 +51,24 @@ spec:
             echo "================================================================================"
             echo ""
             echo "📍 Node: $(hostname)"
-            echo "📍 GPU: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo 'Verificando...')"
+            if command -v nvidia-smi >/dev/null 2>&1; then
+              echo "📍 GPU: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo 'Indisponível')"
+            else
+              echo "⚠️  nvidia-smi não disponível nesta imagem"
+            fi
             echo ""
             
-            # Instalar dependências do sistema
-            echo "📦 Instalando dependências do sistema..."
-            apt-get update -qq > /dev/null 2>&1
-            apt-get install -y -qq python3 python3-pip git curl > /dev/null 2>&1 || true
-            
-            # Instalar PyTorch com CUDA 12.1
-            echo "📦 Instalando PyTorch com CUDA 12.1..."
-            pip3 install --no-cache-dir --quiet torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 || \
-            pip3 install --no-cache-dir --quiet torch torchvision torchaudio
+            echo "✅ Ambiente PyTorch pré-instalado (pytorch/pytorch)"
+            python3 -m pip install --no-cache-dir --upgrade pip
             
             # Verificar CUDA
-            python3 -c "import torch; print(f'✅ PyTorch {torch.__version__}'); print(f'✅ CUDA disponível: {torch.cuda.is_available()}'); print(f'✅ CUDA version: {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}')" || true
+            python3 -c "import torch; print(f'✅ PyTorch {torch.__version__}'); print(f'✅ CUDA disponível: {torch.cuda.is_available()}'); print(f'✅ CUDA version: {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}')"
             
             # Instalar outras dependências
             echo "📦 Instalando dependências Python..."
-            pip3 install --no-cache-dir --quiet torch-geometric numpy scipy matplotlib tqdm pydantic || true
+            python3 -m pip install --no-cache-dir numpy scipy matplotlib tqdm pydantic networkx
+            python3 -m pip install --no-cache-dir pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.4.0+cu121.html
+            python3 -m pip install --no-cache-dir torch-geometric
             
             # Preparar código
             echo "📥 Preparando código..."

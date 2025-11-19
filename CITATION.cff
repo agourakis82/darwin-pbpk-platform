@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "Darwin PBPK Platform: AI-Powered Pharmacokinetic Prediction"
-version: 1.0.0
-date-released: 2025-11-05
+title: "Darwin PBPK Platform: AI-Powered Pharmacokinetic Prediction with Validated Dataset"
+version: 1.0.1
+date-released: 2025-11-08
 doi: 10.5281/zenodo.17536674
 repository-code: "https://github.com/agourakis82/darwin-pbpk-platform"
 license: MIT
@@ -11,24 +11,25 @@ type: software
 authors:
   - family-names: "Agourakis"
     given-names: "Demetrios Chiuratto"
-    affiliation: "Pontifícia Universidade Católica do Rio Grande do Sul (PUCRS)"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+    email: "demetrios@agourakis.med.br"
+    affiliation: "Pontifical Catholic University of São Paulo (PUC-SP); Faculdade São Leopoldo Mandic"
+    orcid: "https://orcid.org/0000-0002-8596-5097"
 
 abstract: >
-  Darwin PBPK Platform is a state-of-the-art deep learning system for
+  Darwin PBPK Platform v1.0.1 is a state-of-the-art deep learning system for
   predicting physiologically-based pharmacokinetic (PBPK) parameters
-  using multi-modal molecular representations. The platform integrates
-  ChemBERTa embeddings (768d), molecular graphs via PyTorch Geometric
-  (20 node + 7 edge features), and RDKit molecular descriptors (25
-  features) to predict fraction unbound (Fu), volume of distribution
-  (Vd), and clearance (CL) with high accuracy (target R² > 0.55).
-  Trained on 44,779 compounds from ChEMBL and Therapeutics Data Commons
-  (TDC), the system employs advanced GNN architectures (GAT +
-  TransformerConv with 4 attention heads each) with multi-task learning
-  and physics-informed PhysioQM constraints. Designed for drug discovery
-  pipelines and Q1 publication in computational chemistry and machine
-  learning journals (Nature Machine Intelligence, Journal of Medicinal
-  Chemistry).
+  using multi-modal molecular representations. NEW in v1.0.1: Validated PBPK
+  dataset publication with complete metadata, experimental validation protocols,
+  and quality assurance documentation. The platform integrates ChemBERTa embeddings
+  (768d), molecular graphs via PyTorch Geometric (20 node + 7 edge features), and
+  RDKit molecular descriptors (25 features) to predict fraction unbound (Fu),
+  volume of distribution (Vd), and clearance (CL) with high accuracy (target R² > 0.55).
+  Trained on 44,779 compounds from ChEMBL and Therapeutics Data Commons (TDC), the
+  system employs advanced GNN architectures (GAT + TransformerConv with 4 attention
+  heads each) with multi-task learning and physics-informed PhysioQM constraints.
+  Includes dataset documentation, validation metrics, and reproducibility protocols
+  for drug discovery pipelines and Q1 publication in computational chemistry and
+  machine learning journals (Nature Machine Intelligence, JAMA, Journal of Medicinal Chemistry).
 
 keywords:
   - PBPK
@@ -41,4 +42,6 @@ keywords:
   - ADMET
   - computational chemistry
   - PyTorch Geometric
+  - dataset publication
+  - validation protocols
 

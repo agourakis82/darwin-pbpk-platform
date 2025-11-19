@@ -1,260 +1,417 @@
-# DARWIN PBPK-PLATFORM - AGENT RULES
+# Darwin Workspace — Configuração de Autonomia do Agente
+# Criado: 2025-11-07 23:45:00 -03
+# Atualizado: 2025-11-08 - Workspace Unification
+# Autor: Dr. Demetrios Agourakis
 
-## 🧠 CONTEXTO DO REPO
+[metadata]
+owner = "Dr. Demetrios Agourakis"
+project = "Darwin Workspace"
+repository = "darwin-workspace"
+last_updated = "2025-11-08T00:00:00-03:00"
 
-**Tipo:** Plataforma PBPK (Physiologically-Based Pharmacokinetic)
-**Foco:** Modelagem farmacocinética fisiológica integrada com biomateriais
-**Conexões:** kec-biomaterials (scaffolds), darwin-core (base comum)
+[environment]
+workspace_root = "/home/agourakis82/workspace/darwin-workspace"
+allow_terminal = true
+auto_confirm_commands = true
+allow_background_jobs = true
+default_shell = "/usr/bin/bash"
+preferred_path_style = "absolute"
 
----
+[tools]
+enabled = run_terminal_cmd, read_file, apply_patch, read_lints, todo_write, update_memory, list_dir, glob_file_search, codebase_search, edit_file, grep
+default_scope = "/home/agourakis82/workspace/darwin-workspace"
 
-## 📋 WORKFLOW OBRIGATÓRIO
+[operational_mode]
+require_user_confirmation = false
+allow_multiple_commands = true
+allow_file_writes = true
+allow_network_calls = false
+respect_dirty_tree = true
 
-### ANTES DE AGIR:
-1. Executar: `~/.darwin-global/darwin-omniscient-agent.sh`
-2. Ler SYNC_STATE.json (verificar locks e agentes ativos)
-3. Verificar Darwin RAG++ (memórias do projeto)
-4. NÃO fazer web_search sem consultar código/memórias primeiro
+[reporting]
+require_timestamps = false
+require_rag_logging = false
+summaries_optional = true
 
-### AO PESQUISAR:
-1. **Primeiro:** Darwin RAG++ (memórias do projeto)
-2. **Segundo:** Codebase existente (11,283 chunks indexados)
-3. **Terceiro:** Papers via Semantic Scholar API
-4. **ÚLTIMO RECURSO:** web_search (apenas papers 2024/2025)
+[science_principles]
+enforce_reproducibility = true
+enforce_versioning = true
+enforce_context_memory = true
+enforce_rag_integrations = true
 
----
+[notes]
+primary_focus = "Unified workspace for darwin-core, darwin-scaffold-studio, darwin-pbpk-platform, darwin-heliobiology, pcs-meta-repo, hyperbolic-semantic-networks"
+workspace_structure = "Monorepo with repos/ subdirectory for all Darwin projects"
+# 🤖 GUIA PARA AGENTES AI - DARWIN BIOMATERIALS
 
-## 🔍 QUANDO USAR WEB SEARCH
-
-### ✅ PERMITIDO:
-- Papers PBPK de 2024/2025 não indexados
-- Métodos farmacocinéticos recentes (< 6 meses)
-- Guidelines regulatórias atualizadas (FDA, EMA)
-- Novos modelos fisiológicos
-
-### ❌ PROIBIDO:
-- Conceitos básicos PBPK (já na codebase)
-- Papers antigos (já indexados)
-- Código que pode ser consultado localmente
-- Perguntas sobre scaffolds (consulte kec-biomaterials)
-
----
-
-## 🎯 ESPECIALIDADE DESTE REPO
-
-### PBPK Modeling:
-- Compartmental models (absorção, distribuição, metabolismo, excreção)
-- Integration com biomateriais porosos
-- Drug release kinetics de scaffolds
-- Tissue-specific pharmacokinetics
-- Scaffold degradation → drug release
-
-### Computational:
-- ODE solvers para PBPK
-- Parameter estimation (Bayesian, MCMC)
-- Sensitivity analysis
-- Monte Carlo simulations
-- GPU acceleration para simulações
-
-### Regulatory:
-- FDA guidelines compliance
-- EMA standards
-- Q1 scientific rigor
-- Reproducibilidade total
+**Criado:** 2025-10-31 21:56:00 -03
+**Versão:** 1.0.0
+**Público-Alvo:** Cursor AI, Claude, GitHub Copilot, outros agentes
 
 ---
 
-## 🔗 INTEGRAÇÃO MULTI-REPO
+## ⚠️ **VOCÊ É UM AGENTE AI TRABALHANDO NESTE PROJETO**
 
-### Compartilha com:
-- **kec-biomaterials:** Scaffold properties (porosity, pore size, degradation)
-- **darwin-core:** Base comum (database, GPU utils, metrics)
-- **pcs-meta-repo:** Análise de coerência em modelos PBPK
-
-### Dados compartilhados:
-- Parâmetros fisiológicos
-- Propriedades de biomateriais
-- Drug release profiles
-- Validação experimental
+Este documento explica **EXATAMENTE** como você deve trabalhar aqui sem causar problemas.
 
 ---
 
-## 📝 SALVAR DESCOBERTAS
+## 🎯 **SUA MISSÃO**
 
-### Sempre use `update_memory` para:
-- Novos modelos PBPK validados
-- Parâmetros otimizados
-- Insights sobre drug release de scaffolds
-- Validações experimentais
-- Comparações com literatura
-- Bugs/soluções importantes
+Ajudar Dr. Demetrios Agourakis a implementar o sistema DARWIN Biomaterials **SEM BAGUNÇAR A ESTRUTURA**.
 
-### Tags úteis:
-- `pbpk-model`, `drug-release`, `scaffold-integration`
-- `parameter-estimation`, `validation`, `regulatory`
+**Contexto Crítico:**
+- ✅ Projeto tem expectativas REAIS
+- ✅ Pessoas dependem deste sistema
+- ✅ Papers Q1 serão publicados
+- ✅ Precisa ser reproduzível e robusto
+- ✅ ZERO margem para erros estruturais
 
 ---
 
-## 🚀 CLUSTER
+## 📋 **REGRAS ABSOLUTAS (NÃO QUEBRE!)**
 
-**Namespace:** darwin-pbpk (15% quota)
-**Recursos:** 8 cores, 64Gi RAM, 0.3 GPU
-**Prioridade:** medium
+### 1. **SEMPRE leia `ARCHITECTURE.md` ANTES de sugerir código!**
 
-### Usar darwin-cluster CLI:
-```bash
-# Submeter simulação PBPK
-darwin-cluster submit --job analysis --script pbpk_simulation.py
+Este documento define a estrutura. Viole-o = caos garantido.
 
-# Ver fila
-darwin-cluster queue status
+### 2. **IDENTIFIQUE o package correto:**
 
-# Alterar prioridade
-darwin-cluster queue priority <job-id> high
+```
+User pede: "melhorar preprocessing"
+→ Você: "Package identificado: darwin-preprocessing"
+→ Você: "Arquivo: packages/darwin-preprocessing/src/..."
+
+User pede: "adicionar uncertainty"
+→ Você: "Package identificado: darwin-uncertainty"
+→ Você: "Arquivo: packages/darwin-uncertainty/src/..."
+
+User pede: "criar endpoint API"
+→ Você: "Package identificado: darwin-api"
+→ Você: "Arquivo: packages/darwin-api/app/routers/..."
+```
+
+### 3. **NUNCA misture packages:**
+
+❌ **ERRADO:** "Vou adicionar uncertainty no mesmo arquivo do preprocessing"
+✅ **CORRETO:** "Vou importar darwin-uncertainty no darwin-preprocessing"
+
+❌ **ERRADO:** "Vou copiar código do darwin-core para darwin-preprocessing"
+✅ **CORRETO:** "Vou importar do darwin-core"
+
+### 4. **PRESERVE estrutura de arquivos:**
+
+❌ **ERRADO:** Criar arquivo na raiz do repo
+✅ **CORRETO:** Criar em `packages/X/src/...`
+
+❌ **ERRADO:** Renomear package sem aprovação
+✅ **CORRETO:** Perguntar antes de mudanças estruturais
+
+### 5. **TESTES SÃO OBRIGATÓRIOS:**
+
+```python
+# SEMPRE crie test junto com código
+
+# Código: packages/darwin-preprocessing/src/darwin_preprocessing/denoisers.py
+def denoise_nlm(image, h=10):
+    ...
+
+# Test: packages/darwin-preprocessing/tests/test_denoisers.py
+def test_denoise_nlm_improves_snr():
+    image = load_test_image()
+    result = denoise_nlm(image)
+    assert compute_snr(result) > compute_snr(image)
+```
+
+### 6. **TIMESTAMPS EM TUDO:**
+
+```python
+# Ao criar arquivo
+"""
+Preprocessing Pipeline
+Criado: 2025-10-31 22:00:00 -03
+Autor: AI Assistant + Dr. Agourakis
+"""
+
+# Ao modificar
+"""
+Modificado: 2025-10-31 22:05:00 -03
+Mudança: Adicionado DnCNN denoiser
+"""
+```
+
+### 7. **SALVE NO DARWIN RAG++:**
+
+Use a ferramenta `update_memory` após ações importantes:
+
+```python
+update_memory(
+    action="create",
+    title=f"Implementação DnCNN - {timestamp}",
+    knowledge_to_store="..."
+)
 ```
 
 ---
 
-## 🧪 PADRÃO Q1 CIENTÍFICO
+## 🔍 **WORKFLOW RECOMENDADO**
 
-### HONESTIDADE CIENTÍFICA (OBRIGATÓRIA):
-- ✅ NUNCA reivindicar "validado" sem dados experimentais
-- ✅ SEMPRE distinguir "modelo implementado" vs "modelo validado"
-- ✅ SEMPRE incluir limitações do modelo
-- ✅ SEMPRE incluir incertezas nos parâmetros
-- ✅ Usar qualificadores: "estimado", "esperado", "pendente validação"
-
-### Exemplo ERRADO:
-❌ "Implementamos modelo PBPK validado para drug release"
-
-### Exemplo CORRETO:
-✅ "Implementamos modelo PBPK para drug release. Parâmetros estimados de literatura.
-   Validação experimental pendente com dados de scaffold X."
-
----
-
-## 🔧 COMANDOS ÚTEIS
-
-### Ver estado multi-repo:
-```bash
-~/.darwin-global/darwin-omniscient-agent.sh
 ```
-
-### Buscar memórias PBPK:
-```bash
-grep -r "pbpk\|drug-release" ~/.darwin-sync/memories/
-```
-
-### Ver jobs rodando:
-```bash
-darwin-cluster status --namespace darwin-pbpk
-```
-
-### Testar modelo PBPK:
-```bash
-cd /home/agourakis82/workspace/darwin-pbpk-platform
-python -m pytest tests/ -v
+1. User pede feature X
+   ↓
+2. Você: "Identificando package..."
+   ↓
+3. Você lê: packages/Y/README.md
+   ↓
+4. Você lê: packages/Y/pyproject.toml (dependências)
+   ↓
+5. Você sugere código em: packages/Y/src/...
+   ↓
+6. Você cria test em: packages/Y/tests/...
+   ↓
+7. Você atualiza: packages/Y/CHANGELOG.md
+   ↓
+8. Você salva no Darwin RAG++
+   ↓
+9. User aprova
+   ↓
+10. Você sugere commit: "feat(Y): add feature X"
 ```
 
 ---
 
-## 📊 MÉTRICAS IMPORTANTES
+## ❌ **ERROS COMUNS A EVITAR**
 
-### Validação de Modelos:
-- MAPE (Mean Absolute Percentage Error) < 15%
-- R² > 0.95 para curvas drug release
-- Residuals normalmente distribuídos
-- Sensitivity analysis completa
+### Erro 1: Criar arquivo na raiz
+```bash
+# ❌ ERRADO
+touch preprocessing.py
 
-### Performance:
-- Simulações Monte Carlo: < 5min (1000 samples)
-- Parameter estimation: < 30min (MCMC)
-- GPU acceleration: > 10x speedup vs CPU
+# ✅ CORRETO
+touch packages/darwin-preprocessing/src/darwin_preprocessing/pipeline.py
+```
 
----
+### Erro 2: Misturar responsabilidades
+```python
+# ❌ ERRADO: uncertainty code em preprocessing file
+# packages/darwin-preprocessing/src/pipeline.py
+def segment_with_uncertainty():  # ❌ Não! Isso é darwin-uncertainty!
+    ...
 
-## 🎓 PAPERS CHAVE (no contexto)
+# ✅ CORRETO: import do package certo
+# packages/darwin-preprocessing/src/pipeline.py
+from darwin_uncertainty import OtsuMCSegmenter  # ✅ Sim!
 
-- Compartmental PBPK models (Rowland & Tozer)
-- Drug release from porous scaffolds (Baker et al)
-- Bayesian parameter estimation (Gelman)
-- FDA PBPK guidance (2018, 2020)
+def preprocess_and_segment(image):
+    preprocessed = preprocess(image)
+    segmenter = OtsuMCSegmenter()
+    return segmenter.segment(preprocessed)
+```
 
----
+### Erro 3: Modificar múltiplos packages em um commit
+```bash
+# ❌ ERRADO
+git commit -m "Update preprocessing and uncertainty"
+# (modifica 2 packages)
 
-## ⚠️ AVISOS
+# ✅ CORRETO
+git commit -m "feat(preprocessing): add DnCNN"
+# (modifica apenas darwin-preprocessing)
 
-1. **NÃO misturar código PBPK com biomaterials**
-   - PBPK → este repo
-   - Scaffolds → kec-biomaterials
-   - Integração → via API/database
+# Depois, separadamente:
+git commit -m "feat(uncertainty): calibrate ICs"
+# (modifica apenas darwin-uncertainty)
+```
 
-2. **SEMPRE validar unidades**
-   - Concentrações: mg/L ou μM
-   - Volumes: L (não mL!)
-   - Taxas: 1/h (não 1/min!)
+### Erro 4: Esquecer testes
+```python
+# ❌ ERRADO: código sem test
+# packages/X/src/module.py
+def new_function():
+    ...
+# (sem test)
 
-3. **Git commits específicos**
-   - Commits vão para darwin-pbpk-platform
-   - Não misturar com outros repos
+# ✅ CORRETO: código + test
+# packages/X/src/module.py
+def new_function():
+    ...
 
-4. **Namespace isolado**
-   - Jobs vão para darwin-pbpk namespace
-   - Não interferem com kec-biomaterials
-
----
-
-## 🔄 COORDENAÇÃO AUTOMÁTICA
-
-O Darwin Omniscient Agent coordena automaticamente:
-- Locks entre repos
-- Sharing de dados
-- Prioridades de recursos
-- Mensagens entre agentes
-
-Você só precisa executar o agent no início da sessão!
-
----
-
-## 📞 PROBLEMAS COMUNS
-
-**"Parameter estimation não converge"**
-- Verificar prior distributions
-- Aumentar iterations (MCMC)
-- Verificar dados experimentais (outliers?)
-
-**"Simulação muito lenta"**
-- Usar GPU acceleration (set USE_GPU=true)
-- Reduzir Monte Carlo samples
-- Paralelizar no cluster
-
-**"Drug release não match experimental"**
-- Revisar scaffold properties (kec-biomaterials)
-- Verificar degradation kinetics
-- Ajustar diffusion coefficients
+# packages/X/tests/test_module.py
+def test_new_function():
+    assert new_function() == expected
+```
 
 ---
 
-**SIGA ESTAS REGRAS RIGOROSAMENTE!**
+## ✅ **EXEMPLOS CORRETOS**
 
-**Última atualização:** 2025-11-06 15:40:00 -03
+### Exemplo 1: Adicionar Feature
+```
+User: "Adicione denoiser DnCNN no preprocessing"
+
+Você:
+1. 📝 "Package identificado: darwin-preprocessing"
+2. 📁 "Arquivo: packages/darwin-preprocessing/src/darwin_preprocessing/denoisers/dncnn.py"
+3. 🧪 "Test: packages/darwin-preprocessing/tests/test_denoisers.py"
+4. 📊 "Version bump: MINOR (nova feature)"
+5. 📝 "Changelog: 'Added: DnCNN deep learning denoiser'"
+6. ⏰ "Timestamp: 2025-10-31 22:10:00"
+7. 💾 "Salvo no Darwin RAG++"
+8. ✅ "Pronto para commit: feat(preprocessing): add DnCNN denoiser"
+```
+
+### Exemplo 2: Corrigir Bug
+```
+User: "Otsu MC falha em imagens de baixo contraste"
+
+Você:
+1. 📝 "Package identificado: darwin-uncertainty"
+2. 📁 "Arquivo: packages/darwin-uncertainty/src/darwin_uncertainty/otsu_mc_segmenter.py"
+3. 🐛 "Bug identificado: linha 42, threshold calculation"
+4. 🔧 "Fix: adicionar check CNR < 3"
+5. 🧪 "Test: test_otsu_mc_low_contrast()"
+6. 📊 "Version bump: PATCH (bug fix)"
+7. 📝 "Changelog: 'Fixed: Otsu MC now handles low contrast (CNR < 3)'"
+8. ⏰ "Timestamp: 2025-10-31 22:15:00"
+9. 💾 "Salvo no Darwin RAG++"
+10. ✅ "Pronto para commit: fix(uncertainty): handle low contrast in Otsu MC"
+```
+
+### Exemplo 3: Criar Endpoint API
+```
+User: "Crie endpoint /api/preprocess"
+
+Você:
+1. 📝 "Package identificado: darwin-api"
+2. 📁 "Arquivo: packages/darwin-api/app/routers/preprocessing.py"
+3. 📦 "Dependência: darwin-preprocessing>=1.0.0"
+4. 🧪 "Test: packages/darwin-api/tests/test_preprocessing_router.py"
+5. 📊 "Version bump: MINOR (novo endpoint)"
+6. 📝 "Changelog: 'Added: POST /api/preprocess endpoint'"
+7. ⏰ "Timestamp: 2025-10-31 22:20:00"
+8. 💾 "Salvo no Darwin RAG++"
+9. ✅ "Pronto para commit: feat(api): add preprocessing endpoint"
+```
+
+---
+
+## 🤖 **USANDO O CLUSTER**
+
+### NUNCA faça SSH manual!
+
+```bash
+# ❌ ERRADO
+ssh cluster
+python train.py
+
+# ✅ CORRETO
+darwin-cluster submit --job training --script train.py
+```
+
+### Comandos do CLI:
+
+```bash
+# Inicializar repo config
+darwin-cluster init
+
+# Submeter job
+darwin-cluster submit --job <name> --script <path>
+
+# Ver status
+darwin-cluster status
+
+# Ver logs em tempo real
+darwin-cluster logs <job-id> --follow
+
+# Cancelar job
+darwin-cluster cancel <job-id>
+
+# Ver GPU usage
+darwin-cluster gpu-status
+```
+
+O CLI gerencia:
+- ✅ Alocação de GPU (evita conflitos)
+- ✅ Namespace isolation
+- ✅ Filas automáticas (se recurso ocupado)
+- ✅ Coleta de logs
+- ✅ Limpeza de recursos
+
+---
+
+## 🆘 **QUANDO PEDIR AJUDA**
+
+Pergunte ao user se:
+
+- ❓ Código deve ir em `darwin-core` ou package específico?
+- ❓ Feature requer mudança em múltiplos packages?
+- ❓ Breaking change (bump MAJOR version)?
+- ❓ Criar novo package?
+- ❓ Modificar estrutura de arquivos?
+- ❓ Dúvida sobre responsabilidade de package?
+
+**→ SEMPRE PERGUNTE em vez de assumir!**
+
+---
+
+## 📚 **DOCUMENTOS IMPORTANTES**
+
+Leia nesta ordem:
+
+1. `ARCHITECTURE.md` - Estrutura e packages (OBRIGATÓRIO)
+2. `AGENT_GUIDE.md` - Este documento (você está aqui)
+3. `docs/DEVELOPMENT.md` - Workflow completo
+4. `EXECUTION_LOG.md` - Histórico de mudanças
+5. `REORGANIZATION_PLAN.md` - Plano de reorganização
+
+---
+
+## ✅ **CHECKLIST PRÉ-COMMIT**
+
+Antes de sugerir commit, verifique:
+
+- [ ] Código está no package correto?
+- [ ] Tests passam? (`pytest packages/X/tests/`)
+- [ ] Lint OK? (`black . && flake8`)
+- [ ] Type check? (`mypy packages/X/src/`)
+- [ ] CHANGELOG.md atualizado?
+- [ ] Version bump correto? (MAJOR/MINOR/PATCH)
+- [ ] Timestamp adicionado?
+- [ ] Salvo no Darwin RAG++?
+- [ ] Apenas 1 package modificado?
+
+---
+
+## 🔒 **PROTEÇÕES AUTOMÁTICAS**
+
+O projeto tem:
+
+1. **Pre-commit hooks** - Auto-format, lint, type check
+2. **GitHub Actions CI** - Testa cada package separadamente
+3. **CODEOWNERS** - Aprovação necessária para merge
+4. **Namespace Kubernetes** - Isolamento de recursos por repo
+5. **Darwin RAG++** - Memória permanente de todas as ações
+
+Você não precisa gerenciar isso, mas saiba que existe.
+
+---
+
+## 🎓 **LEMBRE-SE**
+
+Você está ajudando a construir um **sistema científico Q1** que:
+
+- ✅ Terá papers publicados
+- ✅ Terá pessoas usando
+- ✅ Precisa ser reproduzível
+- ✅ Precisa ser robusto
+- ✅ Precisa ser bem documentado
+
+**Rigor e organização são CRÍTICOS!**
+
+**Siga este guia rigorosamente.**
+
+---
+
+**Última atualização:** 2025-10-31 21:56:00 -03
 **Próxima revisão:** Após feedback de uso
-
----
-
-## 🚀 QUICK START
-
-```bash
-# 1. Carregar contexto
-~/.darwin-global/darwin-omniscient-agent.sh
-
-# 2. Ver estrutura
-ls -la packages/
-
-# 3. Rodar testes
-pytest tests/ -v
-
-# 4. Submeter simulação
-darwin-cluster submit --job analysis --script simulate_pbpk.py
-```
 

@@ -1,0 +1,268 @@
+================================================================================
+TREINAMENTO: Dynamic GNN para PBPK
+================================================================================
+
+Configuração:
+   Dataset: data/processed/pbpk_enriched/dynamic_gnn_dataset_enriched_v3.npz
+   Output: models/dynamic_gnn_sweep_b
+   Épocas: 200
+   Batch size: 24
+   Learning rate: 0.0005
+   Device: cuda
+   Node dim: 16
+   Edge dim: 4
+   Hidden dim: 128
+   GNN layers: 4
+   Temporal steps: 120
+   Δt: 0.1
+
+📦 Carregando dataset...
+   Train: 5,240 amostras
+   Val: 1,311 amostras
+
+🏗️  Criando modelo...
+   Parâmetros: 724,229
+
+🚀 Iniciando treinamento...
+
+Epoch 1/200
+   Train Loss: 0.014723
+   Val Loss: 0.000304
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000304)
+
+Epoch 2/200
+   Train Loss: 0.000277
+   Val Loss: 0.000095
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000095)
+
+Epoch 3/200
+   Train Loss: 0.000118
+   Val Loss: 0.000201
+
+Epoch 4/200
+   Train Loss: 0.000152
+   Val Loss: 0.000078
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000078)
+
+Epoch 5/200
+   Train Loss: 0.000033
+   Val Loss: 0.000140
+
+Epoch 6/200
+   Train Loss: 0.000101
+   Val Loss: 0.000024
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000024)
+
+Epoch 7/200
+   Train Loss: 0.000014
+   Val Loss: 0.000006
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000006)
+
+Epoch 8/200
+   Train Loss: 0.000032
+   Val Loss: 0.000089
+
+Epoch 9/200
+   Train Loss: 0.000042
+   Val Loss: 0.000005
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000005)
+
+Epoch 10/200
+   Train Loss: 0.000025
+   Val Loss: 0.000009
+
+Epoch 11/200
+   Train Loss: 0.000087
+   Val Loss: 0.000005
+
+Epoch 12/200
+   Train Loss: 0.000004
+   Val Loss: 0.000003
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000003)
+
+Epoch 13/200
+   Train Loss: 0.000118
+   Val Loss: 0.000025
+
+Epoch 14/200
+   Train Loss: 0.000010
+   Val Loss: 0.000003
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000003)
+
+Epoch 15/200
+   Train Loss: 0.000004
+   Val Loss: 0.000014
+
+Epoch 16/200
+   Train Loss: 0.000017
+   Val Loss: 0.000026
+
+Epoch 17/200
+   Train Loss: 0.000067
+   Val Loss: 0.000003
+
+Epoch 18/200
+   Train Loss: 0.000007
+   Val Loss: 0.000003
+
+Epoch 19/200
+   Train Loss: 0.000023
+   Val Loss: 0.000029
+
+Epoch 20/200
+   Train Loss: 0.000051
+   Val Loss: 0.000010
+
+Epoch 21/200
+   Train Loss: 0.000003
+   Val Loss: 0.000002
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000002)
+
+Epoch 22/200
+   Train Loss: 0.000001
+   Val Loss: 0.000002
+
+Epoch 23/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 24/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 25/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 26/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 27/200
+   Train Loss: 0.000006
+   Val Loss: 0.000004
+
+Epoch 28/200
+   Train Loss: 0.000003
+   Val Loss: 0.000004
+
+Epoch 29/200
+   Train Loss: 0.000020
+   Val Loss: 0.000048
+
+Epoch 30/200
+   Train Loss: 0.000009
+   Val Loss: 0.000003
+
+Epoch 31/200
+   Train Loss: 0.000012
+   Val Loss: 0.000001
+
+Epoch 32/200
+   Train Loss: 0.000005
+   Val Loss: 0.000097
+
+Epoch 33/200
+   Train Loss: 0.000003
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 34/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 35/200
+   Train Loss: 0.000000
+   Val Loss: 0.000001
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000001)
+
+Epoch 36/200
+   Train Loss: 0.000000
+   Val Loss: 0.000001
+
+Epoch 37/200
+   Train Loss: 0.000000
+   Val Loss: 0.000001
+
+Epoch 38/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 39/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 40/200
+   Train Loss: 0.000004
+   Val Loss: 0.000003
+
+Epoch 41/200
+   Train Loss: 0.000002
+   Val Loss: 0.000005
+
+Epoch 42/200
+   Train Loss: 0.000000
+   Val Loss: 0.000000
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000000)
+
+Epoch 43/200
+   Train Loss: 0.000000
+   Val Loss: 0.000001
+
+Epoch 44/200
+   Train Loss: 0.000000
+   Val Loss: 0.000000
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000000)
+
+Epoch 45/200
+   Train Loss: 0.000000
+   Val Loss: 0.000001
+
+Epoch 46/200
+   Train Loss: 0.000000
+   Val Loss: 0.000000
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000000)
+
+Epoch 47/200
+   Train Loss: 0.000000
+   Val Loss: 0.000000
+
+Epoch 48/200
+   Train Loss: 0.000001
+   Val Loss: 0.000004
+
+Epoch 49/200
+   Train Loss: 0.000001
+   Val Loss: 0.000004
+
+Epoch 50/200
+   Train Loss: 0.000001
+   Val Loss: 0.000000
+   ✅ Novo melhor modelo salvo! (Val Loss: 0.000000)
+
+Epoch 51/200
+   Train Loss: 0.000001
+   Val Loss: 0.000000
+
+Epoch 52/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 53/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 54/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 55/200
+   Train Loss: 0.000001
+   Val Loss: 0.000001
+
+Epoch 56/200

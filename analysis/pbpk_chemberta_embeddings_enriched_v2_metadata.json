@@ -1,0 +1,11 @@
+{
+  "model": "seyonec/ChemBERTa-zinc-base-v1",
+  "embedding_dim": 768,
+  "device": "cuda",
+  "num_smiles": 5941,
+  "generated_at": "2025-11-12 09:30:23",
+  "elapsed_seconds": 6.1290857791900635,
+  "input_file": "analysis/pbpk_parameters_wide_enriched_v2.csv",
+  "output_prefix": "pbpk_chemberta_embeddings_enriched_v2",
+  "batch_size": 32
+}

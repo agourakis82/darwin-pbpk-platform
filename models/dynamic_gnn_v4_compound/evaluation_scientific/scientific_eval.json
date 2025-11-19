@@ -1,0 +1,26 @@
+{
+  "model_metrics": {
+    "fold_error_mean": 1.0003437995910645,
+    "fold_error_median": 1.0001486539840698,
+    "fold_error_p67": 1.0002566576004028,
+    "geometric_mean_fold_error": 1.0003407001495361,
+    "percent_within_1.25x": 99.99909308568526,
+    "percent_within_1.5x": 99.99931981426396,
+    "percent_within_2.0x": 99.99954654284264,
+    "mae": 0.0001894587476272136,
+    "rmse": 0.0005863371164812121,
+    "r2": 0.9999997019767761,
+    "mae_log10": 0.00014792995352763683,
+    "rmse_log10": 0.0009765657014161027,
+    "num_predictions": 882112
+  },
+  "baseline_linear_metrics": {
+    "fold_error_mean": 1.0337769985198975,
+    "geometric_mean_fold_error": 1.032334327697754,
+    "percent_within_2.0x": 100.0,
+    "r2": 0.8110529184341431
+  },
+  "split_strategy": "compound",
+  "num_train": 5240,
+  "num_val": 1311
+}

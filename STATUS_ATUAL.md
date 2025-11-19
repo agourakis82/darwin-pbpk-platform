@@ -1,7 +1,66 @@
 # 📊 Status Atual - Darwin PBPK Platform
 
-**Data:** 06 de Novembro de 2025  
+**Data:** 06 de Novembro de 2025
 **Última atualização:** 16:30
+
+---
+
+## 🗓️ Atualização Operacional — 15 de Novembro de 2025 09:15 -03
+
+- 🚀 **Sweep B** (hidden_dim=128, 4 camadas, batch 24, 120 passos, `dt=0,1`, `lr=5e-4`) em execução: Epoch 56/200 com `Train/Val ≈ 1.0 × 10⁻⁶`, log centralizado em `models/dynamic_gnn_sweep_b/training.log`.
+- 📓 **Notebook `pbpk_enriched_analysis.ipynb`** atualizado para incluir seção “Sweep B” com parsing automático do log parcial e curvas de perda em tempo real.
+- 🧠 **Preparação do Sweep C** concluída: diretório `models/dynamic_gnn_sweep_c/` criado e configuração proposta (`hidden_dim=160`, `num_gnn_layers=4`, `batch=28`, `lr=3e-4`, 120 passos, `dt=0,1`) aguardando disponibilidade da GPU para disparo (`CUDA_VISIBLE_DEVICES=0 python scripts/train_dynamic_gnn_pbpk.py ...`).
+- 📄 `docs/DYNAMIC_GNN_IMPLEMENTATION.md` expandido com a seção “Hyperparameter Sweeps (Nov/2025)” descrevendo o status das execuções (Sweep A concluído, Sweep B em curso, Sweep C planejado).
+- 🔄 Próximas ações imediatas: acompanhar convergência de Sweep B até ~Epoch 100, gerar simulação de validação com `best_model.pt` assim que disponível e disparar Sweep C usando o shell script preparado.
+
+---
+
+## 🗓️ Atualização Operacional — 14 de Novembro de 2025 06:25 -03
+
+- ✅ Treinamento batched (batch 24, lr=5e-4, 200 épocas) concluído com `Val Loss=5.2e-5`; artefatos gerados em `models/dynamic_gnn_enriched_v3/` (`best_model.pt`, `final_model.pt`, `training_curve.png`, `training.log`).
+- 📈 Curva e métricas documentadas em `training_curve.png`; log detalhado disponível via `models/dynamic_gnn_enriched_v3/training.log`.
+- 🧪 CLI `apps.pbpk_core.simulation.dynamic_gnn_pbpk` validado com o novo checkpoint em GPU/CPU (`logs/dynamic_gnn_enriched_v3_cuda_sim.md` e `logs/dynamic_gnn_enriched_v3_cpu_sim.md`), exibindo cinética multiórgãos (picos ~1.55 mg/L em tecidos periféricos, `Final blood=0.3166 mg/L`).
+- 🧷 Checkpoint padrão do simulador atualizado: `DEFAULT_DYNAMIC_GNN_CHECKPOINT` aponta para `models/dynamic_gnn_enriched_v3/best_model.pt` (configurável via CLI `--checkpoint`).
+- 🧷 Regressão numérica (`tests/test_dynamic_gnn_regression.py`) executada após refatoração batched – estabilidade confirmada.
+- 🗂️ Pendências: incorporar métricas no notebook `pbpk_enriched_analysis.ipynb`, atualizar documentação (`docs/DYNAMIC_GNN_IMPLEMENTATION.md`) com o fluxo batched e promover o novo checkpoint como padrão no CLI.
+- 📘 Plano de sweeps documentado em `docs/DYNAMIC_GNN_SWEEP_PLAN.md` (combos de hidden_dim, layers, batch e temporalidade).
+
+---
+
+## 🗓️ Atualização Operacional — 13 de Novembro de 2025 11:30 -03
+
+- ✅ `scripts/analysis/build_dynamic_gnn_dataset_from_enriched.py` executado sem limite de amostras → `data/processed/pbpk_enriched/dynamic_gnn_dataset_enriched_v3.npz` (6 551 amostras, 100 passos temporais) consolidado para treino.
+- ✅ `models/dynamic_gnn_enriched_v3/best_model.pt` atualizado incrementalmente durante retomada do fine-tuning.
+- 🔄 Treinamento `DynamicPBPKGNN` atualizado para forward batched (`CUDA_VISIBLE_DEVICES=0`, `batch_size=24`, `epochs=200`, `lr=5e-4`) com logging em `models/dynamic_gnn_enriched_v3/training.log`, mantendo ~10 GB de VRAM e acelerando as épocas.
+- 🧪 Suite de regressão numérica (`tests/test_dynamic_gnn_regression.py`) pronta para validar consistência pós-treino.
+- 📈 Notebook `notebooks/pbpk_enriched_analysis.ipynb` preparado para incorporar métricas pós-treino (pendente de atualização após convergência).
+- 🗂️ Próximos passos paralelos: (i) atualizar gráficos de clearance vs. parâmetros no notebook, (ii) integrar pesos finais ao CLI de inferência (`apps/pbpk_core/simulation/dynamic_gnn_pbpk.py`) e (iii) documentar a estratégia de throttling de GPU em `docs/DYNAMIC_GNN_IMPLEMENTATION.md`.
+
+---
+
+## 🗓️ Atualização Operacional — 11 de Novembro de 2025 12:25 -03
+
+- ✅ `pytest` (6 testes) executado sem falhas — validação do módulo `DynamicPBPKGNN`.
+- ✅ Simulação rápida `DynamicPBPKSimulator` (`dose=100 mg`, `dt=0.5 h`, 24 passos) registrada em `logs/dynamic_gnn_simulation_20251111_122506.md`.
+- ✅ Nova simulação com pesos treinados (`models/dynamic_gnn_full/best_model.pt`) gerou curvas multiórgãos plausíveis — ver `logs/dynamic_gnn_simulation_full_20251111_154011.md`.
+- ⚠️ Warnings conhecidos durante execução:
+  - `torch-scatter` e `torch-sparse` recompilados para `torch==2.8.0+cu128`; validar em GPU nos próximos treinos.
+  - Depreciação `TRANSFORMERS_CACHE`; alinhar para `HF_HOME` nas próximas releases.
+- 📌 Resultados-chave: `Cmax(blood)=20.0 mg/L`, dispersão multiórgãos com concentrações finais ~0.43 mg/L em compartimentos periféricos.
+- 🔁 Próximo passo recomendado: carregar pesos treinados ou concluir fine-tuning para gerar perfis multiórgãos realistas.
+- 🧭 Próximas ações (executadas nesta sessão): carregamento do checkpoint `dynamic_gnn_full`, geração de log multiórgãos, normalização do ambiente HuggingFace (`HF_HOME`) e documentação de dependências CUDA para `torch-scatter/torch-sparse`.
+- 🧪 Regressão adicional disponível: `tests/test_dynamic_gnn_regression.py` compara resultados do checkpoint com os valores logados; CLI `python -m apps.pbpk_core.simulation.dynamic_gnn_pbpk --help` expõe parâmetros reproduzíveis.
+- 📈 Script `scripts/analysis/analyze_literature_clearance.py` explora o dataset real (`clearance_hepatocyte_az`) e gera resumos em `analysis/literature_clearance_stats.json` e `analysis/literature_simulation_summary.csv`.
+- 📊 Relatório consolidado em `analysis/literature_clearance_report.md` resume as variações de fu e os compostos extremos simulados.
+- 🧮 Script `scripts/analysis/build_pbpk_parameter_table.py` consolida TDC + ChEMBL em `analysis/pbpk_parameters_(long|wide).csv` (6.5k compostos com SMILES).
+- 🧷 `scripts/analysis/generate_chemberta_embeddings.py` gerou embeddings ChemBERTa (`analysis/pbpk_chemberta_embeddings.npz`, 1.8k SMILES únicos).
+- 🧬 `scripts/analysis/generate_chemberta_embeddings.py --input analysis/pbpk_parameters_wide_enriched.csv` gerou 4.5k embeddings ChemBERTa (`analysis/pbpk_chemberta_embeddings_enriched.npz`).
+- 🌐 `scripts/analysis/enrich_pbpk_dataset_pubchem.py` adicionou 1.5k SMILES via PubChem; `analysis/pbpk_parameters_wide_enriched_v2.csv` cobre 5.9k moléculas (504 ainda sem estrutura).
+- 🧠 Embeddings atualizados: `analysis/pbpk_chemberta_embeddings_enriched_v2.npz` (5.9k SMILES).
+- ✅ Cobertura total de SMILES via `build_pbpk_parameter_table.py` + merges sucessivos (`analysis/pbpk_parameters_wide_enriched_v3.csv`).
+- 🧠 Embeddings finais: `analysis/pbpk_chemberta_embeddings_enriched_v3.npz` (6.4k SMILES) + dataset MLP `data/processed/pbpk_enriched/pbpk_enriched_v3.npz`.
+- 📦 Dataset sintético para GNN: `scripts/analysis/build_dynamic_gnn_dataset_from_enriched.py --max-samples` gera `data/processed/pbpk_enriched/dynamic_gnn_dataset_enriched_v3.npz`.
+- 📓 Notebook `notebooks/pbpk_enriched_analysis.ipynb` documenta correlações (Clearance vs fu/Vd).
 
 ---
 
@@ -67,7 +126,7 @@
 
 ## 🚀 BREAKTHROUGH: Dynamic GNN para PBPK ✅ **IMPLEMENTADO!**
 
-**Data:** 06 de Novembro de 2025  
+**Data:** 06 de Novembro de 2025
 **Status:** ✅ Arquitetura completa implementada e testada
 
 ### Implementação:
@@ -141,11 +200,11 @@
 - [x] Arquivos preparados para upload
 
 ### Para Fazer ⏳
-- [ ] Upload datasets no Zenodo
-- [ ] Obter DOI datasets
-- [ ] Atualizar README.md com DOI datasets
-- [ ] Atualizar RELEASE_DESCRIPTION.md
-- [ ] Commit e push das atualizações
+- [ ] Integrar pesos atualizados (`models/dynamic_gnn_enriched_v3`) ao CLI de inferência em `apps/pbpk_core/simulation/dynamic_gnn_pbpk.py`.
+- [ ] Atualizar `notebooks/pbpk_enriched_analysis.ipynb` com métricas pós-treino (curvas de perda, distribuição de erro por órgão).
+- [ ] Documentar a estratégia de redução de footprint de GPU em `docs/DYNAMIC_GNN_IMPLEMENTATION.md` e `STATUS_ATUAL.md`.
+- [ ] Planejar sweep adicional de hiperparâmetros (lr × batch) após convergência do treino atual.
+- [ ] Consolidar log de treinamento (`models/dynamic_gnn_enriched_v3/training_curve.png` + métricas) em `STATUS_ATUAL.md` e `PROXIMOS_PASSOS.md`.
 
 ---
 
@@ -207,9 +266,9 @@
 
 Quando completar o upload no Zenodo:
 
-✅ **DOI Software:** `10.5281/zenodo.17536674`  
-✅ **DOI Datasets:** `10.5281/zenodo.XXXXXX`  
-✅ **README atualizado** com ambos DOIs  
+✅ **DOI Software:** `10.5281/zenodo.17536674`
+✅ **DOI Datasets:** `10.5281/zenodo.XXXXXX`
+✅ **README atualizado** com ambos DOIs
 ✅ **Paper-ready** para Nature Machine Intelligence
 
 ---

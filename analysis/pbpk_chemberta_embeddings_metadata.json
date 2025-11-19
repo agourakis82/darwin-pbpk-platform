@@ -1,0 +1,8 @@
+{
+  "model": "seyonec/ChemBERTa-zinc-base-v1",
+  "embedding_dim": 768,
+  "device": "cuda",
+  "num_smiles": 1823,
+  "generated_at": "2025-11-11 23:32:13",
+  "elapsed_seconds": 2.2605955600738525
+}

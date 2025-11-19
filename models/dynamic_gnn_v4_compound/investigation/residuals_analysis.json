@@ -1,0 +1,24 @@
+{
+  "cmax": {
+    "n": 9,
+    "residual_mean": 22.532866235944958,
+    "residual_median": 1.9918,
+    "residual_std": 34.3754591772836,
+    "residual_pct_mean": 28887.53315715362,
+    "shapiro_w": 0.7120283863350948,
+    "shapiro_p": 0.0019607854199925356,
+    "ttest_statistic": 1.9664784216906162,
+    "ttest_p": 0.0848042935731417
+  },
+  "auc": {
+    "n": 9,
+    "residual_mean": -10.545525700420804,
+    "residual_median": 2.0524341232299803,
+    "residual_std": 28.783128623091905,
+    "residual_pct_mean": 2545.6164202184304,
+    "shapiro_w": 0.5363162531542309,
+    "shapiro_p": 1.7092924590503635e-05,
+    "ttest_statistic": -1.0991361472734853,
+    "ttest_p": 0.30368238788532415
+  }
+}

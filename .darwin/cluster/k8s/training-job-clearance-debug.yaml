@@ -1,0 +1,88 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clearance-sota-debug
+  namespace: darwin-pbpk-platform
+  labels:
+    app: darwin-pbpk-platform
+    component: training-debug
+    version: sota-clearance
+    gpu: l4
+    scientific: "true"
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        app: darwin-pbpk-platform
+        component: training-debug
+        version: sota-clearance
+        gpu: l4
+        scientific: "true"
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: maria
+      restartPolicy: Never
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: training-debug
+        image: pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+          - -c
+          - |
+            set -e
+            set -o pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            LOG_DIR="/workspace/darwin-pbpk-platform/logs"
+            mkdir -p "$LOG_DIR" || true
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+            LOG_FILE="$LOG_DIR/clearance_sota_debug_runtime_${TIMESTAMP}.log"
+            exec > >(tee -a "$LOG_FILE") 2>&1
+            echo "================================================================================"
+            echo "🔍 JOB DE DEBUG: Ambiente Kubernetes"
+            echo "================================================================================"
+            echo "📍 Node: $(hostname)"
+            echo "⏰ Início: $(date)"
+            echo ""
+            if [ ! -x "/workspace/darwin-pbpk-platform/scripts/debug_k8s_environment.sh" ]; then
+              echo "⚠️  Script não executável. Ajustando permissões..."
+              chmod +x /workspace/darwin-pbpk-platform/scripts/debug_k8s_environment.sh || true
+            fi
+            /workspace/darwin-pbpk-platform/scripts/debug_k8s_environment.sh
+            EXIT_CODE=$?
+            echo ""
+            echo "📄 Conteúdo do log de debug (últimas 40 linhas):"
+            tail -40 "$LOG_FILE" || true
+            echo ""
+            echo "⏱️  Fim: $(date)"
+            exit $EXIT_CODE
+        env:
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+          readOnly: false
+        - name: cache
+          mountPath: /workspace/.cache
+          readOnly: false
+      volumes:
+      - name: workspace
+        hostPath:
+          path: /home/agourakis82/workspace
+          type: Directory
+      - name: cache
+        emptyDir: {}

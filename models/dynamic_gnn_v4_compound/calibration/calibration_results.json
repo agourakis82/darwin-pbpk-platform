@@ -1,0 +1,8 @@
+{
+  "optimal_scale_factor": 1.1975565898777112,
+  "optimal_error": 1.4691181036893508,
+  "cmax_ratio_mean": 0.3959151871489926,
+  "cmax_ratio_median": 0.11975565898777112,
+  "auc_ratio_mean": 0.13008695422950078,
+  "auc_ratio_median": 0.05853964503991677
+}

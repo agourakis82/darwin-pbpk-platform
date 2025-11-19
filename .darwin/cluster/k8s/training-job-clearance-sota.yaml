@@ -1,0 +1,279 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clearance-sota-training
+  namespace: darwin-pbpk-platform
+  labels:
+    app: darwin-pbpk-platform
+    component: training
+    version: sota-clearance
+    gpu: l4
+    scientific: "true"
+spec:
+  backoffLimit: 1  # Permitir 1 retry em caso de falha temporária
+  ttlSecondsAfterFinished: 172800  # 48 horas (treinamento científico pode demorar)
+  template:
+    metadata:
+      labels:
+        app: darwin-pbpk-platform
+        component: training
+        version: sota-clearance
+        gpu: l4
+        scientific: "true"
+    spec:
+      # Node selector para forçar execução no node maria (L4 24GB)
+      nodeSelector:
+        kubernetes.io/hostname: maria
+      restartPolicy: Never
+      # Tolerar taints se houver
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: training
+        # Usar imagem PyTorch com CUDA 12.1
+        image: pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash"]
+        args:
+          - -c
+          - |
+            set -o pipefail
+            export DEBIAN_FRONTEND=noninteractive
+
+            # Configurar logging ANTES de qualquer coisa
+            LOG_DIR="/workspace/darwin-pbpk-platform/logs"
+            mkdir -p "$LOG_DIR" || true
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+            LOG_FILE="$LOG_DIR/clearance_sota_training_${TIMESTAMP}.log"
+
+            # Redirecionar output para log
+            exec > >(tee -a "$LOG_FILE") 2>&1 || exec > "$LOG_FILE" 2>&1
+
+            # Trap para capturar erros (após logging estar configurado)
+            trap 'echo "❌ ERRO na linha $LINENO: $BASH_COMMAND" >> "$LOG_FILE" 2>&1; exit 1' ERR
+
+            # Função para verificar comandos críticos
+            check_command() {
+                if ! command -v "$1" >/dev/null 2>&1; then
+                    echo "❌ ERRO: Comando '$1' não encontrado!"
+                    exit 1
+                fi
+            }
+
+            echo "================================================================================"
+            echo "🔬 SCIENTIFIC TRAINING: Single-Task Clearance - Full Multimodal Encoder"
+            echo "Node Maria (L4 24GB) - Metodologia State-of-the-Art Q1"
+            echo "================================================================================"
+            echo ""
+            echo "📍 Node: $(hostname)"
+            echo "⏰ Início: $(date)"
+            if command -v nvidia-smi >/dev/null 2>&1; then
+              echo "📍 GPU: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo 'Indisponível')"
+            else
+              echo "⚠️  nvidia-smi não disponível nesta imagem"
+            fi
+            echo ""
+
+            # Verificar comandos críticos
+            echo "🔍 Verificando comandos críticos..."
+            check_command python3
+            check_command pip
+            echo "✅ Comandos básicos OK"
+
+            # Verificar ambiente PyTorch
+            echo ""
+            echo "✅ Ambiente PyTorch pré-instalado (pytorch/pytorch)"
+            python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel || {
+                echo "❌ ERRO: Falha ao atualizar pip"
+                exit 1
+            }
+
+            # Verificar CUDA
+            echo ""
+            echo "🔍 Verificando ambiente CUDA..."
+            python3 -c "import torch; import sys; print(f'PyTorch {torch.__version__}'); print(f'CUDA disponível: {torch.cuda.is_available()}'); assert torch.cuda.is_available(), 'CUDA não disponível'; print(f'CUDA version: {torch.version.cuda}'); print(f'GPU count: {torch.cuda.device_count()}'); print(f'GPU name: {torch.cuda.get_device_name(0)}')" || {
+                echo "❌ ERRO: Falha ao verificar CUDA ou CUDA não disponível"
+                exit 1
+            }
+
+            # Instalar dependências científicas
+            echo ""
+            echo "📦 Instalando dependências científicas..."
+            python3 -m pip install --no-cache-dir \
+                numpy>=1.24.0 \
+                scipy>=1.10.0 \
+                pandas>=2.0.0 \
+                scikit-learn>=1.3.0 \
+                matplotlib>=3.7.0 \
+                tqdm>=4.65.0 \
+                pydantic>=2.0.0 \
+                networkx>=3.1 \
+                rdkit-pypi \
+                transformers>=4.30.0 \
+                PyTDC || {
+                echo "❌ ERRO: Falha ao instalar dependências científicas críticas"
+                exit 1
+            }
+
+            # Wandb é opcional
+            python3 -m pip install --no-cache-dir wandb || echo "⚠️  Wandb opcional, continuando..."
+
+            # Instalar PyTorch Geometric e dependências
+            echo ""
+            echo "📦 Instalando PyTorch Geometric..."
+            python3 -m pip install --no-cache-dir \
+                pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv \
+                -f https://data.pyg.org/whl/torch-2.4.0+cu121.html || {
+                echo "⚠️  Erro ao instalar PyG extensions, tentando continuar..."
+            }
+            python3 -m pip install --no-cache-dir torch-geometric || {
+                echo "⚠️  Erro ao instalar torch-geometric, tentando continuar..."
+            }
+
+            # Verificar se imports críticos funcionam
+            echo ""
+            echo "🔍 Verificando imports críticos..."
+            python3 -c "import numpy; import pandas; import torch; import sklearn; from tdc.single_pred import ADME; print('✅ Imports básicos OK')" || {
+                echo "❌ ERRO: Falha ao importar dependências críticas"
+                exit 1
+            }
+
+            # Preparar código
+            echo ""
+            echo "📥 Preparando código..."
+            if [ -d "/workspace/darwin-pbpk-platform" ]; then
+                cd /workspace/darwin-pbpk-platform
+                echo "✅ Usando código do workspace compartilhado"
+                echo "   Path: $(pwd)"
+                git log -1 --oneline 2>/dev/null || echo "   (não é um repo git ou sem histórico)"
+            else
+                echo "⚠️  Workspace não encontrado, clonando..."
+                git clone --depth 1 https://github.com/agourakis82/darwin-pbpk-platform.git /app
+                cd /app
+            fi
+
+            # Verificar estrutura do projeto
+            echo ""
+            echo "🔍 Verificando estrutura do projeto..."
+            if [ ! -f "apps/training/03_single_task_clearance_multimodal.py" ]; then
+                echo "❌ ERRO: Script de treinamento não encontrado!"
+                exit 1
+            fi
+            echo "✅ Script de treinamento encontrado"
+
+            if [ ! -d "apps/pbpk_core/ml/multimodal" ]; then
+                echo "❌ ERRO: Diretório multimodal encoder não encontrado!"
+                exit 1
+            fi
+            echo "✅ Diretório multimodal encoder encontrado"
+
+            # Verificar se o script Python pode ser importado (simplificado)
+            echo ""
+            echo "🔍 Verificando imports do script de treinamento..."
+            python3 -c "import sys; from pathlib import Path; sys.path.insert(0, str(Path('.').resolve())); from apps.pbpk_core.ml.multimodal import MultimodalMolecularEncoder; print('✅ MultimodalMolecularEncoder importado com sucesso')" || {
+                echo "❌ ERRO: Falha ao importar módulos do projeto"
+                exit 1
+            }
+
+            # Criar diretórios de saída
+            OUTPUT_DIR="models/clearance_sota_$(date +%Y%m%d_%H%M%S)"
+            mkdir -p "$OUTPUT_DIR"
+            echo "📁 Diretório de saída: $OUTPUT_DIR"
+
+            # Executar treinamento científico
+            echo ""
+            echo "🚀 Iniciando treinamento científico SOTA..."
+            echo "   - Single-task Clearance model"
+            echo "   - Full multimodal encoder (976d)"
+            echo "   - 5-fold cross-validation"
+            echo "   - Target: R² > 0.50"
+            echo ""
+
+            # Executar treinamento com validação prévia (simplificada)
+            echo ""
+            echo "🔍 Validando script de treinamento antes de executar..."
+            python3 -c "import sys; from pathlib import Path; sys.path.insert(0, str(Path('.').resolve())); code = open('apps/training/03_single_task_clearance_multimodal.py').read(); compile(code, 'apps/training/03_single_task_clearance_multimodal.py', 'exec'); print('✅ Script Python válido')" || {
+                echo "❌ ERRO: Script de treinamento tem erros de sintaxe"
+                exit 1
+            }
+
+            echo ""
+            echo "🚀 Executando treinamento científico..."
+            python3 apps/training/03_single_task_clearance_multimodal.py \
+                --output-dir "$OUTPUT_DIR" \
+                --device cuda \
+                --batch-size 32 \
+                --epochs 100 \
+                --lr 1e-4 \
+                --patience 15 \
+                --num-folds 5 \
+                2>&1 | tee "$OUTPUT_DIR/training.log"
+
+            TRAIN_EXIT_CODE=${PIPESTATUS[0]}
+
+            # Verificar se o log foi criado
+            if [ ! -f "$OUTPUT_DIR/training.log" ]; then
+                echo "⚠️  Arquivo de log não foi criado"
+            else
+                echo "✅ Log de treinamento salvo: $OUTPUT_DIR/training.log"
+                echo "📊 Últimas 20 linhas do log:"
+                tail -20 "$OUTPUT_DIR/training.log" || true
+            fi
+
+            echo ""
+            echo "================================================================================"
+            if [ $TRAIN_EXIT_CODE -eq 0 ]; then
+                echo "✅ Treinamento científico concluído com sucesso!"
+            else
+                echo "❌ Treinamento científico falhou com código de saída: $TRAIN_EXIT_CODE"
+            fi
+            echo "================================================================================"
+            echo ""
+            echo "📊 Verificando resultados..."
+            echo "   Diretório: $OUTPUT_DIR"
+            ls -lh "$OUTPUT_DIR" 2>/dev/null || echo "⚠️  Diretório não encontrado"
+            echo ""
+            echo "📝 Logs salvos em: $LOG_FILE"
+            echo "⏰ Fim: $(date)"
+
+            # Exit com código de erro se treinamento falhou
+            exit $TRAIN_EXIT_CODE
+
+        env:
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: PYTORCH_CUDA_ALLOC_CONF
+          value: "max_split_size_mb:512"
+        - name: TRANSFORMERS_CACHE
+          value: "/workspace/.cache/huggingface"
+        - name: HF_HOME
+          value: "/workspace/.cache/huggingface"
+
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "6000m"
+          limits:
+            memory: "24Gi"
+            cpu: "8000m"
+
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+          readOnly: false
+        - name: cache
+          mountPath: /workspace/.cache
+          readOnly: false
+
+      volumes:
+      - name: workspace
+        hostPath:
+          path: /home/agourakis82/workspace
+          type: Directory
+      - name: cache
+        emptyDir: {}
+

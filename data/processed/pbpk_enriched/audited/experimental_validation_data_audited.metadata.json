@@ -1,0 +1,2318 @@
+[
+  {
+    "drug_name": "Atorvastatin",
+    "source": "real_clinical",
+    "cmax_obs": 8.2,
+    "auc_obs": 42.3,
+    "tmax_obs": 1.0,
+    "half_life": 14.0,
+    "Vd_lit": 500.0,
+    "CL_lit": 25.0,
+    "cmax_obs_mg_l": 0.008199999999999999,
+    "cmax_obs_original": 8.2,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 0.0423,
+    "auc_obs_original": 42.3,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Rivaroxaban",
+    "source": "real_clinical",
+    "cmax_obs": 141.0,
+    "auc_obs": 1040.0,
+    "tmax_obs": 2.5,
+    "half_life": 7.0,
+    "Vd_lit": 50.0,
+    "CL_lit": 10.0,
+    "cmax_obs_mg_l": 0.141,
+    "cmax_obs_original": 141.0,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 1.04,
+    "auc_obs_original": 1040.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Metformin",
+    "source": "real_clinical",
+    "cmax_obs": 1000.0,
+    "auc_obs": 5500.0,
+    "tmax_obs": 2.5,
+    "half_life": 5.0,
+    "Vd_lit": 300.0,
+    "CL_lit": 35.0,
+    "cmax_obs_mg_l": 1.0,
+    "cmax_obs_original": 1000.0,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 5.5,
+    "auc_obs_original": 5500.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Midazolam",
+    "source": "real_clinical",
+    "cmax_obs": 32.5,
+    "auc_obs": 89.3,
+    "tmax_obs": 0.5,
+    "half_life": 3.0,
+    "Vd_lit": 1.1,
+    "CL_lit": 27.6,
+    "cmax_obs_mg_l": 0.0325,
+    "cmax_obs_original": 32.5,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 0.08929999999999999,
+    "auc_obs_original": 89.3,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Warfarin",
+    "source": "real_clinical",
+    "cmax_obs": 1.1,
+    "auc_obs": 50.0,
+    "tmax_obs": 4.0,
+    "half_life": 40.0,
+    "Vd_lit": 8.0,
+    "CL_lit": 0.17,
+    "cmax_obs_mg_l": 0.0011,
+    "cmax_obs_original": 1.1,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 0.05,
+    "auc_obs_original": 50.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Digoxin",
+    "source": "real_clinical",
+    "cmax_obs": 1.2,
+    "auc_obs": 20.0,
+    "tmax_obs": 1.5,
+    "half_life": 36.0,
+    "Vd_lit": 500.0,
+    "CL_lit": 7.5,
+    "cmax_obs_mg_l": 0.0012,
+    "cmax_obs_original": 1.2,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 0.02,
+    "auc_obs_original": 20.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Caffeine",
+    "source": "real_clinical",
+    "cmax_obs": 6500.0,
+    "auc_obs": 30000.0,
+    "tmax_obs": 0.75,
+    "half_life": 5.0,
+    "Vd_lit": 40.0,
+    "CL_lit": 6.0,
+    "cmax_obs_mg_l": 6.5,
+    "cmax_obs_original": 6500.0,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 30.0,
+    "auc_obs_original": 30000.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Ibuprofen",
+    "source": "real_clinical",
+    "cmax_obs": 25000.0,
+    "auc_obs": 90000.0,
+    "tmax_obs": 1.5,
+    "half_life": 2.0,
+    "Vd_lit": 10.0,
+    "CL_lit": 3.5,
+    "cmax_obs_mg_l": 25.0,
+    "cmax_obs_original": 25000.0,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 90.0,
+    "auc_obs_original": 90000.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Propranolol",
+    "source": "real_clinical",
+    "cmax_obs": 50.0,
+    "auc_obs": 200.0,
+    "tmax_obs": 1.5,
+    "half_life": 4.0,
+    "Vd_lit": 270.0,
+    "CL_lit": 65.0,
+    "cmax_obs_mg_l": 0.05,
+    "cmax_obs_original": 50.0,
+    "cmax_unit_original": "ng/mL",
+    "auc_obs_mg_h_l": 0.2,
+    "auc_obs_original": 200.0,
+    "auc_unit_original": "ng\u00b7h/mL",
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Aspirin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 4500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 15000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.5,
+    "half_life": 0.25,
+    "Vd_lit": 10.0,
+    "CL_lit": 36.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Warfarin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1100.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 50000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 40.0,
+    "Vd_lit": 8.0,
+    "CL_lit": 0.17,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Midazolam",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 32500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 89300.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.5,
+    "half_life": 3.0,
+    "Vd_lit": 1.1,
+    "CL_lit": 27.6,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Digoxin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1200.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 20000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 36.0,
+    "Vd_lit": 500.0,
+    "CL_lit": 7.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Caffeine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 6500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 30000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.75,
+    "half_life": 5.0,
+    "Vd_lit": 40.0,
+    "CL_lit": 6.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Metoprolol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 85000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 420000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.7,
+    "half_life": 3.5,
+    "Vd_lit": 290.0,
+    "CL_lit": 63.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Propranolol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 50000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 4.0,
+    "Vd_lit": 270.0,
+    "CL_lit": 65.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Ibuprofen",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 25000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 90000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 2.0,
+    "Vd_lit": 10.0,
+    "CL_lit": 3.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Diclofenac",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 5800.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 1.2,
+    "Vd_lit": 14.0,
+    "CL_lit": 16.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Carbamazepine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 4500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 120000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 6.0,
+    "half_life": 26.0,
+    "Vd_lit": 98.0,
+    "CL_lit": 1.8,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Atenolol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 250000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 3500000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 6.0,
+    "Vd_lit": 70.0,
+    "CL_lit": 9.8,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Metformin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 5500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 5.0,
+    "Vd_lit": 300.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Furosemide",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2200.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 9500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 1.5,
+    "Vd_lit": 12.0,
+    "CL_lit": 8.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Theophylline",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 12000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 150000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 8.0,
+    "Vd_lit": 35.0,
+    "CL_lit": 3.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Phenytoin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 15000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 380000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 8.0,
+    "half_life": 22.0,
+    "Vd_lit": 45.0,
+    "CL_lit": 2.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Enalapril",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 60.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 350.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 2.0,
+    "Vd_lit": 40.0,
+    "CL_lit": 18.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Clopidogrel",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 8500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.75,
+    "half_life": 6.0,
+    "Vd_lit": 300.0,
+    "CL_lit": 28.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Simvastatin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 15.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 80.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 2.0,
+    "Vd_lit": 350.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Amoxicillin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 8000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 36000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 1.0,
+    "Vd_lit": 20.0,
+    "CL_lit": 18.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Omeprazole",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 650.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1900.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 1.0,
+    "Vd_lit": 25.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Fluoxetine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 15000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 350000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 6.0,
+    "half_life": 96.0,
+    "Vd_lit": 2000.0,
+    "CL_lit": 15.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Sertraline",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 25000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 550000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.5,
+    "half_life": 26.0,
+    "Vd_lit": 1400.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Paroxetine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 30000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 420000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 5.2,
+    "half_life": 21.0,
+    "Vd_lit": 1100.0,
+    "CL_lit": 36.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Citalopram",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 30000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 600000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 35.0,
+    "Vd_lit": 1000.0,
+    "CL_lit": 20.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Escitalopram",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 18000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 350000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 5.0,
+    "half_life": 27.0,
+    "Vd_lit": 840.0,
+    "CL_lit": 22.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Venlafaxine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 150000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 900000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 5.0,
+    "Vd_lit": 490.0,
+    "CL_lit": 63.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Duloxetine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 47000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 650000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 6.0,
+    "half_life": 12.0,
+    "Vd_lit": 1640.0,
+    "CL_lit": 70.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Desvenlafaxine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 180000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2400000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 7.5,
+    "half_life": 11.0,
+    "Vd_lit": 420.0,
+    "CL_lit": 28.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Amitriptyline",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 65000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 25.0,
+    "Vd_lit": 1400.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Nortriptyline",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 50000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 980000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 7.5,
+    "half_life": 28.0,
+    "Vd_lit": 1300.0,
+    "CL_lit": 28.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Mirtazapine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 54000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 900000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 24.0,
+    "Vd_lit": 1150.0,
+    "CL_lit": 32.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Alprazolam",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 18000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 125000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.8,
+    "half_life": 12.0,
+    "Vd_lit": 140.0,
+    "CL_lit": 7.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Lorazepam",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 20000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 220000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 14.0,
+    "Vd_lit": 98.0,
+    "CL_lit": 6.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Zolpidem",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 121000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 460000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.6,
+    "half_life": 2.6,
+    "Vd_lit": 70.0,
+    "CL_lit": 17.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Risperidone",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 12000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 95000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 3.0,
+    "Vd_lit": 105.0,
+    "CL_lit": 25.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Olanzapine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 31000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 550000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 5.0,
+    "half_life": 33.0,
+    "Vd_lit": 1400.0,
+    "CL_lit": 25.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Lamotrigine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3800.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 72000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 29.0,
+    "Vd_lit": 98.0,
+    "CL_lit": 2.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Valproic Acid",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 100000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 15.0,
+    "Vd_lit": 10.0,
+    "CL_lit": 0.45,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Methylphenidate",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 8500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 23000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 2.5,
+    "Vd_lit": 230.0,
+    "CL_lit": 65.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Atomoxetine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 570.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 4200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 5.2,
+    "Vd_lit": 95.0,
+    "CL_lit": 13.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Morphine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 65000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 180000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 2.5,
+    "Vd_lit": 280.0,
+    "CL_lit": 80.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Oxycodone",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 55000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 285000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.3,
+    "half_life": 3.5,
+    "Vd_lit": 280.0,
+    "CL_lit": 45.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Tramadol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 280000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1850000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 6.3,
+    "Vd_lit": 350.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Rivaroxaban",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 215000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2830000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 8.0,
+    "Vd_lit": 70.0,
+    "CL_lit": 7.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Apixaban",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 170000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1920000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 12.0,
+    "Vd_lit": 28.0,
+    "CL_lit": 3.3,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Diltiazem",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 215.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1120.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 4.2,
+    "Vd_lit": 305.0,
+    "CL_lit": 53.6,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Amlodipine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 4.6,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 180.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 8.0,
+    "half_life": 48.0,
+    "Vd_lit": 1920.0,
+    "CL_lit": 27.8,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Gentamicin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 8500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 48000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.5,
+    "half_life": 2.5,
+    "Vd_lit": 18.2,
+    "CL_lit": 5.2,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Paclitaxel",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3240.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 17500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 13.5,
+    "Vd_lit": 227.0,
+    "CL_lit": 11.4,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Doxorubicin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1850.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 4200.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.25,
+    "half_life": 30.0,
+    "Vd_lit": 2050.0,
+    "CL_lit": 45.2,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Imatinib",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3650.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 58700.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 18.0,
+    "Vd_lit": 435.0,
+    "CL_lit": 8.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Tacrolimus",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 29.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 260.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 11.7,
+    "Vd_lit": 641.0,
+    "CL_lit": 38.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cyclosporine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1420.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 8900.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 8.4,
+    "Vd_lit": 403.0,
+    "CL_lit": 33.7,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cn1c(=O)c2c(ncn2C)n(C)c1=O",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 158730.15873015873,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 33333.333333333336,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 4.9,
+    "Vd_lit": 0.63,
+    "CL_lit": 3.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CC(=O)Nc1ccc(O)cc1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 100000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 9259.25925925926,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 2.5,
+    "Vd_lit": 1.0,
+    "CL_lit": 10.8,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "N#Cc1ccc(C(c2ccc(C#N)cc2)n2cncn2)cc1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 52631.57894736843,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 33333.333333333336,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 45.0,
+    "Vd_lit": 1.9,
+    "CL_lit": 3.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cc1cc(=O)n(-c2ccccc2)n1C",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 129870.12987012987,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 22371.364653243847,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 12.0,
+    "Vd_lit": 0.77,
+    "CL_lit": 4.47,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "O=C1CN=C(c2ccccc2Cl)c2cc([N+](=O)[O-])ccc2N1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 34482.75862068966,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 26881.720430107525,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 38.0,
+    "Vd_lit": 2.9,
+    "CL_lit": 3.72,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "COc1cc2nc(N3CCN(C(=O)C4CCCO4)CC3)nc(N)c2cc1OC",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 102040.81632653062,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1325205.40683806,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 9.0,
+    "Vd_lit": 0.98,
+    "CL_lit": 0.07546,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cc1ncc([N+](=O)[O-])n1CCO",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 250000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 33333.333333333336,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 7.1,
+    "Vd_lit": 0.4,
+    "CL_lit": 3.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CNC1=Nc2ccc(Cl)cc2C(c2ccccc2)=[N+]([O-])C1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 400000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 25706.94087403599,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 8.3,
+    "Vd_lit": 0.25,
+    "CL_lit": 3.89,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 100000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 16207.455429497568,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 42.0,
+    "Vd_lit": 1.0,
+    "CL_lit": 6.17,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cc1nnc2n1-c1ccc(Cl)cc1C(c1ccccc1)=NC2",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 125000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2344.116268166901,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 12.0,
+    "Vd_lit": 0.8,
+    "CL_lit": 42.66,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "O=c1n(CCCN2CCN(c3cccc(Cl)c3)CC2)nc2ccccn12",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 192307.69230769228,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2025752.0257520254,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 7.3,
+    "Vd_lit": 0.52,
+    "CL_lit": 0.04936438356164384,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CC(=O)CCCCn1c(=O)c2c(ncn2C)n(C)c1=O",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 55555.555555555555,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 96200.09620009622,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.2,
+    "Vd_lit": 1.8,
+    "CL_lit": 1.0394999999999999,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CCCc1cc(=O)[nH]c(=S)[nH]1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 294117.64705882355,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 551735.845853493,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.3,
+    "Vd_lit": 0.34,
+    "CL_lit": 0.18124615384615383,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "O=C1Nc2ccc(Cl)cc2C(c2ccccc2Cl)=NC1O",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 76923.07692307692,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 5753.739930955121,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 17.0,
+    "Vd_lit": 1.3,
+    "CL_lit": 17.38,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CCOc1ccc(NC(C)=O)cc1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 71428.57142857143,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 3714.710252600297,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 0.92,
+    "Vd_lit": 1.4,
+    "CL_lit": 26.92,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "COc1cc(Cc2cnc(N)nc2N)cc(OC)c1OC",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 66666.66666666667,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 923520.9235209236,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 9.6,
+    "Vd_lit": 1.5,
+    "CL_lit": 0.10828125,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Nc1cc(-c2ccncc2)c[nH]c1=O",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 76923.07692307692,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 222000.222000222,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 2.0,
+    "Vd_lit": 1.3,
+    "CL_lit": 0.45044999999999996,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "COc1ccc(Cc2nccc3cc(OC)c(OC)cc23)cc1OC",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 100000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 259740.25974025976,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.8,
+    "Vd_lit": 1.0,
+    "CL_lit": 0.38499999999999995,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CCOC(=O)c1ncn2c1CN(C)C(=O)c1cc(F)ccc1-2",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 125000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 140692.6406926407,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 0.78,
+    "Vd_lit": 0.8,
+    "CL_lit": 0.7107692307692307,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CN1C(=O)CN=C(c2ccccc2F)c2cc([N+](=O)[O-])ccc21",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 52631.57894736843,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 19960.079840319362,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 25.0,
+    "Vd_lit": 1.9,
+    "CL_lit": 5.01,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "NNC(=O)c1ccncc1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 121951.21951219512,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 175975.7857318833,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.0,
+    "Vd_lit": 0.82,
+    "CL_lit": 0.5682599999999999,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cc1ccccc1N1C(=O)c2cc(S(N)(=O)=O)c(Cl)cc2NC1C",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 62500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1803751.8037518037,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 20.0,
+    "Vd_lit": 1.6,
+    "CL_lit": 0.05544,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cn1cc[nH]c1=S",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 116279.06976744186,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 402698.0771166818,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 2.4,
+    "Vd_lit": 0.86,
+    "CL_lit": 0.248325,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cc1ccc(-c2nc3ccc(C)cn3c2CC(=O)N(C)C)cc1",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 185185.18518518517,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 454278.2320560098,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.7,
+    "Vd_lit": 0.54,
+    "CL_lit": 0.22012941176470588,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "CCOC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1cccc([N+](=O)[O-])c1",
+    "source": "ultimate",
+    "cmax_obs": null,
+    "auc_obs": null,
+    "tmax_obs": 2.0,
+    "half_life": 8.2,
+    "Vd_lit": 6.1,
+    "CL_lit": 75.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Carvedilol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 50000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 250000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 7.0,
+    "Vd_lit": 1150.0,
+    "CL_lit": 80.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Lisinopril",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 55000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 440000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 7.0,
+    "half_life": 12.0,
+    "Vd_lit": 75.0,
+    "CL_lit": 7.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Losartan",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 240000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 340000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 2.0,
+    "Vd_lit": 34.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Celecoxib",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 700.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 4200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 11.0,
+    "Vd_lit": 400.0,
+    "CL_lit": 28.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Naproxen",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 70000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 900000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 15.0,
+    "Vd_lit": 10.0,
+    "CL_lit": 0.42,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Indomethacin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 9000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 4.5,
+    "Vd_lit": 12.0,
+    "CL_lit": 2.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Ketorolac",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 800.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 3500000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.75,
+    "half_life": 5.0,
+    "Vd_lit": 13.0,
+    "CL_lit": 2.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Codeine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 100000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 500000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 3.0,
+    "Vd_lit": 230.0,
+    "CL_lit": 50.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Fentanyl",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.1,
+    "half_life": 3.5,
+    "Vd_lit": 350.0,
+    "CL_lit": 40.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Ciprofloxacin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2400.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 11000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 4.0,
+    "Vd_lit": 175.0,
+    "CL_lit": 35.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Levofloxacin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 5100.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 48000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 6.0,
+    "Vd_lit": 74.0,
+    "CL_lit": 9.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Moxifloxacin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3100.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 36000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 12.0,
+    "Vd_lit": 140.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Doxycycline",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2600.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 30000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 18.0,
+    "Vd_lit": 50.0,
+    "CL_lit": 3.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Clarithromycin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2400.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 17000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 5.0,
+    "Vd_lit": 244.0,
+    "CL_lit": 38.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Metronidazole",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 12000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 65000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 8.0,
+    "Vd_lit": 52.0,
+    "CL_lit": 6.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cephalexin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 18000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 40000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 1.0,
+    "Vd_lit": 18.0,
+    "CL_lit": 15.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cefuroxime",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 4100.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 12000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 1.3,
+    "Vd_lit": 18.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Acebutolol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 800.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 6000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 3.0,
+    "Vd_lit": 150.0,
+    "CL_lit": 50.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Amiodarone",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 25000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 5.0,
+    "half_life": 1800.0,
+    "Vd_lit": 5000.0,
+    "CL_lit": 5.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Bisoprolol",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 65000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 950000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 11.0,
+    "Vd_lit": 230.0,
+    "CL_lit": 14.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Captopril",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 440000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 850000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 2.0,
+    "Vd_lit": 57.0,
+    "CL_lit": 75.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Candesartan",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 150000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2000000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 9.0,
+    "Vd_lit": 9.0,
+    "CL_lit": 6.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Clonidine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 800.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 10000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 12.0,
+    "Vd_lit": 150.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Doxazosin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 30000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 300000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 22.0,
+    "Vd_lit": 70.0,
+    "CL_lit": 15.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Felodipine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 5000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 45000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 11.0,
+    "Vd_lit": 700.0,
+    "CL_lit": 55.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Irbesartan",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1800.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 11000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 14.0,
+    "Vd_lit": 53.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Ampicillin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 7500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 1.0,
+    "Vd_lit": 20.0,
+    "CL_lit": 18.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cefaclor",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 7000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 15000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 0.75,
+    "Vd_lit": 20.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Cefixime",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 3500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 25000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 3.5,
+    "Vd_lit": 15.0,
+    "CL_lit": 3.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Clindamycin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 9000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.0,
+    "half_life": 2.5,
+    "Vd_lit": 60.0,
+    "CL_lit": 16.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Erythromycin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 8000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.5,
+    "half_life": 1.5,
+    "Vd_lit": 55.0,
+    "CL_lit": 40.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Imipenem",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 35000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 70000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 0.5,
+    "half_life": 1.0,
+    "Vd_lit": 15.0,
+    "CL_lit": 12.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Norfloxacin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 7500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 3.5,
+    "Vd_lit": 175.0,
+    "CL_lit": 30.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Clomipramine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 180000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 4000000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 32.0,
+    "Vd_lit": 1200.0,
+    "CL_lit": 17.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Doxepin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 65000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1400000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.5,
+    "half_life": 17.0,
+    "Vd_lit": 1300.0,
+    "CL_lit": 50.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Fluvoxamine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 88000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 1200000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 15.0,
+    "Vd_lit": 1400.0,
+    "CL_lit": 52.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Glipizide",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 700.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2500000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 3.5,
+    "Vd_lit": 11.0,
+    "CL_lit": 2.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Glyburide",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 250000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 2000000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 4.0,
+    "half_life": 10.0,
+    "Vd_lit": 13.0,
+    "CL_lit": 3.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Pioglitazone",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 1150.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 12500.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 2.0,
+    "half_life": 6.0,
+    "Vd_lit": 64.0,
+    "CL_lit": 2.8,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Sitagliptin",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 950.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 8000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 12.5,
+    "Vd_lit": 198.0,
+    "CL_lit": 14.0,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Levothyroxine",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 2500.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 50000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 3.0,
+    "half_life": 168.0,
+    "Vd_lit": 10.0,
+    "CL_lit": 1.2,
+    "molecular_weight": 400.0,
+    "smiles": null
+  },
+  {
+    "drug_name": "Etodolac",
+    "source": "ultimate",
+    "cmax_obs": {
+      "value": 18000.0,
+      "units": "ng/mL"
+    },
+    "auc_obs": {
+      "value": 80000.0,
+      "units": "ng*h/mL"
+    },
+    "tmax_obs": 1.5,
+    "half_life": 7.0,
+    "Vd_lit": 23.0,
+    "CL_lit": 3.5,
+    "molecular_weight": 400.0,
+    "smiles": null
+  }
+]

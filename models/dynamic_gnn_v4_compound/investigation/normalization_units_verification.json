@@ -1,0 +1,79 @@
+{
+  "c0_ratio_gnn_mean": 1.0,
+  "c0_ratio_ode_mean": 1.0,
+  "cmax_ratio_mean": 1.0,
+  "auc_ratio_mean": 1.6796797919210527,
+  "normalization_ok": true,
+  "results": [
+    {
+      "dose": 10.0,
+      "c0_expected": 2.0,
+      "c0_gnn": 2.0,
+      "c0_ode": 2.0,
+      "c0_ratio_gnn": 1.0,
+      "c0_ratio_ode": 1.0,
+      "cmax_gnn": 2.0,
+      "cmax_ode": 2.0,
+      "cmax_ratio": 1.0,
+      "auc_gnn": 2.250765800476074,
+      "auc_ode": 0.4147268850189618,
+      "auc_ratio": 5.4271036717891254
+    },
+    {
+      "dose": 50.0,
+      "c0_expected": 10.0,
+      "c0_gnn": 10.0,
+      "c0_ode": 10.0,
+      "c0_ratio_gnn": 1.0,
+      "c0_ratio_ode": 1.0,
+      "cmax_gnn": 10.0,
+      "cmax_ode": 10.0,
+      "cmax_ratio": 1.0,
+      "auc_gnn": 2.6763956546783447,
+      "auc_ode": 2.073634363156967,
+      "auc_ratio": 1.2906786761595304
+    },
+    {
+      "dose": 100.0,
+      "c0_expected": 20.0,
+      "c0_gnn": 20.0,
+      "c0_ode": 20.0,
+      "c0_ratio_gnn": 1.0,
+      "c0_ratio_ode": 1.0,
+      "cmax_gnn": 20.0,
+      "cmax_ode": 20.0,
+      "cmax_ratio": 1.0,
+      "auc_gnn": 3.210991382598877,
+      "auc_ode": 4.1472687228902565,
+      "auc_ratio": 0.7742424224589715
+    },
+    {
+      "dose": 200.0,
+      "c0_expected": 40.0,
+      "c0_gnn": 40.0,
+      "c0_ode": 40.0,
+      "c0_ratio_gnn": 1.0,
+      "c0_ratio_ode": 1.0,
+      "cmax_gnn": 40.0,
+      "cmax_ode": 40.0,
+      "cmax_ratio": 1.0,
+      "auc_gnn": 4.411293983459473,
+      "auc_ode": 8.294537439180306,
+      "auc_ratio": 0.5318312221513598
+    },
+    {
+      "dose": 500.0,
+      "c0_expected": 100.0,
+      "c0_gnn": 100.0,
+      "c0_ode": 100.0,
+      "c0_ratio_gnn": 1.0,
+      "c0_ratio_ode": 1.0,
+      "cmax_gnn": 100.0,
+      "cmax_ode": 100.0,
+      "cmax_ratio": 1.0,
+      "auc_gnn": 7.766651630401611,
+      "auc_ode": 20.73634352728891,
+      "auc_ratio": 0.37454296704627515
+    }
+  ]
+}

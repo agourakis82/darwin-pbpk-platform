@@ -1,0 +1,99 @@
+{
+  "n_compounds": 129,
+  "n_with_obs": 9,
+  "cmax_ratio_stats": {
+    "mean": 289.87534361287857,
+    "median": 100.0,
+    "std": 424.0026006959451,
+    "min": 3.2,
+    "max": 1080.7087204673073
+  },
+  "c0_ratio_stats": {
+    "mean": 1.0,
+    "median": 1.0,
+    "std": 0.0
+  },
+  "top_problematic": [
+    {
+      "compound": "Warfarin",
+      "dose": 5.0,
+      "cl_total": 0.10000000149011612,
+      "kp_mean": 0.18839284777641296,
+      "pred_cmax": 1.188779592514038,
+      "obs_cmax": 0.0011,
+      "cmax_ratio": 1080.7087204673073
+    },
+    {
+      "compound": "Digoxin",
+      "dose": 0.25,
+      "cl_total": 0.012500000186264515,
+      "kp_mean": 9.428571701049805,
+      "pred_cmax": 1.1571629047393799,
+      "obs_cmax": 0.0012,
+      "cmax_ratio": 964.30242061615
+    },
+    {
+      "compound": "Atorvastatin",
+      "dose": 10.0,
+      "cl_total": 0.2364066243171692,
+      "kp_mean": 9.428571701049805,
+      "pred_cmax": 2.0,
+      "obs_cmax": 0.008199999999999999,
+      "cmax_ratio": 243.90243902439028
+    },
+    {
+      "compound": "Propranolol",
+      "dose": 40.0,
+      "cl_total": 0.20000000298023224,
+      "kp_mean": 6.317322254180908,
+      "pred_cmax": 8.0,
+      "obs_cmax": 0.05,
+      "cmax_ratio": 160.0
+    },
+    {
+      "compound": "Metformin",
+      "dose": 500.0,
+      "cl_total": 0.09090909361839294,
+      "kp_mean": 7.019108295440674,
+      "pred_cmax": 100.0,
+      "obs_cmax": 1.0,
+      "cmax_ratio": 100.0
+    },
+    {
+      "compound": "Midazolam",
+      "dose": 5.0,
+      "cl_total": 0.0559910424053669,
+      "kp_mean": 0.16499997675418854,
+      "pred_cmax": 1.1838537454605103,
+      "obs_cmax": 0.0325,
+      "cmax_ratio": 36.42626909109262
+    },
+    {
+      "compound": "Rivaroxaban",
+      "dose": 10.0,
+      "cl_total": 0.009615384973585606,
+      "kp_mean": 1.1708928346633911,
+      "pred_cmax": 2.0,
+      "obs_cmax": 0.141,
+      "cmax_ratio": 14.184397163120568
+    },
+    {
+      "compound": "Caffeine",
+      "dose": 200.0,
+      "cl_total": 0.006666666828095913,
+      "kp_mean": 0.9369643330574036,
+      "pred_cmax": 40.0,
+      "obs_cmax": 6.5,
+      "cmax_ratio": 6.153846153846154
+    },
+    {
+      "compound": "Ibuprofen",
+      "dose": 400.0,
+      "cl_total": 0.004444444552063942,
+      "kp_mean": 0.23517858982086182,
+      "pred_cmax": 80.0,
+      "obs_cmax": 25.0,
+      "cmax_ratio": 3.2
+    }
+  ]
+}

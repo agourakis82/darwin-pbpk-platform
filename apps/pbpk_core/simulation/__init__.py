@@ -11,7 +11,8 @@ from .dynamic_gnn_pbpk import (
     DynamicPBPKSimulator,
     PBPKPhysiologicalParams,
     PBPK_ORGANS,
-    NUM_ORGANS
+    NUM_ORGANS,
+    DEFAULT_DYNAMIC_GNN_CHECKPOINT,
 )
 
 from .ode_pbpk_solver import (
@@ -25,6 +26,7 @@ __all__ = [
     "PBPKPhysiologicalParams",
     "PBPK_ORGANS",
     "NUM_ORGANS",
+    "DEFAULT_DYNAMIC_GNN_CHECKPOINT",
     "ODEPBPKSolver",
     "ODEState"
 ]

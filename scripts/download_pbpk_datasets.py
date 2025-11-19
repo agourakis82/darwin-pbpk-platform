@@ -43,10 +43,10 @@ print("="*80)
 def download_tdc_adme():
     """Download TDC ADME datasets"""
     print("\n1️⃣ TDC (Therapeutics Data Commons)...")
-    
+
     try:
         from tdc.single_pred import ADME
-        
+
         datasets_to_download = [
             'caco2_wang',           # Permeability
             'bioavailability_ma',   # Bioavailability
@@ -56,43 +56,43 @@ def download_tdc_adme():
             'half_life_obach',      # Half-life
             'ppbr_az',              # Plasma protein binding
         ]
-        
+
         all_data = []
-        
+
         for dataset_name in datasets_to_download:
             try:
                 print(f"\n  Downloading {dataset_name}...")
                 data = ADME(name=dataset_name)
                 df = data.get_data()
-                
+
                 # Add dataset source
                 df['source'] = dataset_name
                 df['dataset'] = 'TDC'
-                
+
                 print(f"    ✓ {len(df)} compounds")
                 all_data.append(df)
-                
+
             except Exception as e:
                 print(f"    ⚠️  Failed: {e}")
                 continue
-        
+
         if len(all_data) > 0:
             # Combine all TDC datasets
             tdc_df = pd.concat(all_data, ignore_index=True)
-            
+
             # Save
             output_path = OUTPUT_DIR / 'tdc_adme_complete.csv'
             tdc_df.to_csv(output_path, index=False)
-            
+
             print(f"\n  ✅ TDC saved: {len(tdc_df)} total entries")
             print(f"     Unique compounds: {tdc_df['Drug_ID'].nunique() if 'Drug_ID' in tdc_df.columns else 'N/A'}")
             print(f"     File: {output_path}")
-            
+
             return tdc_df
         else:
             print("  ⚠️  No TDC data downloaded")
             return None
-            
+
     except ImportError:
         print("  ⚠️  PyTDC not installed. Installing...")
         import subprocess
@@ -109,73 +109,96 @@ def download_tdc_adme():
 def download_chembl_adme():
     """Download ChEMBL ADME data via API"""
     print("\n2️⃣ ChEMBL ADME Data...")
-    
+
     try:
         from chembl_webresource_client.new_client import new_client
-        
-        # ADME-related assays
-        assay_types = [
-            'Clearance',
-            'Volume of distribution',
-            'Half life',
-            'Bioavailability',
-            'Plasma protein binding',
-            'Caco-2 permeability'
-        ]
-        
+
         activity = new_client.activity
-        all_data = []
-        
-        for assay_type in assay_types:
-            try:
-                print(f"\n  Querying {assay_type}...")
-                
-                # Query ChEMBL
-                results = activity.filter(
-                    assay_type__icontains=assay_type,
-                    standard_type__iregex='(IC50|EC50|Ki|Kd|Activity|Clearance|Volume)',
-                    pchembl_value__isnull=False
-                ).only([
-                    'molecule_chembl_id',
-                    'canonical_smiles',
-                    'standard_type',
-                    'standard_value',
-                    'standard_units',
-                    'pchembl_value'
-                ])
-                
-                # Convert to DataFrame
-                data_list = list(results[:1000])  # Limit to 1000 per type
-                
-                if len(data_list) > 0:
-                    df = pd.DataFrame(data_list)
-                    df['assay_type'] = assay_type
-                    df['dataset'] = 'ChEMBL'
-                    all_data.append(df)
-                    print(f"    ✓ {len(df)} entries")
-                else:
-                    print(f"    ⚠️  No data found")
-                
-            except Exception as e:
-                print(f"    ⚠️  Failed: {e}")
-                continue
-        
-        if len(all_data) > 0:
-            chembl_df = pd.concat(all_data, ignore_index=True)
-            
-            # Save
+        query_specs = [
+            {
+                "label": "clearance",
+                "standard_types": ["Clearance", "Intrinsic Clearance"],
+                "units_hint": "(L/h|l/min|ml/min|uL/min)",
+            },
+            {
+                "label": "volume_distribution",
+                "standard_types": ["Volume of distribution", "VDss"],
+                "units_hint": "(L/kg|L)",
+            },
+            {
+                "label": "half_life",
+                "standard_types": ["Half-life", "Half life"],
+                "units_hint": "(h|hr|hours|min)",
+            },
+            {
+                "label": "bioavailability",
+                "standard_types": ["Bioavailability"],
+                "units_hint": "(%)",
+            },
+            {
+                "label": "plasma_protein_binding",
+                "standard_types": ["Plasma protein binding"],
+                "units_hint": "(%)",
+            },
+            {
+                "label": "caco2_permeability",
+                "standard_types": ["Permeability", "Caco-2 permeability"],
+                "units_hint": "(cm/s)",
+            },
+        ]
+
+        frames = []
+
+        for spec in query_specs:
+            print(f"\n  Querying {spec['label']} ...")
+            collected = []
+            for stype in spec["standard_types"]:
+                try:
+                    results = activity.filter(
+                        standard_type__iexact=stype,
+                        standard_value__isnull=False,
+                                                molecule_chembl_id__isnull=False,
+                    ).only([
+                        'molecule_chembl_id',
+                        'canonical_smiles',
+                        'standard_type',
+                        'standard_value',
+                        'standard_units',
+                        'assay_type'
+                    ])
+
+                    rows = list(results[:2000])
+                    if rows:
+                        df = pd.DataFrame(rows)
+                        df["query_label"] = spec["label"]
+                        df["query_standard_type"] = stype
+                        df["units_hint"] = spec.get("units_hint")
+                        df["dataset"] = "ChEMBL"
+                        collected.append(df)
+                        print(f"    ✓ {len(df)} entries for standard_type={stype!r}")
+                    else:
+                        print(f"    ⚠️  No entries for standard_type={stype!r}")
+                except Exception as inner_exc:
+                    print(f"    ⚠️  Failed standard_type={stype!r}: {inner_exc}")
+                    continue
+
+            if collected:
+                frames.append(pd.concat(collected, ignore_index=True))
+            else:
+                print(f"  ⚠️  No data gathered for label={spec['label']}")
+
+        if frames:
+            chembl_df = pd.concat(frames, ignore_index=True)
             output_path = OUTPUT_DIR / 'chembl_adme_complete.csv'
             chembl_df.to_csv(output_path, index=False)
-            
             print(f"\n  ✅ ChEMBL saved: {len(chembl_df)} total entries")
             print(f"     Unique compounds: {chembl_df['molecule_chembl_id'].nunique()}")
             print(f"     File: {output_path}")
-            
             return chembl_df
-        else:
-            print("  ⚠️  No ChEMBL data downloaded")
-            return None
-            
+
+        print("  ⚠️  No ChEMBL data downloaded")
+        return None
+
     except ImportError:
         print("  ⚠️  ChEMBL client not installed. Installing...")
         import subprocess
@@ -192,22 +215,22 @@ def download_chembl_adme():
 def load_drugbank_local():
     """Load DrugBank data from local storage"""
     print("\n3️⃣ DrugBank (Local)...")
-    
+
     drugbank_paths = [
         Path('/mnt/f/datasets/pbpk/drugbank'),
         BASE_DIR / 'data' / 'external' / 'drugbank'
     ]
-    
+
     for path in drugbank_paths:
         if path.exists():
             print(f"  Found: {path}")
-            
+
             # Look for CSV/JSON files
             files = list(path.glob('*.csv')) + list(path.glob('*.json'))
-            
+
             if len(files) > 0:
                 print(f"  Files found: {len(files)}")
-                
+
                 all_data = []
                 for file in files:
                     try:
@@ -217,28 +240,28 @@ def load_drugbank_local():
                             df = pd.read_json(file)
                         else:
                             continue
-                        
+
                         df['source_file'] = file.name
                         df['dataset'] = 'DrugBank'
                         all_data.append(df)
                         print(f"    ✓ {file.name}: {len(df)} entries")
-                        
+
                     except Exception as e:
                         print(f"    ⚠️  {file.name}: {e}")
                         continue
-                
+
                 if len(all_data) > 0:
                     drugbank_df = pd.concat(all_data, ignore_index=True)
-                    
+
                     # Save
                     output_path = OUTPUT_DIR / 'drugbank_complete.csv'
                     drugbank_df.to_csv(output_path, index=False)
-                    
+
                     print(f"\n  ✅ DrugBank saved: {len(drugbank_df)} entries")
                     print(f"     File: {output_path}")
-                    
+
                     return drugbank_df
-    
+
     print("  ⚠️  DrugBank data not found")
     return None
 
@@ -248,20 +271,20 @@ def load_drugbank_local():
 def load_validation_100():
     """Load validation_drugs_100.json"""
     print("\n4️⃣ Validation Set (100 drugs)...")
-    
+
     val_paths = [
         Path('/mnt/f/datasets/pbpk/validation_drugs_100.json'),
         BASE_DIR / 'data' / 'external' / 'validation_drugs_100.json'
     ]
-    
+
     for path in val_paths:
         if path.exists():
             print(f"  Found: {path}")
-            
+
             try:
                 with open(path, 'r') as f:
                     drugs = json.load(f)
-                
+
                 # Convert to DataFrame
                 data_list = []
                 for drug in drugs:
@@ -279,25 +302,25 @@ def load_validation_100():
                             'auc': pk.get('auc'),
                             'dataset': 'Validation_100'
                         })
-                
+
                 if len(data_list) > 0:
                     val_df = pd.DataFrame(data_list)
-                    
+
                     # Save
                     output_path = OUTPUT_DIR / 'validation_100_complete.csv'
                     val_df.to_csv(output_path, index=False)
-                    
+
                     print(f"  ✅ Validation set saved: {len(val_df)} drugs")
                     print(f"     Fu: {val_df['fu'].notna().sum()}")
                     print(f"     Vd: {val_df['vd'].notna().sum()}")
                     print(f"     CL: {val_df['clearance'].notna().sum()}")
                     print(f"     File: {output_path}")
-                    
+
                     return val_df
-                
+
             except Exception as e:
                 print(f"  ❌ Error: {e}")
-    
+
     print("  ⚠️  Validation set not found")
     return None
 
@@ -307,15 +330,15 @@ def load_validation_100():
 def download_pubchem_sample():
     """Download sample from PubChem"""
     print("\n5️⃣ PubChem Sample (1000 FDA drugs)...")
-    
+
     try:
         import pubchempy as pcp
-        
+
         print("  Querying PubChem for FDA-approved drugs...")
-        
+
         # Search for FDA-approved drugs
         compounds = pcp.get_compounds('fda approved', 'name', listkey_count=1000)
-        
+
         data_list = []
         for compound in compounds[:1000]:
             try:
@@ -329,19 +352,19 @@ def download_pubchem_sample():
                 })
             except:
                 continue
-        
+
         if len(data_list) > 0:
             pubchem_df = pd.DataFrame(data_list)
-            
+
             # Save
             output_path = OUTPUT_DIR / 'pubchem_fda_sample.csv'
             pubchem_df.to_csv(output_path, index=False)
-            
+
             print(f"  ✅ PubChem saved: {len(pubchem_df)} compounds")
             print(f"     File: {output_path}")
-            
+
             return pubchem_df
-        
+
     except ImportError:
         print("  ⚠️  PubChemPy not installed. Installing...")
         import subprocess
@@ -360,17 +383,17 @@ def consolidate_datasets():
     print("\n" + "="*80)
     print("📊 CONSOLIDATING DATASETS")
     print("="*80)
-    
+
     # Load all available datasets
     datasets = []
     dataset_names = []
-    
+
     files = list(OUTPUT_DIR.glob('*.csv'))
-    
+
     if len(files) == 0:
         print("⚠️  No datasets downloaded yet")
         return None
-    
+
     for file in files:
         try:
             df = pd.read_csv(file)
@@ -379,17 +402,17 @@ def consolidate_datasets():
             print(f"  ✓ Loaded {file.name}: {len(df)} entries")
         except Exception as e:
             print(f"  ⚠️  Failed to load {file.name}: {e}")
-    
+
     if len(datasets) == 0:
         print("❌ No datasets loaded")
         return None
-    
+
     # Combine all datasets
     print("\n📦 Combining datasets...")
     combined_df = pd.concat(datasets, ignore_index=True)
-    
+
     print(f"  Total entries: {len(combined_df)}")
-    
+
     # Standardize column names
     column_mapping = {
         'Drug': 'smiles',
@@ -400,41 +423,41 @@ def consolidate_datasets():
         'value': 'value',
         'standard_value': 'value',
     }
-    
+
     combined_df = combined_df.rename(columns=column_mapping)
-    
+
     # Remove duplicates by SMILES
     if 'smiles' in combined_df.columns:
         initial_len = len(combined_df)
         combined_df = combined_df.drop_duplicates(subset=['smiles'], keep='first')
         print(f"  Removed {initial_len - len(combined_df)} duplicates")
         print(f"  Unique compounds: {len(combined_df)}")
-    
+
     # Save consolidated dataset
     output_path = OUTPUT_DIR / 'consolidated_pbpk_dataset.csv'
     combined_df.to_csv(output_path, index=False)
-    
+
     print(f"\n✅ Consolidated dataset saved: {output_path}")
     print(f"   Total compounds: {len(combined_df)}")
-    
+
     # Summary statistics
     print("\n📊 Dataset Summary:")
     if 'dataset' in combined_df.columns:
         dataset_counts = combined_df['dataset'].value_counts()
         for dataset, count in dataset_counts.items():
             print(f"  {dataset:20s}: {count:6d} compounds")
-    
+
     # Check PBPK parameters
     pbpk_params = ['fu', 'vd', 'clearance', 'half_life', 'bioavailability']
     available_params = [p for p in pbpk_params if p in combined_df.columns]
-    
+
     if len(available_params) > 0:
         print("\n🎯 PBPK Parameters Available:")
         for param in available_params:
             n_available = combined_df[param].notna().sum()
             pct = (n_available / len(combined_df)) * 100
             print(f"  {param:20s}: {n_available:6d} ({pct:5.1f}%)")
-    
+
     return combined_df
 
 
@@ -442,25 +465,25 @@ def consolidate_datasets():
 
 def main():
     """Main execution"""
-    
+
     print("\n🚀 Starting dataset download...")
     print("="*80)
-    
+
     # Download each dataset
     tdc_df = download_tdc_adme()
     chembl_df = download_chembl_adme()
     drugbank_df = load_drugbank_local()
     val_df = load_validation_100()
     pubchem_df = download_pubchem_sample()
-    
+
     # Consolidate
     consolidated_df = consolidate_datasets()
-    
+
     # Final summary
     print("\n" + "="*80)
     print("🎉 DOWNLOAD COMPLETE!")
     print("="*80)
-    
+
     successful_downloads = sum([
         tdc_df is not None,
         chembl_df is not None,
@@ -468,13 +491,13 @@ def main():
         val_df is not None,
         pubchem_df is not None
     ])
-    
+
     print(f"\n✅ Successfully downloaded: {successful_downloads}/5 datasets")
-    
+
     if consolidated_df is not None:
         print(f"✅ Total unique compounds: {len(consolidated_df)}")
         print(f"✅ Output directory: {OUTPUT_DIR}")
-        
+
         print("\n🎯 Next Steps:")
         print("1. Review consolidated dataset")
         print("2. Generate embeddings for new compounds")
@@ -482,7 +505,7 @@ def main():
         print("4. Re-train models with expanded data")
     else:
         print("\n⚠️  No datasets consolidated. Check errors above.")
-    
+
     print("\n" + "="*80)
 
 

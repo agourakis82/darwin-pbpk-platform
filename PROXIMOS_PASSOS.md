@@ -33,6 +33,18 @@
 
 ---
 
+## 🔄 Atualização — 14 de Novembro de 2025
+
+- ✅ Treinamento DynamicPBPKGNN `dynamic_gnn_enriched_v3` concluído (batch 24, 200 épocas, Val Loss 5.2e-5).
+- ✅ CLI e notebook analítico atualizados com curvas e logs.
+- ▶️ Próximas ações operacionais (em andamento):
+  - Integrar o novo checkpoint como padrão em todos os scripts/CLIs.
+  - Documentar fluxo batched em `docs/DYNAMIC_GNN_IMPLEMENTATION.md` e STATUS.
+  - Planejar sweeps (hidden_dim, lr, batch) para aproveitar ~10 GB de VRAM e obter R² > 0,5.
+  - Expor o modelo batched nos endpoints (darwin-api) e pipelines de geração sintética.
+
+---
+
 ## 🎯 PRÓXIMOS PASSOS (MANUAL - 30 MINUTOS)
 
 ### PASSO 1: Verificar GitHub (2 min)

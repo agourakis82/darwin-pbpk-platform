@@ -1,0 +1,33 @@
+project:
+  name: darwin-pbpk-platform
+  namespace: darwin-pbpk-platform
+  owner: agourakis82
+
+resources:
+  priority: high
+  cpu:
+    min_cores: 4
+    max_cores: 8
+  memory:
+    min: 8Gi
+    max: 24Gi
+  gpu:
+    type: nvidia-l4
+    quota: "1"
+    time_slicing: false
+  storage:
+    path: /workspace
+    quota: 100Gi
+
+jobs:
+  training:
+    gpu: 1
+    memory: 24Gi
+    cpu: 8
+  light-training:
+    gpu: 0
+    memory: 12Gi
+    cpu: 4
+
+
+

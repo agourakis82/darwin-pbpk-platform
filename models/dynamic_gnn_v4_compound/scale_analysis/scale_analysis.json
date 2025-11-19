@@ -1,0 +1,9 @@
+{
+  "cmax_ratio_mean": 296.21961169367034,
+  "cmax_ratio_median": 67.49983200660118,
+  "cmax_ratio_std": 480.52952956571005,
+  "auc_ratio_mean": 47.10105228198164,
+  "auc_ratio_median": 13.517686220315786,
+  "auc_ratio_std": 68.02313769779023,
+  "num_compounds": 10
+}

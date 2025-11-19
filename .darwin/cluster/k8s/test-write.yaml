@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: workspace-write-check
+  namespace: darwin-pbpk-platform
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: maria
+      restartPolicy: Never
+      containers:
+      - name: writer
+        image: busybox:1.36
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            set -ex
+            date > /workspace/darwin-pbpk-platform/logs/k8s_write_test.txt
+            ls -l /workspace/darwin-pbpk-platform/logs
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+          readOnly: false
+      volumes:
+      - name: workspace
+        hostPath:
+          path: /home/agourakis82/workspace
+          type: Directory
