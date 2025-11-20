@@ -1,7 +1,7 @@
 # Release v0.2.0 - Validação Rigorosa Completa
 
-**Data:** 2025-11-18  
-**Versão:** 0.2.0  
+**Data:** 2025-11-18
+**Versão:** 0.2.0
 **Tag:** `v0.2.0-rigorous-validation`
 
 ---
@@ -130,6 +130,6 @@ Esta release representa um marco importante na validação científica do modelo
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis + AI Assistant  
+**Autor:** Dr. Demetrios Agourakis + AI Assistant
 **Data:** 2025-11-18
 

@@ -1,0 +1,4 @@
+name = "DarwinPBPK"
+uuid = "83d39c8c-05c4-4c8b-90c2-c6f4cdec86e1"
+authors = ["Demetrios Chiuratto Agourakis <agourakis82@gmail.com>"]
+version = "0.1.0"

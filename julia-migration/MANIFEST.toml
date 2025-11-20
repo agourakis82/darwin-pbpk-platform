@@ -1,0 +1,8 @@
+# Manifest.toml será gerado automaticamente pelo Pkg.jl
+# Este arquivo é um placeholder
+
+# Para gerar o Manifest:
+# julia> using Pkg
+# julia> Pkg.activate(".")
+# julia> Pkg.instantiate()
+

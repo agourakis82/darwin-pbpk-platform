@@ -1,0 +1,25 @@
+name = "DarwinPBPK"
+uuid = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+version = "0.1.0"
+authors = ["Dr. Demetrios Agourakis"]
+
+[deps]
+DifferentialEquations = ""
+StaticArrays = ""
+DataFrames = ""
+CSV = ""
+Unitful = ""
+Flux = ""
+CUDA = ""
+Zygote = ""
+GraphNeuralNetworks = ""
+Random = ""
+ProgressMeter = ""
+NPZ = ""
+BenchmarkTools = ""
+Plots = ""
+HTTP = ""
+JSON = ""
+
+[compat]
+julia = "1.9"

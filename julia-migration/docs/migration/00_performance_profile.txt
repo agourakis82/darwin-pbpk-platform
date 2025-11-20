@@ -1,0 +1,28 @@
+         4899107 function calls in 2.839 seconds
+
+   Ordered by: cumulative time
+   List reduced from 37 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      100    0.002    0.000    2.829    0.028 /home/agourakis82/workspace/darwin-pbpk-platform/apps/pbpk_core/simulation/ode_pbpk_solver.py:97(solve)
+      100    0.002    0.000    2.826    0.028 /home/agourakis82/miniforge/lib/python3.12/site-packages/scipy/integrate/_odepack_py.py:29(odeint)
+      100    0.128    0.001    2.818    0.028 {built-in method scipy.integrate._odepack.odeint}
+   119400    2.051    0.000    2.689    0.000 /home/agourakis82/workspace/darwin-pbpk-platform/apps/pbpk_core/simulation/ode_pbpk_solver.py:44(_ode_system)
+  4656800    0.602    0.000    0.602    0.000 {method 'get' of 'dict' objects}
+   119500    0.036    0.000    0.036    0.000 {built-in method numpy.zeros}
+      100    0.007    0.000    0.010    0.000 /home/agourakis82/miniforge/lib/python3.12/site-packages/numpy/_core/function_base.py:25(linspace)
+      100    0.000    0.000    0.002    0.000 {method 'all' of 'numpy.ndarray' objects}
+      100    0.002    0.000    0.002    0.000 /home/agourakis82/miniforge/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:1369(diff)
+      100    0.000    0.000    0.002    0.000 /home/agourakis82/miniforge/lib/python3.12/site-packages/numpy/_core/_methods.py:67(_all)
+      100    0.002    0.000    0.002    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+      200    0.001    0.000    0.001    0.000 /home/agourakis82/miniforge/lib/python3.12/copy.py:61(copy)
+      100    0.001    0.000    0.001    0.000 {built-in method numpy.arange}
+      100    0.000    0.000    0.000    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      200    0.000    0.000    0.000    0.000 {method '__copy__' of 'numpy.ndarray' objects}
+      100    0.000    0.000    0.000    0.000 {method 'result_type' of 'numpy._core._multiarray_umath._array_converter' objects}
+      100    0.000    0.000    0.000    0.000 /home/agourakis82/miniforge/lib/python3.12/site-packages/numpy/_core/numeric.py:1927(isscalar)
+      100    0.000    0.000    0.000    0.000 /home/agourakis82/miniforge/lib/python3.12/site-packages/numpy/_core/fromnumeric.py:3523(ndim)
+      100    0.000    0.000    0.000    0.000 {method 'wrap' of 'numpy._core._multiarray_umath._array_converter' objects}
+      200    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+
+

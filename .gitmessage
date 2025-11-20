@@ -1,0 +1,52 @@
+feat: Validação rigorosa completa e dataset expandido
+
+Implementação completa de validação científica rigorosa do modelo Dynamic GNN PBPK:
+
+## Validação Rigorosa de Parâmetros
+- Validação sistemática de parâmetros estimados vs literatura científica
+- Base de dados de literatura com 9 fármacos comuns
+- Análise de Fold Error (FE) para CL, Kp, Vd
+- Descoberta crítica: CL estimado 100-1000× menor que literatura
+
+## Investigação Detalhada
+- Investigação do problema de escala do Cmax
+- Análise de resíduos detalhada (Shapiro-Wilk, t-test)
+- Análise por composto específico
+- Verificação de normalização e unidades
+
+## Dataset Expandido
+- Criação de dataset expandido (6,951 amostras)
+- 200 exemplos com doses baixas (< 10 mg)
+- 307 exemplos com Kp extremos (< 0.5 ou > 5.0)
+- Balanceamento por dose e Kp
+
+## Scripts Criados
+- scripts/validate_parameters_with_literature.py
+- scripts/investigate_cmax_scale_issue.py
+- scripts/analyze_residuals_detailed.py
+- scripts/analyze_specific_compounds.py
+- scripts/verify_normalization_units.py
+- scripts/create_expanded_dataset.py
+- scripts/revalidate_after_finetuning.py
+- scripts/finetune_on_experimental.py
+- scripts/calibrate_model_scale.py
+
+## Documentação
+- docs/RIGOROUS_VALIDATION_FINAL_REPORT.md
+- docs/COMPLETE_INVESTIGATION_SUMMARY.md
+- docs/INVESTIGATION_FINDINGS.md
+- docs/FINAL_VALIDATION_REPORT.md
+- docs/SOTA_IMPROVEMENTS_SUMMARY.md
+
+## Descobertas Críticas
+- Parâmetros estimados sistematicamente incorretos (FE médio ~228×)
+- Problema de escala do Cmax causado por CL incorreto
+- Necessário corrigir algoritmo de estimativa antes de re-treinar
+
+## Resultados
+- Validação completa de 17 compostos
+- Dataset expandido criado e validado
+- Relatórios científicos completos gerados
+
+Data: 2025-11-18
+Autor: AI Assistant + Dr. Demetrios Agourakis

@@ -1,0 +1,322 @@
+{
+  "nodes": [
+    {
+      "id": "apps.pbpk_core.__init__",
+      "filepath": "apps/pbpk_core/__init__.py"
+    },
+    {
+      "id": "apps.training.03_single_task_clearance_multimodal",
+      "filepath": "apps/training/03_single_task_clearance_multimodal.py"
+    },
+    {
+      "id": "apps.training.02_gnn_model",
+      "filepath": "apps/training/02_gnn_model.py"
+    },
+    {
+      "id": "apps.training.01_baseline_mlp",
+      "filepath": "apps/training/01_baseline_mlp.py"
+    },
+    {
+      "id": "apps.api.dependencies",
+      "filepath": "apps/api/dependencies.py"
+    },
+    {
+      "id": "apps.api.models",
+      "filepath": "apps/api/models.py"
+    },
+    {
+      "id": "apps.api.__init__",
+      "filepath": "apps/api/__init__.py"
+    },
+    {
+      "id": "apps.api.main",
+      "filepath": "apps/api/main.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.__init__",
+      "filepath": "apps/pbpk_core/ml/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.embeddings.gin_encoder",
+      "filepath": "apps/pbpk_core/embeddings/gin_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.embeddings.kec_features",
+      "filepath": "apps/pbpk_core/embeddings/kec_features.py"
+    },
+    {
+      "id": "apps.pbpk_core.embeddings.__init__",
+      "filepath": "apps/pbpk_core/embeddings/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.simulation.dynamic_gnn_pbpk",
+      "filepath": "apps/pbpk_core/simulation/dynamic_gnn_pbpk.py"
+    },
+    {
+      "id": "apps.pbpk_core.simulation.ode_pbpk_solver",
+      "filepath": "apps/pbpk_core/simulation/ode_pbpk_solver.py"
+    },
+    {
+      "id": "apps.pbpk_core.simulation.__init__",
+      "filepath": "apps/pbpk_core/simulation/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.physics.pbpk_constraints",
+      "filepath": "apps/pbpk_core/ml/physics/pbpk_constraints.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.physics.__init__",
+      "filepath": "apps/pbpk_core/ml/physics/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.gnn_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/gnn_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.multimodal_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/multimodal_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.kec_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/kec_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.conformer_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/conformer_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.chemberta_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/chemberta_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.kec_algorithms",
+      "filepath": "apps/pbpk_core/ml/multimodal/kec_algorithms.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.qm_encoder",
+      "filepath": "apps/pbpk_core/ml/multimodal/qm_encoder.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.multimodal.__init__",
+      "filepath": "apps/pbpk_core/ml/multimodal/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.kec_pinn.kec_loss",
+      "filepath": "apps/pbpk_core/ml/kec_pinn/kec_loss.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.kec_pinn.evidential_head",
+      "filepath": "apps/pbpk_core/ml/kec_pinn/evidential_head.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.kec_pinn.kec_pinn_model",
+      "filepath": "apps/pbpk_core/ml/kec_pinn/kec_pinn_model.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.kec_pinn.__init__",
+      "filepath": "apps/pbpk_core/ml/kec_pinn/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.pinn.pinn_core",
+      "filepath": "apps/pbpk_core/ml/pinn/pinn_core.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.pinn.physics_loss",
+      "filepath": "apps/pbpk_core/ml/pinn/physics_loss.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.pinn.training_pipeline",
+      "filepath": "apps/pbpk_core/ml/pinn/training_pipeline.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.pinn.__init__",
+      "filepath": "apps/pbpk_core/ml/pinn/__init__.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.evidential.evidential_head",
+      "filepath": "apps/pbpk_core/ml/evidential/evidential_head.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.evidential.evidential_loss",
+      "filepath": "apps/pbpk_core/ml/evidential/evidential_loss.py"
+    },
+    {
+      "id": "apps.pbpk_core.ml.evidential.__init__",
+      "filepath": "apps/pbpk_core/ml/evidential/__init__.py"
+    },
+    {
+      "id": "apps.api.services.model_service",
+      "filepath": "apps/api/services/model_service.py"
+    },
+    {
+      "id": "apps.api.services.embedding_service",
+      "filepath": "apps/api/services/embedding_service.py"
+    },
+    {
+      "id": "apps.api.services.__init__",
+      "filepath": "apps/api/services/__init__.py"
+    },
+    {
+      "id": "apps.api.routers.pbpk",
+      "filepath": "apps/api/routers/pbpk.py"
+    },
+    {
+      "id": "apps.api.routers.models",
+      "filepath": "apps/api/routers/models.py"
+    },
+    {
+      "id": "apps.api.routers.simulation",
+      "filepath": "apps/api/routers/simulation.py"
+    },
+    {
+      "id": "apps.api.routers.__init__",
+      "filepath": "apps/api/routers/__init__.py"
+    }
+  ],
+  "edges": [
+    {
+      "source": "apps.api.models",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.models",
+      "target": "apps.api.routers.models"
+    },
+    {
+      "source": "apps.api.models",
+      "target": "apps.api.routers.simulation"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.dynamic_gnn_pbpk",
+      "target": "apps.pbpk_core.simulation.ode_pbpk_solver"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.dynamic_gnn_pbpk",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.dynamic_gnn_pbpk",
+      "target": "apps.api.routers.simulation"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.ode_pbpk_solver",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.ode_pbpk_solver",
+      "target": "apps.api.routers.simulation"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.__init__",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.pbpk_core.simulation.__init__",
+      "target": "apps.api.routers.simulation"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.gnn_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.gnn_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.multimodal_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.multimodal_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.kec_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.kec_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.conformer_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.conformer_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.chemberta_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.chemberta_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.kec_algorithms",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.kec_algorithms",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.qm_encoder",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.qm_encoder",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.__init__",
+      "target": "apps.training.03_single_task_clearance_multimodal"
+    },
+    {
+      "source": "apps.pbpk_core.ml.multimodal.__init__",
+      "target": "apps.api.services.embedding_service"
+    },
+    {
+      "source": "apps.api.services.model_service",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.services.model_service",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.api.services.embedding_service",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.services.embedding_service",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.api.services.__init__",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.services.__init__",
+      "target": "apps.api.routers.pbpk"
+    },
+    {
+      "source": "apps.api.routers.pbpk",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.routers.models",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.routers.simulation",
+      "target": "apps.api.main"
+    },
+    {
+      "source": "apps.api.routers.__init__",
+      "target": "apps.api.main"
+    }
+  ]
+}

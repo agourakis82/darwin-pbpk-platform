@@ -1,2 +1,0 @@
-"""Darwin PBPK Platform API"""
-
