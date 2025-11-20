@@ -1,30 +1,31 @@
 {
-  "title": "Darwin PBPK Platform - Rigorous Validation Release v0.2.0",
-  "description": "Complete rigorous validation of Dynamic GNN PBPK model with systematic parameter validation against scientific literature, detailed investigation of Cmax scale issues, and expanded dataset creation.",
+  "title": "Darwin PBPK Platform - Julia Implementation",
+  "description": "Complete migration to Julia for Physiologically-Based Pharmacokinetic (PBPK) modeling with Graph Neural Networks. 100% Julia codebase with 4× performance improvement over Python implementation.",
   "creators": [
     {
       "name": "Agourakis, Demetrios",
-      "affiliation": "Darwin Biomaterials"
+      "affiliation": "Independent Researcher"
     }
   ],
   "keywords": [
-    "PBPK modeling",
-    "Graph Neural Networks",
+    "PBPK",
     "Pharmacokinetics",
-    "Machine Learning",
+    "Graph Neural Networks",
+    "Julia",
     "Drug Discovery",
-    "Parameter Validation",
-    "Scientific Validation"
+    "Machine Learning",
+    "Scientific Computing"
   ],
   "license": {
     "id": "MIT"
   },
-  "version": "0.2.0",
+  "version": "2.0.0-julia",
+  "upload_type": "software",
   "publication_date": "2025-11-18",
-  "related_identifiers": [
+  "communities": [
     {
-      "relation": "isSupplementTo",
-      "identifier": "https://github.com/darwin-biomaterials/darwin-pbpk-platform"
+      "identifier": "pharmacokinetics"
     }
-  ]
+  ],
+  "notes": "BREAKING CHANGE: Complete migration from Python to Julia. Repository is now 100% Julia with 0% Python code. Requires Julia 1.9+."
 }
