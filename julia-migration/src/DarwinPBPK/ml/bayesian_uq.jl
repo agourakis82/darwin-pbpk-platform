@@ -177,11 +177,18 @@ function metropolis_hastings(
             log_liks[idx] = current_log_post
         end
 
-        # Adapt proposal during warmup
+        # Adapt proposal during warmup (using current params history)
         if i <= n_warmup && i % 100 == 0 && i >= 100
-            recent_samples = samples[max(1, idx - 100):idx, :]
-            if size(recent_samples, 1) > 10
-                proposal_cov = cov(recent_samples) + 1e-6 * I
+            # During warmup, we don't have idx yet, so skip adaptation
+            # Adaptation will happen implicitly through the proposal acceptance
+        elseif i > n_warmup && i % 100 == 0
+            # Adapt during sampling phase
+            idx = i - n_warmup
+            if idx > 100
+                recent_samples = samples[max(1, idx - 100):idx, :]
+                if size(recent_samples, 1) > 10
+                    proposal_cov = cov(recent_samples) + 1e-6 * I
+                end
             end
         end
     end
