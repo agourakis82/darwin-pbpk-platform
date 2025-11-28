@@ -17,7 +17,7 @@ include("DarwinPBPK/dynamic_gnn.jl")  # FASE 2 ✅
 include("DarwinPBPK/training.jl")     # FASE 2 ✅
 
 # ML modules
-# include("DarwinPBPK/ml/multimodal_encoder.jl")  # FASE 3 ✅ (requer Transformers.jl)
+include("DarwinPBPK/ml/multimodal_encoder.jl")  # FASE 3 ✅ (Real implementation with MolecularGraph.jl)
 include("DarwinPBPK/ml/evidential.jl")          # FASE 3 ✅
 
 # Validation (FASE 4)
@@ -34,7 +34,7 @@ using .ODEPBPKSolver
 using .DatasetGeneration
 using .DynamicGNN
 using .Training
-# using .MultimodalEncoder  # Opcional (requer Transformers.jl)
+using .MultimodalEncoder
 using .Evidential
 using .Validation
 using .RESTAPI

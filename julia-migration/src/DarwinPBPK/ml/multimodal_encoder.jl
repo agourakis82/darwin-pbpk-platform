@@ -1,263 +1,400 @@
 """
-Multimodal Encoder - Encoder Multi-Modal para Representação Molecular
+Multimodal Encoder - Real Implementation with MolecularGraph.jl
 
-Inovações SOTA Q1 2025:
-- ChemBERTa encoder (Transformers.jl) - IMPLEMENTADO
-- GNN encoder (GraphNeuralNetworks.jl) - IMPLEMENTADO
-- Cross-attention fusion (Flux.jl)
-- Type-safe unified representation
+SOTA Q1 2025 Implementation:
+- Real SMILES tokenization with learned embeddings
+- GNN encoder with MolecularGraph.jl for molecular graph construction
+- Cross-attention fusion
 
 Autor: Dr. Demetrios Agourakis + AI Assistant
 Data: Novembro 2025
-Atualizado: 2025-11-18 - Fase 1 SOTA
+Atualizado: 2025-11-28 - Real encoder implementation
 """
 
 module MultimodalEncoder
 
 using Flux
+using Functors: @functor
 using GraphNeuralNetworks
-using StaticArrays
+using MolecularGraph
+using Statistics
 using Random
 
-# Dimensões padrão
-const CHEMBERTA_DIM = 768
-const GNN_DIM = 256
-const SCHNET_DIM = 128
-const KEC_DIM = 15
-const CONFORMER_DIM = 50
-const QM_DIM = 15
+# Dimensions
+const SMILES_VOCAB_SIZE = 128  # ASCII characters
+const SMILES_MAX_LEN = 200
+const SMILES_EMBED_DIM = 64
+const SMILES_HIDDEN_DIM = 256
+const SMILES_OUTPUT_DIM = 768  # Match ChemBERTa output dim
+
+const GNN_NODE_DIM = 32  # Node feature dimension
+const GNN_HIDDEN_DIM = 128
+const GNN_OUTPUT_DIM = 256
+
 const FUSION_DIM = 512
 
+# Atom type encoding (one-hot)
+const ATOM_TYPES = [:C, :N, :O, :S, :F, :Cl, :Br, :I, :P, :B, :Si, :Se, :other]
+const N_ATOM_TYPES = length(ATOM_TYPES)
+
+# Bond type encoding
+const BOND_ORDERS = [1, 2, 3, 4]  # single, double, triple, aromatic
+const N_BOND_TYPES = length(BOND_ORDERS)
+
 """
-ChemBERTa Encoder - IMPLEMENTADO SOTA.
-
-Inovações:
-- Placeholder para Transformers.jl (quando disponível)
-- Fallback para embeddings aprendidos
-- GPU-ready
+Get atom type index (1-indexed for one-hot encoding).
 """
-struct ChemBERTaEncoder
-    model::Chain  # Embedding layer (fallback até Transformers.jl estar disponível)
-    device
+function get_atom_type_idx(symbol::Symbol)::Int
+    idx = findfirst(==(symbol), ATOM_TYPES)
+    return idx === nothing ? N_ATOM_TYPES : idx  # "other" for unknown
+end
 
-    function ChemBERTaEncoder(device = cpu)
-        # TODO: Quando Transformers.jl suportar ChemBERTa:
-        # using Transformers
-        # model, tokenizer = load_model("seyonec/ChemBERTa-zinc-base-v1")
-        # return new(model, tokenizer, device)
+"""
+Create atom feature vector.
 
-        # Por enquanto: Embedding layer aprendido (será treinado)
-        # Input: SMILES string length (assumindo max 200 tokens)
-        # Output: 768d (ChemBERTa dimension)
-        model = Chain(
-            # Simular tokenization: usar hash de SMILES como índice
-            # Na prática, isso será substituído por tokenizer real
-            Dense(1, 256, relu),  # Input: hash(SMILES) mod vocab_size
-            Dense(256, 512, relu),
-            Dense(512, CHEMBERTA_DIM),  # Output: 768d
-        )
-        new(model, device)
+Features (32-dim total):
+- Atom type one-hot (13)
+- Formal charge (1, normalized)
+- Is aromatic (1)
+- Is in ring (1)
+- Hybridization placeholder (4)
+- Degree placeholder (6)
+- Num H placeholder (5)
+- Padding (1)
+"""
+function atom_features(mol, atom_idx::Int)::Vector{Float32}
+    features = zeros(Float32, GNN_NODE_DIM)
+
+    symbols = atomsymbol(mol)
+    charges = charge(mol)
+    aromatic = isaromatic(mol)
+
+    symbol = symbols[atom_idx]
+
+    # Atom type one-hot (1-13)
+    type_idx = get_atom_type_idx(symbol)
+    features[type_idx] = 1.0f0
+
+    # Formal charge (14) - normalized
+    features[14] = Float32(charges[atom_idx]) / 4.0f0
+
+    # Is aromatic (15)
+    features[15] = aromatic[atom_idx] ? 1.0f0 : 0.0f0
+
+    # Is in ring (16) - approximate from aromatic
+    features[16] = aromatic[atom_idx] ? 1.0f0 : 0.0f0
+
+    # Degree (17-22) - count neighbors
+    n_neighbors = length(mol.neighbormap[atom_idx])
+    if n_neighbors <= 6
+        features[16+n_neighbors] = 1.0f0
+    end
+
+    return features
+end
+
+"""
+Convert SMILES to GNNGraph with node features.
+"""
+function smiles_to_graph(smiles::String)::Union{GNNGraph,Nothing}
+    try
+        mol = smilestomol(smiles)
+        n_atoms = atomcount(mol)
+
+        if n_atoms == 0
+            return nothing
+        end
+
+        # Build edge list (undirected)
+        sources = Int[]
+        targets = Int[]
+        for (src, tgt) in mol.edges
+            push!(sources, src)
+            push!(targets, tgt)
+            push!(sources, tgt)
+            push!(targets, src)
+        end
+
+        # Handle molecules with no bonds (single atoms)
+        if isempty(sources)
+            # Self-loop for single atom
+            sources = [1]
+            targets = [1]
+        end
+
+        # Build node features matrix [n_features, n_nodes]
+        node_features = zeros(Float32, GNN_NODE_DIM, n_atoms)
+        for i in 1:n_atoms
+            node_features[:, i] = atom_features(mol, i)
+        end
+
+        # Create GNNGraph
+        g = GNNGraph(sources, targets; ndata=(; x=node_features))
+
+        return g
+    catch e
+        # Invalid SMILES
+        @warn "Failed to parse SMILES: $smiles" exception = e
+        return nothing
     end
 end
 
-function (encoder::ChemBERTaEncoder)(smiles::String)::Vector{Float64}
-    # TODO: Implementar tokenization real quando Transformers.jl estiver disponível
-    # tokens = encode(encoder.tokenizer, smiles)
-    # embedding = encoder.model(tokens)
-    # pooled = mean(embedding, dims=1)  # [1, 768]
-    # return vec(pooled)
+"""
+SMILES Encoder - Learned character-level embeddings with GRU.
 
-    # Por enquanto: usar hash de SMILES como input
-    # Isso é um placeholder - será substituído por tokenization real
-    hash_val = hash(smiles) % 10000  # Normalizar para 0-10000
-    input = [Float64(hash_val) / 10000.0]  # Normalizar para [0, 1]
-    embedding = encoder.model(input)  # [768]
-    return vec(embedding)
+This is a practical alternative to ChemBERTa that can be trained end-to-end.
+For production, consider using HuggingFace Transformers via PyCall.
+"""
+struct SMILESEncoder
+    embedding::Embedding
+    gru::GRU
+    output_proj::Dense
+end
+
+@functor SMILESEncoder
+
+function SMILESEncoder()
+    embedding = Embedding(SMILES_VOCAB_SIZE => SMILES_EMBED_DIM)
+    gru = GRU(SMILES_EMBED_DIM => SMILES_HIDDEN_DIM)
+    output_proj = Dense(SMILES_HIDDEN_DIM => SMILES_OUTPUT_DIM)
+    return SMILESEncoder(embedding, gru, output_proj)
 end
 
 """
-GNN Encoder (GAT) - IMPLEMENTADO SOTA.
+Encode SMILES string to fixed-size embedding.
+"""
+function (encoder::SMILESEncoder)(smiles::String)::Vector{Float32}
+    # Tokenize: character-level with ASCII codes (1-indexed)
+    tokens = [min(Int(c), SMILES_VOCAB_SIZE) for c in smiles]
 
-Inovações:
-- GraphNeuralNetworks.jl com GATConv
-- Message passing otimizado
-- Type-safe graph construction
-- Global pooling (attention-based)
+    # Pad or truncate to max length
+    if length(tokens) > SMILES_MAX_LEN
+        tokens = tokens[1:SMILES_MAX_LEN]
+    elseif length(tokens) < SMILES_MAX_LEN
+        tokens = vcat(tokens, ones(Int, SMILES_MAX_LEN - length(tokens)))
+    end
+
+    # Embed: [embed_dim, seq_len]
+    embedded = encoder.embedding(tokens)
+
+    # GRU expects [features, seq_len, batch] or [features, seq_len]
+    # Reshape to [features, seq_len, 1] for batch of 1
+    embedded_3d = reshape(embedded, size(embedded, 1), size(embedded, 2), 1)
+
+    # GRU: process sequence - returns [hidden_dim, seq_len, batch]
+    Flux.reset!(encoder.gru)
+    gru_out = encoder.gru(embedded_3d)
+
+    # Take last hidden state: [hidden_dim]
+    hidden = gru_out[:, end, 1]
+
+    # Project to output dimension
+    output = encoder.output_proj(hidden)
+
+    return vec(output)
+end
+
+"""
+Batch encode multiple SMILES strings.
+"""
+function (encoder::SMILESEncoder)(smiles_batch::Vector{String})::Matrix{Float32}
+    outputs = [encoder(s) for s in smiles_batch]
+    return hcat(outputs...)  # [output_dim, batch_size]
+end
+
+"""
+GNN Encoder using GraphNeuralNetworks.jl with GATConv.
+
+Real implementation using MolecularGraph.jl for SMILES -> Graph conversion.
 """
 struct GNNEncoder
-    gnn_layers::Vector{Any}  # GATConv layers
-    pooling::Any  # Global pooling
-    device
-
-    function GNNEncoder(device = cpu)
-        # GAT (Graph Attention Network) - SOTA Q1 2025
-        # Node features: 20 (atom type, charge, aromaticity, etc.)
-        # Edge features: 7 (bond type, conjugation, ring, etc.)
-
-        node_dim = 20  # Node features padrão
-        hidden_dim = 128
-        output_dim = GNN_DIM
-
-        gnn_layers = [
-            GATConv(node_dim => hidden_dim, num_heads=4),  # Layer 1: 4 heads
-            GATConv(hidden_dim => hidden_dim, num_heads=4),  # Layer 2: 4 heads
-            GATConv(hidden_dim => output_dim, num_heads=1),  # Layer 3: 1 head (final)
-        ]
-
-        # Global pooling com attention (SOTA)
-        pooling = GlobalAttentionPool(Dense(output_dim, 1))
-
-        new(gnn_layers, pooling, device)
-    end
+    conv1::GATConv
+    conv2::GATConv
+    conv3::GATConv
+    pool::GlobalPool
+    output_proj::Dense
 end
 
-function (encoder::GNNEncoder)(graph::GNNGraph)::Vector{Float64}
-    x = graph.x  # Node features [num_nodes, node_dim]
+@functor GNNEncoder
 
-    # Message passing através das camadas GAT
-    for layer in encoder.gnn_layers
-        x = layer(graph, x)
-    end
+function GNNEncoder()
+    # GAT layers with multi-head attention
+    conv1 = GATConv(GNN_NODE_DIM => GNN_HIDDEN_DIM ÷ 4; heads=4, concat=true)
+    conv2 = GATConv(GNN_HIDDEN_DIM => GNN_HIDDEN_DIM ÷ 4; heads=4, concat=true)
+    conv3 = GATConv(GNN_HIDDEN_DIM => GNN_OUTPUT_DIM; heads=1, concat=false)
 
-    # Global pooling (attention-based)
-    graph_pooled = encoder.pooling(graph, x)  # [GNN_DIM]
+    # Global mean pooling
+    pool = GlobalPool(mean)
 
-    return vec(graph_pooled)
+    # Output projection
+    output_proj = Dense(GNN_OUTPUT_DIM => GNN_OUTPUT_DIM)
+
+    return GNNEncoder(conv1, conv2, conv3, pool, output_proj)
 end
 
 """
-Cross-Attention Fusion - MELHORADO.
+Encode molecular graph to fixed-size embedding.
+"""
+function (encoder::GNNEncoder)(g::GNNGraph)::Vector{Float32}
+    # Get node features
+    x = g.ndata.x  # [node_dim, n_nodes]
 
-Inovações:
-- Multi-head attention (implementação customizada)
-- Type-safe fusion
-- GPU-ready
+    # Message passing
+    x = relu.(encoder.conv1(g, x))
+    x = relu.(encoder.conv2(g, x))
+    x = encoder.conv3(g, x)
+
+    # Global pooling
+    x_pooled = encoder.pool(g, x)  # [output_dim, 1]
+
+    # Output projection
+    output = encoder.output_proj(x_pooled)
+
+    return vec(output)
+end
+
+"""
+Encode from SMILES string (convenience method).
+"""
+function (encoder::GNNEncoder)(smiles::String)::Union{Vector{Float32},Nothing}
+    g = smiles_to_graph(smiles)
+    if g === nothing
+        return nothing
+    end
+    return encoder(g)
+end
+
+"""
+Cross-Attention Fusion Layer.
+
+Fuses multiple modality embeddings using multi-head attention.
 """
 struct CrossAttentionFusion
-    q_proj::Dense  # Query projection
-    k_proj::Dense  # Key projection
-    v_proj::Dense  # Value projection
+    q_proj::Dense
+    k_proj::Dense
+    v_proj::Dense
     output_proj::Dense
     num_heads::Int
     head_dim::Int
-    output_dim::Int
-
-    function CrossAttentionFusion(
-        input_dims::Vector{Int},
-        output_dim::Int = FUSION_DIM,
-        num_heads::Int = 8,
-    )
-        # Assumir primeira modalidade como query, outras como key/value
-        query_dim = input_dims[1]
-        key_dim = sum(input_dims[2:end])
-
-        head_dim = output_dim ÷ num_heads
-
-        q_proj = Dense(query_dim, output_dim)
-        k_proj = Dense(key_dim, output_dim)
-        v_proj = Dense(key_dim, output_dim)
-        output_proj = Dense(output_dim, output_dim)
-
-        new(q_proj, k_proj, v_proj, output_proj, num_heads, head_dim, output_dim)
-    end
 end
 
-function (fusion::CrossAttentionFusion)(embeddings::Vector{Vector{Float64}})::Vector{Float64}
-    if length(embeddings) == 1
-        # Apenas uma modalidade: retornar diretamente
-        return embeddings[1]
-    end
+@functor CrossAttentionFusion
 
-    # Separar query e key/value
-    query = embeddings[1]  # ChemBERTa
-    keys_values = vcat(embeddings[2:end]...)  # GNN, SchNet, etc.
+function CrossAttentionFusion(
+    input_dims::Vector{Int};
+    output_dim::Int=FUSION_DIM,
+    num_heads::Int=8
+)
+    total_input_dim = sum(input_dims)
+    head_dim = output_dim ÷ num_heads
 
-    # Projections
-    Q = fusion.q_proj(query)  # [output_dim]
-    K = fusion.k_proj(keys_values)  # [output_dim]
-    V = fusion.v_proj(keys_values)  # [output_dim]
+    q_proj = Dense(total_input_dim => output_dim)
+    k_proj = Dense(total_input_dim => output_dim)
+    v_proj = Dense(total_input_dim => output_dim)
+    output_proj = Dense(output_dim => output_dim)
 
-    # Multi-head attention (simplificado)
-    # Reshape para [num_heads, head_dim]
-    Q_reshaped = reshape(Q, fusion.num_heads, fusion.head_dim)
-    K_reshaped = reshape(K, fusion.num_heads, fusion.head_dim)
-    V_reshaped = reshape(V, fusion.num_heads, fusion.head_dim)
+    return CrossAttentionFusion(q_proj, k_proj, v_proj, output_proj, num_heads, head_dim)
+end
 
-    # Attention scores
-    scores = Q_reshaped * K_reshaped' ./ sqrt(Float64(fusion.head_dim))  # [num_heads, num_heads]
-    attn_weights = softmax(scores, dims=2)
+"""
+Fuse multiple embeddings using self-attention.
+"""
+function (fusion::CrossAttentionFusion)(embeddings::Vector{Vector{Float32}})::Vector{Float32}
+    # Concatenate all embeddings
+    concat_emb = vcat(embeddings...)
 
-    # Weighted sum
-    attn_output = attn_weights * V_reshaped  # [num_heads, head_dim]
-    attn_output_flat = vec(attn_output)  # [output_dim]
+    # Self-attention projections
+    Q = fusion.q_proj(concat_emb)
+    K = fusion.k_proj(concat_emb)
+    V = fusion.v_proj(concat_emb)
 
-    # Output projection
-    output = fusion.output_proj(attn_output_flat)
+    # Reshape for multi-head attention [num_heads, head_dim]
+    Q_heads = reshape(Q, fusion.head_dim, fusion.num_heads)
+    K_heads = reshape(K, fusion.head_dim, fusion.num_heads)
+    V_heads = reshape(V, fusion.head_dim, fusion.num_heads)
+
+    # Scaled dot-product attention per head
+    scale = Float32(sqrt(fusion.head_dim))
+    attn_scores = (Q_heads' * K_heads) ./ scale  # [num_heads, num_heads]
+    attn_weights = softmax(attn_scores; dims=2)
+
+    # Weighted combination
+    attn_output = attn_weights * V_heads'  # [num_heads, head_dim]
+
+    # Flatten and project
+    output = fusion.output_proj(vec(attn_output'))
 
     return output
 end
 
 """
-Multimodal Molecular Encoder - COMPLETO.
+Multimodal Molecular Encoder - Complete Implementation.
 
-Inovações:
-- Unified encoder com type safety
-- Automatic batching
-- GPU acceleration
-
-Componentes:
-- ChemBERTa: 768d (implementado)
-- GNN (GAT): 256d (implementado)
-- SchNet: 128d (3D) - TODO
-- KEC: 15d (NOVEL) - TODO
-- 3D Conformer: 50d - TODO
-- QM: 15d - TODO
-- Cross-Attention Fusion: 512d unified (melhorado)
-
-Total: 512d unified (2 modalidades ativas)
+Combines:
+- SMILESEncoder: Character-level GRU (768d)
+- GNNEncoder: Graph attention network (256d)
+- CrossAttentionFusion: Multi-head self-attention (512d)
 """
 struct MultimodalMolecularEncoder
-    chemberta::ChemBERTaEncoder
-    gnn::GNNEncoder
-    # schnet::SchNetEncoder  # TODO
-    # kec::KECEncoder  # TODO
-    # conformer::ConformerEncoder  # TODO
-    # qm::QMEncoder  # TODO
+    smiles_encoder::SMILESEncoder
+    gnn_encoder::GNNEncoder
     fusion::CrossAttentionFusion
-
-    function MultimodalMolecularEncoder(device = cpu)
-        chemberta = ChemBERTaEncoder(device)
-        gnn = GNNEncoder(device)
-        fusion = CrossAttentionFusion([CHEMBERTA_DIM, GNN_DIM], FUSION_DIM)
-
-        new(chemberta, gnn, fusion)
-    end
+    use_gnn::Bool
 end
 
-function (encoder::MultimodalMolecularEncoder)(
-    smiles::String,
-    graph::Union{GNNGraph, Nothing} = nothing,
-)::Vector{Float64}
-    embeddings = Vector{Vector{Float64}}()
+@functor MultimodalMolecularEncoder
 
-    # ChemBERTa embedding
-    chemberta_emb = encoder.chemberta(smiles)
-    push!(embeddings, chemberta_emb)
+function MultimodalMolecularEncoder(; use_gnn::Bool=true)
+    smiles_encoder = SMILESEncoder()
+    gnn_encoder = GNNEncoder()
 
-    # GNN embedding (se grafo fornecido)
-    if graph !== nothing
-        gnn_emb = encoder.gnn(graph)
-        push!(embeddings, gnn_emb)
+    if use_gnn
+        fusion = CrossAttentionFusion([SMILES_OUTPUT_DIM, GNN_OUTPUT_DIM])
+    else
+        fusion = CrossAttentionFusion([SMILES_OUTPUT_DIM])
     end
 
-    # TODO: Adicionar outros encoders (SchNet, KEC, Conformer, QM)
+    return MultimodalMolecularEncoder(smiles_encoder, gnn_encoder, fusion, use_gnn)
+end
 
-    # Fusion (cross-attention)
+"""
+Encode molecule from SMILES to unified representation.
+"""
+function (encoder::MultimodalMolecularEncoder)(smiles::String)::Vector{Float32}
+    embeddings = Vector{Vector{Float32}}()
+
+    # SMILES embedding (always computed)
+    smiles_emb = encoder.smiles_encoder(smiles)
+    push!(embeddings, smiles_emb)
+
+    # GNN embedding (if enabled and valid SMILES)
+    if encoder.use_gnn
+        gnn_emb = encoder.gnn_encoder(smiles)
+        if gnn_emb !== nothing
+            push!(embeddings, gnn_emb)
+        else
+            # Fallback: zero embedding if SMILES parsing fails
+            push!(embeddings, zeros(Float32, GNN_OUTPUT_DIM))
+        end
+    end
+
+    # Fuse embeddings
     unified = encoder.fusion(embeddings)
 
     return unified
 end
 
-export MultimodalMolecularEncoder, ChemBERTaEncoder, GNNEncoder, CrossAttentionFusion
+"""
+Batch encode molecules.
+"""
+function (encoder::MultimodalMolecularEncoder)(smiles_batch::Vector{String})::Matrix{Float32}
+    outputs = [encoder(s) for s in smiles_batch]
+    return hcat(outputs...)  # [fusion_dim, batch_size]
+end
+
+# Export public API
+export MultimodalMolecularEncoder, SMILESEncoder, GNNEncoder, CrossAttentionFusion
+export smiles_to_graph, atom_features
+export SMILES_OUTPUT_DIM, GNN_OUTPUT_DIM, FUSION_DIM
 
 end # module
