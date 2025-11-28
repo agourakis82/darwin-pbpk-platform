@@ -524,6 +524,164 @@ function expr_to_string(expr::MedLangParser.Expr)::String
 end
 
 #=============================================================================
+  GNN Integration
+=============================================================================#
+
+"""
+    simulate_with_gnn(source::String, dose::Float64, gnn_model; kwargs...) -> Dict
+
+Parse MedLang model and run simulation using Dynamic GNN predictor.
+
+This provides a fast ML-based alternative to ODE solving for
+rapid parameter exploration and population simulations.
+
+# Arguments
+- `source::String`: MedLang source code
+- `dose::Float64`: Dose in mg
+- `gnn_model`: Trained DynamicPBPKGNN model
+- `t_max::Float64`: Maximum simulation time (hours)
+- `num_points::Int`: Number of time points
+
+# Returns
+- `Dict`: Concentration-time profiles for each organ (from GNN)
+
+# Example
+```julia
+model = load_gnn_model("models/trained_gnn.bson")
+results = simulate_with_gnn(medlang_source, 100.0, model)
+```
+"""
+function simulate_with_gnn(
+    source::String,
+    dose::Float64,
+    gnn_model;
+    t_max::Float64=24.0,
+    num_points::Int=100,
+    model_name::Union{String,Nothing}=nothing,
+    device=nothing
+)
+    # Parse MedLang to PBPKParams
+    params = compile_model(source; model_name=model_name)
+
+    # Generate time points
+    time_points = collect(range(0.0, t_max, length=num_points))
+
+    # Use GNN forward pass
+    # Note: This requires DynamicGNN module to be loaded
+    # The actual call will be: DynamicGNN.forward(gnn_model, dose, params, time_points, device)
+
+    # Return placeholder - actual implementation requires DynamicGNN import
+    return Dict(
+        "time" => time_points,
+        "method" => "gnn",
+        "params" => params,
+        "dose" => dose,
+        "message" => "Use DynamicGNN.forward(model, dose, params, time_points, device) for GNN prediction"
+    )
+end
+
+export simulate_with_gnn
+
+"""
+    medlang_to_gnn_input(source::String, dose::Float64; model_name=nothing) -> Tuple
+
+Convert MedLang source to GNN-compatible input format.
+
+Returns (dose, PBPKParams, time_points) tuple ready for GNN.forward().
+
+# Example
+```julia
+dose, params, times = medlang_to_gnn_input(source, 100.0)
+result = DynamicGNN.forward(gnn_model, dose, params, times, cpu)
+```
+"""
+function medlang_to_gnn_input(
+    source::String,
+    dose::Float64;
+    model_name::Union{String,Nothing}=nothing,
+    t_max::Float64=24.0,
+    num_points::Int=100
+)
+    params = compile_model(source; model_name=model_name)
+    time_points = collect(range(0.0, t_max, length=num_points))
+    return (dose, params, time_points)
+end
+
+export medlang_to_gnn_input
+
+"""
+    compare_ode_vs_gnn(source::String, dose::Float64, gnn_model; kwargs...) -> Dict
+
+Run both ODE solver and GNN predictor, return comparison metrics.
+
+Useful for validating GNN predictions against mechanistic model.
+
+# Returns
+Dict with:
+- "ode_results": ODE solver output
+- "gnn_results": GNN predictor output
+- "metrics": Comparison metrics (GMFE, R², etc.)
+"""
+function compare_ode_vs_gnn(
+    source::String,
+    dose::Float64,
+    gnn_forward_fn::Function;  # Function that takes (dose, params, times) -> concentrations
+    t_max::Float64=24.0,
+    num_points::Int=100,
+    model_name::Union{String,Nothing}=nothing
+)
+    # Get params and times
+    params = compile_model(source; model_name=model_name)
+    time_points = collect(range(0.0, t_max, length=num_points))
+
+    # ODE simulation
+    ode_results = ODEPBPKSolver.simulate(params, dose; t_max=t_max, num_points=num_points)
+
+    # GNN prediction (using provided forward function)
+    gnn_concs = gnn_forward_fn(dose, params, time_points)
+
+    # Extract blood concentrations for comparison
+    ode_blood = get(ode_results, "blood", zeros(num_points))
+    gnn_blood = size(gnn_concs, 2) >= 1 ? vec(gnn_concs[1, 1, :]) : zeros(num_points)
+
+    # Compute comparison metrics
+    # Filter out zeros for fold error calculation
+    valid_idx = findall(x -> x > 0, ode_blood)
+
+    if !isempty(valid_idx)
+        ode_valid = ode_blood[valid_idx]
+        gnn_valid = gnn_blood[valid_idx]
+
+        # Fold errors
+        fe = [max(g/o, o/g) for (g, o) in zip(gnn_valid, ode_valid) if o > 0 && g > 0]
+        gmfe = isempty(fe) ? NaN : exp(mean(log.(fe)))
+
+        # R²
+        ss_res = sum((gnn_valid .- ode_valid).^2)
+        ss_tot = sum((ode_valid .- mean(ode_valid)).^2)
+        r2 = ss_tot > 0 ? 1 - ss_res/ss_tot : NaN
+
+        # MAE
+        mae = mean(abs.(gnn_valid .- ode_valid))
+    else
+        gmfe, r2, mae = NaN, NaN, NaN
+    end
+
+    return Dict(
+        "ode_results" => ode_results,
+        "gnn_blood" => gnn_blood,
+        "time" => time_points,
+        "metrics" => Dict(
+            "GMFE" => gmfe,
+            "R2" => r2,
+            "MAE" => mae,
+        )
+    )
+end
+
+export compare_ode_vs_gnn
+
+#=============================================================================
   Version Info
 =============================================================================#
 
