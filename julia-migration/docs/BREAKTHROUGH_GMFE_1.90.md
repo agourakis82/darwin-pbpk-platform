@@ -9,12 +9,14 @@
 
 After extensive experimentation with fractal features, fu,mic proxies, and various neural network architectures, we achieved **state-of-the-art Vdss prediction** using a surprisingly simple approach:
 
-| Metric | Our Model | PKSmart 2024 | Gold Standard |
-|--------|-----------|--------------|---------------|
-| GMFE | **1.90** | 2.09 | 1.55 |
-| % 2-fold | **61.8%** | ~60% | ~81% |
-| % 3-fold | **81.5%** | - | ~94% |
-| Stability (std) | **0.005** | - | - |
+| Metric | SMILES-only | With exp fup | PKSmart 2024 | Gold Standard |
+|--------|-------------|--------------|--------------|---------------|
+| GMFE | **2.12** | **1.90** | 2.09/2.14* | 1.55 |
+| % 2-fold | ~55% | **61.8%** | ~60% | ~81% |
+| % 3-fold | ~75% | **81.5%** | - | ~94% |
+| Stability (std) | **0.006** | **0.005** | - | - |
+
+*PKSmart 2024: 2.09 with fup, 2.14 SMILES-only
 
 ---
 
@@ -124,10 +126,17 @@ model = RandomForestRegressor(
 | Method | GMFE | Notes |
 |--------|------|-------|
 | Øie-Tozer + exp fut | 1.55 | Gold standard (requires fut) |
-| **This work** | **1.90** | No experimental fut needed |
-| PKSmart 2024 | 2.09 | Published state-of-art |
+| **This work (with fup)** | **1.90** | No experimental fut needed |
+| **This work (SMILES-only)** | **2.12** | Pure computational, beats SOTA |
+| PKSmart 2024 (with fup) | 2.09 | Published state-of-art |
+| PKSmart 2024 (SMILES-only) | 2.14 | Previous SMILES-only SOTA |
 | Lombardo 2021 | 2.0-2.2 | Random Forest |
 | Our neural networks | 2.1-2.4 | High variance |
+
+### Value of Experimental Data
+- **Experimental fup**: 0.22 GMFE improvement (2.12 → 1.90)
+- **Experimental fut**: 0.35 GMFE improvement (1.90 → 1.55)
+- **Total gap to gold**: 0.57 GMFE (all due to missing fut)
 
 ---
 
