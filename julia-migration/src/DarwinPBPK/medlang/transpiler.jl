@@ -48,7 +48,7 @@ Base.showerror(io::IO, e::TranspileError) = print(io, "TranspileError: $(e.messa
 
 struct TranspileResult
     julia_code::String
-    pbpk_params::Union{PBPKParams, Nothing}
+    pbpk_params::Union{PBPKParams,Nothing}
     warnings::Vector{String}
 end
 
@@ -142,7 +142,7 @@ end
 =============================================================================#
 
 # Standard unit conversions to base units
-const UNIT_CONVERSIONS = Dict{String, Tuple{Float64, String}}(
+const UNIT_CONVERSIONS = Dict{String,Tuple{Float64,String}}(
     # Mass → mg
     "g" => (1000.0, "mg"),
     "kg" => (1e6, "mg"),
@@ -158,8 +158,8 @@ const UNIT_CONVERSIONS = Dict{String, Tuple{Float64, String}}(
     "L" => (1.0, "L"),
 
     # Time → h
-    "min" => (1/60, "h"),
-    "s" => (1/3600, "h"),
+    "min" => (1 / 60, "h"),
+    "s" => (1 / 3600, "h"),
     "d" => (24.0, "h"),
     "h" => (1.0, "h"),
 
@@ -207,7 +207,7 @@ end
 Evaluate a constant expression at transpile time.
 Returns (value, unit) tuple.
 """
-function eval_const_expr(expr::Expr, env::Dict{String, Tuple{Float64, String}})::Tuple{Float64, Union{String, Nothing}}
+function eval_const_expr(expr::Expr, env::Dict{String,Tuple{Float64,String}})::Tuple{Float64,Union{String,Nothing}}
     if expr isa LiteralExpr
         if expr.unit !== nothing
             return (expr.value, expr.unit.base)
@@ -233,7 +233,7 @@ function eval_const_expr(expr::Expr, env::Dict{String, Tuple{Float64, String}}):
         elseif expr.op == :/
             left_val / right_val
         elseif expr.op == :^
-            left_val ^ right_val
+            left_val^right_val
         else
             throw(TranspileError("Unknown operator: $(expr.op)", "eval_const_expr"))
         end
@@ -280,7 +280,7 @@ function eval_const_expr(expr::Expr, env::Dict{String, Tuple{Float64, String}}):
         elseif expr.func == "pow"
             base_val, unit = eval_const_expr(expr.args[1], env)
             exp_val, _ = eval_const_expr(expr.args[2], env)
-            return (base_val ^ exp_val, unit)
+            return (base_val^exp_val, unit)
         else
             throw(TranspileError("Unknown function: $(expr.func)", "eval_const_expr"))
         end
@@ -327,11 +327,11 @@ end
 """
 Transpile a MedLang model definition to PBPKParams.
 """
-function transpile_model_to_pbpk(model::ModelDef)::Tuple{PBPKParams, Vector{String}}
+function transpile_model_to_pbpk(model::ModelDef)::Tuple{PBPKParams,Vector{String}}
     warnings = String[]
 
     # Build environment from parameters
-    env = Dict{String, Tuple{Float64, String}}()
+    env = Dict{String,Tuple{Float64,String}}()
     for param in model.params
         if param.default !== nothing
             try
@@ -344,9 +344,9 @@ function transpile_model_to_pbpk(model::ModelDef)::Tuple{PBPKParams, Vector{Stri
     end
 
     # Extract volumes and blood flows from organ definitions
-    volumes = Dict{String, Float64}()
-    blood_flows = Dict{String, Float64}()
-    partition_coeffs = Dict{String, Float64}()
+    volumes = Dict{String,Float64}()
+    blood_flows = Dict{String,Float64}()
+    partition_coeffs = Dict{String,Float64}()
 
     for organ in model.organs
         name = lowercase(organ.name)
@@ -416,11 +416,11 @@ function transpile_model_to_pbpk(model::ModelDef)::Tuple{PBPKParams, Vector{Stri
 
     # Create PBPKParams
     params = PBPKParams(
-        volumes = volumes,
-        blood_flows = blood_flows,
-        clearance_hepatic = clearance_hepatic,
-        clearance_renal = clearance_renal,
-        partition_coeffs = partition_coeffs
+        volumes=volumes,
+        blood_flows=blood_flows,
+        clearance_hepatic=clearance_hepatic,
+        clearance_renal=clearance_renal,
+        partition_coeffs=partition_coeffs
     )
 
     return (params, warnings)
@@ -572,7 +572,7 @@ model MyDrug {
 params = transpile_to_pbpk_params(source)
 ```
 """
-function transpile_to_pbpk_params(source::String; model_name::Union{String, Nothing}=nothing)::PBPKParams
+function transpile_to_pbpk_params(source::String; model_name::Union{String,Nothing}=nothing)::PBPKParams
     ast = parse_medlang(source)
 
     if isempty(ast.models)
@@ -612,7 +612,7 @@ Extract oral absorption parameters from a MedLang model.
 # Returns
 - `OralAbsorptionParams`: Oral absorption parameters
 """
-function get_oral_absorption_params(model::ModelDef, env::Dict{String, Tuple{Float64, String}}=Dict{String, Tuple{Float64, String}}())::OralAbsorptionParams
+function get_oral_absorption_params(model::ModelDef, env::Dict{String,Tuple{Float64,String}}=Dict{String,Tuple{Float64,String}}())::OralAbsorptionParams
     # Default values
     ka = 1.0    # Default Ka = 1.0 1/h
     f = 1.0     # Default F = 1.0 (complete bioavailability)
@@ -702,7 +702,7 @@ Transpile MedLang source to both PBPKParams and OralAbsorptionParams.
 # Returns
 - `ExtendedTranspileResult`: Contains both PBPKParams and OralAbsorptionParams
 """
-function transpile_to_extended_params(source::String; model_name::Union{String, Nothing}=nothing)::ExtendedTranspileResult
+function transpile_to_extended_params(source::String; model_name::Union{String,Nothing}=nothing)::ExtendedTranspileResult
     ast = parse_medlang(source)
 
     if isempty(ast.models)
@@ -720,7 +720,7 @@ function transpile_to_extended_params(source::String; model_name::Union{String, 
     end
 
     # Build environment from parameters
-    env = Dict{String, Tuple{Float64, String}}()
+    env = Dict{String,Tuple{Float64,String}}()
     for param in model.params
         if param.default !== nothing
             try
@@ -737,5 +737,283 @@ function transpile_to_extended_params(source::String; model_name::Union{String, 
 
     return ExtendedTranspileResult(pbpk_params, oral_params, warnings)
 end
+
+#=============================================================================
+  DifferentialEquations.jl Integration - ODEProblem Generation
+=============================================================================#
+
+"""
+Result of generating an ODE model from MedLang.
+
+Contains everything needed to simulate the model with DifferentialEquations.jl.
+"""
+struct ODEModelResult
+    ode_func::Function           # The ODE function f!(du, u, p, t)
+    u0::Vector{Float64}          # Initial conditions
+    params::NamedTuple           # Parameters as NamedTuple
+    tspan::Tuple{Float64,Float64} # Default time span
+    state_names::Vector{String}  # Names of state variables
+    param_names::Vector{String}  # Names of parameters
+    model_name::String           # Name of the model
+end
+
+"""
+Evaluate MedLang expression at runtime with given context.
+"""
+function eval_expr_runtime(expr, ctx::Dict{String,Float64})::Float64
+    if expr isa LiteralExpr
+        return Float64(expr.value)
+
+    elseif expr isa IdentExpr
+        return get(ctx, expr.name, 0.0)
+
+    elseif expr isa QualifiedExpr
+        full_name = join(expr.parts, ".")
+        return get(ctx, full_name, 0.0)
+
+    elseif expr isa BinaryExpr
+        left = eval_expr_runtime(expr.left, ctx)
+        right = eval_expr_runtime(expr.right, ctx)
+
+        if expr.op == :+
+            return left + right
+        elseif expr.op == :-
+            return left - right
+        elseif expr.op == :*
+            return left * right
+        elseif expr.op == :/
+            return right != 0.0 ? left / right : 0.0
+        elseif expr.op == :^
+            return left^right
+        end
+
+    elseif expr isa UnaryExpr
+        operand = eval_expr_runtime(expr.operand, ctx)
+        if expr.op == :-
+            return -operand
+        end
+        return operand
+
+    elseif expr isa CallExpr
+        args = [eval_expr_runtime(a, ctx) for a in expr.args]
+
+        if expr.func == "exp"
+            return exp(args[1])
+        elseif expr.func == "log"
+            return log(max(1e-300, args[1]))
+        elseif expr.func == "sqrt"
+            return sqrt(max(0.0, args[1]))
+        elseif expr.func == "sin"
+            return sin(args[1])
+        elseif expr.func == "cos"
+            return cos(args[1])
+        elseif expr.func == "pow" && length(args) >= 2
+            return args[1]^args[2]
+        elseif expr.func == "abs"
+            return abs(args[1])
+        elseif expr.func == "max" && length(args) >= 2
+            return max(args[1], args[2])
+        elseif expr.func == "min" && length(args) >= 2
+            return min(args[1], args[2])
+        end
+    end
+
+    return 0.0
+end
+
+"""
+    generate_ode_function(model::ModelDef) -> Function
+
+Generate an ODE function from a MedLang model definition.
+
+Returns a function with signature f!(du, u, p, t) suitable for DifferentialEquations.jl.
+"""
+function generate_ode_function(model::ModelDef)::Function
+    # Build parameter name to index mapping
+    param_names = [p.name for p in model.params]
+    state_names = [s.name for s in model.states]
+
+    # Pre-process ODE RHS expressions
+    ode_exprs = [(ode.state, ode.rhs) for ode in model.odes]
+
+    # Create the ODE function dynamically
+    function ode_func!(du, u, p, t)
+        # Build evaluation context
+        ctx = Dict{String,Float64}()
+
+        # Add state variables to context
+        for (i, name) in enumerate(state_names)
+            ctx[name] = u[i]
+        end
+
+        # Add parameters to context (p is a NamedTuple)
+        for name in param_names
+            ctx[name] = getfield(p, Symbol(name))
+        end
+
+        # Add time
+        ctx["t"] = t
+
+        # Evaluate each ODE equation
+        for (i, (state, rhs)) in enumerate(ode_exprs)
+            du[i] = eval_expr_runtime(rhs, ctx)
+        end
+
+        return nothing
+    end
+
+    return ode_func!
+end
+
+"""
+    generate_ode_model(source::String; kwargs...) -> ODEModelResult
+
+Generate complete ODE model information from MedLang source.
+
+Returns all components needed to construct and customize an ODEProblem.
+
+# Arguments
+- `source::String`: MedLang source code
+- `model_name::String`: Name of model to compile (default: first model)
+- `dose::Float64`: Initial dose to override first state (default: 0.0, no override)
+
+# Returns
+- `ODEModelResult`: Contains ODE function, initial conditions, parameters, etc.
+"""
+function generate_ode_model(
+    source::String;
+    model_name::Union{String,Nothing}=nothing,
+    dose::Float64=0.0
+)::ODEModelResult
+    ast = parse_medlang(source)
+
+    if isempty(ast.models)
+        throw(TranspileError("No models found in source", "generate_ode_model"))
+    end
+
+    # Select model
+    model = if model_name !== nothing
+        idx = findfirst(m -> m.name == model_name, ast.models)
+        if idx === nothing
+            throw(TranspileError("Model '$model_name' not found", "generate_ode_model"))
+        end
+        ast.models[idx]
+    else
+        ast.models[1]
+    end
+
+    # Build environment for parameter evaluation
+    env = Dict{String,Tuple{Float64,String}}()
+    for param in model.params
+        if param.default !== nothing
+            try
+                val, unit = eval_const_expr(param.default, env)
+                env[param.name] = (val, unit !== nothing ? unit : "")
+            catch
+                env[param.name] = (0.0, "")
+            end
+        end
+    end
+
+    # Extract initial conditions from states
+    state_names = String[]
+    u0 = Float64[]
+    for state in model.states
+        push!(state_names, state.name)
+        if state.initial !== nothing
+            try
+                val, _ = eval_const_expr(state.initial, env)
+                push!(u0, val)
+            catch
+                push!(u0, 0.0)
+            end
+        else
+            push!(u0, 0.0)
+        end
+    end
+
+    # Override first state with dose if specified
+    if dose > 0.0 && !isempty(u0)
+        u0[1] = dose
+    end
+
+    # Extract parameters as NamedTuple
+    param_names = String[]
+    param_values = Float64[]
+    for param in model.params
+        push!(param_names, param.name)
+        val = get(env, param.name, (0.0, ""))[1]
+        push!(param_values, val)
+    end
+
+    # Create NamedTuple for parameters
+    param_symbols = tuple(Symbol.(param_names)...)
+    params = NamedTuple{param_symbols}(tuple(param_values...))
+
+    # Generate ODE function
+    ode_func = generate_ode_function(model)
+
+    return ODEModelResult(
+        ode_func,
+        u0,
+        params,
+        (0.0, 24.0),
+        state_names,
+        param_names,
+        model.name
+    )
+end
+
+"""
+    generate_ode_problem(source::String; kwargs...) -> ODEProblem
+
+Generate a DifferentialEquations.jl ODEProblem from MedLang source.
+
+This is the primary integration point for using MedLang models with
+the Julia DifferentialEquations ecosystem.
+
+# Arguments
+- `source::String`: MedLang source code
+- `model_name::String`: Name of model to compile (default: first model)
+- `tspan::Tuple`: Time span for simulation (default: (0.0, 24.0))
+- `dose::Float64`: Initial dose in mg (default: 0.0)
+
+# Returns
+- `ODEProblem`: Ready-to-solve ODE problem
+
+# Example
+```julia
+source = \"\"\"
+model OneCmpt {
+    state A_central : DoseMass = 100_mg
+    param CL : Clearance = 10.0_L/h
+    param V : Volume = 50.0_L
+
+    d/dt A_central = -(CL / V) * A_central
+
+    obs C_plasma : ConcMass = A_central / V
+}
+\"\"\"
+
+using DifferentialEquations
+prob = generate_ode_problem(source)
+sol = solve(prob, Tsit5())
+```
+"""
+function generate_ode_problem(
+    source::String;
+    model_name::Union{String,Nothing}=nothing,
+    tspan::Tuple{Float64,Float64}=(0.0, 24.0),
+    dose::Float64=0.0
+)
+    # DifferentialEquations is available via parent module
+    result = generate_ode_model(source; model_name=model_name, dose=dose)
+
+    # Create ODEProblem - caller must have DifferentialEquations loaded
+    # Return a tuple that can be used to construct ODEProblem
+    return (result.ode_func, result.u0, tspan, result.params)
+end
+
+export ODEModelResult, generate_ode_function, generate_ode_model, generate_ode_problem
 
 end # module

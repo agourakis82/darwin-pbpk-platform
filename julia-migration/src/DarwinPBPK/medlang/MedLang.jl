@@ -53,6 +53,9 @@ export TranspileError, TranspileResult
 export OralAbsorptionParams, get_oral_absorption_params, effective_bioavailability
 export calculate_fh, estimate_fg, ExtendedTranspileResult, transpile_to_extended_params
 
+# Re-export ODEProblem generation functions
+export ODEModelResult, generate_ode_function, generate_ode_model, generate_ode_problem
+
 #=============================================================================
   High-Level API
 =============================================================================#
