@@ -27,6 +27,10 @@ export PopulationDef, TimelineDef, DoseEvent, ObserveEvent
 export ParseError, validate_units
 export AbsorptionDef, FirstPassDef, RouteType
 export ROUTE_IV, ROUTE_ORAL, ROUTE_IM, ROUTE_SC, ROUTE_INFUSION
+# SOTA v0.2 Neural-Symbolic exports
+export CompoundDef, NeuralNetSpec, NeuralODEDef, MechanisticODEDef
+export InferenceDef, PharmacodynamicsDef, TargetDef
+export NeuralPredictDef, PriorDef, VirtualPopulationDef, SensitivityAnalysisDef
 
 #=============================================================================
   Token Types
@@ -52,10 +56,37 @@ export ROUTE_IV, ROUTE_ORAL, ROUTE_IM, ROUTE_SC, ROUTE_INFUSION
     TOK_BIND_PARAMS
     TOK_ORGAN
     TOK_CLEARANCE
+
+    # SOTA Neural-Symbolic Keywords (v0.2)
+    TOK_NEURAL_ODE
+    TOK_MECHANISTIC_ODE
+    TOK_NEURAL_PREDICT
+    TOK_NEURAL_ENCODE
+    TOK_COMPOUND
+    TOK_INFERENCE
+    TOK_LIKELIHOOD
+    TOK_PRIOR
+    TOK_POSTERIOR
+    TOK_CONSTRAINT
+    TOK_REGULARIZE
+    TOK_SENSITIVITY
+    TOK_IDENTIFIABILITY
+    TOK_VIRTUAL_POPULATION
+    TOK_PHARMACODYNAMICS
+    TOK_TARGET
+    TOK_DISSOLUTION
+    TOK_PERMEABILITY
     TOK_PARTITION
     TOK_ABSORPTION
     TOK_FIRSTPASS
     TOK_ROUTE
+    # Additional SOTA tokens
+    TOK_SMILES
+    TOK_EMBEDDING
+    TOK_NETWORK
+    TOK_LAYER
+    TOK_ACTIVATION
+    TOK_METHOD
 
     # Literals
     TOK_IDENT
@@ -224,6 +255,102 @@ end
     ROUTE_INFUSION
 end
 
+#=============================================================================
+  SOTA: Neural-Symbolic AST Nodes (v0.2)
+=============================================================================#
+
+"""Compound definition with molecular identity"""
+struct CompoundDef <: ASTNode
+    name::String
+    smiles::String
+    mw::Float64
+    logP::Union{Float64,Nothing}
+    pKa::Union{Float64,Nothing}
+    embedding_model::Union{String,Nothing}
+end
+
+"""Neural network specification within DSL"""
+struct NeuralNetSpec <: ASTNode
+    input_features::Vector{String}
+    hidden_layers::Vector{Int}
+    activation::String
+    output_dim::Int
+end
+
+"""Neural ODE block"""
+struct NeuralODEDef <: ASTNode
+    name::String
+    state::String
+    network::NeuralNetSpec
+    constraints::Vector{Expr}
+    regularization::Union{Expr,Nothing}
+end
+
+"""Mechanistic ODE block (explicit physics)"""
+struct MechanisticODEDef <: ASTNode
+    name::String
+    equations::Vector{ODEEquation}
+end
+
+"""Neural prediction call"""
+struct NeuralPredictDef <: ASTNode
+    input_expr::Expr
+    target::String
+    model_name::String
+end
+
+"""Inference block for Bayesian estimation"""
+struct InferenceDef <: ASTNode
+    likelihood::Vector{Expr}
+    method::String
+    method_params::Dict{String,Any}
+end
+
+"""Prior distribution specification"""
+struct PriorDef <: ASTNode
+    param_name::String
+    distribution::String
+    params::Vector{Float64}
+    source::Union{String,Nothing}
+end
+
+"""Pharmacodynamics block"""
+struct PharmacodynamicsDef <: ASTNode
+    name::String
+    effect_equation::Expr
+    states::Vector{StateDef}
+    odes::Vector{ODEEquation}
+end
+
+"""Target (receptor/enzyme) definition for QSP"""
+struct TargetDef <: ASTNode
+    name::String
+    expression::Dict{String,Float64}  # tissue -> expression level
+    turnover::Float64
+end
+
+"""Virtual population definition"""
+struct VirtualPopulationDef <: ASTNode
+    name::String
+    n_subjects::Int
+    physiology::Dict{String,Any}
+    enzyme_variability::Dict{String,Any}
+    disease_modifiers::Dict{String,Any}
+end
+
+"""Sensitivity analysis specification"""
+struct SensitivityAnalysisDef <: ASTNode
+    model_name::String
+    local_analysis::Bool
+    global_analysis::Bool
+    parameters::Vector{String}
+    method::String
+end
+
+export CompoundDef, NeuralNetSpec, NeuralODEDef, MechanisticODEDef
+export NeuralPredictDef, InferenceDef, PriorDef, PharmacodynamicsDef
+export TargetDef, VirtualPopulationDef, SensitivityAnalysisDef
+
 """Model definition"""
 struct ModelDef <: ASTNode
     name::String
@@ -236,11 +363,33 @@ struct ModelDef <: ASTNode
     absorption::Union{AbsorptionDef,Nothing}
     firstpass::Union{FirstPassDef,Nothing}
     route::RouteType
+    # SOTA v0.2 fields
+    compound::Union{CompoundDef,Nothing}
+    neural_odes::Vector{NeuralODEDef}
+    mechanistic_odes::Vector{MechanisticODEDef}
+    inference::Union{InferenceDef,Nothing}
+    pharmacodynamics::Vector{PharmacodynamicsDef}
+    targets::Vector{TargetDef}
 end
 
-# Constructor with default values for backward compatibility
+# Constructor with default values for backward compatibility (v0.1 API)
 function ModelDef(name, states, params, organs, clearances, odes, observables)
-    ModelDef(name, states, params, organs, clearances, odes, observables, nothing, nothing, ROUTE_IV)
+    ModelDef(
+        name, states, params, organs, clearances, odes, observables,
+        nothing, nothing, ROUTE_IV,  # absorption, firstpass, route
+        nothing, NeuralODEDef[], MechanisticODEDef[],  # compound, neural_odes, mechanistic_odes
+        nothing, PharmacodynamicsDef[], TargetDef[]    # inference, pharmacodynamics, targets
+    )
+end
+
+# Constructor with v0.1 absorption/firstpass/route (backward compatibility)
+function ModelDef(name, states, params, organs, clearances, odes, observables, absorption, firstpass, route)
+    ModelDef(
+        name, states, params, organs, clearances, odes, observables,
+        absorption, firstpass, route,
+        nothing, NeuralODEDef[], MechanisticODEDef[],
+        nothing, PharmacodynamicsDef[], TargetDef[]
+    )
 end
 
 """Dose event in timeline"""
@@ -295,6 +444,7 @@ Base.showerror(io::IO, e::ParseError) = print(io, "ParseError at line $(e.line),
 =============================================================================#
 
 const KEYWORDS = Dict(
+    # Core v0.1 keywords
     "model" => TOK_MODEL,
     "population" => TOK_POPULATION,
     "measure" => TOK_MEASURE,
@@ -317,6 +467,32 @@ const KEYWORDS = Dict(
     "absorption" => TOK_ABSORPTION,
     "firstpass" => TOK_FIRSTPASS,
     "route" => TOK_ROUTE,
+    # SOTA v0.2 Neural-Symbolic keywords
+    "neural_ode" => TOK_NEURAL_ODE,
+    "mechanistic_ode" => TOK_MECHANISTIC_ODE,
+    "neural_predict" => TOK_NEURAL_PREDICT,
+    "neural_encode" => TOK_NEURAL_ENCODE,
+    "compound" => TOK_COMPOUND,
+    "inference" => TOK_INFERENCE,
+    "likelihood" => TOK_LIKELIHOOD,
+    "prior" => TOK_PRIOR,
+    "posterior" => TOK_POSTERIOR,
+    "constraint" => TOK_CONSTRAINT,
+    "regularize" => TOK_REGULARIZE,
+    "sensitivity" => TOK_SENSITIVITY,
+    "identifiability" => TOK_IDENTIFIABILITY,
+    "virtual_population" => TOK_VIRTUAL_POPULATION,
+    "pharmacodynamics" => TOK_PHARMACODYNAMICS,
+    "target" => TOK_TARGET,
+    "dissolution" => TOK_DISSOLUTION,
+    "permeability" => TOK_PERMEABILITY,
+    # Additional SOTA keywords
+    "smiles" => TOK_SMILES,
+    "embedding" => TOK_EMBEDDING,
+    "network" => TOK_NETWORK,
+    "layer" => TOK_LAYER,
+    "activation" => TOK_ACTIVATION,
+    "method" => TOK_METHOD,
 )
 
 # Standard units recognized by MedLang
@@ -944,11 +1120,359 @@ function parse_route_def(p::Parser)::RouteType
     end
 end
 
+#=============================================================================
+  SOTA v0.2 Neural-Symbolic Block Parsers
+=============================================================================#
+
+"""
+Parse compound definition block:
+    compound {
+        smiles: "CC(=O)Oc1ccccc1C(=O)O"
+        mw: 180.16 g/mol
+        logP: 1.2
+        pKa: [3.5, 13.4]
+        embedding: neural_encode(smiles, model="ChemBERTa")
+    }
+"""
+function parse_compound_def(p::Parser)::CompoundDef
+    expect!(p, TOK_COMPOUND)
+    expect!(p, TOK_LBRACE)
+
+    name = "default"
+    smiles = ""
+    mw = 0.0
+    logP = nothing
+    pKa = nothing
+    embedding_model = nothing
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_IDENT) || check(p, TOK_SMILES)
+            field = advance!(p).value
+            expect!(p, TOK_COLON)
+
+            if field == "name"
+                name = expect!(p, TOK_STRING).value
+            elseif field == "smiles"
+                smiles = expect!(p, TOK_STRING).value
+            elseif field == "mw"
+                mw_expr = parse_expr(p)
+                mw = mw_expr isa LiteralExpr ? mw_expr.value : 0.0
+            elseif field == "logP" || field == "logp"
+                logP = parse_expr(p)
+            elseif field == "pKa" || field == "pka"
+                pKa = parse_expr(p)
+            elseif field == "embedding"
+                # Parse neural_encode(...) call
+                embedding_model = parse_expr(p)
+            end
+
+            if check(p, TOK_COMMA)
+                advance!(p)
+            end
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return CompoundDef(name, smiles, mw, logP, pKa, embedding_model)
+end
+
+"""
+Parse neural network specification:
+    network {
+        layers: [64, 32, 16]
+        activation: "swish"
+        dropout: 0.1
+    }
+"""
+function parse_network_spec(p::Parser)::NeuralNetSpec
+    expect!(p, TOK_LBRACE)
+
+    layers = Int[]
+    activation = "tanh"
+    dropout = 0.0
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_IDENT) || check(p, TOK_LAYER) || check(p, TOK_ACTIVATION)
+            field = advance!(p).value
+            expect!(p, TOK_COLON)
+
+            if field == "layers"
+                # Parse array [64, 32, 16]
+                expect!(p, TOK_LBRACKET)
+                while !check(p, TOK_RBRACKET)
+                    if check(p, TOK_INT) || check(p, TOK_FLOAT)
+                        push!(layers, Int(parse(Float64, advance!(p).value)))
+                    end
+                    if check(p, TOK_COMMA)
+                        advance!(p)
+                    end
+                end
+                expect!(p, TOK_RBRACKET)
+            elseif field == "activation"
+                activation = expect!(p, TOK_STRING).value
+            elseif field == "dropout"
+                dropout = parse(Float64, advance!(p).value)
+            end
+
+            if check(p, TOK_COMMA)
+                advance!(p)
+            end
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return NeuralNetSpec(layers, activation, dropout)
+end
+
+"""
+Parse neural ODE block:
+    neural_ode tissue_dynamics {
+        state: C_tissue
+        network { layers: [64, 32], activation: "swish" }
+        constraint: dC >= 0  # Physiological constraint
+        regularize: L2(1e-4)
+    }
+"""
+function parse_neural_ode_def(p::Parser)::NeuralODEDef
+    expect!(p, TOK_NEURAL_ODE)
+    name = expect!(p, TOK_IDENT).value
+    expect!(p, TOK_LBRACE)
+
+    state = ""
+    network = NeuralNetSpec(Int[], "tanh", 0.0)
+    constraints = Expr[]
+    regularization = nothing
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_STATE)
+            advance!(p)
+            expect!(p, TOK_COLON)
+            state = expect!(p, TOK_IDENT).value
+        elseif check(p, TOK_NETWORK) || (check(p, TOK_IDENT) && current(p).value == "network")
+            advance!(p)
+            if check(p, TOK_COLON)
+                advance!(p)
+            end
+            network = parse_network_spec(p)
+        elseif check(p, TOK_CONSTRAINT) || (check(p, TOK_IDENT) && current(p).value == "constraint")
+            advance!(p)
+            expect!(p, TOK_COLON)
+            push!(constraints, parse_expr(p))
+        elseif check(p, TOK_REGULARIZE) || (check(p, TOK_IDENT) && current(p).value == "regularize")
+            advance!(p)
+            expect!(p, TOK_COLON)
+            regularization = parse_expr(p)
+        else
+            advance!(p)
+        end
+
+        if check(p, TOK_COMMA)
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return NeuralODEDef(name, state, network, constraints, regularization)
+end
+
+"""
+Parse mechanistic ODE block:
+    mechanistic_ode elimination {
+        d/dt(C_blood) = -CL/V * C_blood
+        constraint: C_blood >= 0
+    }
+"""
+function parse_mechanistic_ode_def(p::Parser)::MechanisticODEDef
+    expect!(p, TOK_MECHANISTIC_ODE)
+    name = expect!(p, TOK_IDENT).value
+    expect!(p, TOK_LBRACE)
+
+    equations = ODEEquation[]
+    constraints = Expr[]
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_D_DT) || (check(p, TOK_IDENT) && startswith(current(p).value, "d"))
+            push!(equations, parse_ode_equation(p))
+        elseif check(p, TOK_CONSTRAINT) || (check(p, TOK_IDENT) && current(p).value == "constraint")
+            advance!(p)
+            expect!(p, TOK_COLON)
+            push!(constraints, parse_expr(p))
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return MechanisticODEDef(name, equations, constraints)
+end
+
+"""
+Parse inference block (Bayesian):
+    inference {
+        likelihood {
+            obs_Cp ~ Normal(C_blood, sigma)
+        }
+        prior {
+            CL ~ LogNormal(log(5.0), 0.3)
+            V ~ LogNormal(log(50.0), 0.2)
+            sigma ~ HalfNormal(0.1)
+        }
+        method: NUTS(1000, 0.65)
+    }
+"""
+function parse_inference_def(p::Parser)::InferenceDef
+    expect!(p, TOK_INFERENCE)
+    expect!(p, TOK_LBRACE)
+
+    likelihood = Expr[]
+    method = "NUTS"
+    method_params = Dict{String,Any}()
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_LIKELIHOOD) || (check(p, TOK_IDENT) && current(p).value == "likelihood")
+            advance!(p)
+            expect!(p, TOK_LBRACE)
+            while !check(p, TOK_RBRACE)
+                push!(likelihood, parse_expr(p))
+                if check(p, TOK_COMMA)
+                    advance!(p)
+                end
+            end
+            expect!(p, TOK_RBRACE)
+        elseif check(p, TOK_PRIOR) || (check(p, TOK_IDENT) && current(p).value == "prior")
+            # Prior block - parse but store in likelihood for now (unified)
+            advance!(p)
+            expect!(p, TOK_LBRACE)
+            while !check(p, TOK_RBRACE)
+                push!(likelihood, parse_expr(p))
+                if check(p, TOK_COMMA)
+                    advance!(p)
+                end
+            end
+            expect!(p, TOK_RBRACE)
+        elseif check(p, TOK_METHOD) || (check(p, TOK_IDENT) && current(p).value == "method")
+            advance!(p)
+            expect!(p, TOK_COLON)
+            method = expect!(p, TOK_IDENT).value
+            # Parse method params if present
+            if check(p, TOK_LPAREN)
+                advance!(p)
+                param_idx = 1
+                while !check(p, TOK_RPAREN)
+                    if check(p, TOK_INT) || check(p, TOK_FLOAT)
+                        method_params["arg$param_idx"] = parse(Float64, advance!(p).value)
+                        param_idx += 1
+                    end
+                    if check(p, TOK_COMMA)
+                        advance!(p)
+                    end
+                end
+                expect!(p, TOK_RPAREN)
+            end
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return InferenceDef(likelihood, method, method_params)
+end
+
+"""
+Parse pharmacodynamics block:
+    pharmacodynamics effect {
+        model: Emax
+        E0: 0.0
+        Emax: 100.0
+        EC50: 10.0 ng/mL
+        hill: 1.0
+    }
+"""
+function parse_pharmacodynamics_def(p::Parser)::PharmacodynamicsDef
+    expect!(p, TOK_PHARMACODYNAMICS)
+    name = expect!(p, TOK_IDENT).value
+    expect!(p, TOK_LBRACE)
+
+    pd_model = "Emax"
+    params = Dict{String,Expr}()
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_IDENT)
+            field = advance!(p).value
+            expect!(p, TOK_COLON)
+
+            if field == "model"
+                pd_model = expect!(p, TOK_IDENT).value
+            else
+                params[field] = parse_expr(p)
+            end
+
+            if check(p, TOK_COMMA)
+                advance!(p)
+            end
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return PharmacodynamicsDef(name, pd_model, params)
+end
+
+"""
+Parse target block:
+    target receptor {
+        type: GPCR
+        Kd: 1.5 nM
+        kon: 1e6 1/(M*s)
+        koff: 1e-3 1/s
+    }
+"""
+function parse_target_def(p::Parser)::TargetDef
+    expect!(p, TOK_TARGET)
+    name = expect!(p, TOK_IDENT).value
+    expect!(p, TOK_LBRACE)
+
+    target_type = "receptor"
+    params = Dict{String,Expr}()
+
+    while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
+        if check(p, TOK_IDENT)
+            field = advance!(p).value
+            expect!(p, TOK_COLON)
+
+            if field == "type"
+                target_type = expect!(p, TOK_IDENT).value
+            else
+                params[field] = parse_expr(p)
+            end
+
+            if check(p, TOK_COMMA)
+                advance!(p)
+            end
+        else
+            advance!(p)
+        end
+    end
+
+    expect!(p, TOK_RBRACE)
+    return TargetDef(name, target_type, params)
+end
+
+#=============================================================================
+  Model Parsing
+=============================================================================#
+
 function parse_model_def(p::Parser)::ModelDef
     expect!(p, TOK_MODEL)
     name = expect!(p, TOK_IDENT).value
     expect!(p, TOK_LBRACE)
 
+    # v0.1 fields
     states = StateDef[]
     params = ParamDef[]
     organs = OrganDef[]
@@ -958,6 +1482,14 @@ function parse_model_def(p::Parser)::ModelDef
     absorption = nothing
     firstpass = nothing
     route = ROUTE_IV
+
+    # SOTA v0.2 fields
+    compound = nothing
+    neural_odes = NeuralODEDef[]
+    mechanistic_odes = MechanisticODEDef[]
+    inference = nothing
+    pharmacodynamics = PharmacodynamicsDef[]
+    targets = TargetDef[]
 
     while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
         if check(p, TOK_STATE)
@@ -976,6 +1508,19 @@ function parse_model_def(p::Parser)::ModelDef
             firstpass = parse_firstpass_def(p)
         elseif check(p, TOK_ROUTE)
             route = parse_route_def(p)
+        # SOTA v0.2 blocks
+        elseif check(p, TOK_COMPOUND)
+            compound = parse_compound_def(p)
+        elseif check(p, TOK_NEURAL_ODE)
+            push!(neural_odes, parse_neural_ode_def(p))
+        elseif check(p, TOK_MECHANISTIC_ODE)
+            push!(mechanistic_odes, parse_mechanistic_ode_def(p))
+        elseif check(p, TOK_INFERENCE)
+            inference = parse_inference_def(p)
+        elseif check(p, TOK_PHARMACODYNAMICS)
+            push!(pharmacodynamics, parse_pharmacodynamics_def(p))
+        elseif check(p, TOK_TARGET)
+            push!(targets, parse_target_def(p))
         elseif check(p, TOK_D_DT) || (check(p, TOK_IDENT) && startswith(current(p).value, "d"))
             push!(odes, parse_ode_equation(p))
         else
@@ -985,7 +1530,12 @@ function parse_model_def(p::Parser)::ModelDef
 
     expect!(p, TOK_RBRACE)
 
-    return ModelDef(name, states, params, organs, clearances, odes, observables, absorption, firstpass, route)
+    return ModelDef(
+        name, states, params, organs, clearances, odes, observables,
+        absorption, firstpass, route,
+        compound, neural_odes, mechanistic_odes,
+        inference, pharmacodynamics, targets
+    )
 end
 
 #-----------------------------------------------------------------------------

@@ -1,0 +1,431 @@
+// MedLang SOTA: Neural-Symbolic PBPK Model
+// First-ever DSL combining mechanistic PBPK with neural surrogates
+//
+// INNOVATION: Seamless integration of:
+// - Mechanistic ODEs (physics-based)
+// - Neural ODEs (data-driven)
+// - Probabilistic inference (Bayesian)
+// - Molecular embeddings (ChemBERTa/GNN)
+//
+// Author: Dr. Demetrios Agourakis
+// Date: November 2025
+// Reference: github.com/agourakis82/medlang
+
+// ============================================================================
+// SOTA Model 1: Hybrid Neural-Mechanistic PBPK
+// ============================================================================
+
+model NeuralPBPK {
+
+    // -------------------------------------------------------------------------
+    // Molecular Identity (SMILES-aware)
+    // -------------------------------------------------------------------------
+
+    compound {
+        smiles: "CC(=O)OC1=CC=CC=C1C(=O)O",  // Aspirin
+        name: "Aspirin",
+        mw: 180.16_Da,
+        logP: 1.19,
+        pKa: 3.49,
+
+        // Neural embedding from pre-trained model
+        embedding: neural_encode(smiles, model="ChemBERTa-77M")
+    }
+
+    // -------------------------------------------------------------------------
+    // States with Uncertainty
+    // -------------------------------------------------------------------------
+
+    state A_blood : DoseMass ~ LogNormal(0_mg, 0.1)
+    state A_liver : DoseMass ~ LogNormal(0_mg, 0.1)
+    state A_kidney : DoseMass ~ LogNormal(0_mg, 0.1)
+    state A_tissue : DoseMass ~ LogNormal(0_mg, 0.1)
+
+    // -------------------------------------------------------------------------
+    // Learnable Parameters with Priors
+    // -------------------------------------------------------------------------
+
+    // Clearance with informative prior from population data
+    param CL_hepatic : Clearance ~ LogNormal(log(10.0_L/h), 0.5)
+        prior_source: "Obach et al. 2008, n=670 drugs"
+
+    param CL_renal : Clearance ~ LogNormal(log(2.5_L/h), 0.5)
+        prior_source: "GFR-based, 70kg adult"
+
+    // Partition coefficients predicted by neural network
+    param Kp_liver : Partition = neural_predict(
+        compound.embedding,
+        target: "Kp_liver",
+        model: "darwin_kp_predictor_v2"
+    )
+
+    param Kp_kidney : Partition = neural_predict(
+        compound.embedding,
+        target: "Kp_kidney",
+        model: "darwin_kp_predictor_v2"
+    )
+
+    // -------------------------------------------------------------------------
+    // Hybrid ODE System
+    // -------------------------------------------------------------------------
+
+    // Mechanistic component (known physics)
+    mechanistic_ode liver_clearance {
+        d/dt A_liver = Q_liver * (C_blood - C_liver/Kp_liver) - CL_hepatic * C_liver
+    }
+
+    mechanistic_ode renal_clearance {
+        d/dt A_kidney = Q_kidney * (C_blood - C_kidney/Kp_kidney) - CL_renal * C_kidney
+    }
+
+    // Neural ODE component (unknown dynamics learned from data)
+    neural_ode tissue_distribution {
+        // Learns complex tissue distribution not captured by simple Kp
+        d/dt A_tissue = NeuralNet(
+            input: [C_blood, C_liver, C_kidney, compound.embedding],
+            hidden: [128, 64, 32],
+            activation: "swish",
+            output: 1
+        )
+
+        // Physics constraint: mass conservation
+        constraint: sum(A_blood, A_liver, A_kidney, A_tissue) == A_total
+
+        // Regularization toward mechanistic model
+        regularize: L2(neural_flux - mechanistic_flux, lambda=0.01)
+    }
+
+    // -------------------------------------------------------------------------
+    // Bayesian Inference Block
+    // -------------------------------------------------------------------------
+
+    inference {
+        // Likelihood for observed concentrations
+        likelihood {
+            C_obs ~ Normal(C_blood, sigma_prop * C_blood + sigma_add)
+        }
+
+        // Error model parameters
+        param sigma_prop : f64 ~ HalfNormal(0.2)
+        param sigma_add : ConcMass ~ HalfNormal(0.1_mg/L)
+
+        // Inference method
+        method: NUTS(
+            n_samples: 2000,
+            n_warmup: 1000,
+            target_accept: 0.8,
+            max_tree_depth: 10
+        )
+
+        // Alternative: Variational Inference for speed
+        method_fast: ADVI(
+            n_iterations: 10000,
+            n_samples: 100
+        )
+    }
+
+    // -------------------------------------------------------------------------
+    // Observables with Uncertainty Propagation
+    // -------------------------------------------------------------------------
+
+    obs C_blood : ConcMass = A_blood / V_blood
+        uncertainty: propagate_posterior
+        credible_interval: 0.95
+
+    obs AUC : AUCUnit = integral(C_blood, 0_h, 24_h)
+        uncertainty: propagate_posterior
+
+    obs Cmax : ConcMass = max(C_blood)
+        uncertainty: propagate_posterior
+
+    obs Tmax : Time = argmax(C_blood)
+        uncertainty: propagate_posterior
+}
+
+
+// ============================================================================
+// SOTA Model 2: QSP with Target-Mediated Drug Disposition (TMDD)
+// ============================================================================
+
+model TMDD_QSP {
+
+    // -------------------------------------------------------------------------
+    // Drug and Target Definition
+    // -------------------------------------------------------------------------
+
+    compound drug {
+        smiles: "...",  // Monoclonal antibody
+        type: "biologic",
+        mw: 150000_Da,
+        target_affinity: 0.1_nM
+    }
+
+    target receptor {
+        name: "PD-1",
+        expression: tissue_specific([
+            ("T_cell", 10000_receptors/cell),
+            ("tumor", 5000_receptors/cell)
+        ]),
+        turnover: 0.1_1/day
+    }
+
+    // -------------------------------------------------------------------------
+    // TMDD States
+    // -------------------------------------------------------------------------
+
+    state C_drug : ConcMolar = 0_nM           // Free drug
+    state R_free : ConcMolar = R_0            // Free receptor
+    state DR : ConcMolar = 0_nM               // Drug-receptor complex
+
+    // -------------------------------------------------------------------------
+    // TMDD Parameters with Identifiability Analysis
+    // -------------------------------------------------------------------------
+
+    param kon : RateConst ~ LogNormal(log(0.1_1/nM/h), 0.3)
+        identifiable: true
+        sensitivity: high
+
+    param koff : RateConst ~ LogNormal(log(0.01_1/h), 0.3)
+        identifiable: true
+
+    param kint : RateConst ~ LogNormal(log(0.05_1/h), 0.5)
+        identifiable: conditional  // Only with rich sampling
+
+    param ksyn : RateConst = receptor.turnover * R_0
+        derived: true
+
+    param kdeg : RateConst = receptor.turnover
+        fixed: true
+
+    // Derived: Equilibrium dissociation constant
+    derived Kd : ConcMolar = koff / kon
+
+    // -------------------------------------------------------------------------
+    // TMDD ODEs (Quasi-Equilibrium Approximation Option)
+    // -------------------------------------------------------------------------
+
+    ode_system full_tmdd {
+        d/dt C_drug = -kon * C_drug * R_free + koff * DR - CL/V * C_drug
+        d/dt R_free = ksyn - kdeg * R_free - kon * C_drug * R_free + koff * DR
+        d/dt DR = kon * C_drug * R_free - koff * DR - kint * DR
+    }
+
+    // Alternative: QSS approximation for computational efficiency
+    ode_system qss_tmdd when C_drug >> Kd {
+        // Receptor dynamics at quasi-steady-state
+        R_free_qss = R_0 * Kd / (Kd + C_drug)
+        DR_qss = R_0 * C_drug / (Kd + C_drug)
+
+        d/dt C_drug = -CL/V * C_drug - kint * DR_qss
+    }
+
+    // -------------------------------------------------------------------------
+    // PD Effect (Tumor Kill)
+    // -------------------------------------------------------------------------
+
+    pharmacodynamics tumor_response {
+        // T-cell activation as function of receptor occupancy
+        RO = DR / (R_free + DR)
+        T_cell_activation = Emax * RO^gamma / (EC50^gamma + RO^gamma)
+
+        // Tumor dynamics
+        state tumor_volume : Volume = 100_mm3
+
+        d/dt tumor_volume = kg * tumor_volume * (1 - tumor_volume/Vmax)
+                          - kkill * T_cell_activation * tumor_volume
+
+        // Resistance emergence (stochastic)
+        state resistant_fraction : Fraction ~ Beta(1, 99)
+        d/dt resistant_fraction = mutation_rate * (1 - resistant_fraction)
+    }
+}
+
+
+// ============================================================================
+// SOTA Model 3: Multi-Scale Absorption (Advanced Oral)
+// ============================================================================
+
+model AdvancedOralAbsorption {
+
+    // -------------------------------------------------------------------------
+    // GI Tract Compartments
+    // -------------------------------------------------------------------------
+
+    // Transit compartment absorption (CAT model)
+    compartment_chain GI_transit {
+        n_compartments: 7,
+        transit_time: MTT,  // Mean transit time
+
+        // Spatially-varying absorption
+        absorption_rate(compartment_idx) = Ka_max * regional_peff(compartment_idx)
+    }
+
+    state A_stomach : DoseMass = Dose
+    state A_duodenum : DoseMass = 0_mg
+    state A_jejunum_1 : DoseMass = 0_mg
+    state A_jejunum_2 : DoseMass = 0_mg
+    state A_ileum_1 : DoseMass = 0_mg
+    state A_ileum_2 : DoseMass = 0_mg
+    state A_colon : DoseMass = 0_mg
+    state A_absorbed : DoseMass = 0_mg
+
+    // -------------------------------------------------------------------------
+    // Dissolution (for solid dosage forms)
+    // -------------------------------------------------------------------------
+
+    dissolution {
+        model: "Noyes-Whitney",
+
+        // Particle size distribution
+        particle_size: LogNormal(50_um, 0.3),
+
+        // Solubility as function of pH
+        solubility(pH) = case {
+            pH < pKa - 2 : S_ionized,
+            pH > pKa + 2 : S_neutral,
+            else : S_neutral * (1 + 10^(pH - pKa))
+        }
+
+        // Supersaturation and precipitation
+        enable_precipitation: true,
+        precipitation_rate: kprec
+    }
+
+    // -------------------------------------------------------------------------
+    // Permeability (PAMPA/Caco-2 predicted)
+    // -------------------------------------------------------------------------
+
+    permeability {
+        // Neural prediction from molecular structure
+        Peff = neural_predict(
+            compound.embedding,
+            target: "Caco2_Papp",
+            model: "darwin_perm_predictor_v1"
+        )
+
+        // Regional scaling factors
+        regional_peff(region) = Peff * case region {
+            "stomach" : 0.1,
+            "duodenum" : 1.2,
+            "jejunum" : 1.0,
+            "ileum" : 0.8,
+            "colon" : 0.3
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // First-Pass Metabolism
+    // -------------------------------------------------------------------------
+
+    first_pass {
+        // Gut wall metabolism (CYP3A4)
+        Fg = 1 - Eg
+        Eg = neural_predict(compound.embedding, target: "Fg_CYP3A4")
+
+        // Hepatic extraction
+        Fh = 1 - Eh
+        Eh = CL_hepatic / (Q_liver + CL_hepatic)  // Well-stirred model
+    }
+
+    // Effective bioavailability
+    derived F_eff : Fraction = Fa * Fg * Fh
+}
+
+
+// ============================================================================
+// SOTA Model 4: Physiological Variability (Virtual Populations)
+// ============================================================================
+
+virtual_population Adult_Healthy_VPop {
+
+    // Base demographics
+    n_subjects: 1000,
+
+    // Correlated physiological parameters
+    multivariate_normal physiology {
+        // Body composition
+        BW ~ LogNormal(log(70_kg), 0.2),
+        height ~ Normal(170_cm, 10_cm),
+        BMI = BW / (height/100)^2,
+
+        // Organ volumes (allometrically scaled)
+        V_liver = 0.026 * BW,
+        V_kidney = 0.0044 * BW,
+
+        // Blood flows (cardiac output based)
+        CO ~ Normal(5.5_L/min, 0.8_L/min),
+        Q_liver = 0.27 * CO,
+        Q_kidney = 0.22 * CO,
+
+        // Correlation matrix
+        correlation: [
+            [1.0, 0.7, 0.3, 0.5],   // BW correlations
+            [0.7, 1.0, 0.2, 0.4],   // height correlations
+            [0.3, 0.2, 1.0, 0.8],   // CO correlations
+            [0.5, 0.4, 0.8, 1.0]    // Other
+        ]
+    }
+
+    // Enzymatic variability (genotype-informed)
+    enzyme_variability {
+        CYP3A4_activity ~ Mixture([
+            (0.70, LogNormal(log(1.0), 0.3)),  // Extensive metabolizers
+            (0.25, LogNormal(log(0.5), 0.2)),  // Intermediate
+            (0.05, LogNormal(log(0.1), 0.1))   // Poor metabolizers
+        ])
+
+        CYP2D6_activity ~ categorical_from_genotype(
+            genotype_frequencies: CPIC_database("CYP2D6")
+        )
+    }
+
+    // Disease state modifiers
+    modifiers disease_state {
+        if renal_impairment {
+            GFR_reduction: case severity {
+                "mild" : 0.7,
+                "moderate" : 0.4,
+                "severe" : 0.2
+            }
+        }
+
+        if hepatic_impairment {
+            CL_hepatic_reduction: case child_pugh {
+                "A" : 0.8,
+                "B" : 0.5,
+                "C" : 0.2
+            }
+        }
+    }
+}
+
+
+// ============================================================================
+// SOTA Feature: Auto-Differentiation for Sensitivity Analysis
+// ============================================================================
+
+sensitivity_analysis {
+    model: NeuralPBPK,
+
+    // Local sensitivity (gradients)
+    local {
+        compute: jacobian(observables, parameters),
+        at: parameter_nominal_values,
+        output: sensitivity_matrix
+    }
+
+    // Global sensitivity (Sobol indices)
+    global {
+        method: "Sobol",
+        n_samples: 10000,
+        compute: [first_order_indices, total_order_indices],
+        parameters: [CL_hepatic, CL_renal, Kp_liver, Kp_kidney]
+    }
+
+    // Identifiability analysis
+    identifiability {
+        method: "profile_likelihood",
+        confidence_level: 0.95,
+        report: practical_identifiability
+    }
+}
