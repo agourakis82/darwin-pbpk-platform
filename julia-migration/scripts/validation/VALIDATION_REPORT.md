@@ -120,3 +120,62 @@ Terminal half-life derived from concentration-time profile:
 1. Obach RS, Lombardo F, Waters NJ (2008) Drug Metab Dispos 36:1385-1405
 2. Lombardo F, Berellini G, Obach RS (2018) Drug Metab Dispos 46:1466-1477
 3. PKSmart: https://srijitseal.com/PKSmart/
+
+---
+
+## Q1 2025 Implementation Status
+
+### Completed Features (November 2025)
+
+| Feature | Module | Status |
+|---------|--------|--------|
+| **Real SMILES/GNN Encoders** | `ml/multimodal_encoder.jl` | ✅ Complete |
+| **LR Scheduling** | `training.jl` | ✅ Complete |
+| **Dimensional Analysis** | `medlang/parser.jl` | ✅ Complete |
+| **ODEProblem Generation** | `medlang/transpiler.jl` | ✅ Complete |
+| **Bayesian UQ** | `ml/bayesian_uq.jl` | ✅ Complete |
+| **Real Data Training** | `scripts/training/train_on_real_data.jl` | ✅ Complete |
+
+### ML Module Implementations
+
+#### Multimodal Encoder (`ml/multimodal_encoder.jl`)
+- **SMILESEncoder**: GRU-based sequence encoder (768d output)
+- **GNNEncoder**: GAT-based graph encoder with MolecularGraph.jl (256d output)
+- **CrossAttentionFusion**: Multi-head cross-attention for modality fusion (512d unified)
+
+#### Bayesian UQ (`ml/bayesian_uq.jl`)
+- **Metropolis-Hastings MCMC**: Adaptive proposal covariance
+- **Variational Inference**: Mean-field ADVI-style approximation
+- **Uncertainty Calibration**: ECE, reliability diagrams
+- **Default PBPK Priors**: Population PK-informed priors
+
+#### Training Enhancements (`training.jl`)
+- **CosineAnnealingWarmRestarts**: With warmup epochs
+- **StepLR**: Learning rate step decay
+- **OneCycleLR**: Super-convergence scheduling
+
+### MedLang DSL Enhancements
+
+#### Dimensional Analysis (`medlang/parser.jl`)
+- Full dimensional analysis for pharmacometric units
+- Automatic unit inference from MedLang types
+- Validation of equation dimensional consistency
+
+#### ODE Integration (`medlang/transpiler.jl`)
+- `generate_ode_problem()`: Creates DifferentialEquations.jl-compatible tuples
+- Runtime expression evaluation
+- Parameter extraction and state variable mapping
+
+### Validation Data
+
+| Dataset | Drugs | Source |
+|---------|-------|--------|
+| validation_drugs_100.json | 102 | FDA/Literature PK |
+| Lombardo-Obach | 1,232 | Published 2018 |
+
+### Next Steps
+
+1. Run full training on experimental data (requires ~2h GPU time)
+2. Execute v0.3-v1.0 feature test suites
+3. Generate publication-ready figures
+4. Prepare Q1 2025 manuscript submission
