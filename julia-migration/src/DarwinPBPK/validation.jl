@@ -339,7 +339,7 @@ function plot_scientific_metrics(
 end
 
 export validate_scientific, fold_error, geometric_mean_fold_error, percent_within_fold
-export mae_rmse_log10, r_squared, plot_scientific_metrics
+export mae_rmse_log10, r_squared, plot_scientific_metrics, trapezoidal_auc
 
 end # module
 
