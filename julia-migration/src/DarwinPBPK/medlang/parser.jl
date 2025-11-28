@@ -111,23 +111,23 @@ abstract type ASTNode end
 struct UnitExpr <: ASTNode
     base::String
     power::Int
-    compound::Vector{Tuple{String, Int}}  # [(unit, power), ...]
+    compound::Vector{Tuple{String,Int}}  # [(unit, power), ...]
 end
 
-UnitExpr(base::String) = UnitExpr(base, 1, Tuple{String, Int}[])
+UnitExpr(base::String) = UnitExpr(base, 1, Tuple{String,Int}[])
 
 """Type expression with optional unit"""
 struct TypeExpr <: ASTNode
     name::String
-    unit::Union{UnitExpr, Nothing}
+    unit::Union{UnitExpr,Nothing}
 end
 
 """Expression node"""
 abstract type Expr <: ASTNode end
 
 struct LiteralExpr <: Expr
-    value::Union{Float64, Int, String}
-    unit::Union{UnitExpr, Nothing}
+    value::Union{Float64,Int,String}
+    unit::Union{UnitExpr,Nothing}
 end
 
 struct IdentExpr <: Expr
@@ -158,14 +158,14 @@ end
 struct StateDef <: ASTNode
     name::String
     type::TypeExpr
-    initial::Union{Expr, Nothing}
+    initial::Union{Expr,Nothing}
 end
 
 """Parameter declaration"""
 struct ParamDef <: ASTNode
     name::String
     type::TypeExpr
-    default::Union{Expr, Nothing}
+    default::Union{Expr,Nothing}
 end
 
 """Observable declaration"""
@@ -205,8 +205,8 @@ end
 """Absorption parameters for oral dosing"""
 struct AbsorptionDef <: ASTNode
     ka::Expr              # Absorption rate constant (1/h)
-    f::Union{Expr, Nothing}  # Bioavailability (fraction)
-    lag::Union{Expr, Nothing}  # Lag time (h)
+    f::Union{Expr,Nothing}  # Bioavailability (fraction)
+    lag::Union{Expr,Nothing}  # Lag time (h)
 end
 
 """First-pass metabolism parameters"""
@@ -233,8 +233,8 @@ struct ModelDef <: ASTNode
     clearances::Vector{ClearanceDef}
     odes::Vector{ODEEquation}
     observables::Vector{ObsDef}
-    absorption::Union{AbsorptionDef, Nothing}
-    firstpass::Union{FirstPassDef, Nothing}
+    absorption::Union{AbsorptionDef,Nothing}
+    firstpass::Union{FirstPassDef,Nothing}
     route::RouteType
 end
 
@@ -259,7 +259,7 @@ end
 """Timeline definition"""
 struct TimelineDef <: ASTNode
     name::String
-    events::Vector{Union{DoseEvent, ObserveEvent}}
+    events::Vector{Union{DoseEvent,ObserveEvent}}
 end
 
 """Population definition"""
@@ -603,7 +603,7 @@ end
 Parser(tokens::Vector{Token}) = Parser(tokens, 1)
 
 current(p::Parser) = p.pos <= length(p.tokens) ? p.tokens[p.pos] : p.tokens[end]
-peek_token(p::Parser, offset::Int=0) = p.pos + offset <= length(p.tokens) ? p.tokens[p.pos + offset] : p.tokens[end]
+peek_token(p::Parser, offset::Int=0) = p.pos + offset <= length(p.tokens) ? p.tokens[p.pos+offset] : p.tokens[end]
 
 function advance!(p::Parser)::Token
     tok = current(p)
@@ -1045,7 +1045,7 @@ function parse_timeline_def(p::Parser)::TimelineDef
     name = expect!(p, TOK_IDENT).value
     expect!(p, TOK_LBRACE)
 
-    events = Union{DoseEvent, ObserveEvent}[]
+    events = Union{DoseEvent,ObserveEvent}[]
 
     while !check(p, TOK_RBRACE) && !check(p, TOK_EOF)
         if check(p, TOK_AT)
@@ -1198,20 +1198,353 @@ function parse_medlang(source::String)::MedLangAST
     return parse_program(parser)
 end
 
+# ============================================================================
+# Dimensional Analysis - Unit Validation System
+# ============================================================================
+
+"""
+Canonical unit representation for dimensional analysis.
+Uses base SI dimensions: [Mass, Length, Time, Amount]
+"""
+struct Dimension
+    mass::Int      # kg
+    length::Int    # m (for volume: m³)
+    time::Int      # s (or h)
+    amount::Int    # mol
+end
+
+Dimension() = Dimension(0, 0, 0, 0)
+
+# Dimension arithmetic
+Base.:+(d1::Dimension, d2::Dimension) = Dimension(d1.mass + d2.mass, d1.length + d2.length, d1.time + d2.time, d1.amount + d2.amount)
+Base.:-(d1::Dimension, d2::Dimension) = Dimension(d1.mass - d2.mass, d1.length - d2.length, d1.time - d2.time, d1.amount - d2.amount)
+Base.:*(d::Dimension, n::Int) = Dimension(d.mass * n, d.length * n, d.time * n, d.amount * n)
+Base.:(==)(d1::Dimension, d2::Dimension) = d1.mass == d2.mass && d1.length == d2.length && d1.time == d2.time && d1.amount == d2.amount
+
+"""
+Map unit strings to dimensions.
+"""
+const UNIT_DIMENSIONS = Dict{String,Dimension}(
+    # Mass units
+    "mg" => Dimension(1, 0, 0, 0),
+    "g" => Dimension(1, 0, 0, 0),
+    "kg" => Dimension(1, 0, 0, 0),
+    "ug" => Dimension(1, 0, 0, 0),
+    "ng" => Dimension(1, 0, 0, 0),
+    "pg" => Dimension(1, 0, 0, 0),
+
+    # Volume units (length³)
+    "L" => Dimension(0, 3, 0, 0),
+    "mL" => Dimension(0, 3, 0, 0),
+    "uL" => Dimension(0, 3, 0, 0),
+    "dL" => Dimension(0, 3, 0, 0),
+
+    # Time units
+    "h" => Dimension(0, 0, 1, 0),
+    "min" => Dimension(0, 0, 1, 0),
+    "s" => Dimension(0, 0, 1, 0),
+    "d" => Dimension(0, 0, 1, 0),
+
+    # Amount
+    "mol" => Dimension(0, 0, 0, 1),
+    "mmol" => Dimension(0, 0, 0, 1),
+    "umol" => Dimension(0, 0, 0, 1),
+
+    # Dimensionless
+    "" => Dimension(0, 0, 0, 0),
+    "1" => Dimension(0, 0, 0, 0),
+)
+
+"""
+Map semantic types to expected dimensions.
+"""
+const TYPE_DIMENSIONS = Dict{String,Dimension}(
+    "DoseMass" => Dimension(1, 0, 0, 0),        # [M]
+    "Clearance" => Dimension(0, 3, -1, 0),       # [L³/T] = L/h
+    "Volume" => Dimension(0, 3, 0, 0),           # [L³]
+    "RateConst" => Dimension(0, 0, -1, 0),       # [1/T]
+    "Concentration" => Dimension(1, -3, 0, 0),   # [M/L³] = mg/L
+    "ConcMass" => Dimension(1, -3, 0, 0),        # [M/L³]
+    "ConcMolar" => Dimension(0, -3, 0, 1),       # [mol/L³]
+    "Fraction" => Dimension(0, 0, 0, 0),         # dimensionless
+    "Time" => Dimension(0, 0, 1, 0),             # [T]
+    "MolWeight" => Dimension(1, 0, 0, -1),       # [M/mol] = g/mol
+    "FlowRate" => Dimension(0, 3, -1, 0),        # [L³/T]
+    "BloodFlow" => Dimension(0, 3, -1, 0),       # [L³/T]
+    "PartitionCoeff" => Dimension(0, 0, 0, 0),   # dimensionless (Kp)
+)
+
+"""
+Get dimension from UnitExpr.
+"""
+function get_dimension(unit::UnitExpr)::Dimension
+    # Get base unit dimension
+    base_dim = get(UNIT_DIMENSIONS, unit.base, nothing)
+    if base_dim === nothing
+        @warn "Unknown unit: $(unit.base)"
+        return Dimension()
+    end
+
+    # Apply power
+    result = base_dim * unit.power
+
+    # Handle compound units (e.g., L/h, mg/L)
+    for (comp_unit, comp_power) in unit.compound
+        comp_dim = get(UNIT_DIMENSIONS, comp_unit, nothing)
+        if comp_dim !== nothing
+            result = result + (comp_dim * comp_power)
+        else
+            @warn "Unknown compound unit: $comp_unit"
+        end
+    end
+
+    return result
+end
+
+"""
+Get dimension from TypeExpr.
+"""
+function get_dimension(type::TypeExpr)::Union{Dimension,Nothing}
+    # First check if type name maps to known dimension
+    dim = get(TYPE_DIMENSIONS, type.name, nothing)
+    if dim !== nothing
+        return dim
+    end
+
+    # If type has explicit unit, use that
+    if type.unit !== nothing
+        return get_dimension(type.unit)
+    end
+
+    return nothing
+end
+
+"""
+Infer dimension from expression.
+"""
+function infer_dimension(expr::Expr, context::Dict{String,Dimension}=Dict{String,Dimension}())::Union{Dimension,Nothing}
+    if expr isa LiteralExpr
+        if expr.unit !== nothing
+            return get_dimension(expr.unit)
+        end
+        # Dimensionless literal
+        return Dimension()
+
+    elseif expr isa IdentExpr
+        return get(context, expr.name, nothing)
+
+    elseif expr isa QualifiedExpr
+        # Look up in context with qualified name
+        full_name = join(expr.parts, ".")
+        return get(context, full_name, nothing)
+
+    elseif expr isa BinaryExpr
+        left_dim = infer_dimension(expr.left, context)
+        right_dim = infer_dimension(expr.right, context)
+
+        if left_dim === nothing || right_dim === nothing
+            return nothing
+        end
+
+        if expr.op == :+ || expr.op == :-
+            # Addition/subtraction requires same dimensions
+            if left_dim == right_dim
+                return left_dim
+            else
+                return nothing  # Dimension mismatch
+            end
+        elseif expr.op == :*
+            # Multiplication adds dimensions
+            return left_dim + right_dim
+        elseif expr.op == :/
+            # Division subtracts dimensions
+            return left_dim - right_dim
+        elseif expr.op == :^
+            # Power: only valid if right is dimensionless integer
+            if right_dim == Dimension() && expr.right isa LiteralExpr
+                power = Int(expr.right.value)
+                return left_dim * power
+            end
+            return nothing
+        end
+
+    elseif expr isa UnaryExpr
+        return infer_dimension(expr.operand, context)
+
+    elseif expr isa CallExpr
+        # Most functions preserve or return specific dimensions
+        if expr.func in ["exp", "log", "sin", "cos", "tan", "sqrt"]
+            # exp, log, trig functions require dimensionless input
+            arg_dim = infer_dimension(expr.args[1], context)
+            if arg_dim == Dimension()
+                return Dimension()  # Returns dimensionless
+            elseif expr.func == "sqrt" && arg_dim !== nothing
+                # sqrt halves dimensions
+                return Dimension(arg_dim.mass ÷ 2, arg_dim.length ÷ 2, arg_dim.time ÷ 2, arg_dim.amount ÷ 2)
+            end
+        elseif expr.func == "pow" && length(expr.args) >= 2
+            base_dim = infer_dimension(expr.args[1], context)
+            if base_dim !== nothing && expr.args[2] isa LiteralExpr
+                power = Int(expr.args[2].value)
+                return base_dim * power
+            end
+        end
+        return nothing
+    end
+
+    return nothing
+end
+
+"""
+Validation result with detailed error messages.
+"""
+struct ValidationResult
+    valid::Bool
+    errors::Vector{String}
+    warnings::Vector{String}
+end
+
+ValidationResult() = ValidationResult(true, String[], String[])
+
+function add_error!(result::ValidationResult, msg::String)
+    push!(result.errors, msg)
+    return ValidationResult(false, result.errors, result.warnings)
+end
+
+function add_warning!(result::ValidationResult, msg::String)
+    push!(result.warnings, msg)
+    return result
+end
+
 """
 Validate unit consistency in expressions.
 
 # Arguments
 - `expr::Expr`: Expression to validate
-- `expected::Union{UnitExpr, Nothing}`: Expected unit type
+- `expected::Union{Dimension, Nothing}`: Expected dimension
+- `context::Dict{String, Dimension}`: Variable -> Dimension mapping
 
 # Returns
-- `Bool`: true if units are consistent
+- `ValidationResult`: Validation result with errors/warnings
 """
-function validate_units(expr::Expr, expected::Union{UnitExpr, Nothing}=nothing)::Bool
-    # TODO: Implement full dimensional analysis
-    # For now, return true (placeholder)
-    return true
+function validate_units(
+    expr::Expr,
+    expected::Union{Dimension,Nothing}=nothing,
+    context::Dict{String,Dimension}=Dict{String,Dimension}()
+)::ValidationResult
+    result = ValidationResult()
+
+    inferred = infer_dimension(expr, context)
+
+    if inferred === nothing
+        result = add_warning!(result, "Could not infer dimension for expression")
+        return result
+    end
+
+    if expected !== nothing && inferred != expected
+        result = add_error!(result,
+            "Dimension mismatch: expected $(format_dimension(expected)), got $(format_dimension(inferred))")
+    end
+
+    # Recursively validate sub-expressions for addition/subtraction
+    if expr isa BinaryExpr && (expr.op == :+ || expr.op == :-)
+        left_dim = infer_dimension(expr.left, context)
+        right_dim = infer_dimension(expr.right, context)
+
+        if left_dim !== nothing && right_dim !== nothing && left_dim != right_dim
+            result = add_error!(result,
+                "Cannot $(expr.op == :+ ? "add" : "subtract") quantities with different dimensions: " *
+                "$(format_dimension(left_dim)) vs $(format_dimension(right_dim))")
+        end
+    end
+
+    return result
 end
+
+"""
+Format dimension for human-readable output.
+"""
+function format_dimension(d::Dimension)::String
+    parts = String[]
+
+    if d.mass != 0
+        push!(parts, d.mass == 1 ? "M" : "M^$(d.mass)")
+    end
+    if d.length != 0
+        push!(parts, d.length == 1 ? "L" : "L^$(d.length)")
+    end
+    if d.time != 0
+        push!(parts, d.time == 1 ? "T" : "T^$(d.time)")
+    end
+    if d.amount != 0
+        push!(parts, d.amount == 1 ? "N" : "N^$(d.amount)")
+    end
+
+    if isempty(parts)
+        return "dimensionless"
+    end
+
+    return "[" * join(parts, "·") * "]"
+end
+
+"""
+Validate a complete model's dimensional consistency.
+"""
+function validate_model_units(model::ModelDef)::ValidationResult
+    result = ValidationResult()
+    context = Dict{String,Dimension}()
+
+    # Build context from states and parameters
+    for state in model.states
+        dim = get_dimension(state.type)
+        if dim !== nothing
+            context[state.name] = dim
+        end
+    end
+
+    for param in model.params
+        dim = get_dimension(param.type)
+        if dim !== nothing
+            context[param.name] = dim
+        end
+    end
+
+    # Validate ODE equations: d/dt [State] must have dimension [State]/[Time]
+    for ode in model.odes
+        if haskey(context, ode.state)
+            state_dim = context[ode.state]
+            expected_rhs_dim = state_dim - Dimension(0, 0, 1, 0)  # [State]/[T]
+
+            ode_result = validate_units(ode.rhs, expected_rhs_dim, context)
+            if !ode_result.valid
+                for err in ode_result.errors
+                    result = add_error!(result, "ODE d/dt $(ode.state): $err")
+                end
+            end
+            for warn in ode_result.warnings
+                result = add_warning!(result, "ODE d/dt $(ode.state): $warn")
+            end
+        end
+    end
+
+    # Validate observables
+    for obs in model.observables
+        obs_dim = get_dimension(obs.type)
+        if obs_dim !== nothing
+            obs_result = validate_units(obs.expr, obs_dim, context)
+            if !obs_result.valid
+                for err in obs_result.errors
+                    result = add_error!(result, "Observable $(obs.name): $err")
+                end
+            end
+        end
+    end
+
+    return result
+end
+
+# Export dimensional analysis functions
+export Dimension, ValidationResult, validate_units, validate_model_units
+export infer_dimension, get_dimension, format_dimension
 
 end # module

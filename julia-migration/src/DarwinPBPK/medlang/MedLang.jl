@@ -36,10 +36,15 @@ include("transpiler.jl")
 using .MedLangParser
 export parse_medlang, MedLangAST, ModelDef, StateDef, ParamDef, ODEEquation
 export PopulationDef, TimelineDef, DoseEvent, ObserveEvent
-export ParseError, validate_units
-export Expr, LiteralExpr, IdentExpr, BinaryExpr, CallExpr
+export ParseError, validate_units, validate_model_units
+export Expr, LiteralExpr, IdentExpr, BinaryExpr, CallExpr, UnaryExpr, QualifiedExpr
+export UnitExpr, TypeExpr
 export AbsorptionDef, FirstPassDef, RouteType
 export ROUTE_IV, ROUTE_ORAL, ROUTE_IM, ROUTE_SC, ROUTE_INFUSION
+
+# Re-export dimensional analysis types
+export Dimension, ValidationResult, infer_dimension, get_dimension, format_dimension
+export TYPE_DIMENSIONS, UNIT_DIMENSIONS
 
 # Re-export transpiler functions
 using .MedLangTranspiler
@@ -102,7 +107,7 @@ model MyDrug {
 params = compile_model(source)
 ```
 """
-function compile_model(source::String; model_name::Union{String, Nothing}=nothing)::PBPKParams
+function compile_model(source::String; model_name::Union{String,Nothing}=nothing)::PBPKParams
     return transpile_to_pbpk_params(source; model_name=model_name)
 end
 
@@ -120,7 +125,7 @@ Compile a MedLang file to PBPKParams.
 # Returns
 - `PBPKParams`: Julia PBPK parameters struct
 """
-function compile_file(filepath::String; model_name::Union{String, Nothing}=nothing)::PBPKParams
+function compile_file(filepath::String; model_name::Union{String,Nothing}=nothing)::PBPKParams
     source = read(filepath, String)
     return compile_model(source; model_name=model_name)
 end
@@ -169,9 +174,9 @@ Parse MedLang model and run simulation.
 function simulate_medlang(
     source::String,
     dose::Float64;
-    t_max::Float64 = 24.0,
-    num_points::Int = 100,
-    model_name::Union{String, Nothing} = nothing
+    t_max::Float64=24.0,
+    num_points::Int=100,
+    model_name::Union{String,Nothing}=nothing
 )
     params = compile_model(source; model_name=model_name)
     return ODEPBPKSolver.simulate(params, dose; t_max=t_max, num_points=num_points)
@@ -210,9 +215,9 @@ results = simulate_oral(source, 100.0)  # 100 mg oral dose
 function simulate_oral(
     source::String,
     dose::Float64;
-    t_max::Float64 = 24.0,
-    num_points::Int = 100,
-    model_name::Union{String, Nothing} = nothing
+    t_max::Float64=24.0,
+    num_points::Int=100,
+    model_name::Union{String,Nothing}=nothing
 )
     # Get extended params including oral absorption
     extended = transpile_to_extended_params(source; model_name=model_name)
@@ -251,8 +256,8 @@ function simulate_oral_pbpk(
     pbpk_params::ODEPBPKSolver.PBPKParams,
     oral_params::OralAbsorptionParams,
     dose::Float64;
-    t_max::Float64 = 24.0,
-    num_points::Int = 100
+    t_max::Float64=24.0,
+    num_points::Int=100
 )
     # Calculate effective bioavailability
     f_eff = effective_bioavailability(oral_params)
@@ -275,8 +280,8 @@ function simulate_oral_ode(
     pbpk_params::ODEPBPKSolver.PBPKParams,
     oral_params::OralAbsorptionParams,
     dose::Float64;
-    t_max::Float64 = 24.0,
-    num_points::Int = 100
+    t_max::Float64=24.0,
+    num_points::Int=100
 )
     ka = oral_params.ka
     f_eff = effective_bioavailability(oral_params)
@@ -292,7 +297,7 @@ function simulate_oral_ode(
     # with first-order absorption, then apply to full PBPK
 
     # Run PBPK simulations at multiple time points with absorption input
-    results = Dict{String, Vector{Float64}}()
+    results = Dict{String,Vector{Float64}}()
     results["time"] = collect(times)
     results["gut"] = zeros(num_points)
 
@@ -430,7 +435,7 @@ function describe_model(source::String)::String
 
     for model in ast.models
         println(buf, "Model: $(model.name)")
-        println(buf, "=" ^ (8 + length(model.name)))
+        println(buf, "="^(8 + length(model.name)))
         println(buf)
 
         println(buf, "States ($(length(model.states))):")
