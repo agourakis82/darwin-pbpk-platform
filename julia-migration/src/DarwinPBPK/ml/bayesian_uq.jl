@@ -772,4 +772,167 @@ end
 
 export create_clearance_model
 
+#=============================================================================
+  GNN Integration - Bayesian Neural Network Predictions
+=============================================================================#
+
+"""
+Bayesian prediction wrapper for GNN-based PBPK models.
+
+Combines the GNN forward pass with Bayesian uncertainty quantification
+by using MC Dropout or ensemble methods for epistemic uncertainty.
+
+# Arguments
+- `gnn_model`: DynamicPBPKGNN model
+- `doses`: Vector of doses
+- `params`: Vector of PBPKParams
+- `time_points`: Time points for prediction
+- `n_mc_samples`: Number of Monte Carlo forward passes (for dropout uncertainty)
+
+# Returns
+Dict with predictions and uncertainty estimates
+"""
+function bayesian_gnn_predict(
+    gnn_forward_fn::Function,
+    doses::Vector{Float64},
+    params::Vector,
+    time_points::Vector{Vector{Float64}};
+    n_mc_samples::Int=50,
+    dropout_rate::Float64=0.1
+)::Dict{String, Any}
+    batch_size = length(doses)
+
+    # Collect MC samples
+    all_predictions = []
+
+    for _ in 1:n_mc_samples
+        # Forward pass (with dropout enabled during inference for uncertainty)
+        result = gnn_forward_fn(doses, params, time_points)
+        push!(all_predictions, result["concentrations"])
+    end
+
+    # Stack predictions: [n_mc_samples, batch_size, n_organs, n_times]
+    pred_stack = cat(all_predictions..., dims=4)
+    pred_stack = permutedims(pred_stack, (4, 1, 2, 3))  # Reorder dimensions
+
+    # Compute statistics
+    pred_mean = dropdims(mean(pred_stack, dims=1), dims=1)
+    pred_std = dropdims(std(pred_stack, dims=1), dims=1)
+
+    # Epistemic uncertainty (model uncertainty from MC dropout)
+    epistemic_uncertainty = pred_std
+
+    # Credible intervals (95%)
+    ci_lower = dropdims(mapslices(x -> quantile(x, 0.025), pred_stack, dims=1), dims=1)
+    ci_upper = dropdims(mapslices(x -> quantile(x, 0.975), pred_stack, dims=1), dims=1)
+
+    return Dict{String, Any}(
+        "mean" => pred_mean,
+        "std" => pred_std,
+        "epistemic_uncertainty" => epistemic_uncertainty,
+        "ci_lower" => ci_lower,
+        "ci_upper" => ci_upper,
+        "n_mc_samples" => n_mc_samples,
+        "all_predictions" => pred_stack,
+    )
+end
+
+"""
+Compute prediction intervals for Cmax and AUC with Bayesian GNN.
+
+Returns credible intervals for key PK parameters.
+"""
+function bayesian_pk_metrics(
+    bayesian_result::Dict{String, Any},
+    time_points::Vector{Float64};
+    blood_idx::Int=1
+)::Dict{String, Any}
+    pred_stack = bayesian_result["all_predictions"]
+    n_mc = size(pred_stack, 1)
+    batch_size = size(pred_stack, 2)
+
+    # Compute Cmax and AUC for each MC sample
+    cmax_samples = zeros(n_mc, batch_size)
+    auc_samples = zeros(n_mc, batch_size)
+    tmax_samples = zeros(n_mc, batch_size)
+
+    for mc in 1:n_mc
+        for b in 1:batch_size
+            conc_profile = pred_stack[mc, b, blood_idx, :]
+
+            # Cmax
+            cmax_samples[mc, b] = maximum(conc_profile)
+            tmax_samples[mc, b] = time_points[argmax(conc_profile)]
+
+            # AUC (trapezoidal)
+            auc = 0.0
+            for t in 2:length(time_points)
+                dt = time_points[t] - time_points[t-1]
+                auc += 0.5 * (conc_profile[t] + conc_profile[t-1]) * dt
+            end
+            auc_samples[mc, b] = auc
+        end
+    end
+
+    return Dict{String, Any}(
+        "cmax_mean" => vec(mean(cmax_samples, dims=1)),
+        "cmax_std" => vec(std(cmax_samples, dims=1)),
+        "cmax_ci_lower" => vec(mapslices(x -> quantile(x, 0.025), cmax_samples, dims=1)),
+        "cmax_ci_upper" => vec(mapslices(x -> quantile(x, 0.975), cmax_samples, dims=1)),
+        "auc_mean" => vec(mean(auc_samples, dims=1)),
+        "auc_std" => vec(std(auc_samples, dims=1)),
+        "auc_ci_lower" => vec(mapslices(x -> quantile(x, 0.025), auc_samples, dims=1)),
+        "auc_ci_upper" => vec(mapslices(x -> quantile(x, 0.975), auc_samples, dims=1)),
+        "tmax_mean" => vec(mean(tmax_samples, dims=1)),
+        "tmax_std" => vec(std(tmax_samples, dims=1)),
+    )
+end
+
+"""
+Uncertainty-aware regulatory metrics.
+
+Computes GMFE and other metrics with confidence intervals.
+"""
+function bayesian_regulatory_metrics(
+    pred_samples::Matrix{Float64},  # [n_mc_samples, n_observations]
+    observed::Vector{Float64};
+    n_bootstrap::Int=1000
+)::Dict{String, Any}
+    n_mc = size(pred_samples, 1)
+    n_obs = length(observed)
+
+    # Compute GMFE for each MC sample
+    gmfe_samples = Float64[]
+    within_2fold_samples = Float64[]
+
+    for mc in 1:n_mc
+        pred = pred_samples[mc, 1:min(end, n_obs)]
+
+        # GMFE
+        fold_errors = pred ./ (observed[1:length(pred)] .+ 1e-10)
+        fold_errors = clamp.(fold_errors, 0.01, 100.0)
+        gmfe = 10^mean(abs.(log10.(fold_errors)))
+        push!(gmfe_samples, gmfe)
+
+        # % within 2-fold
+        within_2x = mean(0.5 .<= fold_errors .<= 2.0) * 100
+        push!(within_2fold_samples, within_2x)
+    end
+
+    return Dict{String, Any}(
+        "gmfe_mean" => mean(gmfe_samples),
+        "gmfe_std" => std(gmfe_samples),
+        "gmfe_ci_lower" => quantile(gmfe_samples, 0.025),
+        "gmfe_ci_upper" => quantile(gmfe_samples, 0.975),
+        "within_2fold_mean" => mean(within_2fold_samples),
+        "within_2fold_std" => std(within_2fold_samples),
+        "within_2fold_ci_lower" => quantile(within_2fold_samples, 0.025),
+        "within_2fold_ci_upper" => quantile(within_2fold_samples, 0.975),
+        "meets_fda_criteria" => mean(gmfe_samples) < 2.0,
+        "probability_acceptable" => mean(gmfe_samples .< 2.0),
+    )
+end
+
+export bayesian_gnn_predict, bayesian_pk_metrics, bayesian_regulatory_metrics
+
 end # module
