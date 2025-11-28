@@ -484,6 +484,178 @@ function posterior_predictive(
 end
 
 """
+Posterior Predictive Check (PPC) - comprehensive analysis.
+
+Generates posterior predictive distribution and computes diagnostic statistics
+for model validation.
+
+# Arguments
+- `result::PosteriorResult`: MCMC or VI posterior samples
+- `predict_fn::Function`: Function (params) -> predicted_values
+- `observed::Vector{Float64}`: Observed data points
+- `n_samples::Int`: Number of posterior samples to use
+
+# Returns
+Dict with:
+- `predictions`: Matrix of posterior predictive samples
+- `mean`: Posterior predictive mean
+- `std`: Posterior predictive standard deviation
+- `ci_lower`: 2.5% quantile (95% CI lower)
+- `ci_upper`: 97.5% quantile (95% CI upper)
+- `p_value`: Bayesian p-value (proportion of predictions > observed)
+- `coverage`: Proportion of observations within 95% CI
+- `rmse`: Root mean squared error of posterior mean
+"""
+function posterior_predictive_check(
+    result::PosteriorResult,
+    predict_fn::Function,
+    observed::Vector{Float64};
+    n_samples::Int=1000
+)::Dict{String, Any}
+    # Generate predictions
+    predictions = posterior_predictive(result, predict_fn, n_samples)
+
+    n_obs = length(observed)
+    n_pred_obs = size(predictions, 2)
+
+    # Ensure dimensions match
+    if n_pred_obs != n_obs
+        @warn "Prediction dimension ($n_pred_obs) doesn't match observed ($n_obs)"
+    end
+
+    # Compute statistics for each observation
+    pred_mean = vec(mean(predictions, dims=1))
+    pred_std = vec(std(predictions, dims=1))
+    ci_lower = [quantile(predictions[:, i], 0.025) for i in 1:min(n_pred_obs, n_obs)]
+    ci_upper = [quantile(predictions[:, i], 0.975) for i in 1:min(n_pred_obs, n_obs)]
+
+    # Bayesian p-values (proportion of predictions exceeding observed)
+    p_values = Float64[]
+    for i in 1:min(n_pred_obs, n_obs)
+        p = mean(predictions[:, i] .> observed[i])
+        push!(p_values, min(p, 1-p) * 2)  # Two-sided
+    end
+
+    # Coverage: proportion of observations within 95% CI
+    n_covered = 0
+    for i in 1:min(length(ci_lower), n_obs)
+        if ci_lower[i] <= observed[i] <= ci_upper[i]
+            n_covered += 1
+        end
+    end
+    coverage = n_covered / min(length(ci_lower), n_obs)
+
+    # RMSE of posterior mean
+    rmse = sqrt(mean((pred_mean[1:min(end, n_obs)] .- observed[1:min(end, length(pred_mean))]).^2))
+
+    return Dict{String, Any}(
+        "predictions" => predictions,
+        "mean" => pred_mean,
+        "std" => pred_std,
+        "ci_lower" => ci_lower,
+        "ci_upper" => ci_upper,
+        "p_values" => p_values,
+        "coverage" => coverage,
+        "rmse" => rmse,
+        "n_samples" => n_samples,
+    )
+end
+
+export posterior_predictive_check
+
+"""
+Generate posterior predictive intervals for PBPK concentration-time profiles.
+
+Specialized function for pharmacokinetic predictions that returns
+credible bands over time.
+
+# Arguments
+- `result::PosteriorResult`: Posterior samples
+- `pbpk_simulator::Function`: Function (params) -> concentration_time_profile
+- `time_points::Vector{Float64}`: Time points for prediction
+
+# Returns
+Dict with time-indexed credible intervals
+"""
+function posterior_predictive_pk(
+    result::PosteriorResult,
+    pbpk_simulator::Function,
+    time_points::Vector{Float64};
+    n_samples::Int=500
+)::Dict{String, Any}
+    n_times = length(time_points)
+
+    # Sample from posterior
+    sample_indices = rand(1:size(result.samples, 1), n_samples)
+
+    # Store all concentration profiles
+    all_profiles = zeros(n_samples, n_times)
+
+    for (i, idx) in enumerate(sample_indices)
+        params = result.samples[idx, :]
+        profile = pbpk_simulator(params)
+
+        # Handle different return types
+        if profile isa Vector
+            all_profiles[i, :] = profile[1:min(end, n_times)]
+        elseif profile isa Matrix
+            all_profiles[i, :] = profile[1, 1:min(end, n_times)]
+        end
+    end
+
+    # Compute statistics at each time point
+    mean_profile = vec(mean(all_profiles, dims=1))
+    std_profile = vec(std(all_profiles, dims=1))
+    ci_lower = [quantile(all_profiles[:, i], 0.025) for i in 1:n_times]
+    ci_upper = [quantile(all_profiles[:, i], 0.975) for i in 1:n_times]
+    ci_50_lower = [quantile(all_profiles[:, i], 0.25) for i in 1:n_times]
+    ci_50_upper = [quantile(all_profiles[:, i], 0.75) for i in 1:n_times]
+
+    # PK metrics from posterior
+    cmax_samples = [maximum(all_profiles[i, :]) for i in 1:n_samples]
+    tmax_samples = [time_points[argmax(all_profiles[i, :])] for i in 1:n_samples]
+
+    # AUC via trapezoidal rule
+    auc_samples = Float64[]
+    for i in 1:n_samples
+        auc = 0.0
+        for j in 2:n_times
+            dt = time_points[j] - time_points[j-1]
+            auc += 0.5 * (all_profiles[i, j] + all_profiles[i, j-1]) * dt
+        end
+        push!(auc_samples, auc)
+    end
+
+    return Dict{String, Any}(
+        "time" => time_points,
+        "mean" => mean_profile,
+        "std" => std_profile,
+        "ci_95_lower" => ci_lower,
+        "ci_95_upper" => ci_upper,
+        "ci_50_lower" => ci_50_lower,
+        "ci_50_upper" => ci_50_upper,
+        "cmax" => Dict(
+            "mean" => mean(cmax_samples),
+            "std" => std(cmax_samples),
+            "ci" => (quantile(cmax_samples, 0.025), quantile(cmax_samples, 0.975)),
+        ),
+        "tmax" => Dict(
+            "mean" => mean(tmax_samples),
+            "std" => std(tmax_samples),
+            "ci" => (quantile(tmax_samples, 0.025), quantile(tmax_samples, 0.975)),
+        ),
+        "auc" => Dict(
+            "mean" => mean(auc_samples),
+            "std" => std(auc_samples),
+            "ci" => (quantile(auc_samples, 0.025), quantile(auc_samples, 0.975)),
+        ),
+        "all_profiles" => all_profiles,
+    )
+end
+
+export posterior_predictive_pk
+
+"""
 Compute uncertainty calibration metrics.
 
 Returns Expected Calibration Error (ECE) for assessing if
