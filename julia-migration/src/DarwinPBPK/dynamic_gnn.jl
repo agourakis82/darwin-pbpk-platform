@@ -29,6 +29,131 @@ using ..ODEPBPKSolver: PBPKParams, PBPK_ORGANS, NUM_ORGANS, BLOOD_IDX, LIVER_IDX
 # Constantes
 const CRITICAL_ORGANS_IDX = [LIVER_IDX, KIDNEY_IDX, 4]  # liver, kidney, brain
 
+#=============================================================================
+  Physiological Organ Graph Construction
+=============================================================================#
+
+"""
+Blood flow rates between organs (L/h for 70kg adult).
+Based on Williams & Leggett (1989) ICRP Reference Man data.
+"""
+const ORGAN_BLOOD_FLOWS = Dict{String, Float64}(
+    "blood" => 0.0,       # Central compartment
+    "liver" => 90.0,      # Portal + arterial = 27% CO
+    "kidney" => 74.0,     # 22% CO
+    "brain" => 47.0,      # 14% CO
+    "heart" => 15.0,      # 4% CO
+    "lung" => 330.0,      # 100% CO (entire blood passes)
+    "muscle" => 57.0,     # 17% CO
+    "adipose" => 17.0,    # 5% CO
+    "gut" => 63.0,        # 18% CO (splanchnic - included in liver portal)
+    "skin" => 17.0,       # 5% CO
+    "bone" => 17.0,       # 5% CO
+    "spleen" => 5.0,      # 2% CO
+    "pancreas" => 3.0,    # 1% CO
+    "other" => 10.0,      # Remaining tissues
+)
+
+"""
+Create physiological organ graph based on blood flow connectivity.
+
+Returns a GNNGraph with:
+- Nodes: 14 PBPK organs
+- Edges: Directed edges representing blood flow between organs
+- Edge features: Blood flow rates (normalized)
+
+Blood flow topology:
+- Blood → All organs (arterial supply)
+- All organs → Blood (venous return)
+- Gut → Liver (portal circulation)
+- Lung ↔ Blood (pulmonary circulation)
+"""
+function create_organ_graph(; batch_size::Int=1)::GNNGraph
+    # Build edge list based on physiological blood flow
+    sources = Int[]
+    targets = Int[]
+    edge_weights = Float64[]
+
+    # Organ name to index mapping
+    organ_idx = Dict(organ => i for (i, organ) in enumerate(PBPK_ORGANS))
+
+    blood_idx = organ_idx["blood"]
+    liver_idx = organ_idx["liver"]
+    gut_idx = organ_idx["gut"]
+    lung_idx = organ_idx["lung"]
+
+    # 1. Arterial supply: Blood → All organs (except blood itself)
+    for organ in PBPK_ORGANS
+        if organ != "blood"
+            push!(sources, blood_idx)
+            push!(targets, organ_idx[organ])
+            push!(edge_weights, ORGAN_BLOOD_FLOWS[organ])
+        end
+    end
+
+    # 2. Venous return: All organs → Blood (except gut → liver first)
+    for organ in PBPK_ORGANS
+        if organ != "blood" && organ != "gut"
+            push!(sources, organ_idx[organ])
+            push!(targets, blood_idx)
+            push!(edge_weights, ORGAN_BLOOD_FLOWS[organ])
+        end
+    end
+
+    # 3. Portal circulation: Gut → Liver
+    push!(sources, gut_idx)
+    push!(targets, liver_idx)
+    push!(edge_weights, ORGAN_BLOOD_FLOWS["gut"])
+
+    # 4. Pulmonary circulation: Lung ↔ Blood (bidirectional high flow)
+    # Already covered by arterial/venous, but add extra weight
+
+    # Normalize edge weights
+    max_flow = maximum(edge_weights)
+    edge_weights_normalized = Float32.(edge_weights ./ max_flow)
+
+    # Create GNNGraph
+    g = GNNGraph(sources, targets; edata = (; flow = edge_weights_normalized))
+
+    return g
+end
+
+"""
+Create edge feature matrix from organ graph.
+Edge features: [flow_rate, is_arterial, is_venous, is_portal]
+"""
+function create_edge_features(g::GNNGraph, edge_dim::Int=4)::Matrix{Float32}
+    src_nodes, tgt_nodes = edge_index(g)
+    num_edges = length(src_nodes)
+
+    edge_features = zeros(Float32, edge_dim, num_edges)
+
+    # Get organ indices
+    blood_idx = findfirst(==(("blood")), PBPK_ORGANS)
+    liver_idx = findfirst(==(("liver")), PBPK_ORGANS)
+    gut_idx = findfirst(==(("gut")), PBPK_ORGANS)
+
+    for i in 1:num_edges
+        src, tgt = src_nodes[i], tgt_nodes[i]
+
+        # Feature 1: Flow rate (from graph edge data)
+        edge_features[1, i] = g.edata.flow[i]
+
+        # Feature 2: Is arterial (blood → organ)
+        edge_features[2, i] = src == blood_idx ? 1.0f0 : 0.0f0
+
+        # Feature 3: Is venous (organ → blood)
+        edge_features[3, i] = tgt == blood_idx ? 1.0f0 : 0.0f0
+
+        # Feature 4: Is portal (gut → liver)
+        edge_features[4, i] = (src == gut_idx && tgt == liver_idx) ? 1.0f0 : 0.0f0
+    end
+
+    return edge_features
+end
+
+export create_organ_graph, create_edge_features
+
 """
 Organ Message Passing Layer.
 
@@ -65,10 +190,45 @@ end
 # Não precisa de @functor explícito
 
 function (layer::OrganMessagePassing)(g::GNNGraph, x::AbstractMatrix, edge_attr::AbstractMatrix)
-    # Message passing (GraphNeuralNetworks.jl)
-    # TODO: Implementar message passing customizado
-    # Por enquanto, usar GNN padrão
-    return x
+    # Real message passing implementation
+    # x: [hidden_dim, num_nodes]
+    # edge_attr: [edge_dim, num_edges]
+
+    if g === nothing
+        return x  # Fallback if no graph
+    end
+
+    # Get source and target indices
+    src_nodes, tgt_nodes = edge_index(g)
+    num_edges = length(src_nodes)
+    num_nodes = size(x, 2)
+    hidden_dim = size(x, 1)
+
+    # Gather source and target node features
+    x_src = x[:, src_nodes]  # [hidden_dim, num_edges]
+    x_tgt = x[:, tgt_nodes]  # [hidden_dim, num_edges]
+
+    # Concatenate for message computation: [src || tgt || edge]
+    if size(edge_attr, 2) == num_edges
+        msg_input = vcat(x_src, x_tgt, edge_attr)  # [hidden_dim*2 + edge_dim, num_edges]
+    else
+        msg_input = vcat(x_src, x_tgt)  # [hidden_dim*2, num_edges]
+    end
+
+    # Compute messages
+    messages = layer.message_mlp(msg_input)  # [hidden_dim, num_edges]
+
+    # Aggregate messages (sum aggregation per target node)
+    aggregated = zeros(Float32, hidden_dim, num_nodes)
+    for (i, tgt) in enumerate(tgt_nodes)
+        aggregated[:, tgt] .+= messages[:, i]
+    end
+
+    # Update node features
+    update_input = vcat(x, aggregated)  # [hidden_dim + hidden_dim, num_nodes]
+    x_new = layer.update_mlp(update_input)  # [hidden_dim, num_nodes]
+
+    return x_new
 end
 
 """
@@ -188,39 +348,50 @@ function forward_batch(
 )::Dict{String, Any}
     batch_size = length(doses)
 
-    # Criar grafo de órgãos (fully connected)
-    # Por enquanto, usar grafo simples
-    # TODO: Implementar grafo hierárquico de órgãos
+    # Create physiological organ graph with blood flow connectivity
+    organ_graph = create_organ_graph()
+    edge_features_graph = create_edge_features(organ_graph, model.edge_dim)
+    num_edges = size(edge_features_graph, 2)
 
     # Node features iniciais (baseado em parâmetros)
-    node_features = zeros(Float32, batch_size, NUM_ORGANS, model.node_dim)
+    # Shape: [node_dim, num_nodes] for GNN compatibility
+    node_features = zeros(Float32, model.node_dim, NUM_ORGANS * batch_size)
+
     for (i, p) in enumerate(params)
-        # Features baseadas em partition coefficients
+        offset = (i - 1) * NUM_ORGANS
         for (j, organ) in enumerate(PBPK_ORGANS)
+            idx = offset + j
             kp = get(p.partition_coeffs, organ, 1.0)
-            node_features[i, j, 1] = Float32(kp)
-            node_features[i, j, 2] = Float32(p.clearance_hepatic)
-            node_features[i, j, 3] = Float32(p.clearance_renal)
-            node_features[i, j, 4] = Float32(doses[i])
-            # Preencher resto com zeros ou features derivadas
+
+            # Feature vector per node
+            node_features[1, idx] = Float32(kp)
+            node_features[2, idx] = Float32(p.clearance_hepatic / 100.0)  # Normalized
+            node_features[3, idx] = Float32(p.clearance_renal / 100.0)    # Normalized
+            node_features[4, idx] = Float32(doses[i] / 500.0)             # Normalized
+            node_features[5, idx] = Float32(ORGAN_BLOOD_FLOWS[organ] / 330.0)  # Blood flow normalized
+
+            # Organ type encoding (one-hot style)
+            if organ == "blood"
+                node_features[6, idx] = 1.0f0
+            elseif organ == "liver"
+                node_features[7, idx] = 1.0f0
+            elseif organ == "kidney"
+                node_features[8, idx] = 1.0f0
+            elseif organ in ["brain", "heart", "lung"]
+                node_features[9, idx] = 1.0f0  # Critical organs
+            end
         end
     end
 
-    # Edge features (fluxos entre órgãos)
-    edge_features = zeros(Float32, batch_size, NUM_ORGANS, NUM_ORGANS, model.edge_dim)
-    # Por enquanto, usar valores padrão
-    # TODO: Implementar edge features baseadas em fluxos fisiológicos
+    # Encode node features
+    node_emb = model.node_encoder(node_features)  # [hidden_dim, num_nodes*batch]
 
-    # Encoder
-    node_emb = model.node_encoder(reshape(node_features, batch_size * NUM_ORGANS, model.node_dim))
-    node_emb = reshape(node_emb, batch_size, NUM_ORGANS, model.hidden_dim)
+    # Encode edge features
+    edge_emb = model.edge_encoder(edge_features_graph)  # [hidden_dim/2, num_edges]
 
-    edge_emb = model.edge_encoder(reshape(edge_features, batch_size * NUM_ORGANS * NUM_ORGANS, model.edge_dim))
-    edge_emb = reshape(edge_emb, batch_size, NUM_ORGANS, NUM_ORGANS, model.hidden_dim ÷ 2)
-
-    # Criar grafo (simplificado - fully connected)
-    # TODO: Usar GraphNeuralNetworks.jl para criar grafo real
-    batch_graph = nothing  # Placeholder
+    # For batched processing, replicate graph structure
+    # Use the single organ graph for all batch samples
+    batch_graph = organ_graph
 
     # Condições iniciais (concentração inicial = 0 exceto no sangue)
     initial_concs = zeros(Float32, batch_size, NUM_ORGANS)
@@ -229,43 +400,61 @@ function forward_batch(
         initial_concs[i, BLOOD_IDX] = Float32(doses[i] / 5.0)  # Aproximação: Vd ≈ 5L
     end
 
-    # Evolução temporal
-    current_node_state = reshape(node_emb, batch_size * NUM_ORGANS, model.hidden_dim)
-    concentrations = Vector{Matrix{Float64}}()
+    # Evolução temporal with real GNN message passing
+    # node_emb shape: [hidden_dim, num_nodes * batch_size]
+    current_node_state = node_emb
+    concentrations = Vector{Matrix{Float32}}()
 
     num_evolution_steps = min(model.num_temporal_steps, maximum(length.(time_points)))
 
-    for _ in 1:num_evolution_steps
-        # Message passing
-        x = current_node_state
-        for gnn_layer in model.gnn_layers
-            x = gnn_layer(batch_graph, x, edge_emb)
+    for step in 1:num_evolution_steps
+        # Process each batch sample through the organ graph
+        all_outputs = []
+
+        for b in 1:batch_size
+            # Extract this sample's node features
+            start_idx = (b - 1) * NUM_ORGANS + 1
+            end_idx = b * NUM_ORGANS
+            x_sample = current_node_state[:, start_idx:end_idx]  # [hidden_dim, NUM_ORGANS]
+
+            # Message passing through organ graph
+            for gnn_layer in model.gnn_layers
+                x_sample = gnn_layer(batch_graph, x_sample, edge_emb)
+            end
+
+            push!(all_outputs, x_sample)
         end
 
-        # Reshape para [batch_size, num_nodes, hidden_dim]
-        x = reshape(x, batch_size, NUM_ORGANS, model.hidden_dim)
+        # Stack batch outputs: [hidden_dim, NUM_ORGANS, batch_size]
+        x_batched = cat(all_outputs..., dims=3)
+        x_batched = permutedims(x_batched, (1, 3, 2))  # [hidden_dim, batch_size, NUM_ORGANS]
 
-        # Attention
+        # Attention on critical organs
         if model.use_attention && model.organ_attention !== nothing
-            critical_nodes = x[:, CRITICAL_ORGANS_IDX, :]
-            x, _ = model.organ_attention(x, critical_nodes, critical_nodes)
+            # Reshape for attention: [hidden_dim, batch_size * NUM_ORGANS]
+            x_flat_attn = reshape(x_batched, model.hidden_dim, batch_size * NUM_ORGANS)
+            x_attn = model.organ_attention(x_flat_attn)
+            x_batched = reshape(x_attn, model.hidden_dim, batch_size, NUM_ORGANS)
         end
 
-        # Temporal evolution - SOTA Q1 2025
-        x_mean = mean(x, dims=2)  # [batch_size, 1, hidden_dim]
-        x_mean_flat = reshape(x_mean, batch_size, model.hidden_dim)
+        # Temporal evolution - aggregate and evolve
+        x_mean = mean(x_batched, dims=3)  # [hidden_dim, batch_size, 1]
+        x_mean_flat = dropdims(x_mean, dims=3)  # [hidden_dim, batch_size]
 
-        # Usar Chain simples (sem estado)
-        x_evolved = model.temporal_evolution(x_mean_flat)
+        # Apply temporal evolution
+        x_evolved = model.temporal_evolution(x_mean_flat)  # [hidden_dim, batch_size]
 
-        x_evolved_expanded = repeat(x_evolved, outer=(1, NUM_ORGANS, 1))
-        current_node_state = reshape(x_evolved_expanded, batch_size * NUM_ORGANS, model.hidden_dim)
+        # Broadcast evolved state back to all organs
+        x_evolved_expanded = repeat(x_evolved, 1, 1, NUM_ORGANS)  # [hidden_dim, batch_size, NUM_ORGANS]
 
-        # Output
-        x_flat = reshape(x, batch_size * NUM_ORGANS, model.hidden_dim)
-        conc = model.output_head(x_flat)
-        conc = reshape(conc, batch_size, NUM_ORGANS)
-        push!(concentrations, conc)
+        # Update state for next iteration
+        current_node_state = reshape(permutedims(x_evolved_expanded, (1, 3, 2)), model.hidden_dim, NUM_ORGANS * batch_size)
+
+        # Output concentration prediction
+        x_output = reshape(x_batched, model.hidden_dim, batch_size * NUM_ORGANS)
+        conc = model.output_head(x_output)  # [1, batch_size * NUM_ORGANS]
+        conc = reshape(conc, batch_size, NUM_ORGANS)  # [batch_size, NUM_ORGANS]
+        push!(concentrations, Matrix{Float32}(conc))
     end
 
     # Stack concentrations

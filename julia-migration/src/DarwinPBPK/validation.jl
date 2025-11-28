@@ -64,6 +64,124 @@ function geometric_mean_fold_error(pred::AbstractVector{Float64}, obs::AbstractV
     return exp(mean(log_fe))
 end
 
+#=============================================================================
+  FDA/EMA Regulatory Metrics (AFE, AAFE)
+=============================================================================#
+
+"""
+Average Fold Error (AFE) - FDA/EMA regulatory metric.
+
+AFE = 10^(mean(log10(pred/obs)))
+
+Interpretation:
+- AFE = 1.0: Unbiased predictions
+- AFE > 1.0: Systematic overprediction
+- AFE < 1.0: Systematic underprediction
+
+Reference: Guest et al. (2011) Eur J Pharm Sci 42:283-292
+"""
+function average_fold_error(pred::AbstractVector{Float64}, obs::AbstractVector{Float64})::Float64
+    # Filter valid pairs
+    valid_idx = [i for i in 1:length(pred)
+                 if obs[i] > 0 && pred[i] > 0 && isfinite(pred[i]) && isfinite(obs[i])]
+
+    if isempty(valid_idx)
+        return NaN
+    end
+
+    pred_valid = pred[valid_idx]
+    obs_valid = obs[valid_idx]
+
+    # AFE = 10^(mean(log10(pred/obs)))
+    log_ratios = log10.(pred_valid ./ obs_valid)
+    return 10^mean(log_ratios)
+end
+
+"""
+Absolute Average Fold Error (AAFE) - FDA/EMA regulatory metric.
+
+AAFE = 10^(mean(|log10(pred/obs)|))
+
+Interpretation:
+- AAFE = 1.0: Perfect predictions
+- AAFE < 2.0: Acceptable for regulatory submissions (FDA/EMA guideline)
+- AAFE < 1.5: Excellent prediction accuracy
+
+Reference: Guest et al. (2011) Eur J Pharm Sci 42:283-292
+"""
+function absolute_average_fold_error(pred::AbstractVector{Float64}, obs::AbstractVector{Float64})::Float64
+    # Filter valid pairs
+    valid_idx = [i for i in 1:length(pred)
+                 if obs[i] > 0 && pred[i] > 0 && isfinite(pred[i]) && isfinite(obs[i])]
+
+    if isempty(valid_idx)
+        return NaN
+    end
+
+    pred_valid = pred[valid_idx]
+    obs_valid = obs[valid_idx]
+
+    # AAFE = 10^(mean(|log10(pred/obs)|))
+    abs_log_ratios = abs.(log10.(pred_valid ./ obs_valid))
+    return 10^mean(abs_log_ratios)
+end
+
+"""
+Regulatory Metrics Summary - Complete FDA/EMA metrics package.
+
+Returns a Dict with all regulatory metrics for submission:
+- GMFE: Geometric Mean Fold Error
+- AFE: Average Fold Error (bias indicator)
+- AAFE: Absolute Average Fold Error (precision indicator)
+- pct_within_2fold: Percent within 2-fold (primary acceptance criterion)
+- pct_within_1_5fold: Percent within 1.5-fold
+- pct_within_1_25fold: Percent within bioequivalence range
+- n_valid: Number of valid comparisons
+- bias_direction: "overprediction", "underprediction", or "unbiased"
+"""
+function regulatory_metrics_summary(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64}
+)::Dict{String, Any}
+    gmfe = geometric_mean_fold_error(pred, obs)
+    afe = average_fold_error(pred, obs)
+    aafe = absolute_average_fold_error(pred, obs)
+
+    pct_2x = percent_within_fold(pred, obs, 2.0)
+    pct_1_5x = percent_within_fold(pred, obs, 1.5)
+    pct_1_25x = percent_within_fold(pred, obs, 1.25)
+
+    # Count valid comparisons
+    n_valid = count(i -> obs[i] > 0 && pred[i] > 0 && isfinite(pred[i]) && isfinite(obs[i]),
+                    1:length(pred))
+
+    # Determine bias direction
+    bias_direction = if afe > 1.25
+        "overprediction"
+    elseif afe < 0.8
+        "underprediction"
+    else
+        "unbiased"
+    end
+
+    # FDA/EMA acceptance criteria
+    meets_fda_criteria = aafe < 2.0 && pct_2x >= 70.0
+
+    return Dict{String, Any}(
+        "GMFE" => gmfe,
+        "AFE" => afe,
+        "AAFE" => aafe,
+        "percent_within_2fold" => pct_2x,
+        "percent_within_1.5fold" => pct_1_5x,
+        "percent_within_1.25fold" => pct_1_25x,
+        "n_valid" => n_valid,
+        "bias_direction" => bias_direction,
+        "meets_FDA_criteria" => meets_fda_criteria,
+    )
+end
+
+export average_fold_error, absolute_average_fold_error, regulatory_metrics_summary
+
 """
 Percent within Fold.
 
@@ -342,4 +460,3 @@ export validate_scientific, fold_error, geometric_mean_fold_error, percent_withi
 export mae_rmse_log10, r_squared, plot_scientific_metrics, trapezoidal_auc
 
 end # module
-
