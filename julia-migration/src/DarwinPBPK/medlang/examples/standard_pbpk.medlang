@@ -1,0 +1,296 @@
+// MedLang PBPK Model Definition
+// First Real Implementation of MedLang DSL
+// Reference: github.com/agourakis82/medlang
+//
+// This file demonstrates MedLang Track D syntax for PBPK modeling
+// following the medlang_pharmacometrics_qsp_spec_v0.1.md specification
+
+// ============================================================================
+// Standard 14-Compartment PBPK Model (70kg Adult)
+// ============================================================================
+
+model StandardPBPK_14Compartment {
+
+    // -------------------------------------------------------------------------
+    // State Variables (Drug Mass in Each Compartment)
+    // -------------------------------------------------------------------------
+
+    state A_blood : DoseMass = 0_mg        // Central blood compartment
+    state A_liver : DoseMass = 0_mg        // Liver (metabolism)
+    state A_kidney : DoseMass = 0_mg       // Kidney (excretion)
+    state A_brain : DoseMass = 0_mg        // Brain (BBB-protected)
+    state A_heart : DoseMass = 0_mg        // Heart
+    state A_lung : DoseMass = 0_mg         // Lung
+    state A_muscle : DoseMass = 0_mg       // Skeletal muscle
+    state A_adipose : DoseMass = 0_mg      // Adipose tissue
+    state A_gut : DoseMass = 0_mg          // Gastrointestinal tract
+    state A_skin : DoseMass = 0_mg         // Skin
+    state A_bone : DoseMass = 0_mg         // Bone
+    state A_spleen : DoseMass = 0_mg       // Spleen
+    state A_pancreas : DoseMass = 0_mg     // Pancreas
+    state A_other : DoseMass = 0_mg        // Rest of body
+
+    // -------------------------------------------------------------------------
+    // Physiological Parameters (70kg Adult Reference)
+    // -------------------------------------------------------------------------
+
+    // Organ Definitions with Volume, Blood Flow, and Partition Coefficient
+    // Format: organ NAME { V: volume, Q: blood_flow, Kp: partition_coeff }
+
+    organ blood {
+        V: 5.0_L,
+        Q: 0.0_L/h,      // Blood itself has no "flow" in this sense
+        Kp: 1.0
+    }
+
+    organ liver {
+        V: 1.8_L,
+        Q: 90.0_L/h,     // 27% of cardiac output
+        Kp: 1.5          // Typical lipophilic drug
+    }
+
+    organ kidney {
+        V: 0.31_L,
+        Q: 60.0_L/h,     // 22% of cardiac output
+        Kp: 1.2
+    }
+
+    organ brain {
+        V: 1.4_L,
+        Q: 50.0_L/h,     // 15% of cardiac output
+        Kp: 0.5          // BBB restricts distribution
+    }
+
+    organ heart {
+        V: 0.33_L,
+        Q: 20.0_L/h,     // 5% of cardiac output
+        Kp: 1.0
+    }
+
+    organ lung {
+        V: 0.5_L,
+        Q: 300.0_L/h,    // Receives full cardiac output
+        Kp: 1.0
+    }
+
+    organ muscle {
+        V: 30.0_L,
+        Q: 75.0_L/h,     // 17% of cardiac output
+        Kp: 0.8
+    }
+
+    organ adipose {
+        V: 15.0_L,
+        Q: 12.0_L/h,     // 5% of cardiac output
+        Kp: 2.0          // Lipophilic accumulation
+    }
+
+    organ gut {
+        V: 1.1_L,
+        Q: 45.0_L/h,     // 15% of cardiac output (portal)
+        Kp: 1.0
+    }
+
+    organ skin {
+        V: 3.3_L,
+        Q: 10.0_L/h,     // 5% of cardiac output
+        Kp: 0.9
+    }
+
+    organ bone {
+        V: 10.0_L,
+        Q: 5.0_L/h,      // 5% of cardiac output
+        Kp: 0.3
+    }
+
+    organ spleen {
+        V: 0.18_L,
+        Q: 15.0_L/h,     // 3% of cardiac output
+        Kp: 1.0
+    }
+
+    organ pancreas {
+        V: 0.1_L,
+        Q: 5.0_L/h,      // 1% of cardiac output
+        Kp: 1.0
+    }
+
+    organ other {
+        V: 5.0_L,
+        Q: 20.0_L/h,     // Residual
+        Kp: 1.0
+    }
+
+    // -------------------------------------------------------------------------
+    // Clearance Mechanisms
+    // -------------------------------------------------------------------------
+
+    clearance hepatic: 10.0_L/h     // Hepatic clearance (CYP450 metabolism)
+    clearance renal: 2.5_L/h        // Renal clearance (GFR + tubular secretion)
+
+    // -------------------------------------------------------------------------
+    // Differential Equations (PBPK Mass Balance)
+    // -------------------------------------------------------------------------
+
+    // Each tissue: dA_tissue/dt = Q_tissue * (C_blood - C_tissue/Kp_tissue)
+
+    // Blood compartment (central)
+    d/dt A_blood = sum_organ_fluxes - clearance_rate * C_blood
+
+    // Liver with hepatic clearance
+    d/dt A_liver = (Q_liver / V_liver) * (C_blood - C_liver / Kp_liver) - CL_hepatic * C_liver / V_liver
+
+    // Kidney with renal clearance
+    d/dt A_kidney = (Q_kidney / V_kidney) * (C_blood - C_kidney / Kp_kidney) - CL_renal * C_kidney / V_kidney
+
+    // Other organs (perfusion-limited distribution)
+    d/dt A_brain = (Q_brain / V_brain) * (C_blood - C_brain / Kp_brain)
+    d/dt A_heart = (Q_heart / V_heart) * (C_blood - C_heart / Kp_heart)
+    d/dt A_lung = (Q_lung / V_lung) * (C_blood - C_lung / Kp_lung)
+    d/dt A_muscle = (Q_muscle / V_muscle) * (C_blood - C_muscle / Kp_muscle)
+    d/dt A_adipose = (Q_adipose / V_adipose) * (C_blood - C_adipose / Kp_adipose)
+    d/dt A_gut = (Q_gut / V_gut) * (C_blood - C_gut / Kp_gut)
+    d/dt A_skin = (Q_skin / V_skin) * (C_blood - C_skin / Kp_skin)
+    d/dt A_bone = (Q_bone / V_bone) * (C_blood - C_bone / Kp_bone)
+    d/dt A_spleen = (Q_spleen / V_spleen) * (C_blood - C_spleen / Kp_spleen)
+    d/dt A_pancreas = (Q_pancreas / V_pancreas) * (C_blood - C_pancreas / Kp_pancreas)
+    d/dt A_other = (Q_other / V_other) * (C_blood - C_other / Kp_other)
+
+    // -------------------------------------------------------------------------
+    // Observables (Concentrations)
+    // -------------------------------------------------------------------------
+
+    obs C_blood : ConcMass = A_blood / V_blood      // Plasma concentration
+    obs C_liver : ConcMass = A_liver / V_liver      // Liver concentration
+    obs C_brain : ConcMass = A_brain / V_brain      // Brain concentration
+    obs AUC_blood : ConcMass = integral(C_blood)    // Area under curve
+}
+
+
+// ============================================================================
+// Simple One-Compartment Oral PK Model
+// ============================================================================
+
+model OneCmptOral {
+
+    // States
+    state A_gut : DoseMass = 0_mg          // Gut depot
+    state A_central : DoseMass = 0_mg      // Central compartment
+
+    // Parameters
+    param Ka : RateConst = 1.0_1/h         // Absorption rate
+    param CL : Clearance = 10.0_L/h        // Total clearance
+    param V : Volume = 50.0_L              // Volume of distribution
+    param F : Fraction = 0.8               // Bioavailability
+
+    // ODEs
+    d/dt A_gut = -Ka * A_gut
+    d/dt A_central = Ka * A_gut * F - (CL / V) * A_central
+
+    // Observables
+    obs C_plasma : ConcMass = A_central / V
+}
+
+
+// ============================================================================
+// Two-Compartment IV Model
+// ============================================================================
+
+model TwoCmptIV {
+
+    // States
+    state A_central : DoseMass = 0_mg      // Central compartment
+    state A_peripheral : DoseMass = 0_mg   // Peripheral compartment
+
+    // Parameters
+    param CL : Clearance = 15.0_L/h        // Central clearance
+    param V_c : Volume = 20.0_L            // Central volume
+    param Q : Clearance = 8.0_L/h          // Inter-compartmental clearance
+    param V_p : Volume = 60.0_L            // Peripheral volume
+
+    // ODEs
+    d/dt A_central = -(CL/V_c) * A_central - (Q/V_c) * A_central + (Q/V_p) * A_peripheral
+    d/dt A_peripheral = (Q/V_c) * A_central - (Q/V_p) * A_peripheral
+
+    // Observables
+    obs C_central : ConcMass = A_central / V_c
+    obs C_peripheral : ConcMass = A_peripheral / V_p
+}
+
+
+// ============================================================================
+// Population Model with Random Effects (NLME)
+// ============================================================================
+
+population OneCmptOral_Pop {
+
+    // Reference structural model
+    model OneCmptOral
+
+    // Fixed Effects (typical values)
+    param theta_Ka : RateConst = 1.0_1/h
+    param theta_CL : Clearance = 10.0_L/h
+    param theta_V : Volume = 50.0_L
+
+    // Random Effects (inter-individual variability)
+    rand eta_Ka : f64 ~ Normal(0, 0.3)
+    rand eta_CL : f64 ~ Normal(0, 0.4)
+    rand eta_V : f64 ~ Normal(0, 0.3)
+
+    // Covariate inputs
+    input WT : Mass                        // Body weight
+    input CRCL : Clearance                 // Creatinine clearance
+
+    // Parameter binding with allometric scaling
+    bind_params(individual) {
+        let Ka = theta_Ka * exp(eta_Ka)
+        let CL = theta_CL * (WT / 70_kg)^0.75 * exp(eta_CL)
+        let V = theta_V * (WT / 70_kg) * exp(eta_V)
+    }
+}
+
+
+// ============================================================================
+// Dosing Timeline
+// ============================================================================
+
+timeline SingleDose_100mg {
+    // IV bolus at t=0
+    at 0_h: dose { amount = 100_mg, to = A_blood }
+
+    // Observation times
+    at 0.5_h: observe C_blood
+    at 1_h: observe C_blood
+    at 2_h: observe C_blood
+    at 4_h: observe C_blood
+    at 8_h: observe C_blood
+    at 12_h: observe C_blood
+    at 24_h: observe C_blood
+}
+
+timeline MultipleDose_QD {
+    // Daily dosing for 7 days
+    at 0_h: dose { amount = 100_mg, to = A_gut }
+    at 24_h: dose { amount = 100_mg, to = A_gut }
+    at 48_h: dose { amount = 100_mg, to = A_gut }
+    at 72_h: dose { amount = 100_mg, to = A_gut }
+    at 96_h: dose { amount = 100_mg, to = A_gut }
+    at 120_h: dose { amount = 100_mg, to = A_gut }
+    at 144_h: dose { amount = 100_mg, to = A_gut }
+
+    // Rich PK sampling on day 1 and day 7
+    at 0.5_h: observe C_plasma
+    at 1_h: observe C_plasma
+    at 2_h: observe C_plasma
+    at 4_h: observe C_plasma
+    at 8_h: observe C_plasma
+    at 12_h: observe C_plasma
+    at 24_h: observe C_plasma
+    at 144.5_h: observe C_plasma
+    at 145_h: observe C_plasma
+    at 146_h: observe C_plasma
+    at 148_h: observe C_plasma
+    at 152_h: observe C_plasma
+    at 156_h: observe C_plasma
+    at 168_h: observe C_plasma
+}

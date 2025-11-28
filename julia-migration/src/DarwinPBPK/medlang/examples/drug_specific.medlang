@@ -1,0 +1,255 @@
+// MedLang Drug-Specific PBPK Models
+// First Real Implementation of MedLang DSL
+// Reference: github.com/agourakis82/medlang
+//
+// Examples of drug-specific PBPK parameterizations
+
+// ============================================================================
+// Metformin PBPK Model
+// Anti-diabetic (biguanide), hydrophilic, renal excretion
+// ============================================================================
+
+model Metformin_PBPK {
+
+    // Metformin-specific parameters
+    param MW : MolWeight = 129.16_g/mol    // Molecular weight
+    param pKa : f64 = 11.5                 // Basic drug
+    param logP : f64 = -1.43               // Hydrophilic
+    param fu : Fraction = 1.0              // Unbound fraction (no protein binding)
+    param BP : f64 = 1.0                   // Blood-to-plasma ratio
+
+    // State variables
+    state A_blood : DoseMass = 0_mg
+    state A_liver : DoseMass = 0_mg
+    state A_kidney : DoseMass = 0_mg
+    state A_muscle : DoseMass = 0_mg
+    state A_gut : DoseMass = 0_mg
+    state A_other : DoseMass = 0_mg
+
+    // Organ definitions (metformin-specific Kp values)
+    organ blood { V: 5.0_L, Q: 0.0_L/h, Kp: 1.0 }
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 3.5 }   // OCT1 uptake
+    organ kidney { V: 0.31_L, Q: 60.0_L/h, Kp: 8.0 } // OCT2 uptake
+    organ muscle { V: 30.0_L, Q: 75.0_L/h, Kp: 1.2 }
+    organ gut { V: 1.1_L, Q: 45.0_L/h, Kp: 2.0 }
+    organ other { V: 35.0_L, Q: 30.0_L/h, Kp: 1.0 }
+
+    // Clearance (predominantly renal)
+    clearance hepatic: 0.5_L/h             // Minimal hepatic metabolism
+    clearance renal: 25.0_L/h              // Active tubular secretion (OCT2)
+
+    // Absorption parameters
+    param Ka : RateConst = 0.6_1/h         // Slow absorption
+    param F : Fraction = 0.55              // Bioavailability ~55%
+
+    // Observables
+    obs C_plasma : ConcMass = A_blood / 5.0
+    obs C_liver : ConcMass = A_liver / 1.8
+    obs CLr : Clearance = 25.0_L/h         // Renal clearance
+}
+
+
+// ============================================================================
+// Midazolam PBPK Model
+// Benzodiazepine, CYP3A4 probe substrate
+// ============================================================================
+
+model Midazolam_PBPK {
+
+    // Midazolam-specific parameters
+    param MW : MolWeight = 325.77_g/mol
+    param pKa : f64 = 6.2
+    param logP : f64 = 3.9                 // Lipophilic
+    param fu : Fraction = 0.03             // 97% protein bound
+    param BP : f64 = 0.55                  // Blood-to-plasma ratio
+
+    // State variables
+    state A_blood : DoseMass = 0_mg
+    state A_liver : DoseMass = 0_mg
+    state A_gut : DoseMass = 0_mg
+    state A_brain : DoseMass = 0_mg
+    state A_adipose : DoseMass = 0_mg
+    state A_muscle : DoseMass = 0_mg
+    state A_other : DoseMass = 0_mg
+
+    // Organ definitions (midazolam-specific Kp values)
+    organ blood { V: 5.0_L, Q: 0.0_L/h, Kp: 1.0 }
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 4.2 }
+    organ gut { V: 1.1_L, Q: 45.0_L/h, Kp: 5.8 }      // Gut CYP3A4
+    organ brain { V: 1.4_L, Q: 50.0_L/h, Kp: 6.5 }    // CNS distribution
+    organ adipose { V: 15.0_L, Q: 12.0_L/h, Kp: 12.0 } // Lipophilic
+    organ muscle { V: 30.0_L, Q: 75.0_L/h, Kp: 2.5 }
+    organ other { V: 20.0_L, Q: 30.0_L/h, Kp: 2.0 }
+
+    // CYP3A4-mediated clearance
+    clearance hepatic: 27.0_L/h            // Extensive hepatic metabolism
+    clearance renal: 0.3_L/h               // Minimal renal excretion
+
+    // Intestinal first-pass
+    param Fg : Fraction = 0.57             // Fraction escaping gut metabolism
+    param Fh : Fraction = 0.56             // Fraction escaping hepatic metabolism
+    param F : Fraction = 0.32              // Overall bioavailability
+
+    // Absorption
+    param Ka : RateConst = 3.0_1/h         // Rapid absorption
+
+    // Observables
+    obs C_plasma : ConcMass = A_blood / 5.0
+    obs C_brain : ConcMass = A_brain / 1.4
+    obs t_half : Time = 2.5_h              // Terminal half-life
+}
+
+
+// ============================================================================
+// Warfarin PBPK Model
+// Anticoagulant, CYP2C9 substrate, high protein binding
+// ============================================================================
+
+model Warfarin_PBPK {
+
+    // Warfarin-specific parameters (S-warfarin)
+    param MW : MolWeight = 308.33_g/mol
+    param pKa : f64 = 5.1                  // Weak acid
+    param logP : f64 = 2.7
+    param fu : Fraction = 0.01             // 99% protein bound!
+    param BP : f64 = 0.58
+
+    // State variables
+    state A_blood : DoseMass = 0_mg
+    state A_liver : DoseMass = 0_mg
+    state A_muscle : DoseMass = 0_mg
+    state A_adipose : DoseMass = 0_mg
+    state A_other : DoseMass = 0_mg
+
+    // Organ definitions
+    organ blood { V: 5.0_L, Q: 0.0_L/h, Kp: 1.0 }
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 0.8 }
+    organ muscle { V: 30.0_L, Q: 75.0_L/h, Kp: 0.1 }
+    organ adipose { V: 15.0_L, Q: 12.0_L/h, Kp: 0.3 }
+    organ other { V: 20.0_L, Q: 30.0_L/h, Kp: 0.15 }
+
+    // CYP2C9-mediated clearance (slow)
+    clearance hepatic: 0.2_L/h             // Very low clearance
+    clearance renal: 0.0_L/h               // No renal excretion
+
+    // PK parameters
+    param Ka : RateConst = 2.0_1/h         // Rapid absorption
+    param F : Fraction = 0.99              // Complete absorption
+
+    // Observables
+    obs C_plasma : ConcMass = A_blood / 5.0
+    obs t_half : Time = 40_h               // Long half-life
+    obs Vd : Volume = 10_L                 // Small Vd (high binding)
+}
+
+
+// ============================================================================
+// Caffeine PBPK Model
+// CYP1A2 probe substrate
+// ============================================================================
+
+model Caffeine_PBPK {
+
+    param MW : MolWeight = 194.19_g/mol
+    param pKa : f64 = 14.0                 // Neutral
+    param logP : f64 = -0.07               // Hydrophilic
+    param fu : Fraction = 0.65             // 35% protein bound
+    param BP : f64 = 1.0
+
+    // State variables
+    state A_gut : DoseMass = 0_mg
+    state A_blood : DoseMass = 0_mg
+    state A_liver : DoseMass = 0_mg
+    state A_brain : DoseMass = 0_mg
+    state A_muscle : DoseMass = 0_mg
+    state A_other : DoseMass = 0_mg
+
+    // Organ definitions
+    organ blood { V: 5.0_L, Q: 0.0_L/h, Kp: 1.0 }
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 0.9 }
+    organ brain { V: 1.4_L, Q: 50.0_L/h, Kp: 1.0 }   // Crosses BBB
+    organ muscle { V: 30.0_L, Q: 75.0_L/h, Kp: 0.7 }
+    organ other { V: 35.0_L, Q: 30.0_L/h, Kp: 0.8 }
+
+    // CYP1A2-mediated clearance
+    clearance hepatic: 6.0_L/h
+    clearance renal: 0.1_L/h
+
+    // Absorption (complete and rapid)
+    param Ka : RateConst = 2.5_1/h
+    param F : Fraction = 1.0
+
+    // Observables
+    obs C_plasma : ConcMass = A_blood / 5.0
+    obs t_half : Time = 5_h
+}
+
+
+// ============================================================================
+// Ibuprofen PBPK Model
+// NSAID, CYP2C9 substrate, acidic
+// ============================================================================
+
+model Ibuprofen_PBPK {
+
+    param MW : MolWeight = 206.29_g/mol
+    param pKa : f64 = 4.4                  // Weak acid
+    param logP : f64 = 3.5                 // Lipophilic
+    param fu : Fraction = 0.01             // 99% protein bound
+    param BP : f64 = 0.55
+
+    // State variables
+    state A_gut : DoseMass = 0_mg
+    state A_blood : DoseMass = 0_mg
+    state A_liver : DoseMass = 0_mg
+    state A_kidney : DoseMass = 0_mg
+    state A_muscle : DoseMass = 0_mg
+    state A_adipose : DoseMass = 0_mg
+    state A_other : DoseMass = 0_mg
+
+    // Organ definitions
+    organ blood { V: 5.0_L, Q: 0.0_L/h, Kp: 1.0 }
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 0.7 }
+    organ kidney { V: 0.31_L, Q: 60.0_L/h, Kp: 0.5 }
+    organ muscle { V: 30.0_L, Q: 75.0_L/h, Kp: 0.1 }
+    organ adipose { V: 15.0_L, Q: 12.0_L/h, Kp: 0.3 }
+    organ other { V: 20.0_L, Q: 30.0_L/h, Kp: 0.15 }
+
+    // CYP2C9-mediated clearance
+    clearance hepatic: 3.0_L/h
+    clearance renal: 0.0_L/h               // Metabolites excreted renally
+
+    // Absorption
+    param Ka : RateConst = 1.5_1/h
+    param F : Fraction = 0.95
+
+    // Observables
+    obs C_plasma : ConcMass = A_blood / 5.0
+    obs t_half : Time = 2_h
+    obs Cmax : ConcMass = 30_mg/L          // After 400mg dose
+}
+
+
+// ============================================================================
+// Population Models for Drug-Drug Interactions
+// ============================================================================
+
+population Midazolam_DDI {
+    model Midazolam_PBPK
+
+    // CYP3A4 inhibitor effect
+    param I_max : Fraction = 0.9           // Max inhibition
+    param IC50 : Concentration = 0.1_uM    // Inhibitor potency
+
+    // Random effects
+    rand eta_CL : f64 ~ Normal(0, 0.35)
+    rand eta_Ka : f64 ~ Normal(0, 0.4)
+
+    input C_inhibitor : Concentration      // Inhibitor concentration
+
+    bind_params(individual) {
+        // CYP3A4 inhibition factor
+        let fi = 1 / (1 + C_inhibitor / IC50)
+        let CL_adjusted = 27.0_L/h * fi * exp(eta_CL)
+    }
+}
