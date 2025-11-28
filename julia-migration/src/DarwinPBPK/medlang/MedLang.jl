@@ -31,6 +31,7 @@ using ..ODEPBPKSolver
 # Include submodules
 include("parser.jl")
 include("transpiler.jl")
+include("fractal_kinetics.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -55,6 +56,16 @@ export calculate_fh, estimate_fg, ExtendedTranspileResult, transpile_to_extended
 
 # Re-export ODEProblem generation functions
 export ODEModelResult, generate_ode_function, generate_ode_model, generate_ode_problem
+
+# Re-export fractal kinetics (Deep Fractal PBPK Theory)
+using .FractalKinetics
+export mittag_leffler, mittag_leffler_derivative
+export fractional_decay, fractional_accumulation
+export FractalCompartment, FractalPBPKParams
+export tissue_fractal_dim, tissue_alpha, molecular_fractal_dim
+export fractal_coupling, spectral_correction
+export fractal_oie_tozer, estimate_fut_fractal
+export ALEXANDER_ORBACH_DS, FRACTAL_KEYWORDS
 
 #=============================================================================
   High-Level API
