@@ -1,6 +1,6 @@
 # Release v2.0.0-julia - Migração Completa para Julia
 
-**Data:** 2025-11-18  
+**Data:** 2025-11-18
 **Tipo:** 🚨 **BREAKING CHANGE** - Major Release
 
 ---
@@ -183,6 +183,7 @@ Migração realizada com rigor científico e foco em performance, mantendo 100% 
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis + AI Assistant  
+**Autor:** Dr. Demetrios Agourakis + AI Assistant
 **Data:** 2025-11-18
+
 

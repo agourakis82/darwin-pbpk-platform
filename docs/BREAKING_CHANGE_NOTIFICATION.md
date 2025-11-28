@@ -1,7 +1,7 @@
 # 🚨 NOTIFICAÇÃO: Breaking Change - Migração para Julia
 
-**Data:** 2025-11-18  
-**Versão:** v2.0.0-julia  
+**Data:** 2025-11-18
+**Versão:** v2.0.0-julia
 **Tipo:** 🚨 **BREAKING CHANGE**
 
 ---
@@ -104,6 +104,7 @@ Obrigado por usar o Darwin PBPK Platform! A migração para Julia traz melhorias
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis  
+**Autor:** Dr. Demetrios Agourakis
 **Data:** 2025-11-18
+
 
