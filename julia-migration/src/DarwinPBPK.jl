@@ -19,6 +19,7 @@ include("DarwinPBPK/training.jl")     # FASE 2 ✅
 # ML modules
 include("DarwinPBPK/ml/multimodal_encoder.jl")  # FASE 3 ✅ (Real implementation with MolecularGraph.jl)
 include("DarwinPBPK/ml/evidential.jl")          # FASE 3 ✅
+include("DarwinPBPK/ml/bayesian_uq.jl")         # Q1 2025 ✅ (Bayesian UQ)
 
 # Validation (FASE 4)
 include("DarwinPBPK/validation.jl")              # FASE 4 ✅
@@ -36,6 +37,7 @@ using .DynamicGNN
 using .Training
 using .MultimodalEncoder
 using .Evidential
+using .BayesianUQ
 using .Validation
 using .RESTAPI
 using .MedLang
@@ -43,5 +45,11 @@ using .MedLang
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang
 export load_medlang, generate_julia_module, validate_model, describe_model
+
+# Export Bayesian UQ functions
+export BayesianPBPKModel, PosteriorResult, ParameterPrior
+export sample_posterior, variational_inference, default_pbpk_priors
+export credible_interval, posterior_predictive, uncertainty_calibration
+export VariationalPosterior, sample_variational, create_clearance_model
 
 end # module
