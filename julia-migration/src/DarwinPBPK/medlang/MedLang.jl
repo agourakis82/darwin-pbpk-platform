@@ -38,6 +38,7 @@ include("cns_csf_model.jl")
 include("renal_elimination_model.jl")
 include("hepatic_metabolism_model.jl")
 include("lymphatic_absorption_model.jl")
+include("placental_transfer_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -127,6 +128,24 @@ export simulate_lymphatic_absorption, get_drug_preset
 export create_default_system, validate_lymphatic_model
 export bioavailability_enhancement, lymphatic_partitioning_curve
 export create_disease_state, disease_modifier
+
+# Re-export Placental transfer model
+using .PlacentalTransferModel
+export PlacentalBarrier, PlacentalTransporters, FetalCompartments
+export GestationalAge, MaternalPhysiology, FetalPhysiology
+export DrugPlacentalProperties, PregnancyCondition
+export calculate_placental_clearance, transplacental_flux
+export fetal_maternal_ratio, ion_trapping_factor
+export simulate_placental_transfer, gestational_scaling
+export create_pregnancy_model, validate_placental_model
+# Rename to avoid conflict with LymphaticAbsorptionModel
+const gestational_age = PlacentalTransferModel.gestational_age
+const placental_drug_preset = PlacentalTransferModel.get_drug_preset
+const default_placental_transporters = PlacentalTransferModel.default_transporters
+const default_fetal_compartments = PlacentalTransferModel.default_fetal_compartments
+const pregnancy_condition = PlacentalTransferModel.pregnancy_condition
+export gestational_age, placental_drug_preset, default_placental_transporters
+export default_fetal_compartments, pregnancy_condition
 
 #=============================================================================
   High-Level API
