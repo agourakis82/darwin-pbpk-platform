@@ -41,6 +41,7 @@ include("lymphatic_absorption_model.jl")
 include("placental_transfer_model.jl")
 include("tumor_penetration_model.jl")
 include("pulmonary_absorption_model.jl")
+include("glp1_bariatric_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -192,6 +193,27 @@ export pulmonary_device_preset
 # Re-export pulmonary disease function
 const pulmonary_disease_state = PulmonaryAbsorptionModel.pulmonary_disease
 export pulmonary_disease_state
+
+# Re-export GLP-1 agonist and Bariatric surgery model
+using .GLP1BariatricModel
+export GLP1AgonistParams, GLP1Effect, GLP1Receptor
+export BariatricSurgery, SurgeryType, PostSurgeryPhysiology
+export GIPhysiologyModified, DrugAbsorptionModifier
+export calculate_glp1_effect, gastric_emptying_delay
+export transit_time_modification, dissolution_rate_modifier
+export calculate_fa_bariatric, bioavailability_change
+export simulate_oral_with_glp1, simulate_oral_post_bariatric
+export glp1_agonist_preset, surgery_preset
+export create_modified_gi_params, validate_glp1_model
+# Re-export surgery type enum values
+const NO_SURGERY = GLP1BariatricModel.NO_SURGERY
+const SLEEVE_GASTRECTOMY = GLP1BariatricModel.SLEEVE_GASTRECTOMY
+const ROUX_EN_Y_BYPASS = GLP1BariatricModel.ROUX_EN_Y_BYPASS
+const BILIOPANCREATIC_DIVERSION = GLP1BariatricModel.BILIOPANCREATIC_DIVERSION
+const GASTRIC_BANDING = GLP1BariatricModel.GASTRIC_BANDING
+const MINI_GASTRIC_BYPASS = GLP1BariatricModel.MINI_GASTRIC_BYPASS
+export NO_SURGERY, SLEEVE_GASTRECTOMY, ROUX_EN_Y_BYPASS
+export BILIOPANCREATIC_DIVERSION, GASTRIC_BANDING, MINI_GASTRIC_BYPASS
 
 #=============================================================================
   High-Level API
