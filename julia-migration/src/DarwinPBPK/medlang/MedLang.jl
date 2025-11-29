@@ -37,6 +37,7 @@ include("mechanistic_gi.jl")
 include("cns_csf_model.jl")
 include("renal_elimination_model.jl")
 include("hepatic_metabolism_model.jl")
+include("lymphatic_absorption_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -114,6 +115,18 @@ export ddi_competitive, ddi_noncompetitive, ddi_uncompetitive, ddi_mbi
 export enzyme_induction_dynamics, calculate_net_ddi, inducer_preset
 export fractal_sinusoid, default_zonation, default_cyp_enzymes, default_hepatic_transporters
 export child_pugh_score, cirrhosis_state, drug_hepatic_preset
+
+# Re-export Lymphatic absorption model
+using .LymphaticAbsorptionModel
+export LymphaticSystem, ChylomicronDynamics, LipidFormulation
+export DrugLymphPartitioning, LymphaticFlow, DiseaseState
+export calculate_lymphatic_fraction, chylomicron_association
+export lacteal_uptake_rate, thoracic_duct_flow
+export first_pass_bypass_fraction, lymph_node_exposure
+export simulate_lymphatic_absorption, get_drug_preset
+export create_default_system, validate_lymphatic_model
+export bioavailability_enhancement, lymphatic_partitioning_curve
+export create_disease_state, disease_modifier
 
 #=============================================================================
   High-Level API
