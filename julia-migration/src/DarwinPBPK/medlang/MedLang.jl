@@ -32,6 +32,10 @@ using ..ODEPBPKSolver
 include("parser.jl")
 include("transpiler.jl")
 include("fractal_kinetics.jl")
+include("ml_integration.jl")
+include("mechanistic_gi.jl")
+include("cns_csf_model.jl")
+include("renal_elimination_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -66,6 +70,37 @@ export tissue_fractal_dim, tissue_alpha, molecular_fractal_dim
 export fractal_coupling, spectral_correction
 export fractal_oie_tozer, estimate_fut_fractal
 export ALEXANDER_ORBACH_DS, FRACTAL_KEYWORDS
+
+# Re-export ML-MedLang integration
+using .MLMedLangIntegration
+export estimate_ka_from_transporters, estimate_fg_from_transporters, estimate_fh_from_clearance
+export generate_medlang_absorption, generate_full_medlang_model
+export simulate_ml_oral, generate_transporter_annotation
+export TRANSPORTER_KA_EFFECTS, GUT_WALL_CYP
+
+# Re-export Mechanistic GI model
+using .MechanisticGI
+export MechanisticGIParams, generate_mechanistic_gi_medlang
+export simulate_mechanistic_oral, params_from_ml_predictions
+export GISegmentDef, TransporterDef, default_gi_segments
+
+# Re-export CNS/CSF model
+using .CNSCSFModel
+export CNSParams, BBBTransporters, BCSFBTransporters
+export generate_cns_medlang, simulate_cns_distribution
+export calculate_kpuu_bbb, calculate_kpuu_bcsfb
+export default_bbb_transporters, default_bcsfb_transporters
+export drug_preset
+
+# Re-export Renal elimination model
+using .RenalEliminationModel
+export RenalParams, RenalTransporters, CKDStage, FanconiSyndrome, Cystinosis
+export generate_renal_medlang, simulate_renal_elimination
+export calculate_clr, calculate_fraction_reabsorbed
+export henderson_hasselbalch_ionized_fraction, fraction_unionized
+export default_renal_transporters, apply_disease_to_transporters
+export ckd_stage, fanconi_syndrome, cystinosis
+export drug_renal_preset, estimate_renal_clearance
 
 #=============================================================================
   High-Level API
@@ -304,8 +339,8 @@ function simulate_oral_ode(
     # Time points
     times = range(0.0, t_max, length=num_points)
 
-    # Get blood volume for concentration calculation
-    v_blood = get(pbpk_params.volumes, "blood", 5.0)
+    # Get blood volume for concentration calculation (blood is index 1 in PBPK_ORGANS)
+    v_blood = pbpk_params.volumes[1]  # blood
 
     # For a simplified simulation, we can use the analytical solution for one-compartment
     # with first-order absorption, then apply to full PBPK
@@ -361,8 +396,8 @@ function simulate_oral_ode(
 
     # Calculate Cmax and Tmax
     cmax_idx = argmax(results["plasma"])
-    results["cmax"] = results["plasma"][cmax_idx]
-    results["tmax"] = results["time"][cmax_idx]
+    cmax_val = results["plasma"][cmax_idx]
+    tmax_val = results["time"][cmax_idx]
 
     # Calculate AUC using trapezoidal rule
     auc = 0.0
@@ -370,9 +405,17 @@ function simulate_oral_ode(
         dt = results["time"][i] - results["time"][i-1]
         auc += 0.5 * (results["plasma"][i] + results["plasma"][i-1]) * dt
     end
-    results["auc"] = auc
 
-    return results
+    # Return results with mixed types
+    return Dict{String, Any}(
+        "time" => results["time"],
+        "plasma" => results["plasma"],
+        "gut" => results["gut"],
+        "cmax" => cmax_val,
+        "tmax" => tmax_val,
+        "auc" => auc,
+        [organ => results[organ] for organ in ODEPBPKSolver.PBPK_ORGANS]...
+    )
 end
 
 #=============================================================================

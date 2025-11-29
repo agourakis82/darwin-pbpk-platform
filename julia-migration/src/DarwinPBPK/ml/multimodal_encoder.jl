@@ -147,7 +147,7 @@ For production, consider using HuggingFace Transformers via PyCall.
 """
 struct SMILESEncoder
     embedding::Embedding
-    gru::GRU
+    gru  # Flux.Recur - type varies
     output_proj::Dense
 end
 

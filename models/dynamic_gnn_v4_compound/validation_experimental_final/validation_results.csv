@@ -1,0 +1,194 @@
+compound_id,drug_name,dose,pred_cmax,pred_auc,obs_cmax,obs_auc,cmax_fe,auc_fe
+"['atorvastatin' 'rivaroxaban' 'metformin' 'midazolam' 'warfarin' 'digoxin'
+ 'caffeine' 'ibuprofen' 'paracetamol' 'propranolol']",Atorvastatin,10.0,2.0,4.182053565979004,0.008199999999999999,0.0423,243.90243902439028,98.8665145621514
+"['aspirin' 'warfarin' 'midazolam' 'digoxin' 'caffeine' 'metoprolol'
+ 'propranolol' 'ibuprofen' 'diclofenac' 'carbamazepine' 'atenolol'
+ 'metformin' 'furosemide' 'theophylline' 'phenytoin' 'ethanol' 'enalapril'
+ 'clopidogrel' 'paracetamol_(acetaminophen)' 'simvastatin' 'amoxicillin'
+ 'omeprazole' 'fluoxetine' 'sertraline' 'paroxetine' 'citalopram'
+ 'escitalopram' 'venlafaxine' 'duloxetine' 'desvenlafaxine'
+ 'amitriptyline' 'nortriptyline' 'bupropion' 'mirtazapine' 'alprazolam'
+ 'lorazepam' 'zolpidem' 'risperidone' 'quetiapine' 'olanzapine' 'lithium'
+ 'lamotrigine' 'valproic_acid' 'methylphenidate' 'atomoxetine' 'morphine'
+ 'oxycodone' 'tramadol' 'rivaroxaban' 'apixaban' 'verapamil' 'diltiazem'
+ 'amlodipine' 'vancomycin' 'gentamicin' 'meropenem' 'paclitaxel'
+ 'doxorubicin' 'imatinib' 'tacrolimus' 'cyclosporine' 'mycophenolic_acid'
+ 'cn1c(=o)c2c(ncn2c)n(c)c1=o' 'cc(=o)nc1ccc(o)cc1'
+ 'n#cc1ccc(c(c2ccc(c#n)cc2)n2cncn2)cc1' 'cc1cc(=o)n(-c2ccccc2)n1c'
+ 'ccc1(c2ccccc2)c(=o)nc(=o)nc1=o'
+ 'o=c1cn=c(c2ccccc2cl)c2cc([n+](=o)[o-])ccc2n1'
+ 'coc1cc2nc(n3ccn(c(=o)c4ccco4)cc3)nc(n)c2cc1oc'
+ 'cc1ncc([n+](=o)[o-])n1cco' 'cc1ncc2n1-c1ccc(cl)cc1c(c1ccccc1f)=nc2'
+ 'cnc1=nc2ccc(cl)cc2c(c2ccccc2)=[n+]([o-])c1'
+ 'cn1c(=o)cn=c(c2ccccc2)c2cc(cl)ccc21'
+ 'cc1nnc2n1-c1ccc(cl)cc1c(c1ccccc1)=nc2'
+ 'cc1nnc2n1-c1ccc(cl)cc1c(c1ccccc1cl)=nc2'
+ 'o=c1n(cccn2ccn(c3cccc(cl)c3)cc2)nc2ccccn12'
+ 'cc(=o)ccccn1c(=o)c2c(ncn2c)n(c)c1=o' 'cccc1cc(=o)[nh]c(=s)[nh]1'
+ 'o=c1nc2ccc(cl)cc2c(c2ccccc2cl)=nc1o' 'ccc1nc(n)nc(n)c1-c1ccc(cl)cc1'
+ 'coc(=o)c1=c(c)nc(c)=c(c(=o)oc)c1c1ccccc1[n+](=o)[o-]'
+ 'cc(=o)nc1nnc(s(n)(=o)=o)s1' 'ccoc1ccc(nc(c)=o)cc1'
+ 'oc(cn1cncn1)(cn1cncn1)c1ccc(f)cc1f' 'coc1cc(cc2cnc(n)nc2n)cc(oc)c1oc'
+ 'nc1cc(-c2ccncc2)c[nh]c1=o' 'coc1ccc(cc2nccc3cc(oc)c(oc)cc23)cc1oc'
+ 'ccoc(=o)c1ncn2c1cn(c)c(=o)c1cc(f)ccc1-2'
+ 'cn1c(=o)cn=c(c2ccccc2f)c2cc([n+](=o)[o-])ccc21' 'nnc(=o)c1ccncc1'
+ 'cc1ccccc1n1c(=o)c2cc(s(n)(=o)=o)c(cl)cc2nc1c' 'cn1cc[nh]c1=s'
+ 'cc1ccc(-c2nc3ccc(c)cn3c2cc(=o)n(c)c)cc1'
+ 'ccoc(=o)c1=c(c)nc(c)=c(c(=o)oc)c1c1cccc([n+](=o)[o-])c1' 'carvedilol'
+ 'lisinopril' 'losartan' 'celecoxib' 'naproxen' 'indomethacin' 'ketorolac'
+ 'codeine' 'fentanyl' 'ciprofloxacin' 'azithromycin' 'levofloxacin'
+ 'moxifloxacin' 'doxycycline' 'clarithromycin' 'metronidazole'
+ 'cephalexin' 'cefuroxime' 'acebutolol' 'amiodarone' 'bisoprolol'
+ 'captopril' 'candesartan' 'clonidine' 'doxazosin' 'felodipine'
+ 'hydralazine' 'irbesartan' 'ampicillin' 'cefaclor' 'cefixime'
+ 'ceftriaxone' 'clindamycin' 'erythromycin' 'imipenem' 'norfloxacin'
+ 'clomipramine' 'doxepin' 'fluvoxamine' 'glipizide' 'glyburide'
+ 'pioglitazone' 'sitagliptin' 'levothyroxine' 'acetaminophen' 'etodolac']",Rivaroxaban,10.0,2.0,4.348499298095703,0.141,1.04,14.184397163120568,4.181249325092022
+Metformin,Metformin,500.0,100.0,9.566902160644531,1.0,5.5,100.0,1.739436756480824
+Midazolam,Midazolam,5.0,1.1374890804290771,4.181633472442627,0.0325,0.08929999999999999,34.99966401320237,46.82680260294096
+Warfarin,Warfarin,5.0,1.3955504894256592,4.319430351257324,0.0011,0.05,1268.6822631142356,86.38860702514648
+Digoxin,Digoxin,0.25,1.3412882089614868,4.188366413116455,0.0012,0.02,1117.7401741345725,209.41832065582275
+Caffeine,Caffeine,200.0,40.0,6.484983444213867,6.5,30.0,6.153846153846154,4.62607194884469
+Ibuprofen,Ibuprofen,400.0,80.0,8.575689315795898,25.0,90.0,3.2,10.494783181361932
+Paracetamol,Paracetamol,1000.0,200.0,14.84060287475586,15.0,35.0,13.333333333333334,2.358394756289561
+Propranolol,Propranolol,40.0,8.0,4.57082462310791,0.05,0.2,160.0,22.85412311553955
+Aspirin,Aspirin,500.0,100.0,9.612869262695312,,,,
+Warfarin,Warfarin,10.0,2.0,4.375764846801758,,,,
+Midazolam,Midazolam,7.5,1.5,4.206574440002441,,,,
+Digoxin,Digoxin,0.5,1.3415781259536743,4.191058158874512,,,,
+Caffeine,Caffeine,200.0,40.0,6.484983444213867,,,,
+Metoprolol,Metoprolol,100.0,20.0,5.1331634521484375,,,,
+Propranolol,Propranolol,80.0,16.0,4.952970027923584,,,,
+Ibuprofen,Ibuprofen,400.0,80.0,8.575690269470215,,,,
+Diclofenac,Diclofenac,50.0,10.0,4.742563247680664,,,,
+Carbamazepine,Carbamazepine,200.0,40.0,6.454944610595703,,,,
+Atenolol,Atenolol,50.0,10.0,4.786259651184082,,,,
+Metformin,Metformin,500.0,100.0,9.566902160644531,,,,
+Furosemide,Furosemide,40.0,8.0,4.713074684143066,,,,
+Theophylline,Theophylline,300.0,60.0,7.563844680786133,,,,
+Phenytoin,Phenytoin,300.0,60.0,7.556750297546387,,,,
+Ethanol,Ethanol,20000.0,4000.0,213.59254455566406,,,,
+Enalapril,Enalapril,10.0,2.0,4.287371635437012,,,,
+Clopidogrel,Clopidogrel,75.0,15.0,4.856891632080078,,,,
+Paracetamol (Acetaminophen),Paracetamol (Acetaminophen),1000.0,200.0,14.824381828308105,,,,
+Simvastatin,Simvastatin,20.0,4.0,4.299688339233398,,,,
+Amoxicillin,Amoxicillin,500.0,100.0,9.688308715820312,,,,
+Omeprazole,Omeprazole,20.0,4.0,4.347747325897217,,,,
+Fluoxetine,Fluoxetine,20.0,4.0,4.343441009521484,,,,
+Sertraline,Sertraline,50.0,10.0,4.694363594055176,,,,
+Paroxetine,Paroxetine,20.0,4.0,4.2837653160095215,,,,
+Citalopram,Citalopram,20.0,4.0,4.302713871002197,,,,
+Escitalopram,Escitalopram,10.0,2.0,4.191136360168457,,,,
+Venlafaxine,Venlafaxine,75.0,15.0,4.864071846008301,,,,
+Duloxetine,Duloxetine,60.0,12.0,4.730961799621582,,,,
+Desvenlafaxine,Desvenlafaxine,50.0,10.0,4.574411392211914,,,,
+Amitriptyline,Amitriptyline,50.0,10.0,4.576210021972656,,,,
+Nortriptyline,Nortriptyline,25.0,5.0,4.326913356781006,,,,
+Bupropion,Bupropion,150.0,30.0,5.608729839324951,,,,
+Mirtazapine,Mirtazapine,30.0,6.0,4.377058029174805,,,,
+Alprazolam,Alprazolam,1.0,1.3562157154083252,4.255230903625488,,,,
+Lorazepam,Lorazepam,2.0,1.361649990081787,4.271808624267578,,,,
+Zolpidem,Zolpidem,10.0,2.0,4.284818649291992,,,,
+Risperidone,Risperidone,2.0,1.1445631980895996,4.157352924346924,,,,
+Quetiapine,Quetiapine,200.0,40.0,6.088603496551514,,,,
+Olanzapine,Olanzapine,10.0,2.0,4.182053565979004,,,,
+Lithium,Lithium,600.0,120.0,10.629656791687012,,,,
+Lamotrigine,Lamotrigine,100.0,20.0,5.359525203704834,,,,
+Valproic Acid,Valproic Acid,500.0,100.0,9.597663879394531,,,,
+Methylphenidate,Methylphenidate,20.0,4.0,4.375116348266602,,,,
+Atomoxetine,Atomoxetine,40.0,8.0,4.641965866088867,,,,
+Morphine,Morphine,30.0,6.0,4.491436004638672,,,,
+Oxycodone,Oxycodone,20.0,4.0,4.333381652832031,,,,
+Tramadol,Tramadol,100.0,20.0,5.082225322723389,,,,
+Rivaroxaban,Rivaroxaban,20.0,4.0,4.473745346069336,,,,
+Apixaban,Apixaban,5.0,1.3735536336898804,4.3209075927734375,,,,
+Verapamil,Verapamil,80.0,16.0,4.93156623840332,,,,
+Diltiazem,Diltiazem,60.0,12.0,4.738924026489258,,,,
+Amlodipine,Amlodipine,5.0,1.097495675086975,4.127880096435547,,,,
+Vancomycin,Vancomycin,1000.0,200.0,14.813730239868164,,,,
+Gentamicin,Gentamicin,240.0,48.0,6.953263759613037,,,,
+Meropenem,Meropenem,1000.0,200.0,14.840394020080566,,,,
+Paclitaxel,Paclitaxel,175.0,35.0,6.149251937866211,,,,
+Doxorubicin,Doxorubicin,60.0,12.0,4.692837715148926,,,,
+Imatinib,Imatinib,400.0,80.0,8.533283233642578,,,,
+Tacrolimus,Tacrolimus,5.0,1.0936064720153809,4.138636589050293,,,,
+Cyclosporine,Cyclosporine,300.0,60.0,7.292292594909668,,,,
+Mycophenolic Acid,Mycophenolic Acid,1000.0,200.0,14.821863174438477,,,,
+Cn1c(=O)c2c(ncn2C)n(C)c1=O,Cn1c(=O)c2c(ncn2C)n(C)c1=O,100.0,20.0,5.36427640914917,,,,
+CC(=O)Nc1ccc(O)cc1,CC(=O)Nc1ccc(O)cc1,100.0,20.0,5.318228721618652,,,,
+N#Cc1ccc(C(c2ccc(C#N)cc2)n2cncn2)cc1,N#Cc1ccc(C(c2ccc(C#N)cc2)n2cncn2)cc1,100.0,20.0,5.364276885986328,,,,
+Cc1cc(=O)n(-c2ccccc2)n1C,Cc1cc(=O)n(-c2ccccc2)n1C,100.0,20.0,5.362253189086914,,,,
+CCC1(c2ccccc2)C(=O)NC(=O)NC1=O,CCC1(c2ccccc2)C(=O)NC(=O)NC1=O,100.0,20.0,5.363029479980469,,,,
+O=C1CN=C(c2ccccc2Cl)c2cc([N+](=O)[O-])ccc2N1,O=C1CN=C(c2ccccc2Cl)c2cc([N+](=O)[O-])ccc2N1,100.0,20.0,5.363471508026123,,,,
+COc1cc2nc(N3CCN(C(=O)C4CCCO4)CC3)nc(N)c2cc1OC,COc1cc2nc(N3CCN(C(=O)C4CCCO4)CC3)nc(N)c2cc1OC,100.0,20.0,5.363123893737793,,,,
+Cc1ncc([N+](=O)[O-])n1CCO,Cc1ncc([N+](=O)[O-])n1CCO,100.0,20.0,5.36427640914917,,,,
+Cc1ncc2n1-c1ccc(Cl)cc1C(c1ccccc1F)=NC2,Cc1ncc2n1-c1ccc(Cl)cc1C(c1ccccc1F)=NC2,100.0,20.0,5.193603515625,,,,
+CNC1=Nc2ccc(Cl)cc2C(c2ccccc2)=[N+]([O-])C1,CNC1=Nc2ccc(Cl)cc2C(c2ccccc2)=[N+]([O-])C1,100.0,20.0,5.363162040710449,,,,
+CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21,CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21,100.0,20.0,5.359591484069824,,,,
+Cc1nnc2n1-c1ccc(Cl)cc1C(c1ccccc1)=NC2,Cc1nnc2n1-c1ccc(Cl)cc1C(c1ccccc1)=NC2,100.0,20.0,5.129098415374756,,,,
+Cc1nnc2n1-c1ccc(Cl)cc1C(c1ccccc1Cl)=NC2,Cc1nnc2n1-c1ccc(Cl)cc1C(c1ccccc1Cl)=NC2,100.0,20.0,5.197309494018555,,,,
+O=c1n(CCCN2CCN(c3cccc(Cl)c3)CC2)nc2ccccn12,O=c1n(CCCN2CCN(c3cccc(Cl)c3)CC2)nc2ccccn12,100.0,20.0,5.363089561462402,,,,
+CC(=O)CCCCn1c(=O)c2c(ncn2C)n(C)c1=O,CC(=O)CCCCn1c(=O)c2c(ncn2C)n(C)c1=O,100.0,20.0,5.364450454711914,,,,
+CCCc1cc(=O)[nH]c(=S)[nH]1,CCCc1cc(=O)[nH]c(=S)[nH]1,100.0,20.0,5.363282203674316,,,,
+O=C1Nc2ccc(Cl)cc2C(c2ccccc2Cl)=NC1O,O=C1Nc2ccc(Cl)cc2C(c2ccccc2Cl)=NC1O,100.0,20.0,5.231250286102295,,,,
+CCc1nc(N)nc(N)c1-c1ccc(Cl)cc1,CCc1nc(N)nc(N)c1-c1ccc(Cl)cc1,100.0,20.0,5.363027572631836,,,,
+COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1[N+](=O)[O-],COC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1ccccc1[N+](=O)[O-],100.0,20.0,5.1973090171813965,,,,
+CC(=O)Nc1nnc(S(N)(=O)=O)s1,CC(=O)Nc1nnc(S(N)(=O)=O)s1,100.0,20.0,5.3630499839782715,,,,
+CCOc1ccc(NC(C)=O)cc1,CCOc1ccc(NC(C)=O)cc1,100.0,20.0,5.1380205154418945,,,,
+OC(Cn1cncn1)(Cn1cncn1)c1ccc(F)cc1F,OC(Cn1cncn1)(Cn1cncn1)c1ccc(F)cc1F,100.0,20.0,5.363046646118164,,,,
+COc1cc(Cc2cnc(N)nc2N)cc(OC)c1OC,COc1cc(Cc2cnc(N)nc2N)cc(OC)c1OC,100.0,20.0,5.363166809082031,,,,
+Nc1cc(-c2ccncc2)c[nH]c1=O,Nc1cc(-c2ccncc2)c[nH]c1=O,100.0,20.0,5.363704681396484,,,,
+COc1ccc(Cc2nccc3cc(OC)c(OC)cc23)cc1OC,COc1ccc(Cc2nccc3cc(OC)c(OC)cc23)cc1OC,100.0,20.0,5.363628387451172,,,,
+CCOC(=O)c1ncn2c1CN(C)C(=O)c1cc(F)ccc1-2,CCOC(=O)c1ncn2c1CN(C)C(=O)c1cc(F)ccc1-2,100.0,20.0,5.363978862762451,,,,
+CN1C(=O)CN=C(c2ccccc2F)c2cc([N+](=O)[O-])ccc21,CN1C(=O)CN=C(c2ccccc2F)c2cc([N+](=O)[O-])ccc21,100.0,20.0,5.361496925354004,,,,
+NNC(=O)c1ccncc1,NNC(=O)c1ccncc1,100.0,20.0,5.363836288452148,,,,
+Cc1ccccc1N1C(=O)c2cc(S(N)(=O)=O)c(Cl)cc2NC1C,Cc1ccccc1N1C(=O)c2cc(S(N)(=O)=O)c(Cl)cc2NC1C,100.0,20.0,5.363097667694092,,,,
+Cn1cc[nH]c1=S,Cn1cc[nH]c1=S,100.0,20.0,5.363400459289551,,,,
+Cc1ccc(-c2nc3ccc(C)cn3c2CC(=O)N(C)C)cc1,Cc1ccc(-c2nc3ccc(C)cn3c2CC(=O)N(C)C)cc1,100.0,20.0,5.363350868225098,,,,
+CCOC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1cccc([N+](=O)[O-])c1,CCOC(=O)C1=C(C)NC(C)=C(C(=O)OC)C1c1cccc([N+](=O)[O-])c1,100.0,20.0,5.163251876831055,,,,
+Carvedilol,Carvedilol,25.0,5.0,4.406273365020752,,,,
+Lisinopril,Lisinopril,10.0,2.0,4.358973026275635,,,,
+Losartan,Losartan,50.0,10.0,4.639735221862793,,,,
+Celecoxib,Celecoxib,200.0,40.0,6.1344757080078125,,,,
+Naproxen,Naproxen,500.0,100.0,9.597575187683105,,,,
+Indomethacin,Indomethacin,25.0,5.0,4.5632476806640625,,,,
+Ketorolac,Ketorolac,10.0,2.0,4.390366554260254,,,,
+Codeine,Codeine,30.0,6.0,4.44854736328125,,,,
+Fentanyl,Fentanyl,0.10000000149011612,1.1026867628097534,4.109505653381348,,,,
+Ciprofloxacin,Ciprofloxacin,500.0,100.0,9.585363388061523,,,,
+Azithromycin,Azithromycin,500.0,100.0,8.740041732788086,,,,
+Levofloxacin,Levofloxacin,500.0,100.0,9.661563873291016,,,,
+Moxifloxacin,Moxifloxacin,400.0,80.0,8.63479232788086,,,,
+Doxycycline,Doxycycline,100.0,20.0,5.365823745727539,,,,
+Clarithromycin,Clarithromycin,500.0,100.0,9.562076568603516,,,,
+Metronidazole,Metronidazole,500.0,100.0,9.589309692382812,,,,
+Cephalexin,Cephalexin,500.0,100.0,9.699830055236816,,,,
+Cefuroxime,Cefuroxime,250.0,50.0,7.067474842071533,,,,
+Acebutolol,Acebutolol,400.0,80.0,8.364021301269531,,,,
+Amiodarone,Amiodarone,200.0,40.0,6.402787208557129,,,,
+Bisoprolol,Bisoprolol,10.0,2.0,4.299064636230469,,,,
+Captopril,Captopril,25.0,5.0,4.453447341918945,,,,
+Candesartan,Candesartan,8.0,1.600000023841858,4.3609514236450195,,,,
+Clonidine,Clonidine,0.20000000298023224,1.3222038745880127,4.219935894012451,,,,
+Doxazosin,Doxazosin,4.0,1.2896370887756348,4.242269039154053,,,,
+Felodipine,Felodipine,5.0,1.1360716819763184,4.1675872802734375,,,,
+Hydralazine,Hydralazine,50.0,10.0,4.73372220993042,,,,
+Irbesartan,Irbesartan,150.0,30.0,5.868203163146973,,,,
+Ampicillin,Ampicillin,500.0,100.0,9.688308715820312,,,,
+Cefaclor,Cefaclor,250.0,50.0,7.064888954162598,,,,
+Cefixime,Cefixime,400.0,80.0,8.580353736877441,,,,
+Ceftriaxone,Ceftriaxone,1000.0,200.0,14.83041000366211,,,,
+Clindamycin,Clindamycin,300.0,60.0,7.5762457847595215,,,,
+Erythromycin,Erythromycin,500.0,100.0,9.568424224853516,,,,
+Imipenem,Imipenem,500.0,100.0,9.715254783630371,,,,
+Norfloxacin,Norfloxacin,400.0,80.0,8.526525497436523,,,,
+Clomipramine,Clomipramine,75.0,15.0,4.901277542114258,,,,
+Doxepin,Doxepin,75.0,15.0,4.8454999923706055,,,,
+Fluvoxamine,Fluvoxamine,100.0,20.0,5.085697174072266,,,,
+Glipizide,Glipizide,5.0,1.3840396404266357,4.3323073387146,,,,
+Glyburide,Glyburide,5.0,1.3839342594146729,4.334052085876465,,,,
+Pioglitazone,Pioglitazone,30.0,6.0,4.597421646118164,,,,
+Sitagliptin,Sitagliptin,100.0,20.0,5.2646331787109375,,,,
+Levothyroxine,Levothyroxine,0.10000000149011612,1.3793625831604004,4.27805757522583,,,,
+Acetaminophen,Acetaminophen,1000.0,200.0,14.84060287475586,,,,
+Etodolac,Etodolac,400.0,80.0,8.57109546661377,,,,
