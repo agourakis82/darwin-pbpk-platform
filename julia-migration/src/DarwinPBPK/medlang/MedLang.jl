@@ -36,6 +36,7 @@ include("ml_integration.jl")
 include("mechanistic_gi.jl")
 include("cns_csf_model.jl")
 include("renal_elimination_model.jl")
+include("hepatic_metabolism_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -101,6 +102,18 @@ export henderson_hasselbalch_ionized_fraction, fraction_unionized
 export default_renal_transporters, apply_disease_to_transporters
 export ckd_stage, fanconi_syndrome, cystinosis
 export drug_renal_preset, estimate_renal_clearance
+
+# Re-export Hepatic metabolism model
+using .HepaticMetabolismModel
+export HepaticParams, CYPEnzyme, HepaticTransporters
+export FractalSinusoid, LiverZonation, Cirrhosis, ChildPughScore
+export generate_hepatic_medlang, simulate_hepatic_clearance
+export calculate_clh, calculate_extraction_ratio
+export fractal_michaelis_menten, classical_michaelis_menten
+export ddi_competitive, ddi_noncompetitive, ddi_uncompetitive, ddi_mbi
+export enzyme_induction_dynamics, calculate_net_ddi, inducer_preset
+export fractal_sinusoid, default_zonation, default_cyp_enzymes, default_hepatic_transporters
+export child_pugh_score, cirrhosis_state, drug_hepatic_preset
 
 #=============================================================================
   High-Level API
