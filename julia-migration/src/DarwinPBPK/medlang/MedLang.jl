@@ -39,6 +39,7 @@ include("renal_elimination_model.jl")
 include("hepatic_metabolism_model.jl")
 include("lymphatic_absorption_model.jl")
 include("placental_transfer_model.jl")
+include("tumor_penetration_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -146,6 +147,33 @@ const default_fetal_compartments = PlacentalTransferModel.default_fetal_compartm
 const pregnancy_condition = PlacentalTransferModel.pregnancy_condition
 export gestational_age, placental_drug_preset, default_placental_transporters
 export default_fetal_compartments, pregnancy_condition
+
+# Re-export Tumor penetration model
+using .TumorPenetrationModel
+export TumorPhysiology, TumorMicroenvironment, VascularParameters
+export DrugTumorProperties, ADCProperties, NanoparticleProperties
+export EPREffect, TumorType, StromalBarrier
+export calculate_tumor_uptake, calculate_EPR_accumulation
+export tumor_penetration_depth, IFP_gradient_effect
+export ADC_distribution, binding_site_barrier
+export simulate_tumor_penetration, tumor_drug_preset
+export create_tumor_model, validate_tumor_model
+# Re-export ADC preset with const to avoid clash
+const ADC_preset = TumorPenetrationModel.ADC_preset
+export ADC_preset
+# Re-export tumor type enum values
+const SOLID_CARCINOMA = TumorPenetrationModel.SOLID_CARCINOMA
+const SARCOMA = TumorPenetrationModel.SARCOMA
+const LYMPHOMA = TumorPenetrationModel.LYMPHOMA
+const BRAIN_TUMOR = TumorPenetrationModel.BRAIN_TUMOR
+const PANCREATIC = TumorPenetrationModel.PANCREATIC
+const MELANOMA = TumorPenetrationModel.MELANOMA
+const BREAST = TumorPenetrationModel.BREAST
+const LUNG = TumorPenetrationModel.LUNG
+const COLORECTAL = TumorPenetrationModel.COLORECTAL
+const OVARIAN = TumorPenetrationModel.OVARIAN
+export SOLID_CARCINOMA, SARCOMA, LYMPHOMA, BRAIN_TUMOR, PANCREATIC
+export MELANOMA, BREAST, LUNG, COLORECTAL, OVARIAN
 
 #=============================================================================
   High-Level API
