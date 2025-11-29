@@ -1,6 +1,6 @@
 name = "DarwinPBPK"
 uuid = "a1b2c3d4-5678-90ab-cdef-123456789abc"
-version = "2.3.0"
+version = "2.4.0"
 
 [deps]
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"

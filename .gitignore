@@ -4,61 +4,81 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
 ENV/
-.venv
-*.egg-info/
-dist/
-build/
-
-# Jupyter
-.ipynb_checkpoints
-*.ipynb
-
-# Large Data Files (use Zenodo!)
-data/processed/**/*.parquet
-data/processed/**/*.npz
-data/processed/**/*.pkl
-data/external/**/*
-*.csv
-*.tsv
-*.tab
-
-# Models (large files)
-models/**/*.pt
-models/**/*.pth
-models/baseline_mlp/best_model.pt
-models/gnn_model/best_model.pt
-*.h5
-*.ckpt
-
-# Keep demo models
-!models/demo/*.pt
-
-# Results
-results/
-outputs/
-figures/
-*.png
-*.jpg
-
-# Logs
-logs/
-*.log
+env/
+.venv/
 
 # IDE
-.DS_Store
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Julia
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+Manifest.toml
+
+# Large data files (use Zenodo/DVC for these)
+data/embeddings/*.npy
+data/embeddings/*.npz
+data/embeddings/*.pkl
+data/embeddings/*.parquet
+data/external_datasets/*.zip
+julia-migration/data/zenodo/*.zip
+julia-migration/data/zenodo/wget-log
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+
+# Keep README in embeddings
+!data/embeddings/README.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Secrets
+.env
+.env.local
+*.pem
+*.key
 
 # Temporary
-*.tmp
-*.bak
+tmp/
 temp/
-
-
-# Zenodo upload files (too large for GitHub)
-darwin-pbpk-datasets-*.zip
+*.tmp

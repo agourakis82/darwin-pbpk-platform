@@ -392,9 +392,167 @@ function (encoder::MultimodalMolecularEncoder)(smiles_batch::Vector{String})::Ma
     return hcat(outputs...)  # [fusion_dim, batch_size]
 end
 
+# ============================================================================
+# QUANTUM DESCRIPTOR INTEGRATION
+# ============================================================================
+
+# Import quantum descriptors module
+include("quantum_descriptors.jl")
+using .QuantumDescriptors
+
+const QUANTUM_DIM = QUANTUM_DESCRIPTOR_DIM  # 24 dimensions
+
+"""
+Quantum Descriptor Encoder - Projects quantum descriptors to embedding space.
+
+Quantum descriptors provide electronic structure information that captures
+drug-tissue interactions better than classical descriptors:
+- HOMO/LUMO for CYP450 binding prediction
+- Polarizability for membrane partitioning
+- Abraham descriptors for solvation
+"""
+struct QuantumEncoder
+    input_proj::Dense
+    hidden::Dense
+    output_proj::Dense
+end
+
+@functor QuantumEncoder
+
+function QuantumEncoder(; output_dim::Int = 128)
+    input_proj = Dense(QUANTUM_DIM => 64, relu)
+    hidden = Dense(64 => 64, relu)
+    output_proj = Dense(64 => output_dim)
+    return QuantumEncoder(input_proj, hidden, output_proj)
+end
+
+"""
+Encode quantum descriptors to embedding.
+"""
+function (encoder::QuantumEncoder)(qd::QuantumDescriptorSet)::Vector{Float32}
+    # Normalize and convert to vector
+    x = normalize_descriptors(qd)
+
+    # Forward pass
+    h = encoder.input_proj(x)
+    h = encoder.hidden(h)
+    out = encoder.output_proj(h)
+
+    return vec(out)
+end
+
+function (encoder::QuantumEncoder)(smiles::String)::Union{Vector{Float32},Nothing}
+    qd = calculate_quantum_descriptors(smiles)
+    if qd === nothing
+        return nothing
+    end
+    return encoder(qd)
+end
+
+const QUANTUM_OUTPUT_DIM = 128
+
+"""
+Enhanced Multimodal Encoder with Quantum Descriptors.
+
+Combines FOUR modalities:
+1. SMILESEncoder: Character-level GRU (768d) - sequential patterns
+2. GNNEncoder: Graph attention (256d) - molecular topology
+3. QuantumEncoder: Electronic structure (128d) - quantum properties
+4. CrossAttentionFusion: Multi-head attention (512d) - unified embedding
+
+The quantum descriptors add crucial information:
+- HOMO energy predicts CYP450 oxidation susceptibility
+- Polarizability improves membrane partition prediction
+- Abraham descriptors capture H-bonding for protein binding
+"""
+struct EnhancedMultimodalEncoder
+    smiles_encoder::SMILESEncoder
+    gnn_encoder::GNNEncoder
+    quantum_encoder::QuantumEncoder
+    fusion::CrossAttentionFusion
+    use_gnn::Bool
+    use_quantum::Bool
+end
+
+@functor EnhancedMultimodalEncoder
+
+function EnhancedMultimodalEncoder(; use_gnn::Bool=true, use_quantum::Bool=true)
+    smiles_encoder = SMILESEncoder()
+    gnn_encoder = GNNEncoder()
+    quantum_encoder = QuantumEncoder()
+
+    # Calculate fusion input dimensions
+    input_dims = Int[SMILES_OUTPUT_DIM]
+    if use_gnn
+        push!(input_dims, GNN_OUTPUT_DIM)
+    end
+    if use_quantum
+        push!(input_dims, QUANTUM_OUTPUT_DIM)
+    end
+
+    fusion = CrossAttentionFusion(input_dims)
+
+    return EnhancedMultimodalEncoder(
+        smiles_encoder, gnn_encoder, quantum_encoder,
+        fusion, use_gnn, use_quantum
+    )
+end
+
+"""
+Encode molecule with all available modalities.
+"""
+function (encoder::EnhancedMultimodalEncoder)(smiles::String)::Vector{Float32}
+    embeddings = Vector{Vector{Float32}}()
+
+    # SMILES embedding (always computed)
+    smiles_emb = encoder.smiles_encoder(smiles)
+    push!(embeddings, smiles_emb)
+
+    # GNN embedding
+    if encoder.use_gnn
+        gnn_emb = encoder.gnn_encoder(smiles)
+        if gnn_emb !== nothing
+            push!(embeddings, gnn_emb)
+        else
+            push!(embeddings, zeros(Float32, GNN_OUTPUT_DIM))
+        end
+    end
+
+    # Quantum descriptor embedding
+    if encoder.use_quantum
+        quantum_emb = encoder.quantum_encoder(smiles)
+        if quantum_emb !== nothing
+            push!(embeddings, quantum_emb)
+        else
+            push!(embeddings, zeros(Float32, QUANTUM_OUTPUT_DIM))
+        end
+    end
+
+    # Fuse all embeddings
+    unified = encoder.fusion(embeddings)
+
+    return unified
+end
+
+"""
+Get raw quantum descriptors for a molecule (for interpretability).
+"""
+function get_quantum_descriptors(smiles::String)::Union{QuantumDescriptorSet,Nothing}
+    return calculate_quantum_descriptors(smiles)
+end
+
+"""
+Batch encode with enhanced encoder.
+"""
+function (encoder::EnhancedMultimodalEncoder)(smiles_batch::Vector{String})::Matrix{Float32}
+    outputs = [encoder(s) for s in smiles_batch]
+    return hcat(outputs...)
+end
+
 # Export public API
 export MultimodalMolecularEncoder, SMILESEncoder, GNNEncoder, CrossAttentionFusion
+export EnhancedMultimodalEncoder, QuantumEncoder, get_quantum_descriptors
 export smiles_to_graph, atom_features
-export SMILES_OUTPUT_DIM, GNN_OUTPUT_DIM, FUSION_DIM
+export SMILES_OUTPUT_DIM, GNN_OUTPUT_DIM, QUANTUM_OUTPUT_DIM, FUSION_DIM
 
 end # module

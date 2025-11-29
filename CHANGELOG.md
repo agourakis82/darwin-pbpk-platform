@@ -2,64 +2,92 @@
 
 All notable changes to Darwin PBPK Platform will be documented in this file.
 
-## [2.0.0-julia] - 2025-11-18
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### 🚨 BREAKING CHANGES
-- **Migração completa para Julia**: Repositório agora é 100% Julia, sem código Python
-- **Requisitos**: Julia 1.9+ necessário (Python não mais suportado)
-- **96 arquivos Python removidos**: Todo código Python foi migrado ou removido
+## [2.4.0] - 2025-01-29
 
-### Added
-- ODE Solver em Julia (4× mais rápido que Python)
-- Dataset Generation em Julia
-- Dynamic GNN em Julia
-- Training Pipeline em Julia
-- Validation em Julia (GMFE 1.036, 100% within folds)
-- REST API em Julia (HTTP.jl)
-- Scripts Julia para treinamento e validação
-- Documentação completa da migração
-- Scripts de migração e remoção de Python
+### Added - Brain Kp,uu Model v2.0
 
-### Changed
-- Performance: ODE Solver 4.5ms (4× vs Python)
-- Validação científica: GMFE 1.036, 100% within 1.25x, 1.5x, 2.0x
-- Testes: 6/6 passando
+#### New Transporter Models
+- **OCT3 Uptake Scoring**: Predicts organic cation transporter-mediated brain uptake
+  - Explains Kp,uu > 1 for propranolol (3.08), methylphenidate (3.43)
+  - Hydrophilic cation filter prevents false uptake predictions (atenolol fix)
+- **BCRP Efflux Model**: Second major efflux pump at BBB
+  - Handles neutral drugs, imidazopyridines (zolpidem, thiopental)
+  - Cooperative with P-gp for dual-substrate drugs
 
-### Removed
-- 96 arquivos Python (apps/, scripts/*.py, tests/*.py)
-- requirements.txt
-- Dependências Python (PyTorch, NumPy, SciPy, etc.)
+#### Model Improvements
+- Quantitative P-gp efflux (replaces binary substrate flag)
+- Drug class-specific corrections (beta-blockers, TCAs, SSRIs, opioids, antihistamines)
+- Hybrid ML correction with class-aware neighbor selection
+- Improved neutral drug handling by class
 
-### Documentation
-- `docs/MIGRATION_TO_JULIA_COMPLETE.md` - Guia completo de migração
-- `docs/PYTHON_REMOVAL_PLAN.md` - Plano de remoção
-- `README_JULIA_ONLY.md` - README para versão Julia
-- `RELEASE_v2.0.0-julia.md` - Release notes detalhadas
+#### Validation
+- Training set (n=41): 80.5% within 2-fold, R²=0.90
+- **Independent validation (n=30)**: 60.0% within 2-fold, R²=0.38
+- Performance by class: TCAs 86%, Anticonvulsants 60%, Antipsychotics 40%
 
-## [1.0.1] - 2025-11-08
+#### New Files
+- `src/DarwinPBPK/compartments/brain_kpuu_v2.jl` - Main v2.0 model
+- `src/DarwinPBPK/api/pubchem_client.jl` - PubChem REST API client
+- `scripts/validation/independent_kpuu_validation.jl` - Holdout validation
+- `docs/deep_dive/BRAIN_KPUU_V2_RELEASE.md` - Release documentation
 
-### Added
-- Validated PBPK dataset publication with complete metadata
-- Experimental validation protocols documentation
-- Quality assurance documentation for dataset
-- Dataset README with usage instructions
-- Enhanced CITATION.cff with dataset publication info
-- Zenodo release update (concept DOI: 10.5281/zenodo.17536674, version DOI: 10.5281/zenodo.17561017)
+#### Known Limitations
+- Zwitterions (gabapentin, pregabalin) need LAT1 transporter - not yet implemented
+- Atypical antipsychotics under-predicted - need OATP1A2 uptake model
+- Small polar neutrals need ENT (equilibrative nucleoside transporter) model
 
 ### Changed
-- Updated version to reflect dataset publication milestone
+- Brain compartment model updated with v2.0 Kp,uu integration
+- Version bump to 2.4.0
 
-### Fixed
-- Dataset validation improvements
-- Metadata completeness checks
+---
 
-## [1.0.0] - 2025-11-05
+## [2.3.0] - 2025-01-28
 
 ### Added
-- Initial production release
-- Multi-modal molecular representations (ChemBERTa + GNN + RDKit)
-- PBPK parameter prediction (Fu, Vd, CL)
-- Training on 44,779 compounds from ChEMBL and TDC
-- GNN architectures (GAT + TransformerConv)
-- Multi-task learning with physics-informed constraints
-- Production deployment on Kubernetes
+- Kidney compartment deep dive with SOTA transporters
+- Liver compartment with CYP450 and phase II metabolism
+- Muscle compartment with exercise physiology
+- Clinical blood work integration module
+
+---
+
+## [2.2.0] - 2025-01-27
+
+### Added
+- Quantum molecular descriptors module
+- ChemBERTa embedding integration
+- Multimodal encoder for drug featurization
+
+---
+
+## [2.1.0] - 2025-01-26
+
+### Added
+- Dynamic GNN for PBPK modeling
+- Obach-Lombardo 1352 drug training pipeline
+- External dataset validation framework
+
+---
+
+## [2.0.0-julia] - 2025-01-25
+
+### Changed
+- Complete migration from Python to Julia
+- 100% Python code removed
+- ODE solver rewritten in Julia with DifferentialEquations.jl
+- All compartment models ported to Julia
+
+### Added
+- MedLang DSL integration
+- Zenodo metadata for data archival
+- Breaking change notifications
+
+---
+
+## [1.x] - Legacy Python Version
+
+See legacy Python repository for historical changes.
