@@ -40,6 +40,7 @@ include("hepatic_metabolism_model.jl")
 include("lymphatic_absorption_model.jl")
 include("placental_transfer_model.jl")
 include("tumor_penetration_model.jl")
+include("pulmonary_absorption_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -174,6 +175,23 @@ const COLORECTAL = TumorPenetrationModel.COLORECTAL
 const OVARIAN = TumorPenetrationModel.OVARIAN
 export SOLID_CARCINOMA, SARCOMA, LYMPHOMA, BRAIN_TUMOR, PANCREATIC
 export MELANOMA, BREAST, LUNG, COLORECTAL, OVARIAN
+
+# Re-export Pulmonary absorption model
+using .PulmonaryAbsorptionModel
+export LungAnatomy, ParticleProperties, DepositionFractions
+export PulmonaryTransporters, MucociliaryClearance, DissolutionKinetics
+export DrugPulmonaryProperties, DeviceProperties, PulmonaryDisease
+export calculate_deposition, regional_deposition_fractions
+export mucociliary_clearance_rate, alveolar_macrophage_clearance
+export pulmonary_absorption_rate, calculate_bioavailability
+export simulate_pulmonary_absorption, pulmonary_drug_preset
+export create_lung_model, validate_pulmonary_model
+# Re-export device preset with const to avoid potential clashes
+const pulmonary_device_preset = PulmonaryAbsorptionModel.device_preset
+export pulmonary_device_preset
+# Re-export pulmonary disease function
+const pulmonary_disease_state = PulmonaryAbsorptionModel.pulmonary_disease
+export pulmonary_disease_state
 
 #=============================================================================
   High-Level API
