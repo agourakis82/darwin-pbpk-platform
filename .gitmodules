@@ -1,0 +1,6 @@
+[submodule "Darwin-medlang"]
+	path = Darwin-medlang
+	url = https://github.com/agourakis82/medlang
+[submodule "Darwin-demetrios"]
+	path = Darwin-demetrios
+	url = https://github.com/chiuratto-AI/demetrios
