@@ -84,3 +84,7 @@ temp/
 *.tmp
 *.zip
 darwin-pbpk-datasets-*.zip
+.env
+-e 
+# API keys
+julia-migration/scripts/data_import/.env
