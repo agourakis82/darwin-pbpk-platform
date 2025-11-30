@@ -26,9 +26,9 @@ const MBI_PARAMETERS = Dict{Symbol, Dict{Symbol, NamedTuple}}(
             kinact_per_min = 0.05,
             ki_um = 5.0,
             kdeg_per_min = 0.0005,
-            clinical_auc_ratio = 8.0,
+            clinical_auc_ratio = 6.3,  # Updated: Greenblatt 2015 meta-analysis (6.5±10.9)
             metabolite = :N_desmethylclarithromycin,
-            source = "Obach 2007; Polasek 2006"
+            source = "Obach 2007; Polasek 2006; Greenblatt 2015"
         ),
         :erythromycin => (
             kinact_per_min = 0.03,
@@ -216,6 +216,15 @@ const MBI_PARAMETERS = Dict{Symbol, Dict{Symbol, NamedTuple}}(
     ),
 
     :CYP2C8 => Dict(
+        # Gemfibrozil parent + glucuronide both contribute to CYP2C8 MBI
+        :gemfibrozil => (
+            kinact_per_min = 0.21,
+            ki_um = 10.0,  # Lower Ki to account for combined parent + metabolite effect
+            kdeg_per_min = 0.0003,
+            clinical_auc_ratio = 8.0,
+            metabolite = :none,
+            source = "Ogilvie 2006; Niemi 2003 - repaglinide 8.1x"
+        ),
         :gemfibrozil_glucuronide => (
             kinact_per_min = 0.21,
             ki_um = 20.0,
