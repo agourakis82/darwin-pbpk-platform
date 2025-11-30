@@ -42,6 +42,8 @@ include("placental_transfer_model.jl")
 include("tumor_penetration_model.jl")
 include("pulmonary_absorption_model.jl")
 include("glp1_bariatric_model.jl")
+include("bayesian_cns_model.jl")
+include("bayesian_ddi_model.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -214,6 +216,61 @@ const GASTRIC_BANDING = GLP1BariatricModel.GASTRIC_BANDING
 const MINI_GASTRIC_BYPASS = GLP1BariatricModel.MINI_GASTRIC_BYPASS
 export NO_SURGERY, SLEEVE_GASTRECTOMY, ROUX_EN_Y_BYPASS
 export BILIOPANCREATIC_DIVERSION, GASTRIC_BANDING, MINI_GASTRIC_BYPASS
+
+# Re-export Bayesian CNS model
+using .BayesianCNSModel
+export BayesianBBBParams, BBBPrior, TransporterPrior
+export CNSPopulationPrior, DiseaseStatePrior, IndividualPosterior
+export PosteriorPredictive, UncertaintyBounds
+export calculate_bbb_prior, update_posterior
+export sample_posterior, posterior_predictive
+export kpuu_with_uncertainty, credible_interval
+export simulate_bayesian_cns, hierarchical_model
+export drug_bbb_prior, population_prior_preset
+export validate_bayesian_model, compare_to_observed
+# Re-export helper functions
+const transporter_prior_from_structure = BayesianCNSModel.transporter_prior_from_structure
+const disease_state_prior = BayesianCNSModel.disease_state_prior
+const hierarchical_update = BayesianCNSModel.hierarchical_update
+export transporter_prior_from_structure, disease_state_prior, hierarchical_update
+# Re-export integrated mechanistic+Bayesian functions
+export create_bayesian_cns_params, simulate_mechanistic_bayesian_cns
+export bayesian_cns_target_attainment
+
+# Re-export Bayesian DDI model
+using .BayesianDDIModel
+export DDIMechanism, DDIPerpetrator, DDIVictim, DDIInteraction
+export DDIPrior, DDIPosterior, DDIRiskAssessment
+export CYPInhibitionPrior, CYPInductionPrior, TransporterDDIPrior
+export PopulationDDIPrior, PatientDDIFactors
+export calculate_ddi_prior, update_ddi_posterior
+export predict_auc_ratio, predict_cmax_ratio
+export static_ddi_model, dynamic_ddi_model
+export mechanistic_static_model, net_effect_model
+export ddi_risk_classification, clinical_significance
+export perpetrator_preset, victim_preset, ddi_database_prior
+export simulate_ddi_scenario, validate_ddi_model
+# Re-export DDI mechanism types
+const DDI_CYP_COMPETITIVE = BayesianDDIModel.CYP_COMPETITIVE_INHIBITION
+const DDI_CYP_NONCOMPETITIVE = BayesianDDIModel.CYP_NONCOMPETITIVE_INHIBITION
+const DDI_CYP_MBI = BayesianDDIModel.CYP_MECHANISM_BASED_INHIBITION
+const DDI_CYP_INDUCTION = BayesianDDIModel.CYP_INDUCTION
+const DDI_TRANSPORTER = BayesianDDIModel.TRANSPORTER_INHIBITION
+export DDI_CYP_COMPETITIVE, DDI_CYP_NONCOMPETITIVE, DDI_CYP_MBI
+export DDI_CYP_INDUCTION, DDI_TRANSPORTER
+# Re-export CYP enzyme types
+const DDI_CYP3A4 = BayesianDDIModel.CYP3A4
+const DDI_CYP2D6 = BayesianDDIModel.CYP2D6
+const DDI_CYP2C9 = BayesianDDIModel.CYP2C9
+const DDI_CYP2C19 = BayesianDDIModel.CYP2C19
+const DDI_CYP1A2 = BayesianDDIModel.CYP1A2
+export DDI_CYP3A4, DDI_CYP2D6, DDI_CYP2C9, DDI_CYP2C19, DDI_CYP1A2
+# Re-export transporter types
+const DDI_PGP = BayesianDDIModel.PGP
+const DDI_BCRP = BayesianDDIModel.BCRP
+const DDI_OATP1B1 = BayesianDDIModel.OATP1B1
+const DDI_OATP1B3 = BayesianDDIModel.OATP1B3
+export DDI_PGP, DDI_BCRP, DDI_OATP1B1, DDI_OATP1B3
 
 #=============================================================================
   High-Level API
