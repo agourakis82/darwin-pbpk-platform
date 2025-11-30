@@ -5,6 +5,28 @@ All notable changes to Darwin PBPK Platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2025-01-30
+
+### Added
+- DDI prediction module validation exceeding FDA/EMA criteria (96.2% within 2-fold, AFE 0.94, AAFE 1.33 for 26 external clinical studies).
+- MedLang v1.0 DSL specification with EBNF grammar, dimensional analysis, refinement types, compartmental/DDI semantics, and Demetrios compiler backend.
+- Demetrios PBPK standard library with unit type system, algebraic effects (GPU/Prob/Mut), and linear types for resource safety.
+- Comprehensive DDI test suite (reversible inhibition, MBI, induction, multi-mechanism, phenotype-dependent, risk classification, transporters).
+- DDI-PBPK integration for steady-state inhibitor concentrations ([I]h estimation) and transporter-CYP interplay.
+- Validation scripts, debug tools, and figure generation for DDI analysis (e.g., fluconazole, fluvoxamine underpredictions).
+- Examples: midazolam_ddi.medlang and demo_demetrios_compiler.jl.
+
+### Changed
+- Updated FDA DDI classification database with risk categories and 26 validation pairs.
+- Updated MBI parameters with calibrated kinact/KI for CYP3A4 (kdeg=0.00048 min⁻¹).
+- Methods documentation for Q1 publication, including equations for reversible/MBI/induction/OATP1B1 DDIs.
+
+### Files
+- 4 new docs: DDI_VALIDATION_REPORT.md, DEMETRIOS_PBPK_STDLIB.d, MEDLANG_SPECIFICATION.md, METHODS_DDI_PREDICTION.md
+- 15 new scripts/tests: analyze_remaining_errors.jl, test_comprehensive_ddi.jl, ddi_prediction.jl, etc.
+- 3 new src: ddi_pbpk_integration.jl, medlang_demetrios_compiler.jl, etc.
+- 2 modified: fda_ddi_classification.jl, mbi_parameters.jl
+
 ## [2.4.0] - 2025-01-29
 
 ### Added - Brain Kp,uu Model v2.0

@@ -1,0 +1,356 @@
+// =============================================================================
+// MIDAZOLAM-KETOCONAZOLE DDI MODEL
+// =============================================================================
+// A complete MedLang model demonstrating:
+// - Drug definition with metabolism
+// - DDI prediction (competitive CYP3A4 inhibition)
+// - Gut-wall and hepatic contributions
+// - Population simulation
+//
+// Compiles to: Demetrios (production), Julia (dev), PharmML (regulatory)
+// =============================================================================
+
+/// Midazolam PBPK model with CYP3A4 DDI
+/// @reference Olkkola KT et al. Clin Pharmacol Ther 1994
+/// @validation AUC ratio = 15.4x with ketoconazole
+model Midazolam_Ketoconazole_DDI {
+
+    // =========================================================================
+    // VICTIM DRUG: MIDAZOLAM
+    // =========================================================================
+
+    drug Midazolam {
+        /// Physicochemical properties
+        properties {
+            MW: 325.8 Da
+            logP: 3.9
+            pKa: 6.2              // Weak base
+            fu: 0.03              // Highly bound to albumin
+            BP: 0.55              // Blood:plasma ratio
+        }
+
+        /// Oral absorption parameters
+        absorption {
+            route: oral
+            ka: 1.5 h⁻¹           // Rapid absorption
+            Fa: 1.0               // Complete absorption
+            Tlag: 0 h             // No lag time
+        }
+
+        /// Distribution (2-compartment)
+        distribution {
+            Vc: 30 L              // Central volume
+            Vp: 50 L              // Peripheral volume
+            Q: 25 L/h             // Intercompartmental clearance
+            Vss: 80 L             // Steady-state Vd
+        }
+
+        /// First-pass metabolism
+        first_pass {
+            Fg: 0.57              // 43% gut extraction
+            Fh: 0.77              // 23% hepatic extraction
+            F: 0.44               // Overall bioavailability (Fa × Fg × Fh)
+        }
+
+        /// Enzyme-mediated metabolism
+        metabolism {
+            // CYP3A4 is the primary enzyme
+            CYP3A4 {
+                fm: 0.94          // 94% of metabolism
+                Km: 4 µM          // Michaelis constant
+                Vmax: 500 pmol/min/mg
+                CLint: 125 µL/min/mg  // Vmax/Km
+                location: [gut, liver]
+            }
+
+            // Minor CYP3A5 contribution
+            CYP3A5 {
+                fm: 0.04
+            }
+
+            // Other pathways
+            other {
+                fm: 0.02
+            }
+        }
+
+        /// Elimination
+        elimination {
+            CL: 25 L/h            // Total clearance
+            CLh: 23 L/h           // Hepatic clearance (dominant)
+            CLr: 2 L/h            // Renal clearance
+            fe: 0.01              // <1% excreted unchanged
+            t_half: 2.5 h         // Terminal half-life
+        }
+    }
+
+    // =========================================================================
+    // PERPETRATOR DRUG: KETOCONAZOLE
+    // =========================================================================
+
+    drug Ketoconazole {
+        properties {
+            MW: 531.4 Da
+            fu: 0.01              // Highly bound
+        }
+
+        /// Simplified PK (for DDI prediction)
+        pk {
+            ka: 0.8 h⁻¹
+            Vc: 200 L
+            CL: 10 L/h
+            t_half: 8 h
+        }
+
+        /// CYP3A4 inhibition
+        inhibition {
+            enzyme: CYP3A4
+            mechanism: competitive
+            Ki: 0.015 µM          // Very potent (15 nM)
+
+            // Affects both gut wall and liver
+            affects: [gut, liver]
+        }
+    }
+
+    // =========================================================================
+    // DDI MODEL
+    // =========================================================================
+
+    ddi Ketoconazole_inhibits_Midazolam {
+        perpetrator: Ketoconazole
+        victim: Midazolam
+
+        /// Gut-wall DDI calculation
+        /// [I]gut = Dose / 250 mL (gut lumen volume)
+        gut_wall {
+            I_gut = Ketoconazole.dose / 250 mL / Ketoconazole.MW
+
+            // Fg inhibited = 1 - Eg_baseline / (1 + [I]/Ki)
+            Eg_baseline = 1 - Midazolam.Fg
+            Eg_inhibited = Eg_baseline / (1 + I_gut / Ketoconazole.Ki)
+            Fg_ddi = 1 - Eg_inhibited
+
+            // Contribution to AUC ratio
+            Fg_ratio = Fg_ddi / Midazolam.Fg
+        }
+
+        /// Hepatic DDI calculation
+        /// [I]h = [I]u,plasma + portal contribution
+        hepatic {
+            // Hepatic inlet concentration
+            I_portal = Ketoconazole.ka * Ketoconazole.Fa * Ketoconazole.dose / (Qh * Ketoconazole.MW)
+            I_hepatic = Ketoconazole.Cu + I_portal
+
+            // CLint inhibited
+            CLint_ratio = 1 / (1 + I_hepatic / Ketoconazole.Ki)
+
+            // Fh inhibited (well-stirred model)
+            Eh_baseline = 1 - Midazolam.Fh
+            Eh_inhibited = Eh_baseline * CLint_ratio
+            Fh_ddi = 1 - Eh_inhibited
+
+            // Contributions
+            Fh_ratio = Fh_ddi / Midazolam.Fh
+            CLh_ratio = CLint_ratio  // Assuming blood flow not limiting
+        }
+
+        /// Overall DDI prediction
+        prediction {
+            // AUC ratio = Fg_ratio × Fh_ratio × (1/CLh_ratio)
+            // For oral dosing with first-pass
+            AUC_ratio = Fg_ratio * Fh_ratio / CLh_ratio
+
+            // Cmax ratio (approximate)
+            Cmax_ratio = Fg_ratio * Fh_ratio
+
+            // CL ratio
+            CL_ratio = 1 / AUC_ratio
+        }
+
+        /// Clinical validation
+        validation {
+            observed_AUC_ratio: 15.4
+            observed_Cmax_ratio: 3.8
+            reference: "Olkkola KT et al. Clin Pharmacol Ther 1994"
+
+            // Acceptance criteria: within 2-fold
+            assert AUC_ratio within 2-fold of 15.4
+        }
+    }
+
+    // =========================================================================
+    // PATIENT POPULATION
+    // =========================================================================
+
+    population Healthy_Adults {
+        n: 1000                   // Virtual patients
+
+        /// Demographics
+        demographics {
+            age ~ Uniform(18, 55) years
+            weight ~ Normal(70, 15) kg
+            sex: 50% male, 50% female
+        }
+
+        /// PK variability
+        variability {
+            // Inter-individual variability (log-normal)
+            CL ~ LogNormal(mean: 25 L/h, CV: 30%)
+            Vc ~ LogNormal(mean: 30 L, CV: 25%)
+            ka ~ LogNormal(mean: 1.5 h⁻¹, CV: 40%)
+
+            // Correlations
+            correlation(CL, Vc) = 0.3
+        }
+
+        /// Covariate effects
+        covariates {
+            // Allometric scaling
+            CL = CL_pop * (weight / 70 kg)^0.75
+            Vc = Vc_pop * (weight / 70 kg)^1.0
+
+            // Age effect on CL
+            CL = CL * if(age > 65, 0.8, 1.0)
+
+            // Sex effect
+            CL = CL * if(sex == female, 0.9, 1.0)
+        }
+    }
+
+    // =========================================================================
+    // SIMULATION SCENARIOS
+    // =========================================================================
+
+    simulation DDI_Study {
+        /// Study design
+        design {
+            // Perpetrator pre-treatment
+            dose Ketoconazole 400 mg oral at -24 h
+            dose Ketoconazole 400 mg oral at -12 h
+            dose Ketoconazole 400 mg oral at 0 h
+
+            // Victim administration
+            dose Midazolam 7.5 mg oral at 1 h
+
+            // Sampling times
+            sample at [0, 0.5, 1, 1.5, 2, 3, 4, 6, 8, 12, 24] h
+        }
+
+        /// Simulation settings
+        settings {
+            time: 0..48 h
+            step: 0.1 h
+            solver: Tsit5          // Runge-Kutta 5th order
+            rtol: 1e-8
+            atol: 1e-10
+        }
+
+        /// Outputs
+        observe {
+            C_midazolam: "Midazolam Plasma Conc (µM)"
+            C_ketoconazole: "Ketoconazole Plasma Conc (µM)"
+            AUC: "AUC (µM·h)"
+            Cmax: "Cmax (µM)"
+            Tmax: "Tmax (h)"
+            AUC_ratio: "AUC Ratio"
+        }
+
+        /// Compare scenarios
+        scenarios {
+            control: Midazolam alone
+            ddi: Midazolam + Ketoconazole
+        }
+    }
+
+    simulation Population_DDI {
+        /// Population simulation on GPU
+        @gpu
+        population: Healthy_Adults
+
+        design {
+            // Same dosing as DDI_Study
+            inherit DDI_Study.design
+        }
+
+        /// Population outputs
+        observe {
+            // Median and 90% prediction interval
+            C_median: percentile(C_midazolam, 50)
+            C_5th: percentile(C_midazolam, 5)
+            C_95th: percentile(C_midazolam, 95)
+
+            // Population AUC ratio
+            AUC_ratio_median: percentile(AUC_ratio, 50)
+            AUC_ratio_range: [percentile(AUC_ratio, 5), percentile(AUC_ratio, 95)]
+        }
+    }
+
+    // =========================================================================
+    // MODEL VALIDATION
+    // =========================================================================
+
+    validation {
+        /// Compare to clinical data
+        clinical_data {
+            source: "Olkkola KT et al. Clin Pharmacol Ther 1994"
+
+            observed {
+                AUC_ratio: 15.4 ± 2.1
+                Cmax_ratio: 3.8 ± 0.9
+            }
+        }
+
+        /// Acceptance criteria
+        criteria {
+            // AUC ratio within 2-fold
+            AUC_ratio: 2-fold
+
+            // AFE (average fold error) close to 1
+            AFE: 0.8..1.25
+
+            // AAFE (absolute average fold error) < 2
+            AAFE: < 2.0
+        }
+
+        /// Generate validation report
+        @report("validation_report.pdf")
+        report {
+            title: "Midazolam-Ketoconazole DDI Model Validation"
+            sections: [
+                model_description,
+                parameter_table,
+                simulation_results,
+                observed_vs_predicted,
+                conclusion
+            ]
+        }
+    }
+}
+
+// =============================================================================
+// COMPILATION TARGETS
+// =============================================================================
+
+/// Compile to Demetrios (production - type-safe, GPU-accelerated)
+@target(demetrios)
+compile {
+    output: "midazolam_ddi.d"
+    optimize: true
+    gpu: true
+}
+
+/// Compile to Julia (development - fast iteration)
+@target(julia)
+compile {
+    output: "midazolam_ddi.jl"
+    include_tests: true
+}
+
+/// Compile to PharmML (regulatory submission)
+@target(pharmml)
+compile {
+    output: "midazolam_ddi.xml"
+    version: "0.9.1"
+    annotations: true
+}
