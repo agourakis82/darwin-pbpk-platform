@@ -44,6 +44,7 @@ include("pulmonary_absorption_model.jl")
 include("glp1_bariatric_model.jl")
 include("bayesian_cns_model.jl")
 include("bayesian_ddi_model.jl")
+include("ddi_ontology.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -271,6 +272,22 @@ const DDI_BCRP = BayesianDDIModel.BCRP
 const DDI_OATP1B1 = BayesianDDIModel.OATP1B1
 const DDI_OATP1B3 = BayesianDDIModel.OATP1B3
 export DDI_PGP, DDI_BCRP, DDI_OATP1B1, DDI_OATP1B3
+
+# Re-export DDI Ontology integration
+using .DDIOntology
+export OntologyTerm, DrugOntologyMapping, DDIMechanismOntology
+export DiseaseOntologyMapping, EvidenceTypeOntology
+export CYPOntologyMapping, TransporterOntologyMapping
+export get_dinto_term, get_chebi_id, get_doid_term
+export get_ndfrt_mechanism, get_drugbank_id, get_rxnorm_cui
+export map_cyp_to_ontology, map_transporter_to_ontology
+export map_ddi_mechanism_to_dinto, map_disease_context
+export validate_ontology_mapping, get_literature_ddi_evidence
+export DDI_CLINICAL_DATABASE, DINTO_MECHANISMS, CHEBI_DRUGS
+export create_ontology_annotated_ddi, export_to_rdf
+export ClinicalDDIEvidence, list_available_drugs, list_clinical_ddi_pairs
+export get_ddi_by_mechanism, DISEASE_DDI_CONTEXT, CYP_ONTOLOGY, TRANSPORTER_ONTOLOGY
+export EVIDENCE_TYPES
 
 #=============================================================================
   High-Level API
