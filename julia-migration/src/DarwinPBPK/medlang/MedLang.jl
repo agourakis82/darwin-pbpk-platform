@@ -45,6 +45,7 @@ include("glp1_bariatric_model.jl")
 include("bayesian_cns_model.jl")
 include("bayesian_ddi_model.jl")
 include("ddi_ontology.jl")
+include("ddi_knowledge_base.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -288,6 +289,23 @@ export create_ontology_annotated_ddi, export_to_rdf
 export ClinicalDDIEvidence, list_available_drugs, list_clinical_ddi_pairs
 export get_ddi_by_mechanism, DISEASE_DDI_CONTEXT, CYP_ONTOLOGY, TRANSPORTER_ONTOLOGY
 export EVIDENCE_TYPES
+
+# Re-export DDI Knowledge Base (Native Ontology Data)
+using .DDIKnowledgeBase
+export DrugMetabolismProfile, CYPInteractionData, TransporterInteractionData
+export DrugProperties, DiseaseModifier
+# Re-export with KB prefix to avoid conflicts with DDIOntology ClinicalDDIData
+const KBClinicalDDIData = DDIKnowledgeBase.ClinicalDDIData
+export KBClinicalDDIData
+export DRUG_DATABASE, CYP_SUBSTRATES, CYP_INHIBITORS, CYP_INDUCERS
+export TRANSPORTER_SUBSTRATES, TRANSPORTER_INHIBITORS
+export CLINICAL_DDI_DATABASE, DISEASE_DDI_MODIFIERS
+export get_drug_profile, get_cyp_interaction, get_transporter_interaction
+export predict_ddi_from_database, get_disease_modifier
+export list_cyp_substrates, list_cyp_inhibitors, list_cyp_inducers
+export list_transporter_substrates, list_transporter_inhibitors
+export get_all_ddis_for_drug, calculate_polypharmacy_risk
+export knowledge_base_summary
 
 #=============================================================================
   High-Level API
