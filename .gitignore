@@ -88,3 +88,7 @@ darwin-pbpk-datasets-*.zip
 -e 
 # API keys
 julia-migration/scripts/data_import/.env
+
+# Large data files (>100MB) - Use external storage (Zenodo/DVC)
+julia-migration/scripts/data_import/raw_data/cpic/diplotypes.json
+**/raw_data/**/*.json
