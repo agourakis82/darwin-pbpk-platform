@@ -5,6 +5,51 @@ All notable changes to Darwin PBPK Platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2025-11-30
+
+### Added - Fractal Blood Dynamics Module
+
+#### Core Implementation
+- **FractalBlood module**: Multi-phase tubular reactor with fractal network dynamics
+  - Paradigm shift from "well-stirred tank" to "fractal network of PFRs"
+  - CTRW (Continuous Time Random Walk) framework implementation
+  - Multi-phase dynamics (plasma, RBC, protein-bound)
+  - Fractal vascular network topology based on Murray's Law
+  - Power-law transit time distributions
+
+#### New Components
+- `fractal_blood.jl` - Core fractal blood dynamics implementation
+- `patient_profile.jl` - Patient demographics & scaling module
+- `compartment_models.jl` - Physiological compartment models
+- Fractal POC experimental analysis in `analysis/fractal_poc/`
+  - Box-counting algorithm for fractal dimension calculation
+  - Statistical validation (p < 0.001) for pathological vs normal cells
+  - Theoretical model connecting image-derived fractal dimension to PK parameters
+
+#### Documentation
+- Updated `FRACTAL_PBPK_DEEP_RESEARCH.md` with POC experimental results
+- Theoretical framework for df → h → PK parameter mapping
+- Proof-of-concept validation with real blood cell image datasets
+
+#### Dependencies
+- Added QuadGK dependency for numerical integration
+- Reorganized Project.toml dependencies alphabetically
+
+### Changed
+- Updated DarwinPBPK.jl to include new fractal blood modules
+- Enhanced benchmark suite with fractal dynamics tests
+
+### Files
+- `julia-migration/src/DarwinPBPK/fractal_blood.jl` - NEW (755 lines)
+- `julia-migration/src/DarwinPBPK/patient_profile.jl` - NEW
+- `julia-migration/src/DarwinPBPK/compartment_models.jl` - NEW
+- `analysis/fractal_poc/` - NEW directory with experimental POC
+- `docs/FRACTAL_PBPK_DEEP_RESEARCH.md` - UPDATED with POC results
+- `julia-migration/Project.toml` - UPDATED version and dependencies
+- `julia-migration/benchmarks/benchmark_complete.jl` - UPDATED
+
+---
+
 ## [2.4.1] - 2025-01-30
 
 ### Added

@@ -13,7 +13,8 @@ println("=" ^ 80)
 println("BENCHMARK: ODE Solver")
 println("=" ^ 80)
 
-p = ODEPBPKSolver.PBPKParams(
+# Access through DarwinPBPK module
+p = DarwinPBPK.ODEPBPKSolver.PBPKParams(
     clearance_hepatic=10.0,
     clearance_renal=5.0,
     partition_coeffs=Dict("liver" => 2.0, "kidney" => 1.5),
@@ -21,13 +22,13 @@ p = ODEPBPKSolver.PBPKParams(
 
 # Single simulation
 println("\n1. Single Simulation:")
-@time sol = ODEPBPKSolver.solve(p, 100.0, (0.0, 24.0))
+@time sol = DarwinPBPK.ODEPBPKSolver.solve(p, 100.0, (0.0, 24.0))
 
 # 100 simulations
 println("\n2. 100 Simulations:")
 @time begin
     for _ in 1:100
-        ODEPBPKSolver.solve(p, 100.0, (0.0, 24.0))
+        DarwinPBPK.ODEPBPKSolver.solve(p, 100.0, (0.0, 24.0))
     end
 end
 

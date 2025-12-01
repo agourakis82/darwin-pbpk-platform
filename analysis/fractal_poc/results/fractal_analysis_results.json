@@ -1,0 +1,513 @@
+{
+  "statistics": {
+    "n_images": 100,
+    "mean_df": 1.939308354990454,
+    "std_df": 0.0022432839352678918,
+    "min_df": 1.9337932976642764,
+    "max_df": 1.9425211966234721,
+    "median_df": 1.9387851214342486,
+    "cv_percent": 0.11567443256226956
+  },
+  "individual_results": [
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00000.jpg",
+      "df": 1.9425168158017991,
+      "r2": 0.9994196633863521
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00001.jpg",
+      "df": 1.9425025212965785,
+      "r2": 0.9994198393366536
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00002.jpg",
+      "df": 1.9424084890759012,
+      "r2": 0.9994208123034041
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00003.jpg",
+      "df": 1.9421255726700064,
+      "r2": 0.9994232663036792
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00004.jpg",
+      "df": 1.9423171253780096,
+      "r2": 0.9994217151979282
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00005.jpg",
+      "df": 1.9425211966234721,
+      "r2": 0.9994196068158442
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00006.jpg",
+      "df": 1.942245303528392,
+      "r2": 0.9994220261298502
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00007.jpg",
+      "df": 1.9419071210792929,
+      "r2": 0.9994251216365532
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00008.jpg",
+      "df": 1.939980799947655,
+      "r2": 0.9994436130452089
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00009.jpg",
+      "df": 1.9425211966234721,
+      "r2": 0.9994196068158442
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00010.jpg",
+      "df": 1.9416837322579403,
+      "r2": 0.9994276529960474
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00011.jpg",
+      "df": 1.9418013791377773,
+      "r2": 0.9994266094717333
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00012.jpg",
+      "df": 1.9409941265421156,
+      "r2": 0.9994339688683898
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00013.jpg",
+      "df": 1.9417348186760726,
+      "r2": 0.9994270134736887
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00014.jpg",
+      "df": 1.941532082297608,
+      "r2": 0.9994290017173159
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00015.jpg",
+      "df": 1.9424216591650076,
+      "r2": 0.9994207192663305
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00016.jpg",
+      "df": 1.9386436314573072,
+      "r2": 0.9994492011600936
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00017.jpg",
+      "df": 1.9417860126488349,
+      "r2": 0.9994265466346665
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00018.jpg",
+      "df": 1.9375673106255094,
+      "r2": 0.9994523953151428
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00019.jpg",
+      "df": 1.9397246146618516,
+      "r2": 0.9994436852907541
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00020.jpg",
+      "df": 1.9385245656021914,
+      "r2": 0.9994280383103918
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00021.jpg",
+      "df": 1.9416355403313543,
+      "r2": 0.9994279955588202
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00022.jpg",
+      "df": 1.9414115494213424,
+      "r2": 0.9994300841575761
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00023.jpg",
+      "df": 1.9383024686633379,
+      "r2": 0.9994505564917625
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00024.jpg",
+      "df": 1.9400370920201842,
+      "r2": 0.9994399356898411
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00026.jpg",
+      "df": 1.939382047896291,
+      "r2": 0.9994429484846088
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00028.jpg",
+      "df": 1.9378095840902652,
+      "r2": 0.9994582752289198
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00029.jpg",
+      "df": 1.9384673610009793,
+      "r2": 0.9994510812304537
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00030.jpg",
+      "df": 1.9376094427365635,
+      "r2": 0.9994539466668053
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00031.jpg",
+      "df": 1.937841222565633,
+      "r2": 0.9994409709197647
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00032.jpg",
+      "df": 1.9374602841488364,
+      "r2": 0.9994504052534283
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00033.jpg",
+      "df": 1.938547426620924,
+      "r2": 0.9994492454153387
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00034.jpg",
+      "df": 1.9415616794635129,
+      "r2": 0.9994286782738613
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00035.jpg",
+      "df": 1.9419598598324441,
+      "r2": 0.9994252943238668
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00036.jpg",
+      "df": 1.94194600599302,
+      "r2": 0.9994255112819593
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00037.jpg",
+      "df": 1.9369993455594132,
+      "r2": 0.9994282775986771
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00038.jpg",
+      "df": 1.9373567642239629,
+      "r2": 0.9994163286231279
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00039.jpg",
+      "df": 1.938687581570354,
+      "r2": 0.999447216082967
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00040.jpg",
+      "df": 1.9417110483638231,
+      "r2": 0.9994233331311295
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00041.jpg",
+      "df": 1.9405063595709415,
+      "r2": 0.9994355122962618
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00042.jpg",
+      "df": 1.9385343115691436,
+      "r2": 0.9994394037145373
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00043.jpg",
+      "df": 1.9343700551410514,
+      "r2": 0.9994716603592505
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00044.jpg",
+      "df": 1.9369738764729014,
+      "r2": 0.9994242430493266
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00045.jpg",
+      "df": 1.9370491462377308,
+      "r2": 0.9994264866144509
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00046.jpg",
+      "df": 1.9370169352030373,
+      "r2": 0.9994384926824968
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00047.jpg",
+      "df": 1.9367444186990639,
+      "r2": 0.9994247474612474
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00048.jpg",
+      "df": 1.9359499536939346,
+      "r2": 0.9994531255797707
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00049.jpg",
+      "df": 1.9390503985016516,
+      "r2": 0.9994356218708162
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00050.jpg",
+      "df": 1.9365377166035942,
+      "r2": 0.9994476832086069
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00052.jpg",
+      "df": 1.9379008725770563,
+      "r2": 0.9994479984484519
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00053.jpg",
+      "df": 1.9369273329808592,
+      "r2": 0.9994377938830864
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00054.jpg",
+      "df": 1.9375666409384558,
+      "r2": 0.9994286465975634
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00055.jpg",
+      "df": 1.9379378234119435,
+      "r2": 0.9994219539345556
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00056.jpg",
+      "df": 1.9401263914692657,
+      "r2": 0.999434021297929
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00057.jpg",
+      "df": 1.93741924841132,
+      "r2": 0.9994330024516083
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00058.jpg",
+      "df": 1.9372670376878007,
+      "r2": 0.9994463609994864
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00059.jpg",
+      "df": 1.9367202490550688,
+      "r2": 0.999448855459627
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00062.jpg",
+      "df": 1.9356381395407813,
+      "r2": 0.9994589621795594
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00063.jpg",
+      "df": 1.938224150374465,
+      "r2": 0.9994514379474042
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00064.jpg",
+      "df": 1.9374327522852937,
+      "r2": 0.9994346124049603
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00065.jpg",
+      "df": 1.9355926425019598,
+      "r2": 0.9994572453518805
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00066.jpg",
+      "df": 1.938160457088952,
+      "r2": 0.999450530846139
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00067.jpg",
+      "df": 1.9396600367893153,
+      "r2": 0.9994363897884981
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00068.jpg",
+      "df": 1.9379630263389265,
+      "r2": 0.9994198635978501
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00069.jpg",
+      "df": 1.9370084270382482,
+      "r2": 0.9994471497924715
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00070.jpg",
+      "df": 1.9337932976642764,
+      "r2": 0.9994515602107367
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00071.jpg",
+      "df": 1.9417446001615382,
+      "r2": 0.9994273356624402
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00072.jpg",
+      "df": 1.9411660375562736,
+      "r2": 0.9994323327152145
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00073.jpg",
+      "df": 1.9377431619002237,
+      "r2": 0.9994399692036171
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00074.jpg",
+      "df": 1.936750266710617,
+      "r2": 0.9994450207262814
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00075.jpg",
+      "df": 1.937433532420894,
+      "r2": 0.9994462996912717
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00076.jpg",
+      "df": 1.9368082079830529,
+      "r2": 0.9994304366316766
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00077.jpg",
+      "df": 1.9372140262478996,
+      "r2": 0.9994491652788622
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00078.jpg",
+      "df": 1.9394168600307193,
+      "r2": 0.9994397508353396
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00079.jpg",
+      "df": 1.937423729041125,
+      "r2": 0.9994444134986871
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00081.jpg",
+      "df": 1.9401624627337342,
+      "r2": 0.9994379306941341
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00082.jpg",
+      "df": 1.9407139863447984,
+      "r2": 0.9994341382205655
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00083.jpg",
+      "df": 1.9357069135982383,
+      "r2": 0.9994556979617045
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00086.jpg",
+      "df": 1.937070314847501,
+      "r2": 0.999446603934744
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00087.jpg",
+      "df": 1.9388826612981436,
+      "r2": 0.9994376921231378
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00088.jpg",
+      "df": 1.9410544288455023,
+      "r2": 0.9994334925667
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00089.jpg",
+      "df": 1.9382833882188597,
+      "r2": 0.9994411469425771
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00090.jpg",
+      "df": 1.9404752816574986,
+      "r2": 0.9994370036202049
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00091.jpg",
+      "df": 1.9374089388158215,
+      "r2": 0.9994451828542813
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00092.jpg",
+      "df": 1.9368624439765547,
+      "r2": 0.9994511379698978
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00093.jpg",
+      "df": 1.9375232791557726,
+      "r2": 0.9994331602553359
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00094.jpg",
+      "df": 1.9424158276486676,
+      "r2": 0.9994206586086852
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00095.jpg",
+      "df": 1.9417604844781584,
+      "r2": 0.999426887400012
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00097.jpg",
+      "df": 1.9424838216134668,
+      "r2": 0.9994199952868658
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00098.jpg",
+      "df": 1.941683408207065,
+      "r2": 0.9994267131347947
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00099.jpg",
+      "df": 1.9408625852500232,
+      "r2": 0.9994354322598138
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00100.jpg",
+      "df": 1.941200977551892,
+      "r2": 0.9994322917393986
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00101.jpg",
+      "df": 1.9406520451922495,
+      "r2": 0.9994334514764973
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00103.jpg",
+      "df": 1.9386418566391983,
+      "r2": 0.9994413691322788
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00104.jpg",
+      "df": 1.9425211966234721,
+      "r2": 0.9994196068158442
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00106.jpg",
+      "df": 1.9378939275642935,
+      "r2": 0.999453895085002
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00107.jpg",
+      "df": 1.9415588678928746,
+      "r2": 0.9994283679361253
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00108.jpg",
+      "df": 1.9422673232096987,
+      "r2": 0.9994221512596801
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00109.jpg",
+      "df": 1.9410877874753896,
+      "r2": 0.9994309709437987
+    },
+    {
+      "image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/BCCD_Dataset-master/BCCD/JPEGImages/BloodImage_00110.jpg",
+      "df": 1.9417027907080997,
+      "r2": 0.9994259414589537
+    }
+  ]
+}

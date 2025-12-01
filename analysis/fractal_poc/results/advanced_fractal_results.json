@@ -1,0 +1,439 @@
+{
+  "statistics": {
+    "n_images_total": 50,
+    "n_images_valid": 50,
+    "cell_detection": {
+      "mean_cells_per_image": 14.14,
+      "std_cells": 5.400037036910025,
+      "range": [
+        7,
+        32
+      ]
+    },
+    "df_boundaries": {
+      "mean": 1.1295217520990177,
+      "std": 0.04954979456874243,
+      "range": [
+        1.0132680494263242,
+        1.2549242631143103
+      ],
+      "cv_percent": 4.386794187598675
+    },
+    "df_distribution": {
+      "mean": 0.5490369039754635,
+      "std": 0.03819149322492553,
+      "range": [
+        0.46269719575581747,
+        0.6737706505128026
+      ],
+      "cv_percent": 6.95608855222459
+    },
+    "clustering_index": {
+      "mean": 1.2446186850555634,
+      "std": 0.22932421450459248,
+      "interpretation": "R<1=clustered, R=1=random, R>1=dispersed"
+    }
+  },
+  "individual_results": [
+    {
+      "image": "BloodImage_00000.jpg",
+      "n_cells": 26,
+      "df_boundaries": 1.1273,
+      "df_distribution": 0.6662,
+      "clustering_R": 1.0572,
+      "cell_density": 0.084635
+    },
+    {
+      "image": "BloodImage_00001.jpg",
+      "n_cells": 17,
+      "df_boundaries": 1.2549,
+      "df_distribution": 0.5368,
+      "clustering_R": 1.2788,
+      "cell_density": 0.055339
+    },
+    {
+      "image": "BloodImage_00002.jpg",
+      "n_cells": 28,
+      "df_boundaries": 1.2326,
+      "df_distribution": 0.5816,
+      "clustering_R": 1.1423,
+      "cell_density": 0.091146
+    },
+    {
+      "image": "BloodImage_00003.jpg",
+      "n_cells": 21,
+      "df_boundaries": 1.1536,
+      "df_distribution": 0.5703,
+      "clustering_R": 1.2099,
+      "cell_density": 0.068359
+    },
+    {
+      "image": "BloodImage_00004.jpg",
+      "n_cells": 7,
+      "df_boundaries": 1.1594,
+      "df_distribution": 0.5234,
+      "clustering_R": 1.3431,
+      "cell_density": 0.022786
+    },
+    {
+      "image": "BloodImage_00005.jpg",
+      "n_cells": 22,
+      "df_boundaries": 1.2066,
+      "df_distribution": 0.5706,
+      "clustering_R": 1.278,
+      "cell_density": 0.071615
+    },
+    {
+      "image": "BloodImage_00006.jpg",
+      "n_cells": 17,
+      "df_boundaries": 1.1122,
+      "df_distribution": 0.5478,
+      "clustering_R": 1.4174,
+      "cell_density": 0.055339
+    },
+    {
+      "image": "BloodImage_00007.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.0638,
+      "df_distribution": 0.6027,
+      "clustering_R": 1.2333,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00008.jpg",
+      "n_cells": 18,
+      "df_boundaries": 1.1554,
+      "df_distribution": 0.5304,
+      "clustering_R": 1.4252,
+      "cell_density": 0.058594
+    },
+    {
+      "image": "BloodImage_00009.jpg",
+      "n_cells": 22,
+      "df_boundaries": 1.2179,
+      "df_distribution": 0.5812,
+      "clustering_R": 1.1103,
+      "cell_density": 0.071615
+    },
+    {
+      "image": "BloodImage_00010.jpg",
+      "n_cells": 32,
+      "df_boundaries": 1.231,
+      "df_distribution": 0.6506,
+      "clustering_R": 1.0225,
+      "cell_density": 0.104167
+    },
+    {
+      "image": "BloodImage_00011.jpg",
+      "n_cells": 16,
+      "df_boundaries": 1.1866,
+      "df_distribution": 0.5443,
+      "clustering_R": 1.1379,
+      "cell_density": 0.052083
+    },
+    {
+      "image": "BloodImage_00012.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.168,
+      "df_distribution": 0.5084,
+      "clustering_R": 1.0584,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00013.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.1013,
+      "df_distribution": 0.5316,
+      "clustering_R": 1.2389,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00014.jpg",
+      "n_cells": 8,
+      "df_boundaries": 1.1193,
+      "df_distribution": 0.5704,
+      "clustering_R": 1.0149,
+      "cell_density": 0.026042
+    },
+    {
+      "image": "BloodImage_00015.jpg",
+      "n_cells": 17,
+      "df_boundaries": 1.1752,
+      "df_distribution": 0.5519,
+      "clustering_R": 1.3379,
+      "cell_density": 0.055339
+    },
+    {
+      "image": "BloodImage_00016.jpg",
+      "n_cells": 14,
+      "df_boundaries": 1.1072,
+      "df_distribution": 0.5358,
+      "clustering_R": 1.4636,
+      "cell_density": 0.045573
+    },
+    {
+      "image": "BloodImage_00017.jpg",
+      "n_cells": 11,
+      "df_boundaries": 1.1569,
+      "df_distribution": 0.5361,
+      "clustering_R": 1.6807,
+      "cell_density": 0.035807
+    },
+    {
+      "image": "BloodImage_00018.jpg",
+      "n_cells": 18,
+      "df_boundaries": 1.1158,
+      "df_distribution": 0.5774,
+      "clustering_R": 0.9278,
+      "cell_density": 0.058594
+    },
+    {
+      "image": "BloodImage_00019.jpg",
+      "n_cells": 15,
+      "df_boundaries": 1.091,
+      "df_distribution": 0.5536,
+      "clustering_R": 1.3596,
+      "cell_density": 0.048828
+    },
+    {
+      "image": "BloodImage_00020.jpg",
+      "n_cells": 10,
+      "df_boundaries": 1.1311,
+      "df_distribution": 0.5048,
+      "clustering_R": 1.2397,
+      "cell_density": 0.032552
+    },
+    {
+      "image": "BloodImage_00021.jpg",
+      "n_cells": 17,
+      "df_boundaries": 1.132,
+      "df_distribution": 0.5585,
+      "clustering_R": 1.3866,
+      "cell_density": 0.055339
+    },
+    {
+      "image": "BloodImage_00022.jpg",
+      "n_cells": 14,
+      "df_boundaries": 1.1103,
+      "df_distribution": 0.5058,
+      "clustering_R": 1.433,
+      "cell_density": 0.045573
+    },
+    {
+      "image": "BloodImage_00023.jpg",
+      "n_cells": 14,
+      "df_boundaries": 1.0915,
+      "df_distribution": 0.5292,
+      "clustering_R": 1.205,
+      "cell_density": 0.045573
+    },
+    {
+      "image": "BloodImage_00024.jpg",
+      "n_cells": 8,
+      "df_boundaries": 1.0353,
+      "df_distribution": 0.5613,
+      "clustering_R": 1.9651,
+      "cell_density": 0.026042
+    },
+    {
+      "image": "BloodImage_00026.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.1014,
+      "df_distribution": 0.5403,
+      "clustering_R": 1.4661,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00028.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.1005,
+      "df_distribution": 0.551,
+      "clustering_R": 1.3028,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00029.jpg",
+      "n_cells": 15,
+      "df_boundaries": 1.147,
+      "df_distribution": 0.541,
+      "clustering_R": 1.4243,
+      "cell_density": 0.048828
+    },
+    {
+      "image": "BloodImage_00030.jpg",
+      "n_cells": 20,
+      "df_boundaries": 1.1419,
+      "df_distribution": 0.5563,
+      "clustering_R": 1.1264,
+      "cell_density": 0.065104
+    },
+    {
+      "image": "BloodImage_00031.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.088,
+      "df_distribution": 0.5212,
+      "clustering_R": 1.4044,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00032.jpg",
+      "n_cells": 19,
+      "df_boundaries": 1.1454,
+      "df_distribution": 0.56,
+      "clustering_R": 1.3353,
+      "cell_density": 0.061849
+    },
+    {
+      "image": "BloodImage_00033.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.0587,
+      "df_distribution": 0.5653,
+      "clustering_R": 1.0306,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00034.jpg",
+      "n_cells": 8,
+      "df_boundaries": 1.1237,
+      "df_distribution": 0.5261,
+      "clustering_R": 1.2043,
+      "cell_density": 0.026042
+    },
+    {
+      "image": "BloodImage_00035.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.0781,
+      "df_distribution": 0.5235,
+      "clustering_R": 0.9097,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00036.jpg",
+      "n_cells": 16,
+      "df_boundaries": 1.1475,
+      "df_distribution": 0.5581,
+      "clustering_R": 1.0908,
+      "cell_density": 0.052083
+    },
+    {
+      "image": "BloodImage_00037.jpg",
+      "n_cells": 7,
+      "df_boundaries": 1.0133,
+      "df_distribution": 0.4627,
+      "clustering_R": 1.7445,
+      "cell_density": 0.022786
+    },
+    {
+      "image": "BloodImage_00038.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.1333,
+      "df_distribution": 0.5213,
+      "clustering_R": 1.1992,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00039.jpg",
+      "n_cells": 10,
+      "df_boundaries": 1.1811,
+      "df_distribution": 0.5569,
+      "clustering_R": 1.0928,
+      "cell_density": 0.032552
+    },
+    {
+      "image": "BloodImage_00040.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.0885,
+      "df_distribution": 0.5009,
+      "clustering_R": 1.2835,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00041.jpg",
+      "n_cells": 13,
+      "df_boundaries": 1.1691,
+      "df_distribution": 0.5365,
+      "clustering_R": 1.3893,
+      "cell_density": 0.042318
+    },
+    {
+      "image": "BloodImage_00042.jpg",
+      "n_cells": 11,
+      "df_boundaries": 1.0687,
+      "df_distribution": 0.5249,
+      "clustering_R": 1.5656,
+      "cell_density": 0.035807
+    },
+    {
+      "image": "BloodImage_00043.jpg",
+      "n_cells": 13,
+      "df_boundaries": 1.1473,
+      "df_distribution": 0.6738,
+      "clustering_R": 0.5906,
+      "cell_density": 0.042318
+    },
+    {
+      "image": "BloodImage_00044.jpg",
+      "n_cells": 17,
+      "df_boundaries": 1.1498,
+      "df_distribution": 0.5615,
+      "clustering_R": 1.0772,
+      "cell_density": 0.055339
+    },
+    {
+      "image": "BloodImage_00045.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.0667,
+      "df_distribution": 0.5408,
+      "clustering_R": 1.0339,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00046.jpg",
+      "n_cells": 15,
+      "df_boundaries": 1.1392,
+      "df_distribution": 0.5554,
+      "clustering_R": 1.2448,
+      "cell_density": 0.048828
+    },
+    {
+      "image": "BloodImage_00047.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.094,
+      "df_distribution": 0.533,
+      "clustering_R": 1.256,
+      "cell_density": 0.039062
+    },
+    {
+      "image": "BloodImage_00048.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.0863,
+      "df_distribution": 0.4983,
+      "clustering_R": 1.3437,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00049.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.1235,
+      "df_distribution": 0.5313,
+      "clustering_R": 0.977,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00050.jpg",
+      "n_cells": 9,
+      "df_boundaries": 1.1011,
+      "df_distribution": 0.5221,
+      "clustering_R": 1.254,
+      "cell_density": 0.029297
+    },
+    {
+      "image": "BloodImage_00052.jpg",
+      "n_cells": 12,
+      "df_boundaries": 1.1459,
+      "df_distribution": 0.5591,
+      "clustering_R": 0.9171,
+      "cell_density": 0.039062
+    }
+  ]
+}

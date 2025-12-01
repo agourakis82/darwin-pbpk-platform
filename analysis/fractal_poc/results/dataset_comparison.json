@@ -1,0 +1,124 @@
+{
+  "datasets": {
+    "BCCD_Normal": {
+      "name": "BCCD_Normal",
+      "n_images": 30,
+      "df_boundaries_mean": 1.1404941662728114,
+      "df_boundaries_std": 0.05123153632245141,
+      "df_distribution_mean": 0.5546888977429022,
+      "df_distribution_std": 0.036141335892701236,
+      "clustering_mean": 1.2897010078128348,
+      "clustering_std": 0.20716027769458817
+    },
+    "Malaria_Infected": {
+      "name": "Malaria_Infected",
+      "n_images": 29,
+      "df_boundaries_mean": 1.1486676343351372,
+      "df_boundaries_std": 0.043700958259450216,
+      "df_distribution_mean": 0.737604368594452,
+      "df_distribution_std": 0.057413849460855426,
+      "clustering_mean": 2.737294010744497,
+      "clustering_std": 0.18336354540504185
+    },
+    "Malaria_Normal": {
+      "name": "Malaria_Normal",
+      "n_images": 30,
+      "df_boundaries_mean": 1.1552200680267213,
+      "df_boundaries_std": 0.03866814408502874,
+      "df_distribution_mean": 0.7707352719900302,
+      "df_distribution_std": 0.008272808032047663,
+      "clustering_mean": 2.69505286723698,
+      "clustering_std": 0.2214268531473195
+    },
+    "Synthetic_Patho": {
+      "name": "Synthetic_Patho",
+      "n_images": 20,
+      "df_boundaries_mean": 1.1573048134859314,
+      "df_boundaries_std": 0.049927300294693465,
+      "df_distribution_mean": 0.5558062700513213,
+      "df_distribution_std": 0.03811275834996704,
+      "clustering_mean": 1.2284313667169033,
+      "clustering_std": 0.18491679686638296
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "BCCD_Normal vs Malaria_Infected",
+      "effect_sizes": {
+        "df_boundaries_d": -0.172,
+        "df_distribution_d": -3.813,
+        "clustering_d": -7.4
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "large",
+        "clustering": "large"
+      }
+    },
+    {
+      "comparison": "BCCD_Normal vs Malaria_Normal",
+      "effect_sizes": {
+        "df_boundaries_d": -0.324,
+        "df_distribution_d": -8.241,
+        "clustering_d": -6.554
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "large",
+        "clustering": "large"
+      }
+    },
+    {
+      "comparison": "BCCD_Normal vs Synthetic_Patho",
+      "effect_sizes": {
+        "df_boundaries_d": -0.332,
+        "df_distribution_d": -0.03,
+        "clustering_d": 0.312
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "small",
+        "clustering": "small"
+      }
+    },
+    {
+      "comparison": "Malaria_Infected vs Malaria_Normal",
+      "effect_sizes": {
+        "df_boundaries_d": -0.159,
+        "df_distribution_d": -0.808,
+        "clustering_d": 0.208
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "large",
+        "clustering": "small"
+      }
+    },
+    {
+      "comparison": "Malaria_Infected vs Synthetic_Patho",
+      "effect_sizes": {
+        "df_boundaries_d": -0.184,
+        "df_distribution_d": 3.731,
+        "clustering_d": 8.194
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "large",
+        "clustering": "large"
+      }
+    },
+    {
+      "comparison": "Malaria_Normal vs Synthetic_Patho",
+      "effect_sizes": {
+        "df_boundaries_d": -0.047,
+        "df_distribution_d": 7.794,
+        "clustering_d": 7.19
+      },
+      "interpretation": {
+        "boundaries": "small",
+        "distribution": "large",
+        "clustering": "large"
+      }
+    }
+  ]
+}

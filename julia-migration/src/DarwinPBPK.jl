@@ -11,6 +11,9 @@ Date: November 2025
 module DarwinPBPK
 
 # Core modules
+include("DarwinPBPK/patient_profile.jl")  # Patient demographics & scaling
+include("DarwinPBPK/compartment_models.jl")  # Physiological compartment models
+include("DarwinPBPK/fractal_blood.jl")  # NEW: Fractal blood dynamics (CTRW, multi-phase)
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
 include("DarwinPBPK/dynamic_gnn.jl")  # FASE 2 ✅
@@ -31,6 +34,9 @@ include("DarwinPBPK/api/rest_api.jl")           # FASE 5 ✅
 include("DarwinPBPK/medlang/MedLang.jl")        # MedLang DSL ✅
 
 # Re-export principais
+using .PatientProfile
+using .CompartmentModels
+using .FractalBlood
 using .ODEPBPKSolver
 using .DatasetGeneration
 using .DynamicGNN

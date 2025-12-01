@@ -1,0 +1,644 @@
+// =============================================================================
+// DEMETRIOS PBPK STANDARD LIBRARY
+// =============================================================================
+// Core types and functions for Physiologically-Based Pharmacokinetic Modeling
+//
+// This library leverages Demetrios' unique features:
+// - Compile-time dimensional analysis (units of measure)
+// - Algebraic effects for controlled side effects (GPU, Prob, Mut)
+// - Refinement types for valid parameter ranges
+// - Linear types for resource safety
+//
+// Author: Dr. Demetrios Agourakis
+// Version: 0.1.0
+// =============================================================================
+
+module darwin.pbpk
+
+// =============================================================================
+// SECTION 1: UNIT TYPE SYSTEM
+// =============================================================================
+// The killer feature: Units are checked at COMPILE TIME
+// No more "did I convert mL/min to L/h?" bugs
+
+/// Base dimension markers (phantom types)
+type Mass<U>
+type Volume<U>
+type Time<U>
+type Amount<U>
+
+/// Concrete unit types - Mass
+type mg = Mass<"mg">
+type g = Mass<"g">
+type kg = Mass<"kg">
+type ug = Mass<"ug">   // microgram
+type ng = Mass<"ng">   // nanogram
+type pg = Mass<"pg">   // picogram
+
+/// Concrete unit types - Volume
+type L = Volume<"L">
+type mL = Volume<"mL">
+type uL = Volume<"uL">   // microliter
+type dL = Volume<"dL">   // deciliter
+
+/// Concrete unit types - Time
+type h = Time<"h">       // hour
+type min = Time<"min">   // minute
+type s = Time<"s">       // second
+type day = Time<"day">
+
+/// Concrete unit types - Amount (moles)
+type mol = Amount<"mol">
+type mmol = Amount<"mmol">
+type umol = Amount<"umol">
+type nmol = Amount<"nmol">
+type pmol = Amount<"pmol">
+
+// -----------------------------------------------------------------------------
+// Derived units (compound types)
+// -----------------------------------------------------------------------------
+
+/// Concentration: Amount / Volume
+type M = Amount<"mol"> / Volume<"L">           // molar
+type mM = Amount<"mmol"> / Volume<"L">         // millimolar
+type uM = Amount<"umol"> / Volume<"L">         // micromolar
+type nM = Amount<"nmol"> / Volume<"L">         // nanomolar
+type pM = Amount<"pmol"> / Volume<"L">         // picomolar
+
+/// Concentration: Mass / Volume
+type mg_per_L = Mass<"mg"> / Volume<"L">
+type ug_per_mL = Mass<"ug"> / Volume<"mL">
+type ng_per_mL = Mass<"ng"> / Volume<"mL">
+type pg_per_mL = Mass<"pg"> / Volume<"mL">
+
+/// Clearance: Volume / Time
+type L_per_h = Volume<"L"> / Time<"h">
+type mL_per_min = Volume<"mL"> / Time<"min">
+type mL_per_h = Volume<"mL"> / Time<"h">
+type L_per_day = Volume<"L"> / Time<"day">
+
+/// Clearance normalized to body weight
+type L_per_h_per_kg = Volume<"L"> / Time<"h"> / Mass<"kg">
+type mL_per_min_per_kg = Volume<"mL"> / Time<"min"> / Mass<"kg">
+
+/// Intrinsic clearance (microsomal)
+type uL_per_min_per_mg = Volume<"uL"> / Time<"min"> / Mass<"mg">
+type uL_per_min_per_pmol = Volume<"uL"> / Time<"min"> / Amount<"pmol">
+
+/// Rate constants
+type per_h = 1 / Time<"h">
+type per_min = 1 / Time<"min">
+type per_s = 1 / Time<"s">
+type per_day = 1 / Time<"day">
+
+/// Volume of distribution
+type L_per_kg = Volume<"L"> / Mass<"kg">
+
+/// Enzyme kinetics
+type pmol_per_min_per_mg = Amount<"pmol"> / Time<"min"> / Mass<"mg">  // Vmax
+type pmol_per_mg = Amount<"pmol"> / Mass<"mg">                        // Abundance
+type mg_per_g = Mass<"mg"> / Mass<"g">                                // MPPGL
+
+/// AUC (exposure)
+type uM_h = uM * Time<"h">                     // µM·h
+type ng_h_per_mL = ng_per_mL * Time<"h">       // ng·h/mL
+
+// =============================================================================
+// SECTION 2: REFINEMENT TYPES
+// =============================================================================
+// Ensure parameters are within valid ranges at COMPILE TIME
+
+/// Fraction: must be between 0 and 1
+type Fraction = Real where { 0.0 <= self <= 1.0 }
+
+/// Positive real number
+type Positive = Real where { self > 0.0 }
+
+/// Non-negative real number
+type NonNegative = Real where { self >= 0.0 }
+
+/// Percentage: 0-100
+type Percent = Real where { 0.0 <= self <= 100.0 }
+
+/// Valid Ki range (typical: 0.001 - 1000 µM)
+type ValidKi = uM where { 0.001 <= self <= 1000.0 }
+
+/// Valid fm range
+type ValidFm = Fraction  // Already 0-1
+
+/// Valid bioavailability
+type Bioavailability = Fraction
+
+/// Age in years (0-120)
+type Age = Real where { 0.0 <= self <= 120.0 }
+
+/// Body weight (1-500 kg covers all cases)
+type BodyWeight = kg where { 1.0 <= self <= 500.0 }
+
+// =============================================================================
+// SECTION 3: CORE DATA STRUCTURES
+// =============================================================================
+
+/// Drug physicochemical properties
+struct DrugProperties {
+    name: String,
+    MW: Real,                    // g/mol (molecular weight)
+    logP: Real,                  // Lipophilicity
+    logD: Real,                  // Distribution coefficient at pH 7.4
+    pKa: Option<Real>,           // Ionization constant
+    fu: Fraction,                // Fraction unbound in plasma
+    BP: Positive,                // Blood:plasma ratio
+}
+
+/// PK parameters for a drug
+struct PKParams {
+    // Absorption
+    ka: per_h,                   // Absorption rate constant
+    Fa: Bioavailability,         // Fraction absorbed
+    Fg: Bioavailability,         // Fraction escaping gut metabolism
+    Fh: Bioavailability,         // Fraction escaping hepatic first-pass
+
+    // Distribution
+    Vc: L,                       // Central volume
+    Vp: L,                       // Peripheral volume
+    Vss: L,                      // Steady-state volume
+    Q: L_per_h,                  // Intercompartmental clearance
+
+    // Elimination
+    CL: L_per_h,                 // Total clearance
+    CLh: L_per_h,                // Hepatic clearance
+    CLr: L_per_h,                // Renal clearance
+    fe: Fraction,                // Fraction excreted unchanged
+}
+
+/// Enzyme metabolism parameters
+struct EnzymeParams {
+    enzyme: CYPEnzyme,           // Which CYP enzyme
+    fm: Fraction,                // Fraction metabolized by this enzyme
+    Km: uM,                      // Michaelis constant
+    Vmax: pmol_per_min_per_mg,   // Maximum velocity
+    CLint: uL_per_min_per_mg,    // Intrinsic clearance (Vmax/Km)
+}
+
+/// CYP enzyme enumeration
+enum CYPEnzyme {
+    CYP3A4,
+    CYP3A5,
+    CYP2D6,
+    CYP2C9,
+    CYP2C19,
+    CYP1A2,
+    CYP2C8,
+    CYP2E1,
+    CYP2B6,
+    UGT,      // Glucuronidation
+    Other,
+}
+
+/// Transporter enumeration
+enum Transporter {
+    OATP1B1,
+    OATP1B3,
+    OATP2B1,
+    PGP,      // P-glycoprotein
+    BCRP,
+    MRP2,
+    MRP3,
+    OCT1,
+    OAT1,
+    OAT3,
+    MATE1,
+}
+
+/// DDI mechanism enumeration
+enum DDIMechanism {
+    Competitive,
+    NonCompetitive,
+    Uncompetitive,
+    MechanismBased,  // Time-dependent irreversible
+    Induction,
+    Mixed,           // Inhibition + induction
+}
+
+/// DDI parameters
+struct DDIParams {
+    mechanism: DDIMechanism,
+
+    // Reversible inhibition
+    Ki: Option<uM>,
+
+    // Mechanism-based inactivation
+    kinact: Option<per_h>,       // Inactivation rate constant
+    KI: Option<uM>,              // Concentration for half-max inactivation
+
+    // Induction
+    Emax: Option<Real>,          // Maximum fold-induction
+    EC50: Option<uM>,            // Concentration for half-max induction
+
+    // Affected enzyme
+    enzyme: CYPEnzyme,
+
+    // Location
+    affects_gut: Bool,
+    affects_liver: Bool,
+}
+
+/// Patient demographics
+struct Patient {
+    age: Age,
+    weight: BodyWeight,
+    height: Real,                // cm
+    sex: Sex,
+    race: Race,
+    GFR: mL_per_min,            // Renal function
+    phenotype: Option<Phenotype>,
+}
+
+enum Sex { Male, Female }
+enum Race { Caucasian, Asian, African, Hispanic, Other }
+enum Phenotype { PM, IM, NM, UM }  // CYP2D6/CYP2C19 metabolizer status
+
+// =============================================================================
+// SECTION 4: UNIT CONVERSION FUNCTIONS
+// =============================================================================
+// All conversions are type-safe - wrong conversions won't compile!
+
+/// Convert mL/min to L/h
+fn mL_min_to_L_h(cl: mL_per_min) -> L_per_h {
+    cl * 0.06  // mL/min × 60/1000 = L/h
+}
+
+/// Convert L/h to mL/min
+fn L_h_to_mL_min(cl: L_per_h) -> mL_per_min {
+    cl / 0.06
+}
+
+/// Convert µM to ng/mL given molecular weight
+fn uM_to_ng_mL(conc: uM, mw: Real) -> ng_per_mL {
+    conc * mw  // µmol/L × g/mol = µg/L = ng/mL
+}
+
+/// Convert ng/mL to µM given molecular weight
+fn ng_mL_to_uM(conc: ng_per_mL, mw: Real) -> uM {
+    conc / mw
+}
+
+/// Convert intrinsic clearance to hepatic clearance (well-stirred model)
+fn CLint_to_CLh(
+    clint: uL_per_min_per_mg,
+    mppgl: mg_per_g,            // mg protein per g liver
+    liver_weight: g,            // liver weight
+    fu: Fraction,               // fraction unbound
+    Qh: L_per_h                 // hepatic blood flow
+) -> L_per_h {
+    // CLint,total = CLint × MPPGL × liver weight
+    let clint_total: L_per_h = clint * mppgl * liver_weight * 60.0 / 1_000_000.0
+
+    // Well-stirred model: CLh = Qh × fu × CLint / (Qh + fu × CLint)
+    Qh * fu * clint_total / (Qh + fu * clint_total)
+}
+
+/// Convert oral clearance to IV clearance
+fn CL_oral_to_iv(cl_oral: L_per_h, F: Bioavailability) -> L_per_h {
+    cl_oral * F
+}
+
+// =============================================================================
+// SECTION 5: PK CALCULATION FUNCTIONS
+// =============================================================================
+
+/// Calculate elimination rate constant
+fn calculate_ke(CL: L_per_h, Vd: L) -> per_h {
+    CL / Vd
+}
+
+/// Calculate half-life from ke
+fn calculate_half_life(ke: per_h) -> h {
+    0.693 / ke
+}
+
+/// Calculate half-life from CL and Vd
+fn calculate_half_life_from_pk(CL: L_per_h, Vd: L) -> h {
+    0.693 * Vd / CL
+}
+
+/// Calculate bioavailability from first-pass components
+fn calculate_F(Fa: Fraction, Fg: Fraction, Fh: Fraction) -> Bioavailability {
+    Fa * Fg * Fh
+}
+
+/// Calculate hepatic extraction ratio
+fn calculate_Eh(CLh: L_per_h, Qh: L_per_h) -> Fraction {
+    CLh / Qh
+}
+
+/// Calculate hepatic bioavailability from extraction
+fn calculate_Fh_from_Eh(Eh: Fraction) -> Bioavailability {
+    1.0 - Eh
+}
+
+/// Calculate steady-state volume of distribution
+fn calculate_Vss(Vc: L, Vp: L, CL: L_per_h, Q: L_per_h) -> L {
+    Vc + Vp * CL / Q
+}
+
+// =============================================================================
+// SECTION 6: DDI PREDICTION FUNCTIONS
+// =============================================================================
+
+/// R-model for reversible inhibition
+/// AUC_ratio = 1 / (fm/R + (1-fm))
+/// where R = 1 + [I]/Ki
+fn predict_ddi_reversible(
+    I: uM,                      // Inhibitor concentration (unbound)
+    Ki: uM,                     // Inhibition constant
+    fm: Fraction                // Fraction metabolized by affected enzyme
+) -> Real {
+    let R: Real = 1.0 + I / Ki
+    1.0 / (fm / R + (1.0 - fm))
+}
+
+/// MBI (mechanism-based inactivation) prediction
+/// Uses steady-state approximation
+fn predict_ddi_mbi(
+    I: uM,                      // Inactivator concentration
+    kinact: per_h,              // Maximum inactivation rate
+    KI: uM,                     // Concentration for half-max inactivation
+    kdeg: per_h,                // Enzyme degradation rate
+    fm: Fraction                // Fraction metabolized
+) -> Real {
+    // Inactivation rate: λ = kinact × [I] / (KI + [I])
+    let lambda: per_h = kinact * I / (KI + I)
+
+    // Steady-state enzyme fraction: E_ss = kdeg / (kdeg + λ)
+    let E_ss: Fraction = kdeg / (kdeg + lambda)
+
+    // AUC ratio
+    1.0 / (fm * E_ss + (1.0 - fm))
+}
+
+/// Induction prediction
+fn predict_ddi_induction(
+    I: uM,                      // Inducer concentration
+    Emax: Real,                 // Maximum fold-induction
+    EC50: uM,                   // Concentration for half-max
+    fm: Fraction                // Fraction metabolized
+) -> Real {
+    // Fold induction
+    let fold: Real = 1.0 + Emax * I / (EC50 + I)
+
+    // AUC ratio (decreased exposure)
+    1.0 / (fm * fold + (1.0 - fm))
+}
+
+/// Gut-wall DDI calculation
+/// Uses gut lumen concentration [I]gut = Dose / 250 mL
+fn calculate_gut_ddi(
+    perpetrator_dose: mg,
+    perpetrator_mw: Real,
+    Ki: uM,
+    Fg_baseline: Bioavailability
+) -> Bioavailability {
+    // Gut lumen concentration
+    let V_gut: mL = 250.0
+    let I_gut: uM = (perpetrator_dose / V_gut) / perpetrator_mw * 1000.0
+
+    // Gut extraction inhibition
+    let Eg_baseline: Fraction = 1.0 - Fg_baseline
+    let Eg_inhibited: Fraction = Eg_baseline / (1.0 + I_gut / Ki)
+
+    1.0 - Eg_inhibited
+}
+
+/// Hepatic inlet concentration
+/// [I]h = [I]u,plasma + ka × Fa × Dose / (Qh × MW)
+fn calculate_hepatic_inlet(
+    Cu_plasma: uM,              // Unbound plasma concentration
+    ka: per_h,                  // Absorption rate
+    Fa: Fraction,               // Fraction absorbed
+    dose: mg,
+    Qh: L_per_h,               // Hepatic blood flow
+    MW: Real                    // Molecular weight
+) -> uM {
+    let portal_contribution: uM = ka * Fa * dose / Qh / MW * 1000.0
+    Cu_plasma + portal_contribution
+}
+
+// =============================================================================
+// SECTION 7: ODE SYSTEM FOR PBPK
+// =============================================================================
+// Uses Demetrios algebraic effects for controlled mutation
+
+/// State vector for 2-compartment model
+struct TwoCompState {
+    A_gut: mg,                  // Amount in gut lumen
+    C_central: uM,              // Central concentration
+    A_periph: mg,               // Amount in peripheral
+    t: h,                       // Current time
+}
+
+/// Derivatives for 2-compartment model
+struct TwoCompDerivatives {
+    dA_gut: mg / h,
+    dC_central: uM / h,
+    dA_periph: mg / h,
+}
+
+/// Two-compartment oral PK ODE system
+/// Returns derivatives with algebraic effect for mutation
+fn two_comp_ode(
+    state: &TwoCompState,
+    params: &PKParams,
+    drug: &DrugProperties
+) -> effect[Mut] TwoCompDerivatives {
+
+    // Gut compartment: dA/dt = -ka × A
+    let dA_gut: mg / h = -params.ka * state.A_gut
+
+    // Absorption rate (accounting for first-pass)
+    let F: Bioavailability = params.Fa * params.Fg * params.Fh
+    let absorption: mg / h = params.ka * state.A_gut * F
+
+    // Peripheral concentration
+    let C_periph: uM = (state.A_periph / drug.MW) / params.Vp * 1000.0
+
+    // Central compartment
+    let dC_central: uM / h = (
+        absorption / drug.MW / params.Vc * 1000.0
+        - params.CL / params.Vc * state.C_central
+        - params.Q / params.Vc * (state.C_central - C_periph)
+    )
+
+    // Peripheral compartment
+    let dA_periph: mg / h = params.Q * (state.C_central - C_periph) * params.Vc * drug.MW / 1000.0
+
+    TwoCompDerivatives { dA_gut, dC_central, dA_periph }
+}
+
+// =============================================================================
+// SECTION 8: GPU-ACCELERATED POPULATION SIMULATION
+// =============================================================================
+// Leverage Demetrios' first-class GPU support
+
+/// Population parameters with variability
+struct PopulationParams {
+    n: Int,                     // Number of virtual patients
+
+    // Typical values
+    CL_pop: L_per_h,
+    Vc_pop: L,
+    ka_pop: per_h,
+
+    // Inter-individual variability (CV)
+    omega_CL: Fraction,
+    omega_Vc: Fraction,
+    omega_ka: Fraction,
+
+    // Correlations
+    corr_CL_Vc: Real,
+}
+
+/// Sample population parameters using GPU
+fn sample_population(
+    pop: &PopulationParams,
+    seed: Int
+) -> effect[GPU, Prob] Vec<PKParams> {
+    // GPU-parallel sampling
+    gpu_parallel(pop.n, |i| {
+        // Sample from log-normal with correlation
+        let eta_CL = sample(Normal(0.0, pop.omega_CL))
+        let eta_Vc = sample(Normal(0.0, pop.omega_Vc))
+        let eta_ka = sample(Normal(0.0, pop.omega_ka))
+
+        // Apply correlation
+        let eta_Vc_corr = pop.corr_CL_Vc * eta_CL + sqrt(1.0 - pop.corr_CL_Vc^2) * eta_Vc
+
+        PKParams {
+            CL: pop.CL_pop * exp(eta_CL),
+            Vc: pop.Vc_pop * exp(eta_Vc_corr),
+            ka: pop.ka_pop * exp(eta_ka),
+            // ... other params
+        }
+    })
+}
+
+/// Run population simulation on GPU
+fn simulate_population(
+    pop_params: Vec<PKParams>,
+    drug: &DrugProperties,
+    dose: mg,
+    times: Vec<h>
+) -> effect[GPU, Mut] Vec<Vec<uM>> {
+    // Each patient simulated in parallel on GPU
+    gpu_parallel(pop_params.len(), |i| {
+        let params = &pop_params[i]
+        simulate_single(params, drug, dose, times)
+    })
+}
+
+// =============================================================================
+// SECTION 9: EFFECT HANDLERS
+// =============================================================================
+
+/// Effect for probabilistic computations
+effect Prob {
+    fn sample<D: Distribution>(dist: D) -> D::Output
+}
+
+/// Effect for GPU computations
+effect GPU {
+    fn gpu_parallel<T, F>(n: Int, f: F) -> Vec<T>
+        where F: Fn(Int) -> T
+}
+
+/// Effect for controlled mutation
+effect Mut {
+    fn get<T>(ref: &T) -> T
+    fn set<T>(ref: &mut T, value: T) -> ()
+}
+
+/// Effect for ODE integration
+effect OdeIntegration {
+    fn step(dt: h) -> ()
+    fn get_state() -> State
+}
+
+/// Tsit5 ODE solver handler
+handler Tsit5Handler for OdeIntegration {
+    var state: State
+    var t: h
+    var params: Params
+
+    fn step(dt: h) -> () {
+        // Runge-Kutta 5th order (Tsitouras)
+        let k1 = ode_rhs(&self.state, &self.params, self.t)
+        let k2 = ode_rhs(&(self.state + dt * 0.161 * k1), &self.params, self.t + 0.161 * dt)
+        // ... full Tsit5 tableau
+        self.state = self.state + dt * (/* weighted sum of k1-k7 */)
+        self.t += dt
+    }
+}
+
+// =============================================================================
+// SECTION 10: VALIDATION & TESTING
+// =============================================================================
+
+/// Assertion with units
+fn assert_within_fold<T: Numeric>(
+    predicted: T,
+    observed: T,
+    fold: Real,
+    message: String
+) -> effect[IO] () {
+    let ratio = predicted / observed
+    if ratio < 1.0 / fold || ratio > fold {
+        panic!("{message}: predicted={predicted}, observed={observed}, ratio={ratio:.2}")
+    }
+}
+
+/// Unit test annotation
+@test
+fn test_unit_conversion() {
+    let cl_mL_min: mL_per_min = 100.0
+    let cl_L_h: L_per_h = mL_min_to_L_h(cl_mL_min)
+    assert_eq!(cl_L_h, 6.0)  // 100 × 0.06 = 6
+}
+
+@test
+fn test_ddi_prediction() {
+    // Ketoconazole + Midazolam
+    let auc_ratio = predict_ddi_reversible(
+        I: 6.0,      // µM (unbound)
+        Ki: 0.015,   // µM
+        fm: 0.94
+    )
+    assert_within_fold(auc_ratio, 15.4, 2.0, "Ketoconazole DDI")
+}
+
+// =============================================================================
+// EXPORTS
+// =============================================================================
+
+pub use {
+    // Units
+    mg, g, kg, L, mL, h, min, uM, nM, L_per_h, mL_per_min, per_h,
+
+    // Types
+    Fraction, Bioavailability, DrugProperties, PKParams, EnzymeParams,
+    DDIParams, DDIMechanism, CYPEnzyme, Patient,
+
+    // Functions
+    mL_min_to_L_h, L_h_to_mL_min, uM_to_ng_mL, ng_mL_to_uM,
+    CLint_to_CLh, calculate_ke, calculate_half_life, calculate_F,
+    predict_ddi_reversible, predict_ddi_mbi, predict_ddi_induction,
+    calculate_gut_ddi, calculate_hepatic_inlet,
+
+    // ODE
+    two_comp_ode, TwoCompState, TwoCompDerivatives,
+
+    // Population
+    sample_population, simulate_population,
+
+    // Effects
+    Prob, GPU, Mut, OdeIntegration, Tsit5Handler,
+}

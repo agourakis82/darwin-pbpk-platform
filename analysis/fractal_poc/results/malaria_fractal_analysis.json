@@ -1,0 +1,3698 @@
+{
+  "n_parasitized": 200,
+  "n_uninfected": 200,
+  "comparison": {
+    "df_image": {
+      "parasitized": {
+        "mean": 1.5651279111868825,
+        "std": 0.0660389479942221,
+        "median": 1.5613114510208772,
+        "n": 200
+      },
+      "uninfected": {
+        "mean": 1.5608271617837386,
+        "std": 0.06527704188655849,
+        "median": 1.5533079759562392,
+        "n": 200
+      },
+      "t_statistic": 0.6533723505367739,
+      "p_value": 0.5138935306125457,
+      "cohens_d": 0.06550119324134246,
+      "significant": false
+    },
+    "df_edge": {
+      "parasitized": {
+        "mean": 1.6911656102895316,
+        "std": 0.041974162719468563,
+        "median": 1.6942674315391073,
+        "n": 200
+      },
+      "uninfected": {
+        "mean": 1.7123352570721095,
+        "std": 0.036052713804348796,
+        "median": 1.7154550397439836,
+        "n": 200
+      },
+      "t_statistic": -5.397142731199637,
+      "p_value": 1.1655835377796396e-07,
+      "cohens_d": -0.5410686397993163,
+      "significant": true
+    },
+    "intensity_mean": {
+      "parasitized": {
+        "mean": 0.4458813078375103,
+        "std": 0.050093247082412994,
+        "median": 0.4524554350616593,
+        "n": 200
+      },
+      "uninfected": {
+        "mean": 0.47769646349701167,
+        "std": 0.043688457322731813,
+        "median": 0.48222415149973236,
+        "n": 200
+      },
+      "t_statistic": -6.752226655040221,
+      "p_value": 5.1715797953906796e-11,
+      "cohens_d": -0.6769170788720728,
+      "significant": true
+    },
+    "intensity_std": {
+      "parasitized": {
+        "mean": 0.28722774288448116,
+        "std": 0.02581305823577708,
+        "median": 0.2884780781091153,
+        "n": 200
+      },
+      "uninfected": {
+        "mean": 0.2937202813396129,
+        "std": 0.022064234514843573,
+        "median": 0.2940865723920404,
+        "n": 200
+      },
+      "t_statistic": -2.697113469275238,
+      "p_value": 0.0072915589393703455,
+      "cohens_d": -0.2703881644206212,
+      "significant": true
+    },
+    "area_ratio": {
+      "parasitized": {
+        "mean": 0.30143198028708584,
+        "std": 0.06291203266044136,
+        "median": 0.2862178978050041,
+        "n": 200
+      },
+      "uninfected": {
+        "mean": 0.2760786983297876,
+        "std": 0.05331520925246344,
+        "median": 0.2650166299543063,
+        "n": 200
+      },
+      "t_statistic": 4.337029389036204,
+      "p_value": 1.8325254463780713e-05,
+      "cohens_d": 0.434791279231907,
+      "significant": true
+    }
+  },
+  "individual_results": [
+    {
+      "image_name": "C137P98ThinF_IMG_20151005_161306_cell_21.png",
+      "condition": "Parasitized",
+      "df_image": 1.616099095994196,
+      "df_edge": 1.7480592097975125,
+      "intensity_mean": 0.48125701373161134,
+      "intensity_std": 0.3009470220648029,
+      "area_ratio": 0.28056711758584807
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_114804_cell_33.png",
+      "condition": "Parasitized",
+      "df_image": 1.6635622492580453,
+      "df_edge": 1.638875572882548,
+      "intensity_mean": 0.40178210231461,
+      "intensity_std": 0.30308771751693514,
+      "area_ratio": 0.36142857142857143
+    },
+    {
+      "image_name": "C129P90ThinF_IMG_20151004_133329_cell_104.png",
+      "condition": "Parasitized",
+      "df_image": 1.5319548131754743,
+      "df_edge": 1.6547182142483696,
+      "intensity_mean": 0.45338445695526935,
+      "intensity_std": 0.27926849368291046,
+      "area_ratio": 0.28245801119701414
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171448_cell_91.png",
+      "condition": "Parasitized",
+      "df_image": 1.6030548429801343,
+      "df_edge": 1.7130792561380932,
+      "intensity_mean": 0.34226806227173495,
+      "intensity_std": 0.20895613846284233,
+      "area_ratio": 0.25930020811654525
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_154512_cell_145.png",
+      "condition": "Parasitized",
+      "df_image": 1.561219162397801,
+      "df_edge": 1.735608798065813,
+      "intensity_mean": 0.5005878782314175,
+      "intensity_std": 0.29083571592655355,
+      "area_ratio": 0.2585197710718002
+    },
+    {
+      "image_name": "C89P50ThinF_IMG_20150820_162153_cell_193.png",
+      "condition": "Parasitized",
+      "df_image": 1.673504113654728,
+      "df_edge": 1.7442114527405028,
+      "intensity_mean": 0.3509890636322566,
+      "intensity_std": 0.3273407354691603,
+      "area_ratio": 0.46333694139477344
+    },
+    {
+      "image_name": "C67P28N_ThinF_IMG_20150819_132441_cell_163.png",
+      "condition": "Parasitized",
+      "df_image": 1.6016680945715547,
+      "df_edge": 1.7298058857779295,
+      "intensity_mean": 0.4485085768336018,
+      "intensity_std": 0.3308745681383919,
+      "area_ratio": 0.3554106910039113
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_140646_cell_118.png",
+      "condition": "Parasitized",
+      "df_image": 1.5632109047105922,
+      "df_edge": 1.7037543423337709,
+      "intensity_mean": 0.4289077403814711,
+      "intensity_std": 0.2807568391993043,
+      "area_ratio": 0.30595285205494943
+    },
+    {
+      "image_name": "C97P58ThinF_IMG_20150917_150838_cell_150.png",
+      "condition": "Parasitized",
+      "df_image": 1.6096179061657008,
+      "df_edge": 1.69200521832446,
+      "intensity_mean": 0.4269704298890456,
+      "intensity_std": 0.31446890078667644,
+      "area_ratio": 0.3545190337795988
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_112733_cell_198.png",
+      "condition": "Parasitized",
+      "df_image": 1.534909573332275,
+      "df_edge": 1.670173960434063,
+      "intensity_mean": 0.4310101501156435,
+      "intensity_std": 0.2630447257469814,
+      "area_ratio": 0.27460555972952666
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150923_170110_cell_17.png",
+      "condition": "Parasitized",
+      "df_image": 1.7813956200285899,
+      "df_edge": 1.791473097602674,
+      "intensity_mean": 0.39466785311600094,
+      "intensity_std": 0.3389148450005776,
+      "area_ratio": 0.4234622320176317
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171954_cell_103.png",
+      "condition": "Parasitized",
+      "df_image": 1.5647579590998095,
+      "df_edge": 1.6764701109097337,
+      "intensity_mean": 0.36543176665835064,
+      "intensity_std": 0.24812487717110226,
+      "area_ratio": 0.30824267010879586
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_140646_cell_102.png",
+      "condition": "Parasitized",
+      "df_image": 1.5888286301798367,
+      "df_edge": 1.7189374220308076,
+      "intensity_mean": 0.4582779628034405,
+      "intensity_std": 0.301733166728267,
+      "area_ratio": 0.30188415259770546
+    },
+    {
+      "image_name": "C129P90ThinF_IMG_20151004_133244_cell_117.png",
+      "condition": "Parasitized",
+      "df_image": 1.5110500977213774,
+      "df_edge": 1.6692010163904965,
+      "intensity_mean": 0.47439159267269365,
+      "intensity_std": 0.2864781212960491,
+      "area_ratio": 0.2712948161680749
+    },
+    {
+      "image_name": "C158P119ThinF_IMG_20151115_181035_cell_178.png",
+      "condition": "Parasitized",
+      "df_image": 1.59799102201399,
+      "df_edge": 1.7081975141280785,
+      "intensity_mean": 0.43596606194385046,
+      "intensity_std": 0.2829915488836757,
+      "area_ratio": 0.2965441125750155
+    },
+    {
+      "image_name": "C45P6ThinF_IMG_20151130_155110_cell_208.png",
+      "condition": "Parasitized",
+      "df_image": 1.5379096205581113,
+      "df_edge": 1.6767751344166595,
+      "intensity_mean": 0.46290119763075505,
+      "intensity_std": 0.291633392257465,
+      "area_ratio": 0.28825740822644846
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_161055_cell_194.png",
+      "condition": "Parasitized",
+      "df_image": 1.5614037396439535,
+      "df_edge": 1.7392120580923602,
+      "intensity_mean": 0.46626103456810497,
+      "intensity_std": 0.3136026359836897,
+      "area_ratio": 0.3150070126227209
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_123116_cell_192.png",
+      "condition": "Parasitized",
+      "df_image": 1.5255462768022026,
+      "df_edge": 1.6641827350419156,
+      "intensity_mean": 0.46304138362961894,
+      "intensity_std": 0.30897364172597236,
+      "area_ratio": 0.32080634353361626
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165601_cell_178.png",
+      "condition": "Parasitized",
+      "df_image": 1.5444688309238968,
+      "df_edge": 1.7086881630236965,
+      "intensity_mean": 0.5076526348158839,
+      "intensity_std": 0.28888772384204614,
+      "area_ratio": 0.25222880197826514
+    },
+    {
+      "image_name": "C175P136NThinF_IMG_20151127_141253_cell_249.png",
+      "condition": "Parasitized",
+      "df_image": 1.5294129357017405,
+      "df_edge": 1.7056514085106658,
+      "intensity_mean": 0.520277959145602,
+      "intensity_std": 0.29537401411384734,
+      "area_ratio": 0.24591922395298946
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_114122_cell_12.png",
+      "condition": "Parasitized",
+      "df_image": 1.6100057732365085,
+      "df_edge": 1.7182836104240327,
+      "intensity_mean": 0.4091997475229091,
+      "intensity_std": 0.3022157073993629,
+      "area_ratio": 0.3523043075497916
+    },
+    {
+      "image_name": "C186P147NThinF_IMG_20151203_150808_cell_129.png",
+      "condition": "Parasitized",
+      "df_image": 1.501625087319471,
+      "df_edge": 1.7237537262728304,
+      "intensity_mean": 0.5083620403158341,
+      "intensity_std": 0.26958400480005235,
+      "area_ratio": 0.22419637638807716
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_130407_cell_188.png",
+      "condition": "Parasitized",
+      "df_image": 1.5922729433786158,
+      "df_edge": 1.6881266343437018,
+      "intensity_mean": 0.41239703263529787,
+      "intensity_std": 0.2927312991291498,
+      "area_ratio": 0.33661971830985915
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_125443_cell_141.png",
+      "condition": "Parasitized",
+      "df_image": 1.5624711056963025,
+      "df_edge": 1.6841629937709977,
+      "intensity_mean": 0.47983973982867584,
+      "intensity_std": 0.3013059348568491,
+      "area_ratio": 0.281903676261043
+    },
+    {
+      "image_name": "C60P21thinF_IMG_20150803_144629_cell_1.png",
+      "condition": "Parasitized",
+      "df_image": 1.6378509718777945,
+      "df_edge": 1.7468839331892614,
+      "intensity_mean": 0.450321611474975,
+      "intensity_std": 0.3237867919126908,
+      "area_ratio": 0.34300208116545267
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_105018_cell_158.png",
+      "condition": "Parasitized",
+      "df_image": 1.5879105625311658,
+      "df_edge": 1.7106588500292,
+      "intensity_mean": 0.4400434197448079,
+      "intensity_std": 0.292755692291252,
+      "area_ratio": 0.31203007518796994
+    },
+    {
+      "image_name": "C172P133ThinF_IMG_20151119_155343_cell_277.png",
+      "condition": "Parasitized",
+      "df_image": 1.570074958101202,
+      "df_edge": 1.7229572189746272,
+      "intensity_mean": 0.5145245079379296,
+      "intensity_std": 0.3008880947296384,
+      "area_ratio": 0.25885039969547013
+    },
+    {
+      "image_name": "C154P115ThinF_IMG_20151115_141543_cell_216.png",
+      "condition": "Parasitized",
+      "df_image": 1.467190934234194,
+      "df_edge": 1.651483059923093,
+      "intensity_mean": 0.4365952613511853,
+      "intensity_std": 0.2543197634484854,
+      "area_ratio": 0.24982940329062098
+    },
+    {
+      "image_name": "C46P7ThinF_IMG_20151130_210815_cell_8.png",
+      "condition": "Parasitized",
+      "df_image": 1.5420983166145728,
+      "df_edge": 1.7297786424534807,
+      "intensity_mean": 0.48707106064486755,
+      "intensity_std": 0.2803117164217485,
+      "area_ratio": 0.24731494920174166
+    },
+    {
+      "image_name": "C84P45ThinF_IMG_20150818_101146_cell_97.png",
+      "condition": "Parasitized",
+      "df_image": 1.578974697306089,
+      "df_edge": 1.6679794698789812,
+      "intensity_mean": 0.4326912937214701,
+      "intensity_std": 0.27961944997249844,
+      "area_ratio": 0.29735551923934034
+    },
+    {
+      "image_name": "C97P58ThinF_IMG_20150917_152032_cell_154.png",
+      "condition": "Parasitized",
+      "df_image": 1.478839698583123,
+      "df_edge": 1.6269538441268079,
+      "intensity_mean": 0.49752095052897194,
+      "intensity_std": 0.3035959988640442,
+      "area_ratio": 0.2749409681227863
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_153030_cell_19.png",
+      "condition": "Parasitized",
+      "df_image": 1.52653460834262,
+      "df_edge": 1.7002185230949094,
+      "intensity_mean": 0.5144681806125154,
+      "intensity_std": 0.2573532759073373,
+      "area_ratio": 0.20818158168574402
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_123314_cell_200.png",
+      "condition": "Parasitized",
+      "df_image": 1.5726268325181365,
+      "df_edge": 1.735159624528341,
+      "intensity_mean": 0.4575525725335159,
+      "intensity_std": 0.3307277144138018,
+      "area_ratio": 0.34566220074676035
+    },
+    {
+      "image_name": "C45P6ThinF_IMG_20151130_155110_cell_206.png",
+      "condition": "Parasitized",
+      "df_image": 1.52413321695409,
+      "df_edge": 1.7067759165470031,
+      "intensity_mean": 0.43450177855075545,
+      "intensity_std": 0.27470106334645156,
+      "area_ratio": 0.2863361411046413
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_125423_cell_2.png",
+      "condition": "Parasitized",
+      "df_image": 1.6825267680914673,
+      "df_edge": 1.7257339671747896,
+      "intensity_mean": 0.3764608176766088,
+      "intensity_std": 0.3413047906995785,
+      "area_ratio": 0.45029168692270294
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_222535_cell_143.png",
+      "condition": "Parasitized",
+      "df_image": 1.5315247611753278,
+      "df_edge": 1.6843378110781755,
+      "intensity_mean": 0.5063347096567579,
+      "intensity_std": 0.28863011890028906,
+      "area_ratio": 0.24990278047832004
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_141520_cell_114.png",
+      "condition": "Parasitized",
+      "df_image": 1.5229424748992875,
+      "df_edge": 1.6477766468494688,
+      "intensity_mean": 0.4576630459040207,
+      "intensity_std": 0.2693854735712594,
+      "area_ratio": 0.26364075325929504
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_131120_cell_188.png",
+      "condition": "Parasitized",
+      "df_image": 1.5577282455334354,
+      "df_edge": 1.7094243933433146,
+      "intensity_mean": 0.5012941575747896,
+      "intensity_std": 0.2898781031503373,
+      "area_ratio": 0.25271508569489226
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_172759_cell_48.png",
+      "condition": "Parasitized",
+      "df_image": 1.5183420656650048,
+      "df_edge": 1.7014155959882593,
+      "intensity_mean": 0.47786782208670997,
+      "intensity_std": 0.28180040853996946,
+      "area_ratio": 0.2586054721977052
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_125326_cell_14.png",
+      "condition": "Parasitized",
+      "df_image": 1.5866198319977813,
+      "df_edge": 1.6443579635288486,
+      "intensity_mean": 0.3793674115498117,
+      "intensity_std": 0.29173657242582635,
+      "area_ratio": 0.37555753791257807
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_133350_cell_171.png",
+      "condition": "Parasitized",
+      "df_image": 1.5346125172705318,
+      "df_edge": 1.7424532157857233,
+      "intensity_mean": 0.4841136017985849,
+      "intensity_std": 0.2739869791622383,
+      "area_ratio": 0.24469351319182703
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123500_cell_238.png",
+      "condition": "Parasitized",
+      "df_image": 1.4545017856801477,
+      "df_edge": 1.6079292453592628,
+      "intensity_mean": 0.4939640198900154,
+      "intensity_std": 0.2611377156768541,
+      "area_ratio": 0.23448992644707387
+    },
+    {
+      "image_name": "C138P99ThinF_IMG_20151005_173241_cell_152.png",
+      "condition": "Parasitized",
+      "df_image": 1.4898116960450656,
+      "df_edge": 1.5979317537036393,
+      "intensity_mean": 0.4544344603983325,
+      "intensity_std": 0.2779959661264546,
+      "area_ratio": 0.2862992125984252
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_114122_cell_1.png",
+      "condition": "Parasitized",
+      "df_image": 1.701496443706359,
+      "df_edge": 1.744233292763327,
+      "intensity_mean": 0.35683043392077807,
+      "intensity_std": 0.31738900046745255,
+      "area_ratio": 0.4377373926254894
+    },
+    {
+      "image_name": "C70P31_ThinF_IMG_20150819_142239_cell_10.png",
+      "condition": "Parasitized",
+      "df_image": 1.5332054888234627,
+      "df_edge": 1.6006755982287972,
+      "intensity_mean": 0.45671201618242385,
+      "intensity_std": 0.2811386843974312,
+      "area_ratio": 0.3098225010009342
+    },
+    {
+      "image_name": "C137P98ThinF_IMG_20151005_155444_cell_99.png",
+      "condition": "Parasitized",
+      "df_image": 1.5354948164681401,
+      "df_edge": 1.6900982115011691,
+      "intensity_mean": 0.44530605285592495,
+      "intensity_std": 0.28586850408635855,
+      "area_ratio": 0.30026465028355387
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123500_cell_220.png",
+      "condition": "Parasitized",
+      "df_image": 1.5067763980937174,
+      "df_edge": 1.590539912432314,
+      "intensity_mean": 0.4852950639715346,
+      "intensity_std": 0.28959147298952476,
+      "area_ratio": 0.286136583011583
+    },
+    {
+      "image_name": "C129P90ThinF_IMG_20151004_134700_cell_23.png",
+      "condition": "Parasitized",
+      "df_image": 1.7104094783035202,
+      "df_edge": 1.6889865184969142,
+      "intensity_mean": 0.37838074627844454,
+      "intensity_std": 0.3352618770099708,
+      "area_ratio": 0.44066889632107026
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_171905_cell_151.png",
+      "condition": "Parasitized",
+      "df_image": 1.57505086333464,
+      "df_edge": 1.6860012466583112,
+      "intensity_mean": 0.4176764134609469,
+      "intensity_std": 0.30597652325912833,
+      "area_ratio": 0.34764679515912145
+    },
+    {
+      "image_name": "C66P27N_ThinF_IMG_20150818_163551_cell_176.png",
+      "condition": "Parasitized",
+      "df_image": 1.5194262016946654,
+      "df_edge": 1.6652267012068145,
+      "intensity_mean": 0.4432875731779022,
+      "intensity_std": 0.27557024122481727,
+      "area_ratio": 0.2978487614080834
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150918_151942_cell_66.png",
+      "condition": "Parasitized",
+      "df_image": 1.4895622645305404,
+      "df_edge": 1.6406206909578016,
+      "intensity_mean": 0.5083327186065503,
+      "intensity_std": 0.289953065353088,
+      "area_ratio": 0.25648472048049636
+    },
+    {
+      "image_name": "C181P142ThinF_IMG_20151127_155722_cell_183.png",
+      "condition": "Parasitized",
+      "df_image": 1.5409712534131255,
+      "df_edge": 1.6904019697444346,
+      "intensity_mean": 0.49743693447958015,
+      "intensity_std": 0.3009221142366534,
+      "area_ratio": 0.2775023984649824
+    },
+    {
+      "image_name": "C66P27N_ThinF_IMG_20150818_163419_cell_204.png",
+      "condition": "Parasitized",
+      "df_image": 1.5717388689712977,
+      "df_edge": 1.6871802316159747,
+      "intensity_mean": 0.45188032518510246,
+      "intensity_std": 0.28304648201656946,
+      "area_ratio": 0.2875355787476281
+    },
+    {
+      "image_name": "C172P133ThinF_IMG_20151119_155343_cell_272.png",
+      "condition": "Parasitized",
+      "df_image": 1.5219287468448426,
+      "df_edge": 1.7077290081569871,
+      "intensity_mean": 0.5318631887143997,
+      "intensity_std": 0.3049494771661737,
+      "area_ratio": 0.2510180995475113
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_141001_cell_101.png",
+      "condition": "Parasitized",
+      "df_image": 1.6003982020028955,
+      "df_edge": 1.7383997316219861,
+      "intensity_mean": 0.42613127895786407,
+      "intensity_std": 0.31042732176801885,
+      "area_ratio": 0.3455051442064429
+    },
+    {
+      "image_name": "C189P150ThinF_IMG_20151203_141406_cell_90.png",
+      "condition": "Parasitized",
+      "df_image": 1.5325698560766319,
+      "df_edge": 1.623748521755645,
+      "intensity_mean": 0.3468130194572228,
+      "intensity_std": 0.22682568267978365,
+      "area_ratio": 0.29819694868238555
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_172524_cell_186.png",
+      "condition": "Parasitized",
+      "df_image": 1.494966415085903,
+      "df_edge": 1.739426063648839,
+      "intensity_mean": 0.48092441834601185,
+      "intensity_std": 0.28967987640198245,
+      "area_ratio": 0.2739890564526892
+    },
+    {
+      "image_name": "C128P89ThinF_IMG_20151004_130549_cell_147.png",
+      "condition": "Parasitized",
+      "df_image": 1.553956121534991,
+      "df_edge": 1.7095169107615864,
+      "intensity_mean": 0.46590356112675785,
+      "intensity_std": 0.2923070979223504,
+      "area_ratio": 0.286876705532126
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_110942_cell_20.png",
+      "condition": "Parasitized",
+      "df_image": 1.6627979481872905,
+      "df_edge": 1.7618601469788668,
+      "intensity_mean": 0.3908114579725918,
+      "intensity_std": 0.2993431368261118,
+      "area_ratio": 0.37106812447434817
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134504_cell_130.png",
+      "condition": "Parasitized",
+      "df_image": 1.4832782091378875,
+      "df_edge": 1.737440096739299,
+      "intensity_mean": 0.4809314440409123,
+      "intensity_std": 0.26010841603356893,
+      "area_ratio": 0.2331064657267866
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_143329_cell_112.png",
+      "condition": "Parasitized",
+      "df_image": 1.5973382529279725,
+      "df_edge": 1.7053391676747205,
+      "intensity_mean": 0.42662557451811733,
+      "intensity_std": 0.2889294071794089,
+      "area_ratio": 0.31550575408843123
+    },
+    {
+      "image_name": "C174P135NThinF_IMG_20151127_135342_cell_218.png",
+      "condition": "Parasitized",
+      "df_image": 1.513114607637462,
+      "df_edge": 1.6714337664585455,
+      "intensity_mean": 0.4218771626297578,
+      "intensity_std": 0.2516402230308886,
+      "area_ratio": 0.2622737556561086
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_160944_cell_230.png",
+      "condition": "Parasitized",
+      "df_image": 1.5782818364808622,
+      "df_edge": 1.7473470099769655,
+      "intensity_mean": 0.43492878982688704,
+      "intensity_std": 0.2972654133160505,
+      "area_ratio": 0.3205333822114283
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_110002_cell_22.png",
+      "condition": "Parasitized",
+      "df_image": 1.4806716254724976,
+      "df_edge": 1.642450144563282,
+      "intensity_mean": 0.46382493545006004,
+      "intensity_std": 0.27478455765648624,
+      "area_ratio": 0.2728161668839635
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_155144_cell_130.png",
+      "condition": "Parasitized",
+      "df_image": 1.6395078315802813,
+      "df_edge": 1.7182249466702706,
+      "intensity_mean": 0.4202717522376785,
+      "intensity_std": 0.29543054908019584,
+      "area_ratio": 0.33679508006498027
+    },
+    {
+      "image_name": "C52P13thinF_IMG_20150725_123938_cell_193.png",
+      "condition": "Parasitized",
+      "df_image": 1.6607836224716959,
+      "df_edge": 1.7174655207720384,
+      "intensity_mean": 0.37842827548709906,
+      "intensity_std": 0.32175848884719566,
+      "area_ratio": 0.4185679185679186
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171448_cell_131.png",
+      "condition": "Parasitized",
+      "df_image": 1.6235211562617515,
+      "df_edge": 1.6575901358186556,
+      "intensity_mean": 0.3183403412949557,
+      "intensity_std": 0.2652974166680438,
+      "area_ratio": 0.40044215180545323
+    },
+    {
+      "image_name": "C84P45ThinF_IMG_20150818_101412_cell_110.png",
+      "condition": "Parasitized",
+      "df_image": 1.5652713523430757,
+      "df_edge": 1.6469261975450848,
+      "intensity_mean": 0.44549435873420573,
+      "intensity_std": 0.2828904991820049,
+      "area_ratio": 0.2914639540026537
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165659_cell_17.png",
+      "condition": "Parasitized",
+      "df_image": 1.6798907236034493,
+      "df_edge": 1.754970908395739,
+      "intensity_mean": 0.41607314148681057,
+      "intensity_std": 0.34149295442917865,
+      "area_ratio": 0.40130395683453235
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_221632_cell_170.png",
+      "condition": "Parasitized",
+      "df_image": 1.6269169309048717,
+      "df_edge": 1.7205024538959433,
+      "intensity_mean": 0.4414822847117306,
+      "intensity_std": 0.2934955523277475,
+      "area_ratio": 0.3105840927920464
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_143743_cell_104.png",
+      "condition": "Parasitized",
+      "df_image": 1.5214768477125702,
+      "df_edge": 1.6289493866416709,
+      "intensity_mean": 0.3642465767298655,
+      "intensity_std": 0.25422817553464633,
+      "area_ratio": 0.33264462809917356
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134112_cell_160.png",
+      "condition": "Parasitized",
+      "df_image": 1.6426682051728843,
+      "df_edge": 1.728984292161987,
+      "intensity_mean": 0.4184313725490196,
+      "intensity_std": 0.3039444138122241,
+      "area_ratio": 0.34852195945945946
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_125256_cell_14.png",
+      "condition": "Parasitized",
+      "df_image": 1.7102582403841824,
+      "df_edge": 1.7540779434149978,
+      "intensity_mean": 0.3732662930711558,
+      "intensity_std": 0.3466646364281923,
+      "area_ratio": 0.4651133221017833
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171844_cell_110.png",
+      "condition": "Parasitized",
+      "df_image": 1.546584090996766,
+      "df_edge": 1.65855723226242,
+      "intensity_mean": 0.4102200156434019,
+      "intensity_std": 0.2608029422287891,
+      "area_ratio": 0.28157740613001886
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_113139_cell_19.png",
+      "condition": "Parasitized",
+      "df_image": 1.5292194514907604,
+      "df_edge": 1.6581907626496641,
+      "intensity_mean": 0.42594892598949385,
+      "intensity_std": 0.26675713157119796,
+      "area_ratio": 0.28312997347480107
+    },
+    {
+      "image_name": "C137P98ThinF_IMG_20151005_161659_cell_12.png",
+      "condition": "Parasitized",
+      "df_image": 1.5296245186938555,
+      "df_edge": 1.6111372644468254,
+      "intensity_mean": 0.37188951529979075,
+      "intensity_std": 0.2618387801156932,
+      "area_ratio": 0.34497148421199053
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123652_cell_227.png",
+      "condition": "Parasitized",
+      "df_image": 1.574791473243338,
+      "df_edge": 1.6359594089480651,
+      "intensity_mean": 0.42790215645320556,
+      "intensity_std": 0.27667303425126366,
+      "area_ratio": 0.306625667208169
+    },
+    {
+      "image_name": "C51AP12thinF_IMG_20150724_153313_cell_102.png",
+      "condition": "Parasitized",
+      "df_image": 1.6854086945164224,
+      "df_edge": 1.710366772967906,
+      "intensity_mean": 0.33333114841256395,
+      "intensity_std": 0.31209998593469734,
+      "area_ratio": 0.4650385365400687
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_133447_cell_131.png",
+      "condition": "Parasitized",
+      "df_image": 1.5461558333897967,
+      "df_edge": 1.7305669181411123,
+      "intensity_mean": 0.46336905612447404,
+      "intensity_std": 0.2911659357582487,
+      "area_ratio": 0.2858877964141122
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_133447_cell_156.png",
+      "condition": "Parasitized",
+      "df_image": 1.5857934070003086,
+      "df_edge": 1.680305184026038,
+      "intensity_mean": 0.40475046579717855,
+      "intensity_std": 0.2901332506301394,
+      "area_ratio": 0.3447398190045249
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123824_cell_196.png",
+      "condition": "Parasitized",
+      "df_image": 1.505402730312894,
+      "df_edge": 1.6190045991236137,
+      "intensity_mean": 0.45666700685345535,
+      "intensity_std": 0.2786057036270133,
+      "area_ratio": 0.2780595222207394
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_113430_cell_42.png",
+      "condition": "Parasitized",
+      "df_image": 1.4319458404348833,
+      "df_edge": 1.601093640085203,
+      "intensity_mean": 0.39793417366946787,
+      "intensity_std": 0.2104245053240572,
+      "area_ratio": 0.2161697247706422
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_164304_cell_3.png",
+      "condition": "Parasitized",
+      "df_image": 1.5721384859741652,
+      "df_edge": 1.6861222219801828,
+      "intensity_mean": 0.4331097681803206,
+      "intensity_std": 0.2776998251221446,
+      "area_ratio": 0.29536859073718147
+    },
+    {
+      "image_name": "C66P27N_ThinF_IMG_20150818_163551_cell_181.png",
+      "condition": "Parasitized",
+      "df_image": 1.5191954992449195,
+      "df_edge": 1.6452224811121408,
+      "intensity_mean": 0.46456121484131385,
+      "intensity_std": 0.28153873811450303,
+      "area_ratio": 0.29712713366290455
+    },
+    {
+      "image_name": "C172P133ThinF_IMG_20151119_155343_cell_285.png",
+      "condition": "Parasitized",
+      "df_image": 1.555696480993996,
+      "df_edge": 1.7183229049770656,
+      "intensity_mean": 0.4818357837449206,
+      "intensity_std": 0.29799744039561227,
+      "area_ratio": 0.28318635414249244
+    },
+    {
+      "image_name": "C45P6ThinF_IMG_20151130_155110_cell_207.png",
+      "condition": "Parasitized",
+      "df_image": 1.521230748574616,
+      "df_edge": 1.6030625899622677,
+      "intensity_mean": 0.47825986326734077,
+      "intensity_std": 0.2900252701690579,
+      "area_ratio": 0.2699001210653753
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_111544_cell_129.png",
+      "condition": "Parasitized",
+      "df_image": 1.6563960663979784,
+      "df_edge": 1.7415884943039384,
+      "intensity_mean": 0.3864360985035725,
+      "intensity_std": 0.31521101212565006,
+      "area_ratio": 0.39763177998472116
+    },
+    {
+      "image_name": "C184P145ThinF_IMG_20151203_104334_cell_39.png",
+      "condition": "Parasitized",
+      "df_image": 1.4966329383865753,
+      "df_edge": 1.6494961041746419,
+      "intensity_mean": 0.48772330576793044,
+      "intensity_std": 0.2577084515604591,
+      "area_ratio": 0.2206366047745358
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_152353_cell_138.png",
+      "condition": "Parasitized",
+      "df_image": 1.535944151292351,
+      "df_edge": 1.6073220101661754,
+      "intensity_mean": 0.4095595419256016,
+      "intensity_std": 0.2631234424413064,
+      "area_ratio": 0.30820695807314896
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_164304_cell_32.png",
+      "condition": "Parasitized",
+      "df_image": 1.507475764206247,
+      "df_edge": 1.6694620637919264,
+      "intensity_mean": 0.5111375947995666,
+      "intensity_std": 0.27555001517001615,
+      "area_ratio": 0.2268689057421452
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_141314_cell_135.png",
+      "condition": "Parasitized",
+      "df_image": 1.4773971522665255,
+      "df_edge": 1.6322957596735357,
+      "intensity_mean": 0.49064608705918666,
+      "intensity_std": 0.2579664578153742,
+      "area_ratio": 0.22093561834182493
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_172842_cell_3.png",
+      "condition": "Parasitized",
+      "df_image": 1.540535262246542,
+      "df_edge": 1.6884183540017108,
+      "intensity_mean": 0.455117468108495,
+      "intensity_std": 0.2787999726881336,
+      "area_ratio": 0.2739895697522816
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_105253_cell_109.png",
+      "condition": "Parasitized",
+      "df_image": 1.5322773464359405,
+      "df_edge": 1.6916926396799161,
+      "intensity_mean": 0.47567529296169464,
+      "intensity_std": 0.2817072665443238,
+      "area_ratio": 0.26057479734708916
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_105102_cell_87.png",
+      "condition": "Parasitized",
+      "df_image": 1.5574370467454073,
+      "df_edge": 1.6344608301955879,
+      "intensity_mean": 0.43661166570414983,
+      "intensity_std": 0.2916963971602805,
+      "area_ratio": 0.308835904628331
+    },
+    {
+      "image_name": "C97P58ThinF_IMG_20150917_152437_cell_12.png",
+      "condition": "Parasitized",
+      "df_image": 1.6086422427953928,
+      "df_edge": 1.6943834556236215,
+      "intensity_mean": 0.4454410542061496,
+      "intensity_std": 0.29935118951414574,
+      "area_ratio": 0.31297841231616064
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_221632_cell_169.png",
+      "condition": "Parasitized",
+      "df_image": 1.4530621630444773,
+      "df_edge": 1.6870263167396666,
+      "intensity_mean": 0.46219530634238926,
+      "intensity_std": 0.27954805377463227,
+      "area_ratio": 0.2792452830188679
+    },
+    {
+      "image_name": "C164P125ThinF_IMG_20151116_113651_cell_134.png",
+      "condition": "Parasitized",
+      "df_image": 1.5855663962187327,
+      "df_edge": 1.6941514074545931,
+      "intensity_mean": 0.3719010355903654,
+      "intensity_std": 0.2717671971436574,
+      "area_ratio": 0.33917470842460484
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165601_cell_198.png",
+      "condition": "Parasitized",
+      "df_image": 1.5835755593645031,
+      "df_edge": 1.7384516291425711,
+      "intensity_mean": 0.47114516177654886,
+      "intensity_std": 0.32442659649072536,
+      "area_ratio": 0.32426971227761914
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165528_cell_169.png",
+      "condition": "Parasitized",
+      "df_image": 1.5367063122754268,
+      "df_edge": 1.7236671805528985,
+      "intensity_mean": 0.4901159424950954,
+      "intensity_std": 0.31612350386662713,
+      "area_ratio": 0.2974986331328595
+    },
+    {
+      "image_name": "C45P6ThinF_IMG_20151130_155011_cell_179.png",
+      "condition": "Parasitized",
+      "df_image": 1.5428829315571355,
+      "df_edge": 1.692251230495084,
+      "intensity_mean": 0.4533368962363868,
+      "intensity_std": 0.26988558148975117,
+      "area_ratio": 0.2646880678376741
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_112802_cell_197.png",
+      "condition": "Parasitized",
+      "df_image": 1.4948672613750642,
+      "df_edge": 1.671622937367508,
+      "intensity_mean": 0.4176727098552236,
+      "intensity_std": 0.24046364290923178,
+      "area_ratio": 0.2518445036890074
+    },
+    {
+      "image_name": "C95P56ThinF_IMG_20150821_172351_cell_104.png",
+      "condition": "Parasitized",
+      "df_image": 1.6222903504933381,
+      "df_edge": 1.7437046284355928,
+      "intensity_mean": 0.43034175642087824,
+      "intensity_std": 0.30292740831209575,
+      "area_ratio": 0.332306338028169
+    },
+    {
+      "image_name": "C105P66ThinF_IMG_20150924_095130_cell_155.png",
+      "condition": "Parasitized",
+      "df_image": 1.5952306155025655,
+      "df_edge": 1.7113299933042572,
+      "intensity_mean": 0.506520203944225,
+      "intensity_std": 0.3007922714157653,
+      "area_ratio": 0.26408237431859477
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_140538_cell_112.png",
+      "condition": "Parasitized",
+      "df_image": 1.6370067766437657,
+      "df_edge": 1.7112653296524272,
+      "intensity_mean": 0.4377328586957423,
+      "intensity_std": 0.2965643959454172,
+      "area_ratio": 0.3186627168853153
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_152505_cell_117.png",
+      "condition": "Parasitized",
+      "df_image": 1.5135669007707881,
+      "df_edge": 1.6225697739068972,
+      "intensity_mean": 0.4544588983544622,
+      "intensity_std": 0.27204677401522026,
+      "area_ratio": 0.2696277760400375
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150923_170246_cell_64.png",
+      "condition": "Parasitized",
+      "df_image": 1.5538994851159877,
+      "df_edge": 1.65617636837344,
+      "intensity_mean": 0.46330267002090886,
+      "intensity_std": 0.28343647654264625,
+      "area_ratio": 0.27465297279948647
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_125443_cell_147.png",
+      "condition": "Parasitized",
+      "df_image": 1.6124388991029148,
+      "df_edge": 1.6453062213409053,
+      "intensity_mean": 0.44354761701880174,
+      "intensity_std": 0.2923217867431723,
+      "area_ratio": 0.3100641512036973
+    },
+    {
+      "image_name": "C100P61ThinF_IMG_20150918_144348_cell_142.png",
+      "condition": "Parasitized",
+      "df_image": 1.6787804105942565,
+      "df_edge": 1.7528457361478373,
+      "intensity_mean": 0.47461063819248384,
+      "intensity_std": 0.3160243188711805,
+      "area_ratio": 0.3066582461205341
+    },
+    {
+      "image_name": "C167P128ReThinF_IMG_20151201_110011_cell_234.png",
+      "condition": "Parasitized",
+      "df_image": 1.4663373108159807,
+      "df_edge": 1.687346934368709,
+      "intensity_mean": 0.4970676797792195,
+      "intensity_std": 0.2684559577509232,
+      "area_ratio": 0.23210904960242332
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_111802_cell_11.png",
+      "condition": "Parasitized",
+      "df_image": 1.599795399140669,
+      "df_edge": 1.6598511788425783,
+      "intensity_mean": 0.44385703980588886,
+      "intensity_std": 0.2581454110778686,
+      "area_ratio": 0.2631438127090301
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_152808_cell_21.png",
+      "condition": "Parasitized",
+      "df_image": 1.486978730050312,
+      "df_edge": 1.650202698221056,
+      "intensity_mean": 0.4599066016324988,
+      "intensity_std": 0.2677726245347952,
+      "area_ratio": 0.26183416287196865
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165659_cell_3.png",
+      "condition": "Parasitized",
+      "df_image": 1.6488641072382577,
+      "df_edge": 1.7379448905062538,
+      "intensity_mean": 0.41378129030767874,
+      "intensity_std": 0.3289000674010869,
+      "area_ratio": 0.38805877611755224
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_165423_cell_184.png",
+      "condition": "Parasitized",
+      "df_image": 1.5662829907305023,
+      "df_edge": 1.729130197278085,
+      "intensity_mean": 0.5232685850494494,
+      "intensity_std": 0.3096155449409596,
+      "area_ratio": 0.2628872004675628
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150923_170246_cell_76.png",
+      "condition": "Parasitized",
+      "df_image": 1.5856054625883929,
+      "df_edge": 1.6879774250250843,
+      "intensity_mean": 0.45223663476487785,
+      "intensity_std": 0.3033161739983196,
+      "area_ratio": 0.3168516198317523
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_111326_cell_21.png",
+      "condition": "Parasitized",
+      "df_image": 1.5165401466840174,
+      "df_edge": 1.691205731615226,
+      "intensity_mean": 0.5337499755364051,
+      "intensity_std": 0.286220377119532,
+      "area_ratio": 0.2308417433736276
+    },
+    {
+      "image_name": "C170P131ThinF_IMG_20151119_120233_cell_187.png",
+      "condition": "Parasitized",
+      "df_image": 1.5867848626015975,
+      "df_edge": 1.7045091652488058,
+      "intensity_mean": 0.4451105964207314,
+      "intensity_std": 0.28511558841890877,
+      "area_ratio": 0.2894924098671727
+    },
+    {
+      "image_name": "C137P98ThinF_IMG_20151005_160918_cell_65.png",
+      "condition": "Parasitized",
+      "df_image": 1.5043379281533769,
+      "df_edge": 1.6681671839776797,
+      "intensity_mean": 0.47055875905012806,
+      "intensity_std": 0.2666309597270588,
+      "area_ratio": 0.251957406827435
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_171905_cell_138.png",
+      "condition": "Parasitized",
+      "df_image": 1.4907012827378732,
+      "df_edge": 1.7102012149849668,
+      "intensity_mean": 0.4828087310395855,
+      "intensity_std": 0.2763674863027521,
+      "area_ratio": 0.2572641509433962
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171219_cell_101.png",
+      "condition": "Parasitized",
+      "df_image": 1.4454395561627424,
+      "df_edge": 1.585584265563072,
+      "intensity_mean": 0.45415763728099445,
+      "intensity_std": 0.23826860399903935,
+      "area_ratio": 0.2113041042162768
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_105018_cell_149.png",
+      "condition": "Parasitized",
+      "df_image": 1.5934672737179298,
+      "df_edge": 1.719936901778419,
+      "intensity_mean": 0.4781900277622281,
+      "intensity_std": 0.29343548140276754,
+      "area_ratio": 0.2792618714071784
+    },
+    {
+      "image_name": "C60P21thinF_IMG_20150804_105034_cell_121.png",
+      "condition": "Parasitized",
+      "df_image": 1.6810158044383514,
+      "df_edge": 1.7064436246187193,
+      "intensity_mean": 0.39492883341887514,
+      "intensity_std": 0.3244097857679524,
+      "area_ratio": 0.4041285379868057
+    },
+    {
+      "image_name": "C184P145ThinF_IMG_20151203_103114_cell_170.png",
+      "condition": "Parasitized",
+      "df_image": 1.546571132908746,
+      "df_edge": 1.7111933393884176,
+      "intensity_mean": 0.4757821244913923,
+      "intensity_std": 0.30153557598681197,
+      "area_ratio": 0.28912454452022796
+    },
+    {
+      "image_name": "C130P91ThinF_IMG_20151004_142709_cell_122.png",
+      "condition": "Parasitized",
+      "df_image": 1.5655918975753373,
+      "df_edge": 1.7130645262694562,
+      "intensity_mean": 0.4997916195927795,
+      "intensity_std": 0.29648192984204047,
+      "area_ratio": 0.2683372965063106
+    },
+    {
+      "image_name": "C119P80ThinF_IMG_20151002_123608_cell_143.png",
+      "condition": "Parasitized",
+      "df_image": 1.595192389752594,
+      "df_edge": 1.6717883722684994,
+      "intensity_mean": 0.4117988562687942,
+      "intensity_std": 0.2846164503943083,
+      "area_ratio": 0.32757991343797255
+    },
+    {
+      "image_name": "C128P89ThinF_IMG_20151004_131030_cell_152.png",
+      "condition": "Parasitized",
+      "df_image": 1.6873251841934445,
+      "df_edge": 1.7328944797268517,
+      "intensity_mean": 0.39145807914617775,
+      "intensity_std": 0.32151672975384593,
+      "area_ratio": 0.40375549968573227
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_143743_cell_110.png",
+      "condition": "Parasitized",
+      "df_image": 1.647809942804562,
+      "df_edge": 1.73793890136399,
+      "intensity_mean": 0.3904190236863331,
+      "intensity_std": 0.3185676122107809,
+      "area_ratio": 0.39949631564219756
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134504_cell_124.png",
+      "condition": "Parasitized",
+      "df_image": 1.6160058057692224,
+      "df_edge": 1.7541703588149444,
+      "intensity_mean": 0.403806333557843,
+      "intensity_std": 0.30283248845306626,
+      "area_ratio": 0.3609788225757422
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_154351_cell_123.png",
+      "condition": "Parasitized",
+      "df_image": 1.633242291593323,
+      "df_edge": 1.7041652854894722,
+      "intensity_mean": 0.41527816534583467,
+      "intensity_std": 0.2966408928926524,
+      "area_ratio": 0.3407258064516129
+    },
+    {
+      "image_name": "C93P54ThinF_IMG_20150821_162901_cell_204.png",
+      "condition": "Parasitized",
+      "df_image": 1.5185460312227461,
+      "df_edge": 1.6586605829710492,
+      "intensity_mean": 0.49092808035673746,
+      "intensity_std": 0.2947336307018475,
+      "area_ratio": 0.271943029180176
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_111333_cell_152.png",
+      "condition": "Parasitized",
+      "df_image": 1.5822058177809841,
+      "df_edge": 1.6874676653079925,
+      "intensity_mean": 0.37876919081437976,
+      "intensity_std": 0.23477220096693585,
+      "area_ratio": 0.2692307692307692
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_110608_cell_155.png",
+      "condition": "Parasitized",
+      "df_image": 1.5063370277847106,
+      "df_edge": 1.6850978902657963,
+      "intensity_mean": 0.4528465611784569,
+      "intensity_std": 0.27324054856891383,
+      "area_ratio": 0.2729938683017862
+    },
+    {
+      "image_name": "C184P145ThinF_IMG_20151203_103824_cell_127.png",
+      "condition": "Parasitized",
+      "df_image": 1.5659537043566332,
+      "df_edge": 1.7220331838026839,
+      "intensity_mean": 0.44680829459703014,
+      "intensity_std": 0.25210897100466684,
+      "area_ratio": 0.2410994373350595
+    },
+    {
+      "image_name": "C167P128ReThinF_IMG_20151201_105559_cell_227.png",
+      "condition": "Parasitized",
+      "df_image": 1.6447460552130044,
+      "df_edge": 1.6650877102219528,
+      "intensity_mean": 0.2964031250680072,
+      "intensity_std": 0.2892220647260798,
+      "area_ratio": 0.48346281908990013
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_124504_cell_191.png",
+      "condition": "Parasitized",
+      "df_image": 1.5358471578205368,
+      "df_edge": 1.7139709170804582,
+      "intensity_mean": 0.4795484018464741,
+      "intensity_std": 0.31602108812382795,
+      "area_ratio": 0.3146613743487968
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_113051_cell_162.png",
+      "condition": "Parasitized",
+      "df_image": 1.4622547752162547,
+      "df_edge": 1.63779520797161,
+      "intensity_mean": 0.38830127265263037,
+      "intensity_std": 0.22259893433947361,
+      "area_ratio": 0.24071535393818544
+    },
+    {
+      "image_name": "C159P120ThinF_IMG_20151115_190812_cell_240.png",
+      "condition": "Parasitized",
+      "df_image": 1.5725947871479118,
+      "df_edge": 1.6732537285794935,
+      "intensity_mean": 0.5008999111579455,
+      "intensity_std": 0.30394196201474705,
+      "area_ratio": 0.2742388870360665
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_105102_cell_97.png",
+      "condition": "Parasitized",
+      "df_image": 1.5242140065949787,
+      "df_edge": 1.6279245560703806,
+      "intensity_mean": 0.41126033057851236,
+      "intensity_std": 0.28792460660308966,
+      "area_ratio": 0.32910271546635184
+    },
+    {
+      "image_name": "C181P142ThinF_IMG_20151127_160539_cell_179.png",
+      "condition": "Parasitized",
+      "df_image": 1.6290142701894377,
+      "df_edge": 1.6720332175074706,
+      "intensity_mean": 0.4430774646337976,
+      "intensity_std": 0.31871478582846996,
+      "area_ratio": 0.34439970959012606
+    },
+    {
+      "image_name": "C123P84ThinF_IMG_20151002_150931_cell_208.png",
+      "condition": "Parasitized",
+      "df_image": 1.5411910237935411,
+      "df_edge": 1.667078571314705,
+      "intensity_mean": 0.48224855307148323,
+      "intensity_std": 0.27410546559780796,
+      "area_ratio": 0.24896919718651467
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_170021_cell_3.png",
+      "condition": "Parasitized",
+      "df_image": 1.5355810120481643,
+      "df_edge": 1.7491463544305546,
+      "intensity_mean": 0.5049093033501255,
+      "intensity_std": 0.30630382974929293,
+      "area_ratio": 0.27088082057961577
+    },
+    {
+      "image_name": "C176P137NThinF_IMG_20151201_120845_cell_125.png",
+      "condition": "Parasitized",
+      "df_image": 1.4727963458591806,
+      "df_edge": 1.7194475200293566,
+      "intensity_mean": 0.5477762792667052,
+      "intensity_std": 0.29263426395511705,
+      "area_ratio": 0.23113836310317248
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_152353_cell_165.png",
+      "condition": "Parasitized",
+      "df_image": 1.5497425956430826,
+      "df_edge": 1.6739097595278312,
+      "intensity_mean": 0.45530579477448546,
+      "intensity_std": 0.26587333993099976,
+      "area_ratio": 0.25818858560794045
+    },
+    {
+      "image_name": "C135P96ThinF_IMG_20151005_124031_cell_160.png",
+      "condition": "Parasitized",
+      "df_image": 1.5872851529916714,
+      "df_edge": 1.6955165270718502,
+      "intensity_mean": 0.4376990626359085,
+      "intensity_std": 0.3262361907697452,
+      "area_ratio": 0.3600755073147711
+    },
+    {
+      "image_name": "C60P21thinF_IMG_20150803_144510_cell_148.png",
+      "condition": "Parasitized",
+      "df_image": 1.5641302181139565,
+      "df_edge": 1.7171907910796,
+      "intensity_mean": 0.4464086754401248,
+      "intensity_std": 0.30721892912057996,
+      "area_ratio": 0.32586867008596404
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_143743_cell_125.png",
+      "condition": "Parasitized",
+      "df_image": 1.657107857084465,
+      "df_edge": 1.7503374480085032,
+      "intensity_mean": 0.42301949759142404,
+      "intensity_std": 0.2838147953882873,
+      "area_ratio": 0.31282439446366783
+    },
+    {
+      "image_name": "C113P74ThinF_IMG_20150930_134614_cell_175.png",
+      "condition": "Parasitized",
+      "df_image": 1.6198126829521116,
+      "df_edge": 1.726167212214357,
+      "intensity_mean": 0.45573611962828436,
+      "intensity_std": 0.3130384974760728,
+      "area_ratio": 0.32485966319166
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134112_cell_125.png",
+      "condition": "Parasitized",
+      "df_image": 1.6250945616618917,
+      "df_edge": 1.7216574949255399,
+      "intensity_mean": 0.4467487642527665,
+      "intensity_std": 0.32407908452823336,
+      "area_ratio": 0.34737063746907404
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150923_170246_cell_71.png",
+      "condition": "Parasitized",
+      "df_image": 1.6801644335870607,
+      "df_edge": 1.7359505081801165,
+      "intensity_mean": 0.324631700472234,
+      "intensity_std": 0.28832603731794154,
+      "area_ratio": 0.43892890698402753
+    },
+    {
+      "image_name": "C183P144NThinF_IMG_20151201_223758_cell_136.png",
+      "condition": "Parasitized",
+      "df_image": 1.5017588785227505,
+      "df_edge": 1.7350817154021878,
+      "intensity_mean": 0.5310695602590008,
+      "intensity_std": 0.2999896011016853,
+      "area_ratio": 0.2487080757928868
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_125154_cell_213.png",
+      "condition": "Parasitized",
+      "df_image": 1.61945202995314,
+      "df_edge": 1.7483873346838277,
+      "intensity_mean": 0.5170084230875448,
+      "intensity_std": 0.32630747910180746,
+      "area_ratio": 0.288473487986744
+    },
+    {
+      "image_name": "C46P7ThinF_IMG_20151130_210123_cell_122.png",
+      "condition": "Parasitized",
+      "df_image": 1.4705353643117223,
+      "df_edge": 1.6637554059174724,
+      "intensity_mean": 0.46740309026836535,
+      "intensity_std": 0.28090504272628264,
+      "area_ratio": 0.2743375576036866
+    },
+    {
+      "image_name": "C183P144NThinF_IMG_20151201_223758_cell_126.png",
+      "condition": "Parasitized",
+      "df_image": 1.574005540421228,
+      "df_edge": 1.679449896426919,
+      "intensity_mean": 0.468989711269123,
+      "intensity_std": 0.2969873108887632,
+      "area_ratio": 0.29086538461538464
+    },
+    {
+      "image_name": "C186P147NThinF_IMG_20151203_150222_cell_172.png",
+      "condition": "Parasitized",
+      "df_image": 1.464474217786502,
+      "df_edge": 1.6356219067565203,
+      "intensity_mean": 0.5207418954843083,
+      "intensity_std": 0.2478720704344637,
+      "area_ratio": 0.19131028207461329
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_124937_cell_196.png",
+      "condition": "Parasitized",
+      "df_image": 1.6845996104896523,
+      "df_edge": 1.7442256997399714,
+      "intensity_mean": 0.3935356490774447,
+      "intensity_std": 0.3515925900290674,
+      "area_ratio": 0.4424522845575477
+    },
+    {
+      "image_name": "C81P42ThinF_IMG_20150817_121113_cell_179.png",
+      "condition": "Parasitized",
+      "df_image": 1.5715404091660847,
+      "df_edge": 1.6910983903817918,
+      "intensity_mean": 0.4755077011396772,
+      "intensity_std": 0.2726035760063382,
+      "area_ratio": 0.25463014306310305
+    },
+    {
+      "image_name": "C140P101ThinF_IMG_20151005_210309_cell_183.png",
+      "condition": "Parasitized",
+      "df_image": 1.491900135885848,
+      "df_edge": 1.6361967112368654,
+      "intensity_mean": 0.49476557686996786,
+      "intensity_std": 0.28416373991335436,
+      "area_ratio": 0.2512459371614301
+    },
+    {
+      "image_name": "C149P110ThinF_IMG_20151115_115154_cell_251.png",
+      "condition": "Parasitized",
+      "df_image": 1.6194774102650908,
+      "df_edge": 1.6639622461236039,
+      "intensity_mean": 0.4310364783858862,
+      "intensity_std": 0.280286127798747,
+      "area_ratio": 0.29515327257663626
+    },
+    {
+      "image_name": "C33P1thinF_IMG_20150619_120645a_cell_215.png",
+      "condition": "Parasitized",
+      "df_image": 1.5810848859324356,
+      "df_edge": 1.6532995169012745,
+      "intensity_mean": 0.5107941956623498,
+      "intensity_std": 0.31422042927507754,
+      "area_ratio": 0.27347480106100797
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_222535_cell_141.png",
+      "condition": "Parasitized",
+      "df_image": 1.5722966838128343,
+      "df_edge": 1.7290940574186981,
+      "intensity_mean": 0.5118747814969086,
+      "intensity_std": 0.3032735170107557,
+      "area_ratio": 0.2641365257259297
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_154158_cell_113.png",
+      "condition": "Parasitized",
+      "df_image": 1.5004901996909783,
+      "df_edge": 1.665850555633793,
+      "intensity_mean": 0.47318452380952375,
+      "intensity_std": 0.2738858351500531,
+      "area_ratio": 0.26035714285714284
+    },
+    {
+      "image_name": "C136P97ThinF_IMG_20151005_141321_cell_101.png",
+      "condition": "Parasitized",
+      "df_image": 1.464337078676867,
+      "df_edge": 1.7069771053486353,
+      "intensity_mean": 0.5169397904692022,
+      "intensity_std": 0.2615421910226788,
+      "area_ratio": 0.20831600831600833
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_142334_cell_2.png",
+      "condition": "Parasitized",
+      "df_image": 1.5479924525878994,
+      "df_edge": 1.682655796750269,
+      "intensity_mean": 0.474164289653075,
+      "intensity_std": 0.2759092385958687,
+      "area_ratio": 0.2550219564608054
+    },
+    {
+      "image_name": "C181P142ThinF_IMG_20151127_160434_cell_159.png",
+      "condition": "Parasitized",
+      "df_image": 1.6553630102163528,
+      "df_edge": 1.7284056528867693,
+      "intensity_mean": 0.384067141840025,
+      "intensity_std": 0.3101616861847652,
+      "area_ratio": 0.39607998640457714
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_112858_cell_160.png",
+      "condition": "Parasitized",
+      "df_image": 1.483171250323791,
+      "df_edge": 1.6393949671663177,
+      "intensity_mean": 0.3963257474935676,
+      "intensity_std": 0.22996241411739723,
+      "area_ratio": 0.25005656108597285
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_133350_cell_176.png",
+      "condition": "Parasitized",
+      "df_image": 1.5119790846834038,
+      "df_edge": 1.714759031465996,
+      "intensity_mean": 0.40875321621861405,
+      "intensity_std": 0.259110388242461,
+      "area_ratio": 0.29287330316742083
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_152257_cell_120.png",
+      "condition": "Parasitized",
+      "df_image": 1.5870580184246605,
+      "df_edge": 1.71861818094223,
+      "intensity_mean": 0.46208165903932724,
+      "intensity_std": 0.28776191153886665,
+      "area_ratio": 0.28356261859582543
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123500_cell_222.png",
+      "condition": "Parasitized",
+      "df_image": 1.5348344729188057,
+      "df_edge": 1.6188933006057564,
+      "intensity_mean": 0.39877137932558454,
+      "intensity_std": 0.27371861404342707,
+      "area_ratio": 0.3344716890922751
+    },
+    {
+      "image_name": "C184P145ThinF_IMG_20151203_103824_cell_121.png",
+      "condition": "Parasitized",
+      "df_image": 1.511622006086723,
+      "df_edge": 1.676396888278784,
+      "intensity_mean": 0.45856314356728595,
+      "intensity_std": 0.2561271340900587,
+      "area_ratio": 0.241025097956158
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_125114_cell_16.png",
+      "condition": "Parasitized",
+      "df_image": 1.6633232680674823,
+      "df_edge": 1.6787262239663376,
+      "intensity_mean": 0.4273061533817589,
+      "intensity_std": 0.3186484549605443,
+      "area_ratio": 0.3585817228955126
+    },
+    {
+      "image_name": "C182P143NThinF_IMG_20151201_172524_cell_166.png",
+      "condition": "Parasitized",
+      "df_image": 1.5135267651395437,
+      "df_edge": 1.7320204965539168,
+      "intensity_mean": 0.49345581147438744,
+      "intensity_std": 0.2958768206004928,
+      "area_ratio": 0.26732215153267785
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_114609_cell_15.png",
+      "condition": "Parasitized",
+      "df_image": 1.5704289003286485,
+      "df_edge": 1.6628210703358328,
+      "intensity_mean": 0.4473190379735047,
+      "intensity_std": 0.28307766123572015,
+      "area_ratio": 0.2858140671928477
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134712_cell_12.png",
+      "condition": "Parasitized",
+      "df_image": 1.7829256001245364,
+      "df_edge": 1.7488479261144212,
+      "intensity_mean": 0.22520253144874125,
+      "intensity_std": 0.3003718628334106,
+      "area_ratio": 0.6395222045995241
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_111943_cell_13.png",
+      "condition": "Parasitized",
+      "df_image": 1.628958377030576,
+      "df_edge": 1.7643181837530644,
+      "intensity_mean": 0.4291707473832405,
+      "intensity_std": 0.2778190694176607,
+      "area_ratio": 0.29292403746097817
+    },
+    {
+      "image_name": "C46P7ThinF_IMG_20151130_210815_cell_2.png",
+      "condition": "Parasitized",
+      "df_image": 1.5388587185204077,
+      "df_edge": 1.705661472053775,
+      "intensity_mean": 0.43158032080756825,
+      "intensity_std": 0.2791144700540698,
+      "area_ratio": 0.29733827493261455
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123824_cell_200.png",
+      "condition": "Parasitized",
+      "df_image": 1.5560730799079099,
+      "df_edge": 1.6711670040269313,
+      "intensity_mean": 0.47302433768587776,
+      "intensity_std": 0.28967445223218996,
+      "area_ratio": 0.27687958738345564
+    },
+    {
+      "image_name": "C168P129ThinF_IMG_20151118_154651_cell_143.png",
+      "condition": "Parasitized",
+      "df_image": 1.4787204875524802,
+      "df_edge": 1.7182379078445418,
+      "intensity_mean": 0.5754870134362848,
+      "intensity_std": 0.2954355932912114,
+      "area_ratio": 0.21235003528581511
+    },
+    {
+      "image_name": "C97P58ThinF_IMG_20150917_151320_cell_162.png",
+      "condition": "Parasitized",
+      "df_image": 1.5760116519614735,
+      "df_edge": 1.738158309649499,
+      "intensity_mean": 0.5272286821705425,
+      "intensity_std": 0.29899369675526166,
+      "area_ratio": 0.24760877719429858
+    },
+    {
+      "image_name": "C70P31_ThinF_IMG_20150819_141327_cell_75.png",
+      "condition": "Parasitized",
+      "df_image": 1.5978156801238692,
+      "df_edge": 1.6381334122098896,
+      "intensity_mean": 0.34408671235484484,
+      "intensity_std": 0.2735665001471436,
+      "area_ratio": 0.38626907073509015
+    },
+    {
+      "image_name": "C175P136NThinF_IMG_20151127_142009_cell_232.png",
+      "condition": "Parasitized",
+      "df_image": 1.4851635709066722,
+      "df_edge": 1.6639149509052393,
+      "intensity_mean": 0.5050381926973474,
+      "intensity_std": 0.27328664848773093,
+      "area_ratio": 0.22879963745539003
+    },
+    {
+      "image_name": "C46P7ThinF_IMG_20151130_205828_cell_140.png",
+      "condition": "Parasitized",
+      "df_image": 1.4474122600976653,
+      "df_edge": 1.7021969248711974,
+      "intensity_mean": 0.4882631372549019,
+      "intensity_std": 0.26383520276678907,
+      "area_ratio": 0.2352
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_141001_cell_94.png",
+      "condition": "Parasitized",
+      "df_image": 1.56063713923816,
+      "df_edge": 1.7086793067594617,
+      "intensity_mean": 0.47390996906483807,
+      "intensity_std": 0.2810833337461038,
+      "area_ratio": 0.26439994501214314
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_113139_cell_55.png",
+      "condition": "Parasitized",
+      "df_image": 1.5857044318458062,
+      "df_edge": 1.5971325123267064,
+      "intensity_mean": 0.3692782563580242,
+      "intensity_std": 0.2536169671937028,
+      "area_ratio": 0.332642360687721
+    },
+    {
+      "image_name": "C132P93ThinF_IMG_20151004_151811_cell_149.png",
+      "condition": "Parasitized",
+      "df_image": 1.569989242735322,
+      "df_edge": 1.7060766578014788,
+      "intensity_mean": 0.41867476480050997,
+      "intensity_std": 0.26003127274900184,
+      "area_ratio": 0.27965455930911864
+    },
+    {
+      "image_name": "C117P78ThinF_IMG_20150930_220616_cell_93.png",
+      "condition": "Parasitized",
+      "df_image": 1.501004193567207,
+      "df_edge": 1.7119828661144108,
+      "intensity_mean": 0.4837968285027108,
+      "intensity_std": 0.2696168664231062,
+      "area_ratio": 0.24074844074844076
+    },
+    {
+      "image_name": "C99P60ThinF_IMG_20150918_141001_cell_123.png",
+      "condition": "Parasitized",
+      "df_image": 1.5806856931492894,
+      "df_edge": 1.7189234522655326,
+      "intensity_mean": 0.4711526661024122,
+      "intensity_std": 0.2791361343284693,
+      "area_ratio": 0.2648381294964029
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_171809_cell_87.png",
+      "condition": "Parasitized",
+      "df_image": 1.4156423698711462,
+      "df_edge": 1.6599173945082837,
+      "intensity_mean": 0.4179626495650367,
+      "intensity_std": 0.19438498040029378,
+      "area_ratio": 0.18419880644873965
+    },
+    {
+      "image_name": "C77P38ThinF_IMG_20150601_152941_cell_121.png",
+      "condition": "Parasitized",
+      "df_image": 1.494703673382291,
+      "df_edge": 1.7013166243025908,
+      "intensity_mean": 0.4377442138659177,
+      "intensity_std": 0.2481550137631423,
+      "area_ratio": 0.24355437665782492
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134712_cell_76.png",
+      "condition": "Parasitized",
+      "df_image": 1.6066327670814082,
+      "df_edge": 1.7488419894398843,
+      "intensity_mean": 0.443047894904426,
+      "intensity_std": 0.3037708071770248,
+      "area_ratio": 0.3236642221058146
+    },
+    {
+      "image_name": "C179P140ThinF_IMG_20151127_153521_cell_167.png",
+      "condition": "Parasitized",
+      "df_image": 1.5399746881917564,
+      "df_edge": 1.7433798764898643,
+      "intensity_mean": 0.45309526187384963,
+      "intensity_std": 0.27519310752293363,
+      "area_ratio": 0.27837739510065485
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_154919_cell_139.png",
+      "condition": "Parasitized",
+      "df_image": 1.5432148977121996,
+      "df_edge": 1.6458673062330276,
+      "intensity_mean": 0.4703975941626222,
+      "intensity_std": 0.26968112563073277,
+      "area_ratio": 0.2551865799383773
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123652_cell_199.png",
+      "condition": "Parasitized",
+      "df_image": 1.6225940867621256,
+      "df_edge": 1.632526932582502,
+      "intensity_mean": 0.39068870546053164,
+      "intensity_std": 0.28303659794997077,
+      "area_ratio": 0.3436474121673535
+    },
+    {
+      "image_name": "C171P132ThinF_IMG_20151119_153425_cell_240.png",
+      "condition": "Parasitized",
+      "df_image": 1.5509930389654176,
+      "df_edge": 1.6451899328798174,
+      "intensity_mean": 0.44236182019977804,
+      "intensity_std": 0.2672115158810286,
+      "area_ratio": 0.2664150943396226
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_125423_cell_29.png",
+      "condition": "Parasitized",
+      "df_image": 1.6965686337824064,
+      "df_edge": 1.6368977048142688,
+      "intensity_mean": 0.36329784472294613,
+      "intensity_std": 0.3218484858333608,
+      "area_ratio": 0.4587060760037215
+    },
+    {
+      "image_name": "C133P94ThinF_IMG_20151004_154351_cell_101.png",
+      "condition": "Parasitized",
+      "df_image": 1.6466344743604278,
+      "df_edge": 1.7513930302732565,
+      "intensity_mean": 0.45359341748298315,
+      "intensity_std": 0.2836522251529766,
+      "area_ratio": 0.2828811101905551
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_112329_cell_24.png",
+      "condition": "Parasitized",
+      "df_image": 1.4853024181322159,
+      "df_edge": 1.7000432810294164,
+      "intensity_mean": 0.45267423535844076,
+      "intensity_std": 0.24086626964499638,
+      "area_ratio": 0.2219108802624385
+    },
+    {
+      "image_name": "C101P62ThinF_IMG_20150918_155731_cell_71.png",
+      "condition": "Parasitized",
+      "df_image": 1.689843060939801,
+      "df_edge": 1.6583721847050275,
+      "intensity_mean": 0.4040708388618605,
+      "intensity_std": 0.3176214094808228,
+      "area_ratio": 0.3830827067669173
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_160406_cell_196.png",
+      "condition": "Parasitized",
+      "df_image": 1.566728106846479,
+      "df_edge": 1.7165736629345874,
+      "intensity_mean": 0.4570880983972536,
+      "intensity_std": 0.30080793711820103,
+      "area_ratio": 0.3040872858838826
+    },
+    {
+      "image_name": "C176P137NThinF_IMG_20151201_114035_cell_128.png",
+      "condition": "Parasitized",
+      "df_image": 1.6027904296546014,
+      "df_edge": 1.7188076446507379,
+      "intensity_mean": 0.47484623535139153,
+      "intensity_std": 0.3278208359110848,
+      "area_ratio": 0.32617515010547954
+    },
+    {
+      "image_name": "C178P139NThinF_IMG_20151201_153246_cell_157.png",
+      "condition": "Parasitized",
+      "df_image": 1.4550286910598569,
+      "df_edge": 1.6804483441970945,
+      "intensity_mean": 0.44746432181119866,
+      "intensity_std": 0.26677428382863344,
+      "area_ratio": 0.27422680412371137
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_170110_cell_25.png",
+      "condition": "Parasitized",
+      "df_image": 1.5528966446329449,
+      "df_edge": 1.7536152056093257,
+      "intensity_mean": 0.5031517718649325,
+      "intensity_std": 0.3159696315619978,
+      "area_ratio": 0.2850912778904665
+    },
+    {
+      "image_name": "C93P54ThinF_IMG_20150821_163640_cell_127.png",
+      "condition": "Uninfected",
+      "df_image": 1.5903382943184663,
+      "df_edge": 1.7470652245125546,
+      "intensity_mean": 0.506039021067484,
+      "intensity_std": 0.31857215164776775,
+      "area_ratio": 0.2834367245657568
+    },
+    {
+      "image_name": "C153P114ThinF_IMG_20151115_135832_cell_193.png",
+      "condition": "Uninfected",
+      "df_image": 1.4794878821414976,
+      "df_edge": 1.6943987588211238,
+      "intensity_mean": 0.46523796264067757,
+      "intensity_std": 0.26634119468206746,
+      "area_ratio": 0.24017751479289942
+    },
+    {
+      "image_name": "C201ThinF_IMG_20150930_143129_cell_102.png",
+      "condition": "Uninfected",
+      "df_image": 1.6218192933100175,
+      "df_edge": 1.7366169652976169,
+      "intensity_mean": 0.47368333414558866,
+      "intensity_std": 0.29347488701787133,
+      "area_ratio": 0.27666735708367857
+    },
+    {
+      "image_name": "C217ThinF_IMG_20151106_142147_cell_17.png",
+      "condition": "Uninfected",
+      "df_image": 1.586326255864247,
+      "df_edge": 1.731317956173317,
+      "intensity_mean": 0.48562001524108533,
+      "intensity_std": 0.31268922773135066,
+      "area_ratio": 0.2921211479402732
+    },
+    {
+      "image_name": "C97P58ThinF_IMG_20150917_151551_cell_57.png",
+      "condition": "Uninfected",
+      "df_image": 1.5141237998970696,
+      "df_edge": 1.6981659476894757,
+      "intensity_mean": 0.49975132467847816,
+      "intensity_std": 0.2911568812207525,
+      "area_ratio": 0.2525984077841663
+    },
+    {
+      "image_name": "C103P64ThinF_IMG_20150918_165510_cell_98.png",
+      "condition": "Uninfected",
+      "df_image": 1.5322372090773126,
+      "df_edge": 1.701230900941338,
+      "intensity_mean": 0.5127173982144965,
+      "intensity_std": 0.31033877327335596,
+      "area_ratio": 0.2673112552107457
+    },
+    {
+      "image_name": "C90P51ThinF_IMG_20150821_115056_cell_209.png",
+      "condition": "Uninfected",
+      "df_image": 1.5719743622112825,
+      "df_edge": 1.7309946987219211,
+      "intensity_mean": 0.47596886825879714,
+      "intensity_std": 0.2911904991795745,
+      "area_ratio": 0.2703789724126211
+    },
+    {
+      "image_name": "C65P26N_ThinF_IMG_20150818_154326_cell_114.png",
+      "condition": "Uninfected",
+      "df_image": 1.5320683938997708,
+      "df_edge": 1.6774018181096513,
+      "intensity_mean": 0.45506006253085396,
+      "intensity_std": 0.263953898435724,
+      "area_ratio": 0.251028467994076
+    },
+    {
+      "image_name": "C106P67ThinF_IMG_20150924_103811_cell_32.png",
+      "condition": "Uninfected",
+      "df_image": 1.595955603577107,
+      "df_edge": 1.740375667305496,
+      "intensity_mean": 0.4535774823035739,
+      "intensity_std": 0.29980541604396,
+      "area_ratio": 0.303561469205641
+    },
+    {
+      "image_name": "C158P119ThinF_IMG_20151115_181035_cell_161.png",
+      "condition": "Uninfected",
+      "df_image": 1.52242110100427,
+      "df_edge": 1.6938904527369816,
+      "intensity_mean": 0.47255921533670653,
+      "intensity_std": 0.27463530215385706,
+      "area_ratio": 0.2484771950675977
+    },
+    {
+      "image_name": "C66P27N_ThinF_IMG_20150818_163551_cell_167.png",
+      "condition": "Uninfected",
+      "df_image": 1.5864263964179355,
+      "df_edge": 1.7124238843713697,
+      "intensity_mean": 0.4412190486632677,
+      "intensity_std": 0.32059146222802387,
+      "area_ratio": 0.3448741845293569
+    },
+    {
+      "image_name": "C69P30N_ThinF_IMG_20150819_140143_cell_71.png",
+      "condition": "Uninfected",
+      "df_image": 1.6031493210427232,
+      "df_edge": 1.7270133706566058,
+      "intensity_mean": 0.4685048781324701,
+      "intensity_std": 0.3149806460203239,
+      "area_ratio": 0.31090803033249076
+    },
+    {
+      "image_name": "C112P73ThinF_IMG_20150930_131605_cell_98.png",
+      "condition": "Uninfected",
+      "df_image": 1.486538146349632,
+      "df_edge": 1.687070870047451,
+      "intensity_mean": 0.49165580397656955,
+      "intensity_std": 0.2694185392723672,
+      "area_ratio": 0.22931276297335204
+    },
+    {
+      "image_name": "C163P124ThinF_IMG_20151116_110818_cell_82.png",
+      "condition": "Uninfected",
+      "df_image": 1.507745830012094,
+      "df_edge": 1.7008332965771953,
+      "intensity_mean": 0.4881228777435807,
+      "intensity_std": 0.2610770895605435,
+      "area_ratio": 0.22026529108327192
+    },
+    {
+      "image_name": "C223ThinF_IMG_20151112_104410_cell_164.png",
+      "condition": "Uninfected",
+      "df_image": 1.4684831028135403,
+      "df_edge": 1.6768341640946318,
+      "intensity_mean": 0.5060298443512437,
+      "intensity_std": 0.2676507257926913,
+      "area_ratio": 0.21641686510715785
+    },
+    {
+      "image_name": "C218ThinF_IMG_20151106_144143_cell_1.png",
+      "condition": "Uninfected",
+      "df_image": 1.5594084322919555,
+      "df_edge": 1.7220053903882562,
+      "intensity_mean": 0.5328187850242375,
+      "intensity_std": 0.30851751058636967,
+      "area_ratio": 0.25037989479836353
+    },
+    {
+      "image_name": "C207ThinF_IMG_20151029_144033_cell_275.png",
+      "condition": "Uninfected",
+      "df_image": 1.5027819659602437,
+      "df_edge": 1.6983852620116964,
+      "intensity_mean": 0.486661777752143,
+      "intensity_std": 0.2781345192356659,
+      "area_ratio": 0.2445720689172153
+    },
+    {
+      "image_name": "C119P80ThinF_IMG_20151002_124304_cell_82.png",
+      "condition": "Uninfected",
+      "df_image": 1.5914543151209009,
+      "df_edge": 1.692930610144173,
+      "intensity_mean": 0.4492749576319556,
+      "intensity_std": 0.30625204564882225,
+      "area_ratio": 0.31576354679802954
+    },
+    {
+      "image_name": "C173P134NThinF_IMG_20151130_125501_cell_35.png",
+      "condition": "Uninfected",
+      "df_image": 1.4937671205141667,
+      "df_edge": 1.7344322400562844,
+      "intensity_mean": 0.5460337985350229,
+      "intensity_std": 0.26565089435213746,
+      "area_ratio": 0.18925598335067637
+    },
+    {
+      "image_name": "C1_thinF_IMG_20150604_105100_cell_186.png",
+      "condition": "Uninfected",
+      "df_image": 1.7092257764418204,
+      "df_edge": 1.7429667141678833,
+      "intensity_mean": 0.3302744396174009,
+      "intensity_std": 0.32813845060389235,
+      "area_ratio": 0.4953940095804601
+    },
+    {
+      "image_name": "C141P102ThinF_IMG_20151005_214208_cell_47.png",
+      "condition": "Uninfected",
+      "df_image": 1.5400859076647433,
+      "df_edge": 1.7340552003513698,
+      "intensity_mean": 0.4744203683640303,
+      "intensity_std": 0.2911261477303748,
+      "area_ratio": 0.27253521126760566
+    },
+    {
+      "image_name": "C37BP2_thinF_IMG_20150620_133205a_cell_41.png",
+      "condition": "Uninfected",
+      "df_image": 1.5140627855373125,
+      "df_edge": 1.6555091944164166,
+      "intensity_mean": 0.5102474833563824,
+      "intensity_std": 0.287797655197476,
+      "area_ratio": 0.238039912520503
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_112802_cell_146.png",
+      "condition": "Uninfected",
+      "df_image": 1.6419575201333776,
+      "df_edge": 1.7017914853185163,
+      "intensity_mean": 0.388250245917765,
+      "intensity_std": 0.2708028447754691,
+      "area_ratio": 0.32448160535117054
+    },
+    {
+      "image_name": "C38P3thinF_original_IMG_20150621_112116_cell_129.png",
+      "condition": "Uninfected",
+      "df_image": 1.4917597261255344,
+      "df_edge": 1.6847819225329372,
+      "intensity_mean": 0.43699833801051674,
+      "intensity_std": 0.24373229651217423,
+      "area_ratio": 0.23703103288559518
+    },
+    {
+      "image_name": "C103P64ThinF_IMG_20150918_164553_cell_160.png",
+      "condition": "Uninfected",
+      "df_image": 1.6204279296257338,
+      "df_edge": 1.719310852381665,
+      "intensity_mean": 0.4959796145821184,
+      "intensity_std": 0.30140327981405884,
+      "area_ratio": 0.2689193654990086
+    },
+    {
+      "image_name": "C95P56ThinF_IMG_20150821_172319_cell_100.png",
+      "condition": "Uninfected",
+      "df_image": 1.5017394961387096,
+      "df_edge": 1.6550487462305297,
+      "intensity_mean": 0.49292536133198606,
+      "intensity_std": 0.27831038000697017,
+      "area_ratio": 0.23861090365944734
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_123314_cell_17.png",
+      "condition": "Uninfected",
+      "df_image": 1.6909916880247897,
+      "df_edge": 1.7527513152096854,
+      "intensity_mean": 0.4250211598243383,
+      "intensity_std": 0.33243641512591277,
+      "area_ratio": 0.3791590201867071
+    },
+    {
+      "image_name": "C114P75ThinF_IMG_20150930_150555_cell_129.png",
+      "condition": "Uninfected",
+      "df_image": 1.509897201757685,
+      "df_edge": 1.7224876413678238,
+      "intensity_mean": 0.5020969228794473,
+      "intensity_std": 0.26892232894444185,
+      "area_ratio": 0.22227732592739535
+    },
+    {
+      "image_name": "C130P91ThinF_IMG_20151004_141428_cell_29.png",
+      "condition": "Uninfected",
+      "df_image": 1.6230948270976577,
+      "df_edge": 1.7415812109045268,
+      "intensity_mean": 0.4861672310289373,
+      "intensity_std": 0.3205261629486329,
+      "area_ratio": 0.30275089149261336
+    },
+    {
+      "image_name": "C206ThinF_IMG_20151029_140511_cell_202.png",
+      "condition": "Uninfected",
+      "df_image": 1.551998201244643,
+      "df_edge": 1.7607149656139813,
+      "intensity_mean": 0.5350708744872709,
+      "intensity_std": 0.3047861764351519,
+      "area_ratio": 0.244360502234518
+    },
+    {
+      "image_name": "C76P37ThinF_IMG_20150815_172902_cell_159.png",
+      "condition": "Uninfected",
+      "df_image": 1.5693269794939806,
+      "df_edge": 1.7226313744522066,
+      "intensity_mean": 0.46929681702500653,
+      "intensity_std": 0.2811779960835899,
+      "area_ratio": 0.2630810261620523
+    },
+    {
+      "image_name": "C5NThinF_IMG_20150609_122034_cell_146.png",
+      "condition": "Uninfected",
+      "df_image": 1.5151288583697917,
+      "df_edge": 1.7548825755915327,
+      "intensity_mean": 0.5161954226506655,
+      "intensity_std": 0.2794690922264695,
+      "area_ratio": 0.22555183946488294
+    },
+    {
+      "image_name": "C92P53ThinF_IMG_20150821_151722_cell_56.png",
+      "condition": "Uninfected",
+      "df_image": 1.5114443136851778,
+      "df_edge": 1.6751431315178784,
+      "intensity_mean": 0.4234871594861008,
+      "intensity_std": 0.25808817740685663,
+      "area_ratio": 0.2686478806535638
+    },
+    {
+      "image_name": "C208ThinF_IMG_20151029_155827_cell_45.png",
+      "condition": "Uninfected",
+      "df_image": 1.4840468182888409,
+      "df_edge": 1.7642892701909827,
+      "intensity_mean": 0.5865082179089797,
+      "intensity_std": 0.3015662390522367,
+      "area_ratio": 0.20882753256853975
+    },
+    {
+      "image_name": "C73P34_ThinF_IMG_20150815_111501_cell_66.png",
+      "condition": "Uninfected",
+      "df_image": 1.5221539879184762,
+      "df_edge": 1.6539563884394743,
+      "intensity_mean": 0.47594901246673194,
+      "intensity_std": 0.2803833665694686,
+      "area_ratio": 0.25612830928701497
+    },
+    {
+      "image_name": "C50P11thinF_IMG_20150724_120553_cell_54.png",
+      "condition": "Uninfected",
+      "df_image": 1.5033331662899971,
+      "df_edge": 1.7251578467024367,
+      "intensity_mean": 0.499003259040084,
+      "intensity_std": 0.2957096831925397,
+      "area_ratio": 0.2593630399125205
+    },
+    {
+      "image_name": "C228ThinF_IMG_20151112_142900_cell_20.png",
+      "condition": "Uninfected",
+      "df_image": 1.5760935361936428,
+      "df_edge": 1.7403459067109475,
+      "intensity_mean": 0.5108239991127869,
+      "intensity_std": 0.30712002469646654,
+      "area_ratio": 0.26450038815570587
+    },
+    {
+      "image_name": "C121P82ThinF_IMG_20151002_133001_cell_59.png",
+      "condition": "Uninfected",
+      "df_image": 1.5725292210045592,
+      "df_edge": 1.7363925085427978,
+      "intensity_mean": 0.5237016857102552,
+      "intensity_std": 0.30316080809913104,
+      "area_ratio": 0.2507643884892086
+    },
+    {
+      "image_name": "C80P41ThinF_IMG_20150817_111246_cell_25.png",
+      "condition": "Uninfected",
+      "df_image": 1.4416530613562601,
+      "df_edge": 1.653206779656527,
+      "intensity_mean": 0.4492634832449773,
+      "intensity_std": 0.2394197208640894,
+      "area_ratio": 0.21774193548387097
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_110834_cell_54.png",
+      "condition": "Uninfected",
+      "df_image": 1.5247411885520705,
+      "df_edge": 1.7339227622466085,
+      "intensity_mean": 0.4618820731622019,
+      "intensity_std": 0.2947902372824908,
+      "area_ratio": 0.28894173602853745
+    },
+    {
+      "image_name": "C218ThinF_IMG_20151106_143940_cell_23.png",
+      "condition": "Uninfected",
+      "df_image": 1.5424324530022764,
+      "df_edge": 1.7055678796943214,
+      "intensity_mean": 0.4768249442904765,
+      "intensity_std": 0.28749420011073323,
+      "area_ratio": 0.2648347487423595
+    },
+    {
+      "image_name": "C134P95ThinF_IMG_20151005_122449_cell_3.png",
+      "condition": "Uninfected",
+      "df_image": 1.5144795787945815,
+      "df_edge": 1.721171957171663,
+      "intensity_mean": 0.5178990372253807,
+      "intensity_std": 0.29588013597032775,
+      "area_ratio": 0.24550752792617775
+    },
+    {
+      "image_name": "C183P144NThinF_IMG_20151201_224458_cell_3.png",
+      "condition": "Uninfected",
+      "df_image": 1.5706848563567855,
+      "df_edge": 1.6646613750745385,
+      "intensity_mean": 0.47101752386949425,
+      "intensity_std": 0.3186694737547129,
+      "area_ratio": 0.31139288900216644
+    },
+    {
+      "image_name": "C64P25N_ThinF_IMG_20150818_152337_cell_106.png",
+      "condition": "Uninfected",
+      "df_image": 1.6047589453220454,
+      "df_edge": 1.7232969131231501,
+      "intensity_mean": 0.4719909939122804,
+      "intensity_std": 0.3068609121489654,
+      "area_ratio": 0.29655236849481453
+    },
+    {
+      "image_name": "C205ThinF_IMG_20151106_151622_cell_25.png",
+      "condition": "Uninfected",
+      "df_image": 1.5833637236247662,
+      "df_edge": 1.6788006706279535,
+      "intensity_mean": 0.4905506939617953,
+      "intensity_std": 0.2963499024766448,
+      "area_ratio": 0.26584317937701396
+    },
+    {
+      "image_name": "C241NThinF_IMG_20151207_124030_cell_144.png",
+      "condition": "Uninfected",
+      "df_image": 1.6122698938802134,
+      "df_edge": 1.7301484369648767,
+      "intensity_mean": 0.4442095290381367,
+      "intensity_std": 0.3148417634352073,
+      "area_ratio": 0.3319074470153607
+    },
+    {
+      "image_name": "C47P8thinOriginalOlympusCX21_IMG_20150717_174222_cell_14.png",
+      "condition": "Uninfected",
+      "df_image": 1.559149988324557,
+      "df_edge": 1.6816892981829752,
+      "intensity_mean": 0.4578923942458339,
+      "intensity_std": 0.2983198884240332,
+      "area_ratio": 0.2964588377723971
+    },
+    {
+      "image_name": "C118P79ThinF_IMG_20151002_105018_cell_59.png",
+      "condition": "Uninfected",
+      "df_image": 1.5297576333221665,
+      "df_edge": 1.7223820621224792,
+      "intensity_mean": 0.4898749421028254,
+      "intensity_std": 0.28274775691936554,
+      "area_ratio": 0.24930345245305877
+    },
+    {
+      "image_name": "C181P142ThinF_IMG_20151127_160514_cell_33.png",
+      "condition": "Uninfected",
+      "df_image": 1.5335873379680303,
+      "df_edge": 1.6757653567309658,
+      "intensity_mean": 0.4901527654795774,
+      "intensity_std": 0.301765544430031,
+      "area_ratio": 0.27416050592322083
+    },
+    {
+      "image_name": "C53P14thinF_IMG_20150726_115457_cell_29.png",
+      "condition": "Uninfected",
+      "df_image": 1.561339477230594,
+      "df_edge": 1.6809541808784996,
+      "intensity_mean": 0.49056373243230333,
+      "intensity_std": 0.28888579146818233,
+      "area_ratio": 0.25559395003682095
+    },
+    {
+      "image_name": "C215ThinF_IMG_20151106_133043_cell_81.png",
+      "condition": "Uninfected",
+      "df_image": 1.5219433973588423,
+      "df_edge": 1.7030039538814101,
+      "intensity_mean": 0.5186310403593706,
+      "intensity_std": 0.2823537274389426,
+      "area_ratio": 0.22749385626159788
+    },
+    {
+      "image_name": "C4thin_original_IMG_20150608_170016_cell_117.png",
+      "condition": "Uninfected",
+      "df_image": 1.678494123820218,
+      "df_edge": 1.766477738957452,
+      "intensity_mean": 0.45942523637020793,
+      "intensity_std": 0.30602602226535947,
+      "area_ratio": 0.3063468789275241
+    },
+    {
+      "image_name": "C162P123ThinF_IMG_20151116_105019_cell_136.png",
+      "condition": "Uninfected",
+      "df_image": 1.5585147635567087,
+      "df_edge": 1.749160510076199,
+      "intensity_mean": 0.48277100912258086,
+      "intensity_std": 0.28516055491575826,
+      "area_ratio": 0.2579938377268059
+    },
+    {
+      "image_name": "C55P16thinF_IMG_20150728_123510_cell_21.png",
+      "condition": "Uninfected",
+      "df_image": 1.5193678585259833,
+      "df_edge": 1.6861520871009834,
+      "intensity_mean": 0.4752874668946925,
+      "intensity_std": 0.259826480940643,
+      "area_ratio": 0.2273167777104785
+    },
+    {
+      "image_name": "C4thin_original_IMG_20150608_165908_cell_187.png",
+      "condition": "Uninfected",
+      "df_image": 1.647940503285214,
+      "df_edge": 1.6964655078444764,
+      "intensity_mean": 0.42200759013282724,
+      "intensity_std": 0.28626008002924236,
+      "area_ratio": 0.3118548387096774
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_105803_cell_64.png",
+      "condition": "Uninfected",
+      "df_image": 1.5301741264817044,
+      "df_edge": 1.666759273333422,
+      "intensity_mean": 0.48744610061219057,
+      "intensity_std": 0.29101452346358897,
+      "area_ratio": 0.25893665158371043
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_163848_cell_1.png",
+      "condition": "Uninfected",
+      "df_image": 1.736380970044395,
+      "df_edge": 1.772107617330053,
+      "intensity_mean": 0.3564393662603382,
+      "intensity_std": 0.3391864457907392,
+      "area_ratio": 0.4748164878599661
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_222415_cell_147.png",
+      "condition": "Uninfected",
+      "df_image": 1.5526884865680959,
+      "df_edge": 1.7302214635490647,
+      "intensity_mean": 0.48140715109573246,
+      "intensity_std": 0.2899223213754662,
+      "area_ratio": 0.2653846153846154
+    },
+    {
+      "image_name": "C50P11thinF_IMG_20150724_115141_cell_27.png",
+      "condition": "Uninfected",
+      "df_image": 1.5450248407014293,
+      "df_edge": 1.7273797464116265,
+      "intensity_mean": 0.36658557176660833,
+      "intensity_std": 0.277873619236587,
+      "area_ratio": 0.36422073984232867
+    },
+    {
+      "image_name": "C142P103ThinF_IMG_20151005_222440_cell_11.png",
+      "condition": "Uninfected",
+      "df_image": 1.5407654697463748,
+      "df_edge": 1.7055821835855898,
+      "intensity_mean": 0.4829927608478911,
+      "intensity_std": 0.26561602650758814,
+      "area_ratio": 0.23102431834929993
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_110435_cell_5.png",
+      "condition": "Uninfected",
+      "df_image": 1.5352550206398343,
+      "df_edge": 1.682394268361055,
+      "intensity_mean": 0.47629303689979924,
+      "intensity_std": 0.29887933784829007,
+      "area_ratio": 0.27819178852643417
+    },
+    {
+      "image_name": "C94P55ThinF_IMG_20150821_165118_cell_102.png",
+      "condition": "Uninfected",
+      "df_image": 1.5823662775259681,
+      "df_edge": 1.726618641305098,
+      "intensity_mean": 0.4746196871924727,
+      "intensity_std": 0.3125835055016825,
+      "area_ratio": 0.3026185280698274
+    },
+    {
+      "image_name": "C135P96ThinF_IMG_20151005_124031_cell_54.png",
+      "condition": "Uninfected",
+      "df_image": 1.6633036284796283,
+      "df_edge": 1.7063439938417528,
+      "intensity_mean": 0.46436418493530385,
+      "intensity_std": 0.3281409130852781,
+      "area_ratio": 0.33267653393209
+    },
+    {
+      "image_name": "C236ThinF_IMG_20151127_102115_cell_108.png",
+      "condition": "Uninfected",
+      "df_image": 1.5274438138979205,
+      "df_edge": 1.6462042616013641,
+      "intensity_mean": 0.5190688120506676,
+      "intensity_std": 0.2859198740326991,
+      "area_ratio": 0.2310852447791852
+    },
+    {
+      "image_name": "C50P11thinF_IMG_20150724_115141_cell_151.png",
+      "condition": "Uninfected",
+      "df_image": 1.5924729262943975,
+      "df_edge": 1.70603152561152,
+      "intensity_mean": 0.5009414859004636,
+      "intensity_std": 0.2903435636658156,
+      "area_ratio": 0.249593873288466
+    },
+    {
+      "image_name": "C156P117ThinF_IMG_20151115_153831_cell_248.png",
+      "condition": "Uninfected",
+      "df_image": 1.552107253591039,
+      "df_edge": 1.7046168233154402,
+      "intensity_mean": 0.49247206666209853,
+      "intensity_std": 0.29865547788848046,
+      "area_ratio": 0.26448162660171554
+    },
+    {
+      "image_name": "C165P126ThinF_IMG_20151117_172859_cell_191.png",
+      "condition": "Uninfected",
+      "df_image": 1.4994579921144124,
+      "df_edge": 1.6924344035181913,
+      "intensity_mean": 0.5014157237698228,
+      "intensity_std": 0.2798987816911682,
+      "area_ratio": 0.23600956130483688
+    },
+    {
+      "image_name": "C71P32_ThinF_IMG_20150813_162146_cell_120.png",
+      "condition": "Uninfected",
+      "df_image": 1.5308349065099485,
+      "df_edge": 1.7274349798434976,
+      "intensity_mean": 0.4650289680785821,
+      "intensity_std": 0.28447220163641557,
+      "area_ratio": 0.27206010833478944
+    },
+    {
+      "image_name": "C129P90ThinF_IMG_20151004_134520_cell_22.png",
+      "condition": "Uninfected",
+      "df_image": 1.517933269808035,
+      "df_edge": 1.7513172056139248,
+      "intensity_mean": 0.5542727386601647,
+      "intensity_std": 0.29316345485340445,
+      "area_ratio": 0.21839251225672263
+    },
+    {
+      "image_name": "C38P3thinF_original_IMG_20150621_112227_cell_187.png",
+      "condition": "Uninfected",
+      "df_image": 1.6113080895145402,
+      "df_edge": 1.7432613938333037,
+      "intensity_mean": 0.46528961880072317,
+      "intensity_std": 0.27512432513847007,
+      "area_ratio": 0.25795093139482056
+    },
+    {
+      "image_name": "C108P69ThinF_IMG_20150924_223834_cell_22.png",
+      "condition": "Uninfected",
+      "df_image": 1.6307778279222644,
+      "df_edge": 1.7532945722095659,
+      "intensity_mean": 0.44249237778649547,
+      "intensity_std": 0.3152490590942909,
+      "area_ratio": 0.3359073359073359
+    },
+    {
+      "image_name": "C103P64ThinF_IMG_20150918_165510_cell_138.png",
+      "condition": "Uninfected",
+      "df_image": 1.5066101624326425,
+      "df_edge": 1.7213214714392238,
+      "intensity_mean": 0.5183799254729115,
+      "intensity_std": 0.2986029768613812,
+      "area_ratio": 0.24796473943479388
+    },
+    {
+      "image_name": "C161P122ThinF_IMG_20151116_100959_cell_38.png",
+      "condition": "Uninfected",
+      "df_image": 1.4653605664547142,
+      "df_edge": 1.619275376708297,
+      "intensity_mean": 0.45178349249771343,
+      "intensity_std": 0.25011076246134883,
+      "area_ratio": 0.2231404958677686
+    },
+    {
+      "image_name": "C66P27N_ThinF_IMG_20150818_164702_cell_83.png",
+      "condition": "Uninfected",
+      "df_image": 1.6175237066932995,
+      "df_edge": 1.7279586414936599,
+      "intensity_mean": 0.46192907818561985,
+      "intensity_std": 0.31804638358003623,
+      "area_ratio": 0.32114238750770496
+    },
+    {
+      "image_name": "C179P140ThinF_IMG_20151127_153521_cell_126.png",
+      "condition": "Uninfected",
+      "df_image": 1.5123773138162195,
+      "df_edge": 1.6782156283374472,
+      "intensity_mean": 0.49149348773879437,
+      "intensity_std": 0.25148555150801827,
+      "area_ratio": 0.20621931260229132
+    },
+    {
+      "image_name": "C116P77ThinF_IMG_20150930_172112_cell_51.png",
+      "condition": "Uninfected",
+      "df_image": 1.559437381215915,
+      "df_edge": 1.6637064760801985,
+      "intensity_mean": 0.3917299340140027,
+      "intensity_std": 0.2324206534689232,
+      "area_ratio": 0.2538856555973982
+    },
+    {
+      "image_name": "C117P78ThinF_IMG_20150930_221812_cell_61.png",
+      "condition": "Uninfected",
+      "df_image": 1.6648791017890714,
+      "df_edge": 1.729408240749442,
+      "intensity_mean": 0.4623150350553669,
+      "intensity_std": 0.3159394834286249,
+      "area_ratio": 0.31758291685597456
+    },
+    {
+      "image_name": "C82P43ThinF_IMG_20150817_123652_cell_80.png",
+      "condition": "Uninfected",
+      "df_image": 1.684459290009693,
+      "df_edge": 1.7402461378877325,
+      "intensity_mean": 0.44521394119144986,
+      "intensity_std": 0.33419570976770313,
+      "area_ratio": 0.35967341482047366
+    },
+    {
+      "image_name": "C215ThinF_IMG_20151106_133116_cell_25.png",
+      "condition": "Uninfected",
+      "df_image": 1.5272584190880094,
+      "df_edge": 1.7028194765837643,
+      "intensity_mean": 0.48861811449113096,
+      "intensity_std": 0.28860102622930706,
+      "area_ratio": 0.2570525141050282
+    },
+    {
+      "image_name": "C70P31_ThinF_IMG_20150813_130510_cell_43.png",
+      "condition": "Uninfected",
+      "df_image": 1.4201206150838328,
+      "df_edge": 1.6955066560995151,
+      "intensity_mean": 0.5369708139444109,
+      "intensity_std": 0.24634415243735683,
+      "area_ratio": 0.17292712480526223
+    },
+    {
+      "image_name": "C160P121ThinF_IMG_20151116_093748_cell_97.png",
+      "condition": "Uninfected",
+      "df_image": 1.5819470812524978,
+      "df_edge": 1.7242614254491184,
+      "intensity_mean": 0.49249107658514873,
+      "intensity_std": 0.29003353186958625,
+      "area_ratio": 0.2561909360557357
+    },
+    {
+      "image_name": "C125P86ThinF_IMG_20151004_102205_cell_58.png",
+      "condition": "Uninfected",
+      "df_image": 1.4997699589692832,
+      "df_edge": 1.7155916140843273,
+      "intensity_mean": 0.5001809368720775,
+      "intensity_std": 0.2694057411277329,
+      "area_ratio": 0.22365225837785332
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_130407_cell_119.png",
+      "condition": "Uninfected",
+      "df_image": 1.6503056325651002,
+      "df_edge": 1.755887968906839,
+      "intensity_mean": 0.4714585588836761,
+      "intensity_std": 0.32384417746020405,
+      "area_ratio": 0.3202453987730061
+    },
+    {
+      "image_name": "C124P85ThinF_IMG_20151002_153825_cell_76.png",
+      "condition": "Uninfected",
+      "df_image": 1.5272156966461186,
+      "df_edge": 1.7273507971790798,
+      "intensity_mean": 0.5361823915834611,
+      "intensity_std": 0.2969527048171175,
+      "area_ratio": 0.2343928798474253
+    },
+    {
+      "image_name": "C152P113ThinF_IMG_20151115_124557_cell_90.png",
+      "condition": "Uninfected",
+      "df_image": 1.4697926415038813,
+      "df_edge": 1.627053163809195,
+      "intensity_mean": 0.40871125309627987,
+      "intensity_std": 0.23139097954082782,
+      "area_ratio": 0.23177390791027155
+    },
+    {
+      "image_name": "C127P88ThinF_IMG_20151004_111526_cell_6.png",
+      "condition": "Uninfected",
+      "df_image": 1.4763369482035253,
+      "df_edge": 1.6974635345335438,
+      "intensity_mean": 0.4710981799979664,
+      "intensity_std": 0.2660336096662136,
+      "area_ratio": 0.2412445153570004
+    },
+    {
+      "image_name": "C50P11thinF_IMG_20150724_115603_cell_72.png",
+      "condition": "Uninfected",
+      "df_image": 1.561226499913016,
+      "df_edge": 1.7045411861217548,
+      "intensity_mean": 0.473253523742498,
+      "intensity_std": 0.2991237918301066,
+      "area_ratio": 0.28489531405782653
+    },
+    {
+      "image_name": "C211ThinF_IMG_20151029_163959_cell_13.png",
+      "condition": "Uninfected",
+      "df_image": 1.541093329872537,
+      "df_edge": 1.6915372776749558,
+      "intensity_mean": 0.5129630471607157,
+      "intensity_std": 0.2941022038583759,
+      "area_ratio": 0.2459718175872525
+    },
+    {
+      "image_name": "C139P100ThinF_IMG_20151005_182257_cell_143.png",
+      "condition": "Uninfected",
+      "df_image": 1.5382058790859847,
+      "df_edge": 1.7054534894933209,
+      "intensity_mean": 0.5145146181807324,
+      "intensity_std": 0.2941401152417436,
+      "area_ratio": 0.24524172059383326
+    },
+    {
+      "image_name": "C74P35_ThinF_IMG_20150815_120712_cell_33.png",
+      "condition": "Uninfected",
+      "df_image": 1.5796294531993533,
+      "df_edge": 1.7298615597878109,
+      "intensity_mean": 0.4854193943078026,
+      "intensity_std": 0.29622234457292174,
+      "area_ratio": 0.2703696343402226
+    },
+    {
+      "image_name": "C176P137NThinF_IMG_20151201_120845_cell_48.png",
+      "condition": "Uninfected",
+      "df_image": 1.5131730832253232,
+      "df_edge": 1.7741184414678801,
+      "intensity_mean": 0.5405808034242479,
+      "intensity_std": 0.2928631949281112,
+      "area_ratio": 0.22656027358221714
+    },
+    {
+      "image_name": "C170P131ThinF_IMG_20151119_120233_cell_168.png",
+      "condition": "Uninfected",
+      "df_image": 1.5526015734751637,
+      "df_edge": 1.729205972221218,
+      "intensity_mean": 0.4567023326572007,
+      "intensity_std": 0.30022945171081344,
+      "area_ratio": 0.2990948275862069
+    },
+    {
+      "image_name": "C126P87ThinF_IMG_20151004_105234_cell_61.png",
+      "condition": "Uninfected",
+      "df_image": 1.738712831724551,
+      "df_edge": 1.7590495292321655,
+      "intensity_mean": 0.33424383838042254,
+      "intensity_std": 0.30665118692105575,
+      "area_ratio": 0.45551882724920956
+    },
+    {
+      "image_name": "C68P29N_ThinF_IMG_20150819_134112_cell_51.png",
+      "condition": "Uninfected",
+      "df_image": 1.628818756201613,
+      "df_edge": 1.759001235674369,
+      "intensity_mean": 0.5062605699082231,
+      "intensity_std": 0.2940709409257049,
+      "area_ratio": 0.25184951281125945
+    },
+    {
+      "image_name": "C13NThinF_IMG_20150614_131553_cell_90.png",
+      "condition": "Uninfected",
+      "df_image": 1.5308621479813733,
+      "df_edge": 1.6415537710667725,
+      "intensity_mean": 0.3850838560434183,
+      "intensity_std": 0.24453154095405255,
+      "area_ratio": 0.2794608301081009
+    },
+    {
+      "image_name": "C73P34_ThinF_IMG_20150815_112246_cell_83.png",
+      "condition": "Uninfected",
+      "df_image": 1.550014193466785,
+      "df_edge": 1.6540332080108504,
+      "intensity_mean": 0.5068002661326243,
+      "intensity_std": 0.28927067499050113,
+      "area_ratio": 0.24454766895145302
+    },
+    {
+      "image_name": "C92P53ThinF_IMG_20150821_150457_cell_97.png",
+      "condition": "Uninfected",
+      "df_image": 1.6789748151385593,
+      "df_edge": 1.7554176070896086,
+      "intensity_mean": 0.35920288556991126,
+      "intensity_std": 0.29349125239959534,
+      "area_ratio": 0.3978397411496003
+    },
+    {
+      "image_name": "C81P42ThinF_IMG_20150817_121113_cell_130.png",
+      "condition": "Uninfected",
+      "df_image": 1.6243103037659041,
+      "df_edge": 1.7114277333817163,
+      "intensity_mean": 0.48012002552223904,
+      "intensity_std": 0.31728864795990497,
+      "area_ratio": 0.30344466148935156
+    },
+    {
+      "image_name": "C120P81ThinF_IMG_20151002_131120_cell_130.png",
+      "condition": "Uninfected",
+      "df_image": 1.6122251113557553,
+      "df_edge": 1.7392394785917438,
+      "intensity_mean": 0.45119298151668497,
+      "intensity_std": 0.32640339191629936,
+      "area_ratio": 0.34301319981793355
+    },
+    {
+      "image_name": "C52P13thinF_IMG_20150725_123938_cell_22.png",
+      "condition": "Uninfected",
+      "df_image": 1.5569719181843076,
+      "df_edge": 1.727207658045203,
+      "intensity_mean": 0.460049520878506,
+      "intensity_std": 0.3048781034124154,
+      "area_ratio": 0.3047800237812128
+    },
+    {
+      "image_name": "C144P105ThinF_IMG_20151015_163142_cell_249.png",
+      "condition": "Uninfected",
+      "df_image": 1.5498807681833626,
+      "df_edge": 1.6751529779562813,
+      "intensity_mean": 0.4889577158509365,
+      "intensity_std": 0.31164735876883604,
+      "area_ratio": 0.28672354038922954
+    },
+    {
+      "image_name": "C90P51ThinF_IMG_20150821_115310_cell_33.png",
+      "condition": "Uninfected",
+      "df_image": 1.6023212608669148,
+      "df_edge": 1.6871594816955784,
+      "intensity_mean": 0.4180183248748254,
+      "intensity_std": 0.29413463580849974,
+      "area_ratio": 0.32961783439490444
+    },
+    {
+      "image_name": "C47P8thinOriginalOlympusCX21_IMG_20150717_172748_cell_45.png",
+      "condition": "Uninfected",
+      "df_image": 1.5122746125167157,
+      "df_edge": 1.6994658716799043,
+      "intensity_mean": 0.47014011249661153,
+      "intensity_std": 0.3040563875550294,
+      "area_ratio": 0.29435483870967744
+    },
+    {
+      "image_name": "C205ThinF_IMG_20151106_151622_cell_52.png",
+      "condition": "Uninfected",
+      "df_image": 1.5516224732017285,
+      "df_edge": 1.741298933147485,
+      "intensity_mean": 0.546625112117806,
+      "intensity_std": 0.30409879822131247,
+      "area_ratio": 0.2356274298949458
+    },
+    {
+      "image_name": "C81P42ThinF_IMG_20150817_120856_cell_39.png",
+      "condition": "Uninfected",
+      "df_image": 1.5170679950357322,
+      "df_edge": 1.7268362427889334,
+      "intensity_mean": 0.4825961248404687,
+      "intensity_std": 0.2898543706028903,
+      "area_ratio": 0.2646745562130178
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_112802_cell_100.png",
+      "condition": "Uninfected",
+      "df_image": 1.6365781159793462,
+      "df_edge": 1.7137294039976465,
+      "intensity_mean": 0.3733171319375207,
+      "intensity_std": 0.27996860153002234,
+      "area_ratio": 0.35688559322033897
+    },
+    {
+      "image_name": "C203ThinF_IMG_20151029_105443_cell_117.png",
+      "condition": "Uninfected",
+      "df_image": 1.6837263601436046,
+      "df_edge": 1.79860800069609,
+      "intensity_mean": 0.4536144703857856,
+      "intensity_std": 0.35007501486958476,
+      "area_ratio": 0.37306407531126634
+    },
+    {
+      "image_name": "C122P83ThinF_IMG_20151002_150207_cell_97.png",
+      "condition": "Uninfected",
+      "df_image": 1.487259556628534,
+      "df_edge": 1.6859337236423033,
+      "intensity_mean": 0.49635342610293354,
+      "intensity_std": 0.2713260106314562,
+      "area_ratio": 0.22891940595289878
+    },
+    {
+      "image_name": "C85P46ThinF_IMG_20150820_110040_cell_13.png",
+      "condition": "Uninfected",
+      "df_image": 1.6144650308596735,
+      "df_edge": 1.7551037052222385,
+      "intensity_mean": 0.46757943126467677,
+      "intensity_std": 0.2906175725686635,
+      "area_ratio": 0.27835378755818874
+    },
+    {
+      "image_name": "C171P132ThinF_IMG_20151119_153512_cell_163.png",
+      "condition": "Uninfected",
+      "df_image": 1.4420398403645507,
+      "df_edge": 1.631245488469619,
+      "intensity_mean": 0.5634554968348309,
+      "intensity_std": 0.25673909741108825,
+      "area_ratio": 0.1656891495601173
+    },
+    {
+      "image_name": "C85P46ThinF_IMG_20150820_110143_cell_110.png",
+      "condition": "Uninfected",
+      "df_image": 1.6771491667782281,
+      "df_edge": 1.7590287868636238,
+      "intensity_mean": 0.48012594018551913,
+      "intensity_std": 0.32650228660926106,
+      "area_ratio": 0.31596934548467276
+    },
+    {
+      "image_name": "C241NThinF_IMG_20151207_124608_cell_125.png",
+      "condition": "Uninfected",
+      "df_image": 1.5349364779858852,
+      "df_edge": 1.6801351906870163,
+      "intensity_mean": 0.535594444556323,
+      "intensity_std": 0.27837885825873687,
+      "area_ratio": 0.21013351591920576
+    },
+    {
+      "image_name": "C61P22N_ThinF_IMG_20150818_112518_cell_37.png",
+      "condition": "Uninfected",
+      "df_image": 1.5074400213645078,
+      "df_edge": 1.7431024476758679,
+      "intensity_mean": 0.4963956170703576,
+      "intensity_std": 0.2795431515429538,
+      "area_ratio": 0.2402771025765678
+    },
+    {
+      "image_name": "C54P15thinF_IMG_20150728_112832_cell_183.png",
+      "condition": "Uninfected",
+      "df_image": 1.558228942254368,
+      "df_edge": 1.648155612892493,
+      "intensity_mean": 0.44826651543839424,
+      "intensity_std": 0.2913145490148678,
+      "area_ratio": 0.2934224848390608
+    },
+    {
+      "image_name": "C119P80ThinF_IMG_20151002_123911_cell_18.png",
+      "condition": "Uninfected",
+      "df_image": 1.6412453457958869,
+      "df_edge": 1.7212810715859987,
+      "intensity_mean": 0.42316747075459826,
+      "intensity_std": 0.2921511152975385,
+      "area_ratio": 0.32158377595364557
+    },
+    {
+      "image_name": "C229ThinF_IMG_20151112_144147_cell_216.png",
+      "condition": "Uninfected",
+      "df_image": 1.4184906144265708,
+      "df_edge": 1.6200488114803198,
+      "intensity_mean": 0.5343502808075508,
+      "intensity_std": 0.284102952564223,
+      "area_ratio": 0.21740594226075247
+    },
+    {
+      "image_name": "C91P52ThinF_IMG_20150821_123314_cell_93.png",
+      "condition": "Uninfected",
+      "df_image": 1.60899714182555,
+      "df_edge": 1.762267006752893,
+      "intensity_mean": 0.4763206782530108,
+      "intensity_std": 0.3249561684047638,
+      "area_ratio": 0.31715644433605655
+    },
+    {
+      "image_name": "C4thin_original_IMG_20150608_165620_cell_204.png",
+      "condition": "Uninfected",
+      "df_image": 1.690950938561288,
+      "df_edge": 1.7546002348540788,
+      "intensity_mean": 0.3811477823485178,
+      "intensity_std": 0.30906311262020253,
+      "area_ratio": 0.39484369964550436
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_105102_cell_59.png",
+      "condition": "Uninfected",
+      "df_image": 1.5260979136949864,
+      "df_edge": 1.712860499898474,
+      "intensity_mean": 0.47347730814179984,
+      "intensity_std": 0.2753161819161049,
+      "area_ratio": 0.2502897350993378
+    },
+    {
+      "image_name": "C162P123ThinF_IMG_20151116_104114_cell_112.png",
+      "condition": "Uninfected",
+      "df_image": 1.5273421303494072,
+      "df_edge": 1.7528610079399383,
+      "intensity_mean": 0.4743496750927092,
+      "intensity_std": 0.2859407645482353,
+      "area_ratio": 0.2659919028340081
+    },
+    {
+      "image_name": "C168P129ThinF_IMG_20151118_153739_cell_137.png",
+      "condition": "Uninfected",
+      "df_image": 1.60710795573689,
+      "df_edge": 1.7335049832393072,
+      "intensity_mean": 0.5083388467353706,
+      "intensity_std": 0.32413418899096685,
+      "area_ratio": 0.2883270848110244
+    },
+    {
+      "image_name": "C90P51ThinF_IMG_20150821_120044_cell_82.png",
+      "condition": "Uninfected",
+      "df_image": 1.5229255616435133,
+      "df_edge": 1.7097263836548662,
+      "intensity_mean": 0.45623252746545695,
+      "intensity_std": 0.28673393221597426,
+      "area_ratio": 0.28277276456111566
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_161055_cell_144.png",
+      "condition": "Uninfected",
+      "df_image": 1.6712048215862183,
+      "df_edge": 1.7661724321171952,
+      "intensity_mean": 0.42566223798200425,
+      "intensity_std": 0.32093801338081035,
+      "area_ratio": 0.3631912915048411
+    },
+    {
+      "image_name": "C49P10thinF_IMG_20150724_103233_cell_41.png",
+      "condition": "Uninfected",
+      "df_image": 1.583631643507152,
+      "df_edge": 1.6629219986305284,
+      "intensity_mean": 0.470392223989904,
+      "intensity_std": 0.2838736423042952,
+      "area_ratio": 0.26538856555973983
+    },
+    {
+      "image_name": "C115P76ThinF_IMG_20150930_163018_cell_147.png",
+      "condition": "Uninfected",
+      "df_image": 1.603519179203576,
+      "df_edge": 1.6377175877343455,
+      "intensity_mean": 0.4338710088585813,
+      "intensity_std": 0.3070768740652831,
+      "area_ratio": 0.33158179848320696
+    },
+    {
+      "image_name": "C219ThinF_IMG_20151106_150314_cell_79.png",
+      "condition": "Uninfected",
+      "df_image": 1.4999868107537428,
+      "df_edge": 1.6920955684139036,
+      "intensity_mean": 0.498197266522708,
+      "intensity_std": 0.28093964111898534,
+      "area_ratio": 0.23833480760725342
+    },
+    {
+      "image_name": "C211ThinF_IMG_20151029_163959_cell_169.png",
+      "condition": "Uninfected",
+      "df_image": 1.4795481520607476,
+      "df_edge": 1.695676692820173,
+      "intensity_mean": 0.5409775003992352,
+      "intensity_std": 0.2872852769497542,
+      "area_ratio": 0.21841294298921418
+    },
+    {
+      "image_name": "C232ThinF_IMG_20151112_154211_cell_158.png",
+      "condition": "Uninfected",
+      "df_image": 1.553596822433225,
+      "df_edge": 1.7223142621722047,
+      "intensity_mean": 0.457577187413614,
+      "intensity_std": 0.3019313068851186,
+      "area_ratio": 0.3017136606708799
+    },
+    {
+      "image_name": "C146P107ThinF_IMG_20151018_140439_cell_238.png",
+      "condition": "Uninfected",
+      "df_image": 1.5733878147861855,
+      "df_edge": 1.6895954372059032,
+      "intensity_mean": 0.46750353392130833,
+      "intensity_std": 0.29122387442012304,
+      "area_ratio": 0.2771450685537373
+    },
+    {
+      "image_name": "C145P106ThinF_IMG_20151016_154921_cell_32.png",
+      "condition": "Uninfected",
+      "df_image": 1.481895618299993,
+      "df_edge": 1.7114325466420253,
+      "intensity_mean": 0.4849476632758366,
+      "intensity_std": 0.24729537100831447,
+      "area_ratio": 0.2041260175231467
+    },
+    {
+      "image_name": "C62P23N_ThinF_IMG_20150818_132918_cell_161.png",
+      "condition": "Uninfected",
+      "df_image": 1.5073351446353638,
+      "df_edge": 1.6694540255816712,
+      "intensity_mean": 0.4807213760909644,
+      "intensity_std": 0.27013091405166073,
+      "area_ratio": 0.23691523853635943
+    },
+    {
+      "image_name": "C213ThinF_IMG_20151106_112759_cell_151.png",
+      "condition": "Uninfected",
+      "df_image": 1.6047083345316435,
+      "df_edge": 1.6754439646986168,
+      "intensity_mean": 0.46184825234441607,
+      "intensity_std": 0.30033444448216057,
+      "area_ratio": 0.29438127090301003
+    },
+    {
+      "image_name": "C37BP2_thinF_IMG_20150620_132847a_cell_38.png",
+      "condition": "Uninfected",
+      "df_image": 1.6203777725909545,
+      "df_edge": 1.701160411667703,
+      "intensity_mean": 0.4506793549338241,
+      "intensity_std": 0.31442732273794016,
+      "area_ratio": 0.32361144797477565
+    },
+    {
+      "image_name": "C89P50ThinF_IMG_20150820_163347_cell_13.png",
+      "condition": "Uninfected",
+      "df_image": 1.6259857075760122,
+      "df_edge": 1.7785232160413575,
+      "intensity_mean": 0.42896689079003064,
+      "intensity_std": 0.30179531375347884,
+      "area_ratio": 0.3300077406037671
+    },
+    {
+      "image_name": "C169P130ThinF_IMG_20151118_173039_cell_136.png",
+      "condition": "Uninfected",
+      "df_image": 1.4790406268835867,
+      "df_edge": 1.6785871724834343,
+      "intensity_mean": 0.5069753079041004,
+      "intensity_std": 0.2610503083794919,
+      "area_ratio": 0.20620808778703514
+    },
+    {
+      "image_name": "C217ThinF_IMG_20151106_141326_cell_109.png",
+      "condition": "Uninfected",
+      "df_image": 1.5886495644826264,
+      "df_edge": 1.6890060611883044,
+      "intensity_mean": 0.4859672553885077,
+      "intensity_std": 0.2934878903868794,
+      "area_ratio": 0.2651985111662531
+    },
+    {
+      "image_name": "C56P17thinF_IMG_20150728_153328_cell_72.png",
+      "condition": "Uninfected",
+      "df_image": 1.565218576806374,
+      "df_edge": 1.697218731246901,
+      "intensity_mean": 0.45811500965074514,
+      "intensity_std": 0.3035452989667945,
+      "area_ratio": 0.30379990998521184
+    },
+    {
+      "image_name": "C96P57ThinF_IMG_20150824_110812_cell_111.png",
+      "condition": "Uninfected",
+      "df_image": 1.5815337044276103,
+      "df_edge": 1.7449358821248997,
+      "intensity_mean": 0.4941569276717309,
+      "intensity_std": 0.31239822552045826,
+      "area_ratio": 0.2849751655629139
+    },
+    {
+      "image_name": "C113P74ThinF_IMG_20150930_134751_cell_30.png",
+      "condition": "Uninfected",
+      "df_image": 1.5877293046968222,
+      "df_edge": 1.6871612716807274,
+      "intensity_mean": 0.4795850148791326,
+      "intensity_std": 0.30452430885420295,
+      "area_ratio": 0.2865904365904366
+    },
+    {
+      "image_name": "C168P129ThinF_IMG_20151118_160845_cell_40.png",
+      "condition": "Uninfected",
+      "df_image": 1.496353969185348,
+      "df_edge": 1.7312773736877842,
+      "intensity_mean": 0.5659308504466875,
+      "intensity_std": 0.30820954073959916,
+      "area_ratio": 0.22828402366863906
+    },
+    {
+      "image_name": "C119P80ThinF_IMG_20151002_122720_cell_13.png",
+      "condition": "Uninfected",
+      "df_image": 1.4980939708267615,
+      "df_edge": 1.7153184654036397,
+      "intensity_mean": 0.5100566923249953,
+      "intensity_std": 0.2808388422707328,
+      "area_ratio": 0.2318685592066887
+    },
+    {
+      "image_name": "C123P84ThinF_IMG_20151002_152330_cell_160.png",
+      "condition": "Uninfected",
+      "df_image": 1.4866587700366618,
+      "df_edge": 1.7017651844259434,
+      "intensity_mean": 0.4981718945726921,
+      "intensity_std": 0.27885637286387255,
+      "area_ratio": 0.23761408083441982
+    },
+    {
+      "image_name": "C188P149ThinF_IMG_20151203_134449_cell_21.png",
+      "condition": "Uninfected",
+      "df_image": 1.5008851678459414,
+      "df_edge": 1.714067469883564,
+      "intensity_mean": 0.5036020041819546,
+      "intensity_std": 0.29248155296693296,
+      "area_ratio": 0.25163480885311873
+    },
+    {
+      "image_name": "C113P74ThinF_IMG_20150930_134949_cell_135.png",
+      "condition": "Uninfected",
+      "df_image": 1.6089861835258112,
+      "df_edge": 1.7330394149517452,
+      "intensity_mean": 0.4737851932986483,
+      "intensity_std": 0.29617665346994887,
+      "area_ratio": 0.27994075327972917
+    },
+    {
+      "image_name": "C104P65ThinF_IMG_20150918_172639_cell_93.png",
+      "condition": "Uninfected",
+      "df_image": 1.672789754986803,
+      "df_edge": 1.7472835898050925,
+      "intensity_mean": 0.4628236357975728,
+      "intensity_std": 0.3307194540540715,
+      "area_ratio": 0.3376286603367111
+    },
+    {
+      "image_name": "C69P30N_ThinF_IMG_20150819_135705_cell_197.png",
+      "condition": "Uninfected",
+      "df_image": 1.5908179344093325,
+      "df_edge": 1.7372753396215734,
+      "intensity_mean": 0.4954957913686566,
+      "intensity_std": 0.30673386028885247,
+      "area_ratio": 0.27673697270471465
+    },
+    {
+      "image_name": "C78P39ThinF_IMG_20150606_103459_cell_108.png",
+      "condition": "Uninfected",
+      "df_image": 1.6666724225690468,
+      "df_edge": 1.7446193671169907,
+      "intensity_mean": 0.46458969400909145,
+      "intensity_std": 0.3023515667446701,
+      "area_ratio": 0.2961721453287197
+    },
+    {
+      "image_name": "C176P137NThinF_IMG_20151201_121808_cell_25.png",
+      "condition": "Uninfected",
+      "df_image": 1.52215842630919,
+      "df_edge": 1.7665195339868984,
+      "intensity_mean": 0.5186399396403008,
+      "intensity_std": 0.3167989822314572,
+      "area_ratio": 0.2712692231535872
+    },
+    {
+      "image_name": "C1_thinF_IMG_20150604_104919_cell_240.png",
+      "condition": "Uninfected",
+      "df_image": 1.563776236769879,
+      "df_edge": 1.7019312474016235,
+      "intensity_mean": 0.49461931384509006,
+      "intensity_std": 0.2978031728119547,
+      "area_ratio": 0.26466674060108686
+    },
+    {
+      "image_name": "C204ThinF_IMG_20151029_112231_cell_221.png",
+      "condition": "Uninfected",
+      "df_image": 1.5713853605319446,
+      "df_edge": 1.7293660487523903,
+      "intensity_mean": 0.48346713375176376,
+      "intensity_std": 0.29553220342857417,
+      "area_ratio": 0.27003722084367243
+    },
+    {
+      "image_name": "C103P64ThinF_IMG_20150918_165016_cell_84.png",
+      "condition": "Uninfected",
+      "df_image": 1.702085134395387,
+      "df_edge": 1.7455713459827218,
+      "intensity_mean": 0.40782377230829336,
+      "intensity_std": 0.3289859967469169,
+      "area_ratio": 0.39385296496530586
+    },
+    {
+      "image_name": "C215ThinF_IMG_20151106_133043_cell_119.png",
+      "condition": "Uninfected",
+      "df_image": 1.5536037552959203,
+      "df_edge": 1.7314543981210229,
+      "intensity_mean": 0.5344987043621598,
+      "intensity_std": 0.31178521361778433,
+      "area_ratio": 0.252836714894335
+    },
+    {
+      "image_name": "C131P92ThinF_IMG_20151004_150208_cell_112.png",
+      "condition": "Uninfected",
+      "df_image": 1.4748349255234594,
+      "df_edge": 1.7059475901591106,
+      "intensity_mean": 0.5066900517012611,
+      "intensity_std": 0.2675849367339877,
+      "area_ratio": 0.21731915996888773
+    },
+    {
+      "image_name": "C221ThinF_IMG_20151106_160727_cell_135.png",
+      "condition": "Uninfected",
+      "df_image": 1.535648792773682,
+      "df_edge": 1.702115604334654,
+      "intensity_mean": 0.4863561618979576,
+      "intensity_std": 0.29270511312641484,
+      "area_ratio": 0.2644303065355697
+    },
+    {
+      "image_name": "C48P9thinF_IMG_20150721_161412_cell_52.png",
+      "condition": "Uninfected",
+      "df_image": 1.7169002205060129,
+      "df_edge": 1.7478871037410995,
+      "intensity_mean": 0.3616642378876684,
+      "intensity_std": 0.32137289987800843,
+      "area_ratio": 0.43863909200043655
+    },
+    {
+      "image_name": "C170P131ThinF_IMG_20151119_120233_cell_183.png",
+      "condition": "Uninfected",
+      "df_image": 1.647323931658825,
+      "df_edge": 1.7090445653948618,
+      "intensity_mean": 0.43476706615641963,
+      "intensity_std": 0.29101121191531754,
+      "area_ratio": 0.3063400857031554
+    },
+    {
+      "image_name": "C89P50ThinF_IMG_20150820_163728_cell_47.png",
+      "condition": "Uninfected",
+      "df_image": 1.678983480432226,
+      "df_edge": 1.7763005875973341,
+      "intensity_mean": 0.3667309400020051,
+      "intensity_std": 0.3178544544946879,
+      "area_ratio": 0.4285518626734843
+    },
+    {
+      "image_name": "C89P50ThinF_IMG_20150820_162300_cell_82.png",
+      "condition": "Uninfected",
+      "df_image": 1.538172632401001,
+      "df_edge": 1.748749403465925,
+      "intensity_mean": 0.49247537929198837,
+      "intensity_std": 0.28707848585668483,
+      "area_ratio": 0.25231900452488687
+    },
+    {
+      "image_name": "C59P20thinF_IMG_20150803_111244_cell_119.png",
+      "condition": "Uninfected",
+      "df_image": 1.506745246701129,
+      "df_edge": 1.64385727533115,
+      "intensity_mean": 0.43437844103158507,
+      "intensity_std": 0.24717496701427324,
+      "area_ratio": 0.2342753435312419
+    },
+    {
+      "image_name": "C125P86ThinF_IMG_20151004_102619_cell_1.png",
+      "condition": "Uninfected",
+      "df_image": 1.56453390380197,
+      "df_edge": 1.7535025236245334,
+      "intensity_mean": 0.5175844931590938,
+      "intensity_std": 0.3072755019695535,
+      "area_ratio": 0.2602132966371377
+    },
+    {
+      "image_name": "C155P116ThinF_IMG_20151115_143156_cell_141.png",
+      "condition": "Uninfected",
+      "df_image": 1.5626849834660046,
+      "df_edge": 1.7399490715523085,
+      "intensity_mean": 0.48479363044712975,
+      "intensity_std": 0.3227261644032335,
+      "area_ratio": 0.3053414828594207
+    },
+    {
+      "image_name": "C42P5thin_original_IMG_20150623_135251_cell_97.png",
+      "condition": "Uninfected",
+      "df_image": 1.6759476190748284,
+      "df_edge": 1.691680772055602,
+      "intensity_mean": 0.4186266898907728,
+      "intensity_std": 0.3321873101516396,
+      "area_ratio": 0.38543861594765444
+    },
+    {
+      "image_name": "C225ThinF_IMG_20151112_113915_cell_136.png",
+      "condition": "Uninfected",
+      "df_image": 1.6345544374667127,
+      "df_edge": 1.740591150442006,
+      "intensity_mean": 0.4323431706177853,
+      "intensity_std": 0.3323586272961192,
+      "area_ratio": 0.37080700048614484
+    },
+    {
+      "image_name": "C57P18thinF_IMG_20150729_110134_cell_89.png",
+      "condition": "Uninfected",
+      "df_image": 1.6110270729087814,
+      "df_edge": 1.709315050077768,
+      "intensity_mean": 0.4882194813409234,
+      "intensity_std": 0.27219204053618784,
+      "area_ratio": 0.23580190822353475
+    },
+    {
+      "image_name": "C155P116ThinF_IMG_20151115_143051_cell_69.png",
+      "condition": "Uninfected",
+      "df_image": 1.5538513256884037,
+      "df_edge": 1.7120446790401451,
+      "intensity_mean": 0.4962448382031638,
+      "intensity_std": 0.26327209411158936,
+      "area_ratio": 0.21698489598176118
+    },
+    {
+      "image_name": "C211ThinF_IMG_20151029_164451_cell_220.png",
+      "condition": "Uninfected",
+      "df_image": 1.524734829388492,
+      "df_edge": 1.734534599854886,
+      "intensity_mean": 0.5355039974379796,
+      "intensity_std": 0.301090468867474,
+      "area_ratio": 0.239597511180245
+    },
+    {
+      "image_name": "C237ThinF_IMG_20151127_104954_cell_80.png",
+      "condition": "Uninfected",
+      "df_image": 1.5591091265331172,
+      "df_edge": 1.7301231355545572,
+      "intensity_mean": 0.486213743936977,
+      "intensity_std": 0.32516189700276527,
+      "area_ratio": 0.3083010514665191
+    },
+    {
+      "image_name": "C88P49ThinF_IMG_20150820_150141_cell_93.png",
+      "condition": "Uninfected",
+      "df_image": 1.5645400076666034,
+      "df_edge": 1.7586855062652362,
+      "intensity_mean": 0.4840845816819305,
+      "intensity_std": 0.31385889453685223,
+      "area_ratio": 0.29558431671107727
+    },
+    {
+      "image_name": "C157P118ThinF_IMG_20151115_164026_cell_154.png",
+      "condition": "Uninfected",
+      "df_image": 1.4630281017156552,
+      "df_edge": 1.6103842651214697,
+      "intensity_mean": 0.4050118031083401,
+      "intensity_std": 0.2322132568443945,
+      "area_ratio": 0.2345910138248848
+    },
+    {
+      "image_name": "C205ThinF_IMG_20151106_151622_cell_202.png",
+      "condition": "Uninfected",
+      "df_image": 1.4566443636560733,
+      "df_edge": 1.6522436076181324,
+      "intensity_mean": 0.5425660346783342,
+      "intensity_std": 0.2759422000547164,
+      "area_ratio": 0.20388134592680046
+    },
+    {
+      "image_name": "C90P51ThinF_IMG_20150821_115056_cell_224.png",
+      "condition": "Uninfected",
+      "df_image": 1.5030461651631268,
+      "df_edge": 1.7120526823848077,
+      "intensity_mean": 0.5234482758620689,
+      "intensity_std": 0.280122602751362,
+      "area_ratio": 0.22112068965517243
+    },
+    {
+      "image_name": "C143P104ThinF_IMG_20151005_225528_cell_118.png",
+      "condition": "Uninfected",
+      "df_image": 1.593904632156984,
+      "df_edge": 1.7480109482695896,
+      "intensity_mean": 0.4822325403968458,
+      "intensity_std": 0.30865699950546055,
+      "area_ratio": 0.28984699564292227
+    },
+    {
+      "image_name": "C180P141NThinF_IMG_20151201_163702_cell_77.png",
+      "condition": "Uninfected",
+      "df_image": 1.5823609622702515,
+      "df_edge": 1.7749581149942832,
+      "intensity_mean": 0.51175151606244,
+      "intensity_std": 0.29277142807750933,
+      "area_ratio": 0.24623246597486573
+    },
+    {
+      "image_name": "C239ThinF_IMG_20151127_113150_cell_262.png",
+      "condition": "Uninfected",
+      "df_image": 1.5327474837633777,
+      "df_edge": 1.6653994887236871,
+      "intensity_mean": 0.5359218973339908,
+      "intensity_std": 0.2788367792583496,
+      "area_ratio": 0.21031242062484126
+    },
+    {
+      "image_name": "C57P18thinF_IMG_20150729_110305_cell_96.png",
+      "condition": "Uninfected",
+      "df_image": 1.5654110528555591,
+      "df_edge": 1.6593688179716242,
+      "intensity_mean": 0.4345803884467694,
+      "intensity_std": 0.27562048196996625,
+      "area_ratio": 0.28453169347209084
+    },
+    {
+      "image_name": "C226ThinF_IMG_20151112_131546_cell_177.png",
+      "condition": "Uninfected",
+      "df_image": 1.4936003359063181,
+      "df_edge": 1.734568684569183,
+      "intensity_mean": 0.5382097691147465,
+      "intensity_std": 0.3056991919572902,
+      "area_ratio": 0.24337278106508875
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_110115_cell_5.png",
+      "condition": "Uninfected",
+      "df_image": 1.5215205607969697,
+      "df_edge": 1.6650101261323187,
+      "intensity_mean": 0.49725668381703314,
+      "intensity_std": 0.2818736323124979,
+      "area_ratio": 0.24000649104776328
+    },
+    {
+      "image_name": "C208ThinF_IMG_20151029_155436_cell_111.png",
+      "condition": "Uninfected",
+      "df_image": 1.6458875842738774,
+      "df_edge": 1.7572830381694775,
+      "intensity_mean": 0.44190586483580113,
+      "intensity_std": 0.33370604167206197,
+      "area_ratio": 0.3629332450988502
+    },
+    {
+      "image_name": "C204ThinF_IMG_20151029_110627_cell_117.png",
+      "condition": "Uninfected",
+      "df_image": 1.3956010290666496,
+      "df_edge": 1.6463260952266574,
+      "intensity_mean": 0.5417664752529395,
+      "intensity_std": 0.2689732139578303,
+      "area_ratio": 0.19647251845775227
+    },
+    {
+      "image_name": "C177P138NThinF_IMG_20151201_142514_cell_89.png",
+      "condition": "Uninfected",
+      "df_image": 1.5499703935191342,
+      "df_edge": 1.73786155879126,
+      "intensity_mean": 0.5354516161659948,
+      "intensity_std": 0.31393766325799105,
+      "area_ratio": 0.2551215917464996
+    },
+    {
+      "image_name": "C178P139NThinF_IMG_20151201_154524_cell_48.png",
+      "condition": "Uninfected",
+      "df_image": 1.4733869160614315,
+      "df_edge": 1.7069438550677338,
+      "intensity_mean": 0.4734283550230669,
+      "intensity_std": 0.2867579701806302,
+      "area_ratio": 0.2677132823796736
+    },
+    {
+      "image_name": "C131P92ThinF_IMG_20151004_145410_cell_51.png",
+      "condition": "Uninfected",
+      "df_image": 1.606027643258876,
+      "df_edge": 1.6771148724703324,
+      "intensity_mean": 0.41976141617227863,
+      "intensity_std": 0.31016351843294393,
+      "area_ratio": 0.35163567259400025
+    },
+    {
+      "image_name": "C226ThinF_IMG_20151112_131255_cell_150.png",
+      "condition": "Uninfected",
+      "df_image": 1.5752537577481844,
+      "df_edge": 1.6945014669418448,
+      "intensity_mean": 0.46951306009349447,
+      "intensity_std": 0.32440923193836063,
+      "area_ratio": 0.3218281925285655
+    },
+    {
+      "image_name": "C138P99ThinF_IMG_20151005_170905_cell_23.png",
+      "condition": "Uninfected",
+      "df_image": 1.519029925787449,
+      "df_edge": 1.7180768709405103,
+      "intensity_mean": 0.5002629607294923,
+      "intensity_std": 0.3077642859698528,
+      "area_ratio": 0.27427772600186395
+    },
+    {
+      "image_name": "C241NThinF_IMG_20151207_124208_cell_164.png",
+      "condition": "Uninfected",
+      "df_image": 1.5530191294792535,
+      "df_edge": 1.752401125220807,
+      "intensity_mean": 0.5040444954960401,
+      "intensity_std": 0.2823345601546769,
+      "area_ratio": 0.23769036718677006
+    },
+    {
+      "image_name": "C106P67ThinF_IMG_20150924_103636_cell_7.png",
+      "condition": "Uninfected",
+      "df_image": 1.648925102670022,
+      "df_edge": 1.7562319095483556,
+      "intensity_mean": 0.4822157626026189,
+      "intensity_std": 0.29329964097318056,
+      "area_ratio": 0.2694096020761246
+    },
+    {
+      "image_name": "C100P61ThinF_IMG_20150918_144348_cell_131.png",
+      "condition": "Uninfected",
+      "df_image": 1.5496531950978747,
+      "df_edge": 1.6934234261860264,
+      "intensity_mean": 0.4981253387382973,
+      "intensity_std": 0.2922769856924725,
+      "area_ratio": 0.2555850056796668
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_221909_cell_83.png",
+      "condition": "Uninfected",
+      "df_image": 1.5144185213807442,
+      "df_edge": 1.6779601115240612,
+      "intensity_mean": 0.5008510148927607,
+      "intensity_std": 0.2945795235209599,
+      "area_ratio": 0.25613169821380966
+    },
+    {
+      "image_name": "C202ThinF_IMG_20151015_151736_cell_145.png",
+      "condition": "Uninfected",
+      "df_image": 1.5643855859483766,
+      "df_edge": 1.7100281208298835,
+      "intensity_mean": 0.5159344318278836,
+      "intensity_std": 0.306287252091195,
+      "area_ratio": 0.25863570391872276
+    },
+    {
+      "image_name": "C95P56ThinF_IMG_20150821_172222_cell_26.png",
+      "condition": "Uninfected",
+      "df_image": 1.4491732686514258,
+      "df_edge": 1.736853208837203,
+      "intensity_mean": 0.4817742722088835,
+      "intensity_std": 0.2757118011986342,
+      "area_ratio": 0.24513711734693877
+    },
+    {
+      "image_name": "C107P68ThinF_IMG_20150924_221909_cell_41.png",
+      "condition": "Uninfected",
+      "df_image": 1.608940647676254,
+      "df_edge": 1.742601064582496,
+      "intensity_mean": 0.46635592934103426,
+      "intensity_std": 0.3034830225769892,
+      "area_ratio": 0.2969905765528422
+    },
+    {
+      "image_name": "C217ThinF_IMG_20151106_141135_cell_218.png",
+      "condition": "Uninfected",
+      "df_image": 1.606810106946903,
+      "df_edge": 1.685474006488673,
+      "intensity_mean": 0.4736457855869621,
+      "intensity_std": 0.3057364990165809,
+      "area_ratio": 0.29084415584415585
+    },
+    {
+      "image_name": "C124P85ThinF_IMG_20151002_155223_cell_79.png",
+      "condition": "Uninfected",
+      "df_image": 1.5992886575742031,
+      "df_edge": 1.716864499214263,
+      "intensity_mean": 0.4609750120143752,
+      "intensity_std": 0.31269179316926676,
+      "area_ratio": 0.3144712430426716
+    },
+    {
+      "image_name": "C110P71ThinF_IMG_20150930_105559_cell_137.png",
+      "condition": "Uninfected",
+      "df_image": 1.4849510094866778,
+      "df_edge": 1.7032859690160183,
+      "intensity_mean": 0.5325281218491419,
+      "intensity_std": 0.29916599153791795,
+      "area_ratio": 0.23958632576845734
+    },
+    {
+      "image_name": "C86P47ThinF_IMG_20150820_124943_cell_78.png",
+      "condition": "Uninfected",
+      "df_image": 1.667075873859727,
+      "df_edge": 1.7244360425060035,
+      "intensity_mean": 0.4267002945852427,
+      "intensity_std": 0.3293387892533369,
+      "area_ratio": 0.37231717011128773
+    },
+    {
+      "image_name": "C210ThinF_IMG_20151029_162834_cell_136.png",
+      "condition": "Uninfected",
+      "df_image": 1.5152973547526158,
+      "df_edge": 1.7603894856442606,
+      "intensity_mean": 0.5463355426534776,
+      "intensity_std": 0.2920212788379895,
+      "area_ratio": 0.2217276538481445
+    },
+    {
+      "image_name": "C137P98ThinF_IMG_20151005_155444_cell_45.png",
+      "condition": "Uninfected",
+      "df_image": 1.6112024344014872,
+      "df_edge": 1.74156999943343,
+      "intensity_mean": 0.4629186650530164,
+      "intensity_std": 0.30084483613068624,
+      "area_ratio": 0.2964185928371857
+    },
+    {
+      "image_name": "C145P106ThinF_IMG_20151016_155121_cell_168.png",
+      "condition": "Uninfected",
+      "df_image": 1.514645220759472,
+      "df_edge": 1.622301621918514,
+      "intensity_mean": 0.4715077778684289,
+      "intensity_std": 0.2645365490657329,
+      "area_ratio": 0.23483009708737865
+    },
+    {
+      "image_name": "C39P4thinF_original_IMG_20150622_111723_cell_28.png",
+      "condition": "Uninfected",
+      "df_image": 1.497088219058249,
+      "df_edge": 1.6794459984841665,
+      "intensity_mean": 0.5016111419370695,
+      "intensity_std": 0.28927058219376806,
+      "area_ratio": 0.24867553947538443
+    },
+    {
+      "image_name": "C207ThinF_IMG_20151029_144152_cell_127.png",
+      "condition": "Uninfected",
+      "df_image": 1.4749868115700984,
+      "df_edge": 1.7186094945908281,
+      "intensity_mean": 0.5566784262596826,
+      "intensity_std": 0.30247794798563876,
+      "area_ratio": 0.2270534550195567
+    }
+  ]
+}

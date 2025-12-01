@@ -984,8 +984,54 @@ Onde:
 
 ---
 
-**Timestamp:** 2025-10-31T02:00:00Z  
-**Status:** DEEP RESEARCH COMPLETE  
-**Recommendation:** **INTEGRATE FRACTALS - This is the breakthrough!**  
+**Timestamp:** 2025-10-31T02:00:00Z
+**Status:** DEEP RESEARCH COMPLETE
+**Recommendation:** **INTEGRATE FRACTALS - This is the breakthrough!**
 **Next:** Validate KECMolecularEncoder on pilot molecules 🌀🔬
+
+---
+
+## 📊 UPDATE: POC EXPERIMENTAL RESULTS (2025-11-30)
+
+### Proof of Concept Completed!
+
+A practical PoC was executed using real blood cell image datasets:
+
+**Location:** `analysis/fractal_poc/`
+
+**Key Finding:** df_edge (fractal dimension of cell boundaries) significantly
+distinguishes pathological from normal cells.
+
+| Condition | df_edge | p-value | Cohen's d |
+|-----------|---------|---------|-----------|
+| Uninfected (normal) | 1.712 ± 0.036 | - | - |
+| Parasitized (malaria) | 1.691 ± 0.042 | < 0.001 | -0.54 |
+
+### Theoretical Model Developed
+
+A theoretical framework connecting image-derived fractal dimension to PK parameters
+was developed based on Kopelman's fractal kinetics:
+
+```
+df (from image) → h (heterogeneity exponent) → PK parameters
+
+h = α(2 - df_edge) + β(2 - df_distribution) + γ|1 - R|
+
+k(t) = k₀ × t^(-h)  [Kopelman, 1986]
+```
+
+**Files:**
+- `analysis/fractal_poc/THEORETICAL_MODEL.md` - Full derivation
+- `analysis/fractal_poc/fractal_pk_model.py` - Python implementation
+- `analysis/fractal_poc/RESULTS_SUMMARY.md` - Experimental results
+
+### Status
+
+- ✅ Box-counting algorithm implemented and validated
+- ✅ Statistical difference detected between conditions (p < 0.001)
+- ✅ Theoretical df → h → PK model developed
+- ⚠️ Empirical validation pending (requires paired image + PK data)
+- 🔮 Feature marked for future integration with clinical collaboration
+
+**This feature is PARKED for future development pending external data.**
 
