@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-04T23:25:35.459966",
+  "source_dir": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/wbc_classification_raw/dataset2-master/dataset2-master/images/TRAIN/NEUTROPHIL",
+  "cell_type": "neutrophils",
+  "n_images": 10,
+  "total_cells": 72,
+  "files": [
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_129_4058_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_29_6716_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_132_1989_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_16_6604_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_145_1561_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_36_2806_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_132_7559_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_113_5819_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_21_1994_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/neutrophils/_111_2941_masks.npz"
+  ]
+}

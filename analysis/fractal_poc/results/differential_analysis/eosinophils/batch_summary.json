@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-04T23:28:35.341813",
+  "source_dir": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/wbc_classification_raw/dataset2-master/dataset2-master/images/TRAIN/EOSINOPHIL",
+  "cell_type": "eosinophils",
+  "n_images": 10,
+  "total_cells": 219,
+  "files": [
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_52_5943_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_70_9014_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_6_5000_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_11_3744_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_41_3861_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_21_6675_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_16_9350_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_51_2764_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_25_9992_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/eosinophils/_60_6109_masks.npz"
+  ]
+}

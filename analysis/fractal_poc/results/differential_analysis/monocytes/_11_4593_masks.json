@@ -1,0 +1,52 @@
+{
+  "source_image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/wbc_classification_raw/dataset2-master/dataset2-master/images/TRAIN/MONOCYTE/_11_4593.jpeg",
+  "cell_type": "monocytes",
+  "prompt_used": "monocytes",
+  "n_cells": 3,
+  "image_shape": [
+    240,
+    320
+  ],
+  "timestamp": "2025-12-04T23:27:35.873652",
+  "cell_properties": [
+    {
+      "id": 0,
+      "area": 1407,
+      "centroid_x": 300.33049040511725,
+      "centroid_y": 119.83511016346837,
+      "score": 0.57421875,
+      "bbox": [
+        279.873046875,
+        99.26592254638672,
+        321.5365295410156,
+        141.42584228515625
+      ]
+    },
+    {
+      "id": 1,
+      "area": 3799,
+      "centroid_x": 102.71887338773361,
+      "centroid_y": 179.43063964201104,
+      "score": 0.79296875,
+      "bbox": [
+        63.29405975341797,
+        146.65562438964844,
+        143.09603881835938,
+        213.9784393310547
+      ]
+    },
+    {
+      "id": 2,
+      "area": 216,
+      "centroid_x": 225.39814814814815,
+      "centroid_y": 5.013888888888889,
+      "score": 0.5859375,
+      "bbox": [
+        214.91909790039062,
+        -0.23367717862129211,
+        237.45086669921875,
+        12.848880767822266
+      ]
+    }
+  ]
+}

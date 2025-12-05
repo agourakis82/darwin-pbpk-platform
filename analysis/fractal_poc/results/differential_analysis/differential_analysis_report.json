@@ -1,0 +1,171 @@
+{
+  "timestamp": "2025-12-05T05:20:17.562390",
+  "summary": {
+    "total_cells_analyzed": 1405,
+    "cell_types_analyzed": [
+      "neutrophils",
+      "lymphocytes",
+      "monocytes",
+      "eosinophils",
+      "leukemia"
+    ]
+  },
+  "per_cell_type": {
+    "neutrophils": {
+      "n_cells": 72,
+      "n_images": 10,
+      "df_combined_mean": 1.660380367938653,
+      "df_combined_std": 0.1217788308733856,
+      "df_edges_mean": 1.3084636604119013,
+      "mean_circularity": 0.5089492161154436
+    },
+    "lymphocytes": {
+      "n_cells": 221,
+      "n_images": 10,
+      "df_combined_mean": 1.7221611072941634,
+      "df_combined_std": 0.03599357025288089,
+      "df_edges_mean": 1.3235126343289942,
+      "mean_circularity": 0.5098543356747306
+    },
+    "monocytes": {
+      "n_cells": 139,
+      "n_images": 10,
+      "df_combined_mean": 1.6763260937884499,
+      "df_combined_std": 0.07746351439983201,
+      "df_edges_mean": 1.2549581508788215,
+      "mean_circularity": 0.49670154763398144
+    },
+    "eosinophils": {
+      "n_cells": 219,
+      "n_images": 10,
+      "df_combined_mean": 1.7108331308882374,
+      "df_combined_std": 0.03245824150134814,
+      "df_edges_mean": 1.3202872041866809,
+      "mean_circularity": 0.4920953037368127
+    },
+    "leukemia": {
+      "n_cells": 754,
+      "n_images": 10,
+      "df_combined_mean": 1.7610299561977634,
+      "df_combined_std": 0.06824861194503874,
+      "df_edges_mean": 1.5885788936764007,
+      "mean_circularity": 0.56376055831404
+    }
+  },
+  "statistical_comparisons": {
+    "neutrophils_vs_lymphocytes": {
+      "mann_whitney_U": 38.0,
+      "p_value": 0.3846730627355087,
+      "cohens_d": -0.7252514799376981,
+      "significant": false,
+      "mean_diff": -0.06178073935551032,
+      "n1": 10,
+      "n2": 10
+    },
+    "neutrophils_vs_monocytes": {
+      "mann_whitney_U": 52.0,
+      "p_value": 0.9097218891455553,
+      "cohens_d": -0.16469723781748277,
+      "significant": false,
+      "mean_diff": -0.01594572584979681,
+      "n1": 10,
+      "n2": 10
+    },
+    "neutrophils_vs_eosinophils": {
+      "mann_whitney_U": 45.0,
+      "p_value": 0.7337299956962472,
+      "cohens_d": -0.5967658168827779,
+      "significant": false,
+      "mean_diff": -0.05045276294958434,
+      "n1": 10,
+      "n2": 10
+    },
+    "neutrophils_vs_leukemia": {
+      "mann_whitney_U": 19.0,
+      "p_value": 0.0211339281291611,
+      "cohens_d": -1.074787465513099,
+      "significant": true,
+      "mean_diff": -0.1006495882591103,
+      "n1": 10,
+      "n2": 10
+    },
+    "lymphocytes_vs_monocytes": {
+      "mann_whitney_U": 67.0,
+      "p_value": 0.21229383619233155,
+      "cohens_d": 0.799916639517483,
+      "significant": false,
+      "mean_diff": 0.04583501350571351,
+      "n1": 10,
+      "n2": 10
+    },
+    "lymphocytes_vs_eosinophils": {
+      "mann_whitney_U": 58.0,
+      "p_value": 0.5707503880581739,
+      "cohens_d": 0.34841567056719747,
+      "significant": false,
+      "mean_diff": 0.011327976405925977,
+      "n1": 10,
+      "n2": 10
+    },
+    "lymphocytes_vs_leukemia": {
+      "mann_whitney_U": 22.0,
+      "p_value": 0.03763531378731424,
+      "cohens_d": -0.7509525930093273,
+      "significant": true,
+      "mean_diff": -0.038868848903599984,
+      "n1": 10,
+      "n2": 10
+    },
+    "monocytes_vs_eosinophils": {
+      "mann_whitney_U": 38.0,
+      "p_value": 0.3846730627355087,
+      "cohens_d": -0.612462604017362,
+      "significant": false,
+      "mean_diff": -0.03450703709978753,
+      "n1": 10,
+      "n2": 10
+    },
+    "monocytes_vs_leukemia": {
+      "mann_whitney_U": 14.0,
+      "p_value": 0.00728455700947966,
+      "cohens_d": -1.2230650107770622,
+      "significant": true,
+      "mean_diff": -0.08470386240931349,
+      "n1": 10,
+      "n2": 10
+    },
+    "eosinophils_vs_leukemia": {
+      "mann_whitney_U": 17.0,
+      "p_value": 0.014019277113959953,
+      "cohens_d": -0.9901438798809165,
+      "significant": true,
+      "mean_diff": -0.05019682530952596,
+      "n1": 10,
+      "n2": 10
+    },
+    "kruskal_wallis": {
+      "statistic": 11.127529411764698,
+      "p_value": 0.025167535735745466,
+      "significant": true
+    }
+  },
+  "clinical_validation": {
+    "normal_vs_leukemia": {
+      "normal_mean_df": 1.692425174977376,
+      "normal_std_df": 0.07643773186802912,
+      "leukemia_mean_df": 1.7610299561977634,
+      "leukemia_std_df": 0.06474631826738905,
+      "mann_whitney_p": 0.0019859246730641413,
+      "significant": true,
+      "n_normal": 40,
+      "n_leukemia": 10
+    },
+    "diagnostic_performance": {
+      "optimal_threshold_df": 1.754426529731505,
+      "sensitivity": 0.7,
+      "specificity": 0.825,
+      "youden_index": 0.5249999999999999,
+      "interpretation": "Moderate diagnostic performance - further validation needed"
+    }
+  }
+}

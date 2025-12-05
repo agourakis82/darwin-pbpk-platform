@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-12-04T18:07:58.796008",
+  "overall_valid": false,
+  "subpopulations": {
+    "neutrophils": {
+      "valid": true,
+      "n_tests": 10,
+      "total_cells": 72,
+      "avg_score": 0.6194889322916667,
+      "issues": [],
+      "avg_cells_per_image": 7.2
+    },
+    "lymphocytes": {
+      "valid": true,
+      "n_tests": 10,
+      "total_cells": 307,
+      "avg_score": 0.7444876011524099,
+      "issues": [],
+      "avg_cells_per_image": 30.7
+    },
+    "monocytes": {
+      "valid": true,
+      "n_tests": 10,
+      "total_cells": 139,
+      "avg_score": 0.6283146488605564,
+      "issues": [],
+      "avg_cells_per_image": 13.9
+    },
+    "eosinophils": {
+      "valid": false,
+      "reason": "No test results",
+      "n_tests": 0
+    },
+    "basophils": {
+      "valid": false,
+      "reason": "No test results",
+      "n_tests": 0
+    },
+    "all_wbc": {
+      "valid": true,
+      "n_tests": 10,
+      "total_cells": 261,
+      "avg_score": 0.7254515479822129,
+      "issues": [],
+      "avg_cells_per_image": 26.1
+    }
+  },
+  "pathological": {
+    "leukemia": {
+      "valid": true,
+      "n_tests": 4,
+      "total_cells": 15,
+      "avg_score": 0.6033854166666666,
+      "issues": [],
+      "avg_cells_per_image": 3.75
+    },
+    "sepsis": {
+      "valid": false,
+      "reason": "No test results",
+      "n_tests": 0
+    }
+  },
+  "summary": {
+    "total_valid": 5,
+    "total_tests": 8,
+    "coverage": {
+      "subpopulations_tested": 6,
+      "pathological_tested": 2,
+      "total_cells_detected": 794,
+      "validation_rate": 0.625
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-04T23:29:38.064302",
+  "source_dir": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/leukemia_ALL_raw/Original/Pre",
+  "cell_type": "leukemia",
+  "n_images": 10,
+  "total_cells": 754,
+  "files": [
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-889_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-275_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-514_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-033_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-131_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-693_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-395_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-627_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-324_masks.npz",
+    "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/results/differential_analysis/leukemia/WBC-Malignant-Pre-709_masks.npz"
+  ]
+}

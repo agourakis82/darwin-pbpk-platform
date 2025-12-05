@@ -1,0 +1,52 @@
+{
+  "source_image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/normal/lymphocytes/WBC-Benign-330.jpg",
+  "cell_type": "lymphocytes",
+  "prompt_used": "small lymphocytes",
+  "n_cells": 3,
+  "image_shape": [
+    224,
+    224
+  ],
+  "timestamp": "2025-12-05T05:26:01.565640",
+  "cell_properties": [
+    {
+      "id": 0,
+      "area": 595,
+      "centroid_x": 8.20672268907563,
+      "centroid_y": 120.4873949579832,
+      "score": 0.59375,
+      "bbox": [
+        0.04579794406890869,
+        102.15316009521484,
+        20.950756072998047,
+        141.42892456054688
+      ]
+    },
+    {
+      "id": 1,
+      "area": 892,
+      "centroid_x": 117.05269058295964,
+      "centroid_y": 117.98766816143498,
+      "score": 0.625,
+      "bbox": [
+        102.21435546875,
+        99.40348052978516,
+        133.1236572265625,
+        136.8272705078125
+      ]
+    },
+    {
+      "id": 2,
+      "area": 243,
+      "centroid_x": 132.09876543209876,
+      "centroid_y": 65.26337448559671,
+      "score": 0.50390625,
+      "bbox": [
+        125.20501708984375,
+        54.69371032714844,
+        139.57933044433594,
+        76.3992919921875
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "source_image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/normal/neutrophils/_41_986.jpeg",
+  "cell_type": "neutrophils",
+  "prompt_used": "neutrophil white blood cells",
+  "n_cells": 2,
+  "image_shape": [
+    240,
+    320
+  ],
+  "timestamp": "2025-12-05T05:24:10.159189",
+  "cell_properties": [
+    {
+      "id": 0,
+      "area": 2028,
+      "centroid_x": 147.90532544378698,
+      "centroid_y": 154.65532544378698,
+      "score": 0.69140625,
+      "bbox": [
+        123.66372680664062,
+        124.70865631103516,
+        172.89797973632812,
+        184.08375549316406
+      ]
+    },
+    {
+      "id": 1,
+      "area": 3964,
+      "centroid_x": 149.58728557013117,
+      "centroid_y": 150.7883451059536,
+      "score": 0.7109375,
+      "bbox": [
+        114.5833969116211,
+        116.07025909423828,
+        188.2650604248047,
+        187.8338165283203
+      ]
+    }
+  ]
+}

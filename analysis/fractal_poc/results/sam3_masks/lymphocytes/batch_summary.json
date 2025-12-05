@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-12-04T19:03:55.045755",
+  "source_dir": "data/leukocytes/normal/lymphocytes",
+  "cell_type": "lymphocytes",
+  "n_images": 5,
+  "total_cells": 130,
+  "files": [
+    "results/sam3_masks/lymphocytes/WBC-Benign-151_masks.npz",
+    "results/sam3_masks/lymphocytes/WBC-Benign-500_masks.npz",
+    "results/sam3_masks/lymphocytes/WBC-Benign-321_masks.npz",
+    "results/sam3_masks/lymphocytes/WBC-Benign-243_masks.npz",
+    "results/sam3_masks/lymphocytes/WBC-Benign-169_masks.npz"
+  ]
+}

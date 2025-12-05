@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-12-04T19:09:52.187092",
+  "source_dir": "data/leukocytes/wbc_classification_raw/dataset-master/dataset-master/JPEGImages",
+  "cell_type": "all_wbc",
+  "n_images": 3,
+  "total_cells": 94,
+  "files": [
+    "results/sam3_masks_julia/BloodImage_00214_masks.npz",
+    "results/sam3_masks_julia/BloodImage_00175_masks.npz",
+    "results/sam3_masks_julia/BloodImage_00275_masks.npz"
+  ]
+}

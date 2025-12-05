@@ -1,0 +1,26 @@
+{
+  "source_image": "/home/agourakis82/workspace/darwin-pbpk-platform/analysis/fractal_poc/data/leukocytes/normal/monocytes/_10_3007.jpeg",
+  "cell_type": "monocytes",
+  "prompt_used": "monocytes",
+  "n_cells": 1,
+  "image_shape": [
+    240,
+    320
+  ],
+  "timestamp": "2025-12-05T05:27:04.903940",
+  "cell_properties": [
+    {
+      "id": 0,
+      "area": 8628,
+      "centroid_x": 199.53407510431154,
+      "centroid_y": 114.9800649049606,
+      "score": 0.515625,
+      "bbox": [
+        145.45877075195312,
+        57.44064712524414,
+        267.52838134765625,
+        172.3422088623047
+      ]
+    }
+  ]
+}
