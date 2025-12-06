@@ -34,6 +34,8 @@ include("DarwinPBPK/compartments/rbc_aging.jl")  # NEW: RBC age distribution, RD
 include("DarwinPBPK/compartments/spleen_res_clearance.jl")  # NEW: Splenic macrophage clearance
 include("DarwinPBPK/compartments/circadian_effects.jl")  # NEW: Chronopharmacokinetic rhythms
 include("DarwinPBPK/compartments/disease_ontology_pk.jl")  # NEW: DOID + ICD-10/11 PK integration
+include("DarwinPBPK/compartments/anemia_polycythemia.jl")  # NEW: Hematocrit-dependent PK adjustments
+include("DarwinPBPK/compartments/plasma_viscosity.jl")  # NEW: Blood rheology and viscosity effects
 # include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # Temporarily disabled - needs Images package
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
@@ -81,6 +83,8 @@ using .RBCAging
 using .SpleenRESClearance
 using .CircadianEffects
 using .DiseaseOntologyPK
+using .AnemiaPolycythemia
+using .PlasmaViscosity
 # using .LeukocyteFractalAnalysis  # Temporarily disabled
 using .ODEPBPKSolver
 using .DatasetGeneration
@@ -274,5 +278,31 @@ export combine_disease_profiles, list_supported_diseases
 export get_disease_summary
 export DOID_PK_DATABASE, ICD10_TO_DOID, ICD11_TO_DOID
 export DISEASE_HIERARCHY
+
+# Export Anemia/Polycythemia functions
+export HematologicalState, AnemiaProfile, PolycythemiaProfile
+export RBCIndices, ReticulocyteState, EPOState
+export create_normal_hematology, create_anemia_state, create_polycythemia_state
+export calculate_hematocrit_correction, calculate_blood_plasma_ratio
+export calculate_vd_correction, calculate_clearance_correction
+export apply_anemia_pk_adjustments, apply_polycythemia_pk_adjustments
+export calculate_rbc_partitioning, estimate_reticulocyte_effect
+export simulate_epo_therapy, calculate_transfusion_effect
+export ANEMIA_PROFILES, POLYCYTHEMIA_PROFILES, RBC_PARTITION_DATABASE
+export NORMAL_HEMATOLOGY, EPO_PARAMETERS
+
+# Export Plasma Viscosity functions
+export ViscosityState, BloodRheology, PerfusionState
+export CarreauYasudaParams, FahrauesLindqvistParams
+export calculate_plasma_viscosity, calculate_blood_viscosity
+export calculate_carreau_yasuda_viscosity, calculate_apparent_viscosity
+export calculate_fahraeus_lindqvist_effect, calculate_microvascular_viscosity
+export calculate_perfusion_effect, calculate_hepatic_flow
+export calculate_renal_flow, calculate_tissue_perfusion
+export apply_hyperviscosity_adjustments, apply_hemodilution_adjustments
+export create_normal_rheology, create_hyperviscosity_state
+export estimate_viscosity_from_hematocrit, estimate_viscosity_from_proteins
+export NORMAL_VISCOSITY, SHEAR_RATE_RANGES, HYPERVISCOSITY_SYNDROMES
+export CARREAU_YASUDA_NORMAL, FAHRAEUS_LINDQVIST_PARAMS
 
 end # module
