@@ -36,6 +36,7 @@ include("DarwinPBPK/compartments/circadian_effects.jl")  # NEW: Chronopharmacoki
 include("DarwinPBPK/compartments/disease_ontology_pk.jl")  # NEW: DOID + ICD-10/11 PK integration
 include("DarwinPBPK/compartments/anemia_polycythemia.jl")  # NEW: Hematocrit-dependent PK adjustments
 include("DarwinPBPK/compartments/plasma_viscosity.jl")  # NEW: Blood rheology and viscosity effects
+include("DarwinPBPK/compartments/blood_compartment_integrated.jl")  # NEW: Integration layer for all blood modules
 # include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # Temporarily disabled - needs Images package
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
@@ -85,6 +86,7 @@ using .CircadianEffects
 using .DiseaseOntologyPK
 using .AnemiaPolycythemia
 using .PlasmaViscosity
+using .BloodCompartmentIntegrated
 # using .LeukocyteFractalAnalysis  # Temporarily disabled
 using .ODEPBPKSolver
 using .DatasetGeneration
@@ -304,5 +306,22 @@ export create_normal_rheology, create_hyperviscosity_state
 export estimate_viscosity_from_hematocrit, estimate_viscosity_from_proteins
 export NORMAL_VISCOSITY, SHEAR_RATE_RANGES, HYPERVISCOSITY_SYNDROMES
 export CARREAU_YASUDA_NORMAL, FAHRAEUS_LINDQVIST_PARAMS
+
+# Export Blood Compartment Integrated functions
+export BloodCompartmentState, DrugBloodProperties, IntegratedPKAdjustments
+export create_blood_state, create_blood_state_from_disease
+export update_blood_state!, get_current_adjustments
+export calculate_integrated_pk_parameters
+export apply_time_step!, get_ode_parameters
+export validate_blood_state, get_integration_summary
+# Disease ontology bridge functions
+export create_state_from_doid_profile, map_ontology_to_binding_state
+export get_binding_adjustments_by_doid, calculate_fu_from_disease_code
+export get_binding_adjustments_by_icd10, create_state_from_icd10
+
+# Export ODE Blood State Integration functions
+export DynamicPBPKParams, BloodStateODECallback
+export solve_with_blood_state, simulate_with_blood_state
+export create_blood_state_callback
 
 end # module

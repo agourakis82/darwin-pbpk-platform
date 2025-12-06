@@ -1630,18 +1630,18 @@ struct TMDDParams
     # Binding kinetics
     kon::Float64      # Association rate (1/nM/h)
     koff::Float64     # Dissociation rate (1/h)
-    
+
     # Target turnover
     ksyn::Float64     # Target synthesis rate (nM/h)
     kdeg::Float64     # Target degradation rate (1/h)
-    
+
     # Complex internalization
     kint::Float64     # Internalization rate of drug-target complex (1/h)
-    
+
     # Derived
     kd::Float64       # Equilibrium dissociation constant (nM) = koff/kon
     r0::Float64       # Baseline target concentration (nM) = ksyn/kdeg
-    
+
     function TMDDParams(;
         kon::Float64 = 0.1,       # 1/nM/h
         koff::Float64 = 0.01,     # 1/h
@@ -1675,43 +1675,43 @@ const COMPLEX_IDX = 33
 function tmdd_ode_system!(du, u, p, t)
     # Unpack parameters
     pbpk_params, tmdd_params, dose, absorption_params = p
-    
+
     # Get drug concentration in plasma (central compartment)
     c_plasma = u[BLOOD_IDX]
-    
+
     # Get target and complex
     r_free = max(0.0, u[TARGET_IDX])      # Free target
     lr_complex = max(0.0, u[COMPLEX_IDX]) # Drug-target complex
-    
+
     # PBPK component (standard tissue distribution)
     volumes = pbpk_params.volumes
     flows = pbpk_params.blood_flows
     kps = pbpk_params.partition_coeffs
-    
+
     # Plasma concentration
     v_plasma = volumes[BLOOD_IDX]
-    
+
     # TMDD terms (in plasma only for simplicity)
     # Binding: L + R <-> LR
     binding_rate = tmdd_params.kon * c_plasma * r_free
     unbinding_rate = tmdd_params.koff * lr_complex
-    
+
     # Net binding flux
     net_binding = binding_rate - unbinding_rate
-    
+
     # Target turnover
     target_synthesis = tmdd_params.ksyn
     target_degradation = tmdd_params.kdeg * r_free
-    
+
     # Complex internalization (elimination)
     complex_internalization = tmdd_params.kint * lr_complex
-    
+
     # Drug ODEs (PBPK + TMDD)
     for i in 1:NUM_ORGANS
         if i == BLOOD_IDX
             # Plasma: includes TMDD binding
             du[i] = -net_binding  # Binding removes free drug
-            
+
             # Add flow terms from other organs
             for j in 1:NUM_ORGANS
                 if j != BLOOD_IDX && flows[j] > 0
@@ -1719,22 +1719,22 @@ function tmdd_ode_system!(du, u, p, t)
                     du[i] += flows[j] * (c_tissue - c_plasma)
                 end
             end
-            
+
             # Hepatic clearance (of free drug only)
             du[i] -= pbpk_params.clearance_hepatic * c_plasma
-            
+
         elseif i == LIVER_IDX
             # Liver
             c_liver = u[i]
             c_liver_ven = c_liver / kps[i]
             du[i] = flows[i] * (c_plasma - c_liver_ven) - pbpk_params.clearance_hepatic * c_liver_ven
-            
+
         elseif i == KIDNEY_IDX
             # Kidney
             c_kidney = u[i]
             c_kidney_ven = c_kidney / kps[i]
             du[i] = flows[i] * (c_plasma - c_kidney_ven) - pbpk_params.clearance_renal * c_kidney_ven
-            
+
         else
             # Other organs
             c_organ = u[i]
@@ -1742,25 +1742,25 @@ function tmdd_ode_system!(du, u, p, t)
             du[i] = flows[i] * (c_plasma - c_organ_ven)
         end
     end
-    
+
     # Absorption from gut lumen
     if absorption_params !== nothing
         gut_lumen = max(0.0, u[GUT_LUMEN_IDX])
         ka = absorption_params.ka
         fg = absorption_params.fg
         fh = absorption_params.fh
-        
+
         absorption_rate = ka * gut_lumen
         du[GUT_LUMEN_IDX] = -absorption_rate
         du[BLOOD_IDX] += fg * fh * absorption_rate
     end
-    
+
     # Target ODE
     du[TARGET_IDX] = target_synthesis - target_degradation - net_binding
-    
+
     # Complex ODE
     du[COMPLEX_IDX] = net_binding - complex_internalization
-    
+
     return nothing
 end
 
@@ -1780,10 +1780,10 @@ function simulate_tmdd(
     # Initial conditions
     n_states = COMPLEX_IDX  # 33 states
     u0 = zeros(Float64, n_states)
-    
+
     # Initial target at baseline
     u0[TARGET_IDX] = tmdd_params.r0
-    
+
     # Dose application
     if route == :IV
         # IV bolus to plasma
@@ -1793,39 +1793,39 @@ function simulate_tmdd(
         # Oral: dose to gut lumen
         u0[GUT_LUMEN_IDX] = dose * absorption_params.fa
     end
-    
+
     # Parameter tuple
     p = (pbpk_params, tmdd_params, dose, absorption_params)
-    
+
     # Solve ODE
     tspan = (0.0, maximum(time_points))
     prob = ODEProblem(tmdd_ode_system!, u0, tspan, p)
     sol = solve(prob, Tsit5(), saveat=time_points, abstol=1e-8, reltol=1e-6)
-    
+
     # Extract results
     results = Dict{String, Any}()
-    
+
     # Drug concentrations
     for (k, organ) in enumerate(PBPK_ORGANS)
         results[organ] = [sol[j][k] for j in 1:length(sol)]
     end
     results["plasma"] = results["blood"]
-    
+
     # Target and complex
     results["target_free"] = [sol[j][TARGET_IDX] for j in 1:length(sol)]
     results["complex"] = [sol[j][COMPLEX_IDX] for j in 1:length(sol)]
-    
+
     # Target occupancy (TO)
     total_target = results["target_free"] .+ results["complex"]
     results["target_occupancy"] = results["complex"] ./ max.(total_target, 1e-10)
-    
+
     # PK metrics
     plasma_conc = results["plasma"]
     if !isempty(plasma_conc) && any(c -> c > 0, plasma_conc)
         cmax_idx = argmax(plasma_conc)
         results["cmax"] = plasma_conc[cmax_idx]
         results["tmax"] = time_points[cmax_idx]
-        
+
         # AUC
         auc = 0.0
         for i in 2:length(time_points)
@@ -1834,10 +1834,10 @@ function simulate_tmdd(
         end
         results["auc"] = auc
     end
-    
+
     # Maximum target occupancy
     results["max_to"] = maximum(results["target_occupancy"])
-    
+
     return results
 end
 
@@ -1862,21 +1862,21 @@ struct TumorGrowthKillParams
     growth_model::Symbol      # :exponential, :logistic, :gompertz
     kg::Float64               # Growth rate (1/day)
     kmax::Float64             # Carrying capacity (mm3) for logistic
-    
+
     # Kill model
     kill_model::Symbol        # :emax, :linear, :simeoni
     kk::Float64               # Kill rate constant (1/day)
     emax::Float64             # Maximum effect (for Emax model)
     ec50::Float64             # Half-maximal concentration (ng/mL)
     gamma::Float64            # Hill coefficient
-    
+
     # Simeoni transit compartments
     n_transit::Int            # Number of damage transit compartments
     ktr::Float64              # Transit rate (1/day)
-    
+
     # Initial conditions
     tumor0::Float64           # Initial tumor volume (mm3)
-    
+
     function TumorGrowthKillParams(;
         growth_model::Symbol = :logistic,
         kg::Float64 = 0.05,         # 5% per day
@@ -1909,19 +1909,19 @@ State vector:
 """
 function tumor_growth_kill_ode!(du, u, p, t)
     pbpk_params, tumor_params, dose, absorption_params = p
-    
+
     # Drug concentration in tumor (assume similar to plasma for now)
     c_drug = max(0.0, u[BLOOD_IDX])
-    
+
     # Tumor volume (proliferating + damaged)
     tumor_prolif = max(0.0, u[TUMOR_IDX])
-    
+
     # Damaged cells in transit
     damaged = [max(0.0, u[TUMOR_TRANSIT_START + i - 1]) for i in 1:tumor_params.n_transit]
-    
+
     # Total tumor volume
     total_tumor = tumor_prolif + sum(damaged)
-    
+
     # Growth term
     growth = if tumor_params.growth_model == :exponential
         tumor_params.kg * tumor_prolif
@@ -1932,25 +1932,25 @@ function tumor_growth_kill_ode!(du, u, p, t)
     else
         tumor_params.kg * tumor_prolif  # Default exponential
     end
-    
+
     # Kill term (drug effect)
     effect = if tumor_params.kill_model == :emax
-        tumor_params.emax * (c_drug ^ tumor_params.gamma) / 
+        tumor_params.emax * (c_drug ^ tumor_params.gamma) /
             (tumor_params.ec50 ^ tumor_params.gamma + c_drug ^ tumor_params.gamma)
     elseif tumor_params.kill_model == :linear
         tumor_params.kk * c_drug
     else
         tumor_params.emax * c_drug / (tumor_params.ec50 + c_drug)
     end
-    
+
     kill_rate = effect * tumor_params.kk
-    
+
     # PBPK ODEs (standard)
     volumes = pbpk_params.volumes
     flows = pbpk_params.blood_flows
     kps = pbpk_params.partition_coeffs
     c_plasma = u[BLOOD_IDX]
-    
+
     for i in 1:NUM_ORGANS
         if i == BLOOD_IDX
             du[i] = 0.0
@@ -1975,7 +1975,7 @@ function tumor_growth_kill_ode!(du, u, p, t)
             du[i] = flows[i] * (c_plasma - c_organ_ven)
         end
     end
-    
+
     # Absorption
     if absorption_params !== nothing
         gut_lumen = max(0.0, u[GUT_LUMEN_IDX])
@@ -1984,19 +1984,19 @@ function tumor_growth_kill_ode!(du, u, p, t)
         du[GUT_LUMEN_IDX] = -absorption_rate
         du[BLOOD_IDX] += absorption_params.fg * absorption_params.fh * absorption_rate
     end
-    
+
     # Tumor dynamics (Simeoni model)
     # Proliferating cells: growth - kill -> transit1
     du[TUMOR_IDX] = growth - kill_rate * tumor_prolif
-    
+
     # Transit compartments (damaged cells)
     ktr = tumor_params.ktr
     du[TUMOR_TRANSIT_START] = kill_rate * tumor_prolif - ktr * damaged[1]
-    
+
     for i in 2:tumor_params.n_transit
         du[TUMOR_TRANSIT_START + i - 1] = ktr * damaged[i-1] - ktr * damaged[i]
     end
-    
+
     return nothing
 end
 
@@ -2017,10 +2017,10 @@ function simulate_tumor_growth_kill(
     # Initial conditions
     n_states = TUMOR_TRANSIT_START + tumor_params.n_transit - 1
     u0 = zeros(Float64, n_states)
-    
+
     # Initial tumor
     u0[TUMOR_IDX] = tumor_params.tumor0
-    
+
     # First dose
     if route == :IV
         v_plasma = pbpk_params.volumes[BLOOD_IDX]
@@ -2028,10 +2028,10 @@ function simulate_tumor_growth_kill(
     elseif route == :ORAL && absorption_params !== nothing
         u0[GUT_LUMEN_IDX] = dose * absorption_params.fa
     end
-    
+
     # Parameter tuple
     p = (pbpk_params, tumor_params, dose, absorption_params)
-    
+
     # Callback for multiple doses
     function dose_callback(integrator)
         if route == :IV
@@ -2041,7 +2041,7 @@ function simulate_tumor_growth_kill(
             integrator.u[GUT_LUMEN_IDX] += dose * absorption_params.fa
         end
     end
-    
+
     # Create callbacks for dosing times (skip first, already applied)
     callbacks = if length(dosing_times) > 1
         cb_set = [PresetTimeCallback([t], dose_callback) for t in dosing_times[2:end]]
@@ -2049,49 +2049,49 @@ function simulate_tumor_growth_kill(
     else
         nothing
     end
-    
+
     # Solve ODE
     tspan = (0.0, maximum(time_points))
     prob = ODEProblem(tumor_growth_kill_ode!, u0, tspan, p)
-    
+
     sol = if callbacks !== nothing
         solve(prob, Tsit5(), saveat=time_points, callback=callbacks, abstol=1e-8, reltol=1e-6)
     else
         solve(prob, Tsit5(), saveat=time_points, abstol=1e-8, reltol=1e-6)
     end
-    
+
     # Extract results
     results = Dict{String, Any}()
-    
+
     # Drug concentrations
     for (k, organ) in enumerate(PBPK_ORGANS)
         results[organ] = [sol[j][k] for j in 1:length(sol)]
     end
     results["plasma"] = results["blood"]
-    
+
     # Tumor dynamics
     results["tumor_proliferating"] = [sol[j][TUMOR_IDX] for j in 1:length(sol)]
-    
+
     # Transit compartments (damaged cells)
     for i in 1:tumor_params.n_transit
         results["tumor_damaged_"] = [sol[j][TUMOR_TRANSIT_START + i - 1] for j in 1:length(sol)]
     end
-    
+
     # Total tumor volume
-    results["tumor_total"] = results["tumor_proliferating"] .+ 
+    results["tumor_total"] = results["tumor_proliferating"] .+
         sum([results["tumor_damaged_"] for i in 1:tumor_params.n_transit])
-    
+
     # Tumor metrics
     tumor_total = results["tumor_total"]
     results["tumor_initial"] = tumor_params.tumor0
     results["tumor_final"] = tumor_total[end]
     results["tumor_change_pct"] = (tumor_total[end] - tumor_params.tumor0) / tumor_params.tumor0 * 100
-    
+
     # Time to nadir
     nadir_idx = argmin(tumor_total)
     results["tumor_nadir"] = tumor_total[nadir_idx]
     results["time_to_nadir"] = time_points[nadir_idx]
-    
+
     # Response classification (RECIST-like)
     change_pct = results["tumor_change_pct"]
     results["response"] = if change_pct <= -30
@@ -2101,7 +2101,7 @@ function simulate_tumor_growth_kill(
     else
         "Stable Disease"
     end
-    
+
     return results
 end
 
@@ -2120,15 +2120,15 @@ struct ReceptorLigandParams
     # Kinetic parameters
     kon::Float64       # On-rate (1/nM/h)
     koff::Float64      # Off-rate (1/h)
-    
+
     # Receptor properties
     rtot::Float64      # Total receptor (nM)
     krecycle::Float64  # Receptor recycling rate (1/h)
     kintern::Float64   # Internalization rate (1/h)
-    
+
     # Derived
     kd::Float64        # Equilibrium Kd (nM)
-    
+
     function ReceptorLigandParams(;
         kon::Float64 = 0.1,
         koff::Float64 = 0.01,
@@ -2182,15 +2182,15 @@ struct EnzymeTurnoverParams
     ksyn::Float64      # Synthesis rate (amount/h)
     kdeg::Float64      # Degradation rate (1/h)
     e0::Float64        # Baseline enzyme level = ksyn/kdeg
-    
+
     # Induction parameters
     emax_ind::Float64  # Max fold induction
     ec50_ind::Float64  # Inducer concentration for half-max effect
-    
+
     # Inhibition parameters
     ki::Float64        # Inhibition constant
     kinact::Float64    # Inactivation rate (for TDI)
-    
+
     function EnzymeTurnoverParams(;
         ksyn::Float64 = 1.0,
         kdeg::Float64 = 0.01,     # ~70h half-life (typical CYP)
@@ -2213,7 +2213,7 @@ function enzyme_induction(
     inducer_conc::Float64,
     enzyme_params::EnzymeTurnoverParams,
 )::Float64
-    fold_induction = 1.0 + (enzyme_params.emax_ind - 1.0) * inducer_conc / 
+    fold_induction = 1.0 + (enzyme_params.emax_ind - 1.0) * inducer_conc /
         (enzyme_params.ec50_ind + inducer_conc)
     return enzyme_params.e0 * fold_induction
 end
@@ -2265,11 +2265,11 @@ struct MLParameterPredictor
     model_type::Symbol           # :gnn, :chemberta, :multimodal
     model_path::Union{String, Nothing}
     prediction_targets::Vector{Symbol}  # What parameters to predict
-    
+
     # Cached model (loaded on demand)
     _model::Ref{Any}
     _loaded::Ref{Bool}
-    
+
     function MLParameterPredictor(;
         model_type::Symbol = :multimodal,
         model_path::Union{String, Nothing} = nothing,
@@ -2295,9 +2295,9 @@ function predict_partition_coeffs(
     # Fallback: Poulin-Theil QSPR method
     # Kp = (fup / fut) * (Vwt + 0.7 * Vnlt + (Vpt + 0.3 * Vnlt) * P)
     # Simplified version using logP correlation
-    
+
     kp_dict = Dict{String, Float64}()
-    
+
     # Tissue composition factors (fraction lipid, water)
     tissue_lipid = Dict(
         "blood" => 0.0056, "liver" => 0.0348, "kidney" => 0.0207,
@@ -2306,7 +2306,7 @@ function predict_partition_coeffs(
         "skin" => 0.0603, "bone" => 0.0436, "spleen" => 0.0157,
         "pancreas" => 0.0448, "other" => 0.0300,
     )
-    
+
     tissue_water = Dict(
         "blood" => 0.8290, "liver" => 0.7510, "kidney" => 0.7830,
         "brain" => 0.7770, "heart" => 0.7580, "lung" => 0.8110,
@@ -2314,21 +2314,21 @@ function predict_partition_coeffs(
         "skin" => 0.6180, "bone" => 0.4390, "spleen" => 0.7880,
         "pancreas" => 0.6640, "other" => 0.7000,
     )
-    
+
     # Calculate P (partition coefficient)
     P = 10.0 ^ logP
-    
+
     for organ in PBPK_ORGANS
         fl = get(tissue_lipid, organ, 0.03)
         fw = get(tissue_water, organ, 0.70)
-        
+
         # Poulin-Theil equation (simplified)
         kp = (fup / 0.5) * (fw + fl * P)
-        
+
         # Clamp to reasonable range
         kp_dict[organ] = clamp(kp, 0.1, 50.0)
     end
-    
+
     return kp_dict
 end
 
@@ -2347,24 +2347,24 @@ function predict_clearance(
     psa::Float64 = 80.0,
 )::NamedTuple{(:hepatic, :renal), Tuple{Float64, Float64}}
     # QSPR fallback based on physicochemical properties
-    
+
     # Hepatic clearance correlation (simplified)
     # High logP -> more hepatic metabolism
     # High PSA -> less hepatic (more polar)
     cl_hepatic_base = 10.0  # L/h baseline
     logP_factor = 1.0 + 0.3 * (logP - 2.0)  # Scale by logP
     psa_factor = 1.0 - 0.005 * (psa - 60.0)  # PSA reduces CL
-    
+
     cl_hepatic = cl_hepatic_base * max(0.1, logP_factor * psa_factor)
-    
+
     # Renal clearance (GFR-based for small molecules)
     # Small, polar compounds have higher renal clearance
     gfr = 7.5  # L/h (125 mL/min)
     mw_factor = mw < 500 ? 1.0 : 0.5  # Large molecules filtered less
     polar_factor = 1.0 + 0.01 * (psa - 60.0)  # More polar = more renal
-    
+
     cl_renal = gfr * 0.2 * mw_factor * max(0.1, polar_factor)  # 20% of GFR typical
-    
+
     return (hepatic = cl_hepatic, renal = cl_renal)
 end
 
@@ -2381,7 +2381,7 @@ struct NeuralODEComponent
     correction_nn::Any      # Neural network for correction term
     state_indices::Vector{Int}  # Which states to correct
     scaling::Float64        # Scale factor for correction
-    
+
     function NeuralODEComponent(;
         hidden_dim::Int = 32,
         state_indices::Vector{Int} = [BLOOD_IDX, LIVER_IDX],
@@ -2408,17 +2408,17 @@ function apply_neural_correction!(
     if neural_component.correction_nn === nothing
         return  # No correction if model not loaded
     end
-    
+
     # Get states to correct
     states = u[neural_component.state_indices]
-    
+
     # Neural network input: [states..., t]
     nn_input = vcat(states, [t])
-    
+
     # Get correction (would call neural_component.correction_nn(nn_input))
     # Placeholder: no correction
     correction = zeros(length(neural_component.state_indices))
-    
+
     # Apply scaled correction
     for (i, idx) in enumerate(neural_component.state_indices)
         du[idx] += neural_component.scaling * correction[i]
@@ -2439,7 +2439,7 @@ struct PKSurrogateModel
     input_features::Vector{Symbol}  # Required inputs
     output_features::Vector{Symbol} # What it predicts
     trained::Bool
-    
+
     function PKSurrogateModel(;
         input_features::Vector{Symbol} = [:dose, :logP, :mw, :clearance],
         output_features::Vector{Symbol} = [:cmax, :tmax, :auc, :half_life],
@@ -2464,7 +2464,7 @@ function predict_pk_surrogate(
 )::Dict{Symbol, Float64}
     # Analytical one-compartment PK (fallback)
     ke = clearance / vd
-    
+
     # Cmax and Tmax for oral
     if ka > ke
         tmax = log(ka / ke) / (ka - ke)
@@ -2474,13 +2474,13 @@ function predict_pk_surrogate(
         tmax = log(ke / ka) / (ke - ka)
         cmax = (f * dose / vd) * (ke / (ke - ka)) * (exp(-ka * tmax) - exp(-ke * tmax))
     end
-    
+
     # AUC
     auc = f * dose / clearance
-    
+
     # Half-life
     half_life = log(2) / ke
-    
+
     return Dict(
         :cmax => cmax,
         :tmax => tmax,
@@ -2502,7 +2502,7 @@ struct UncertaintyQuantifier
     method::Symbol          # :ensemble, :dropout, :conformal
     n_samples::Int          # Number of samples for MC
     confidence_level::Float64
-    
+
     function UncertaintyQuantifier(;
         method::Symbol = :ensemble,
         n_samples::Int = 100,
@@ -2525,14 +2525,14 @@ function prediction_interval(
     if n < 2
         return (predictions[1], predictions[1])
     end
-    
+
     # Sort for percentile calculation
     sorted = sort(predictions)
-    
+
     alpha = 1.0 - uq.confidence_level
     lower_idx = max(1, Int(floor(alpha / 2 * n)))
     upper_idx = min(n, Int(ceil((1 - alpha / 2) * n)))
-    
+
     return (sorted[lower_idx], sorted[upper_idx])
 end
 
@@ -2548,7 +2548,7 @@ function predict_with_uncertainty(
     mean_pred = sum(predictions) / length(predictions)
     std_pred = sqrt(sum((p - mean_pred)^2 for p in predictions) / length(predictions))
     lower, upper = prediction_interval(uq, predictions)
-    
+
     return (mean = mean_pred, std = std_pred, lower = lower, upper = upper)
 end
 
@@ -2590,7 +2590,7 @@ struct CovariateEffect
     reference_value::Float64  # Reference covariate value
     theta::Float64           # Effect parameter
     category_factors::Dict{String, Float64}  # For categorical
-    
+
     function CovariateEffect(;
         covariate_name::Symbol,
         effect_type::Symbol = :power,
@@ -2659,7 +2659,7 @@ struct IIVSpec
     distribution::Symbol      # :exponential, :proportional, :additive
     omega::Float64           # Standard deviation
     correlation_group::Int   # For correlated parameters
-    
+
     function IIVSpec(;
         parameter_name::Symbol,
         distribution::Symbol = :exponential,
@@ -2679,7 +2679,7 @@ function sample_individual_param(
     rng = Random.GLOBAL_RNG,
 )::Float64
     eta = randn(rng) * iiv.omega
-    
+
     if iiv.distribution == :exponential
         return population_value * exp(eta)
     elseif iiv.distribution == :proportional
@@ -2702,7 +2702,7 @@ struct VirtualSubject
     id::Int
     covariates::Dict{Symbol, Any}      # Demographics, genotypes, etc.
     individual_params::Dict{Symbol, Float64}  # Sampled individual parameters
-    
+
     function VirtualSubject(
         id::Int;
         covariates::Dict{Symbol, Any} = Dict{Symbol, Any}(),
@@ -2722,7 +2722,7 @@ struct VirtualPopulationGenerator
     covariate_distributions::Dict{Symbol, Any}  # Distribution specs
     iiv_specs::Vector{IIVSpec}
     correlation_matrix::Union{Matrix{Float64}, Nothing}
-    
+
     function VirtualPopulationGenerator(;
         n_subjects::Int = 100,
         covariate_distributions::Dict{Symbol, Any} = default_covariate_distributions(),
@@ -2786,20 +2786,20 @@ function generate_virtual_population(
     rng = Random.GLOBAL_RNG,
 )::Vector{VirtualSubject}
     subjects = VirtualSubject[]
-    
+
     for i in 1:gen.n_subjects
         # Sample covariates
         covariates = Dict{Symbol, Any}()
         for (name, spec) in gen.covariate_distributions
             covariates[name] = sample_covariate(spec; rng=rng)
         end
-        
+
         # Sample individual parameters
         individual_params = Dict{Symbol, Float64}()
         for (param, pop_value) in population_params
             # Find IIV spec for this parameter
             iiv_idx = findfirst(s -> s.parameter_name == param, gen.iiv_specs)
-            
+
             if iiv_idx !== nothing
                 individual_params[param] = sample_individual_param(
                     pop_value, gen.iiv_specs[iiv_idx]; rng=rng
@@ -2808,10 +2808,10 @@ function generate_virtual_population(
                 individual_params[param] = pop_value
             end
         end
-        
+
         push!(subjects, VirtualSubject(i; covariates=covariates, individual_params=individual_params))
     end
-    
+
     return subjects
 end
 
@@ -2828,7 +2828,7 @@ struct DosingRegimen
     interval::Float64       # Dosing interval (hours)
     n_doses::Int           # Number of doses
     infusion_duration::Float64  # For IV infusion
-    
+
     function DosingRegimen(;
         dose::Float64 = 100.0,
         route::Symbol = :ORAL,
@@ -2855,7 +2855,7 @@ struct TrialArm
     regimen::DosingRegimen
     n_subjects::Int
     sampling_times::Vector{Float64}
-    
+
     function TrialArm(;
         name::String = "Treatment",
         regimen::DosingRegimen = DosingRegimen(),
@@ -2874,7 +2874,7 @@ struct TrialDesign
     arms::Vector{TrialArm}
     duration::Float64       # Total trial duration (hours)
     endpoints::Vector{Symbol}
-    
+
     function TrialDesign(;
         name::String = "Phase1_PK",
         arms::Vector{TrialArm} = [TrialArm()],
@@ -2907,20 +2907,20 @@ function simulate_trial(
         "design" => design,
         "arms" => Dict{String, Any}(),
     )
-    
+
     for arm in design.arms
         arm_results = Dict{String, Any}(
             "name" => arm.name,
             "subjects" => [],
             "summary" => Dict{String, Any}(),
         )
-        
+
         # Generate virtual population for this arm
         population_params = Dict{Symbol, Float64}(
             :clearance_hepatic => pbpk_params.clearance_hepatic,
             :clearance_renal => pbpk_params.clearance_renal,
         )
-        
+
         subjects = generate_virtual_population(
             VirtualPopulationGenerator(
                 n_subjects = arm.n_subjects,
@@ -2929,12 +2929,12 @@ function simulate_trial(
             ),
             population_params,
         )
-        
+
         # Simulate each subject
         cmax_values = Float64[]
         auc_values = Float64[]
         tmax_values = Float64[]
-        
+
         for subject in subjects
             # Adjust parameters for individual
             ind_pbpk = PBPKParams(
@@ -2944,23 +2944,23 @@ function simulate_trial(
                 clearance_renal = get(subject.individual_params, :clearance_renal, pbpk_params.clearance_renal),
                 partition_coeffs = pbpk_params.partition_coeffs,
             )
-            
+
             # Run simulation
             dose = arm.regimen.dose
             time_points = collect(0.0:0.1:design.duration)
-            
+
             sim_result = simulate_pbpk(
                 dose,
                 ind_pbpk,
                 time_points;
                 absorption_params = absorption_params,
             )
-            
+
             # Collect endpoints
             push!(cmax_values, sim_result["cmax"])
             push!(auc_values, sim_result["auc"])
             push!(tmax_values, sim_result["tmax"])
-            
+
             push!(arm_results["subjects"], Dict(
                 "id" => subject.id,
                 "covariates" => subject.covariates,
@@ -2969,7 +2969,7 @@ function simulate_trial(
                 "tmax" => sim_result["tmax"],
             ))
         end
-        
+
         # Summary statistics
         arm_results["summary"]["Cmax"] = (
             mean = sum(cmax_values) / length(cmax_values),
@@ -2978,7 +2978,7 @@ function simulate_trial(
             min = minimum(cmax_values),
             max = maximum(cmax_values),
         )
-        
+
         arm_results["summary"]["AUC"] = (
             mean = sum(auc_values) / length(auc_values),
             std = sqrt(sum((a - sum(auc_values)/length(auc_values))^2 for a in auc_values) / length(auc_values)),
@@ -2986,10 +2986,10 @@ function simulate_trial(
             min = minimum(auc_values),
             max = maximum(auc_values),
         )
-        
+
         results["arms"][arm.name] = arm_results
     end
-    
+
     return results
 end
 
@@ -3010,30 +3010,30 @@ function bioequivalence_analysis(
     # Log-transform
     log_test = log.(test_values)
     log_ref = log.(reference_values)
-    
+
     # Geometric means
     gm_test = exp(sum(log_test) / length(log_test))
     gm_ref = exp(sum(log_ref) / length(log_ref))
     ratio = gm_test / gm_ref
-    
+
     # Pooled variance (simplified - assumes equal n)
     n = length(log_test)
     var_test = sum((x - sum(log_test)/n)^2 for x in log_test) / (n - 1)
     var_ref = sum((x - sum(log_ref)/n)^2 for x in log_ref) / (n - 1)
     pooled_se = sqrt((var_test + var_ref) / n)
-    
+
     # 90% CI on log scale
     # Using normal approximation (t-distribution would be more accurate)
     z = 1.645  # 95th percentile for 90% CI
     log_lower = log(ratio) - z * pooled_se
     log_upper = log(ratio) + z * pooled_se
-    
+
     lower = exp(log_lower)
     upper = exp(log_upper)
-    
+
     # BE criteria: 80-125%
     bioequivalent = (lower >= 0.80) && (upper <= 1.25)
-    
+
     return (ratio = ratio, lower = lower, upper = upper, bioequivalent = bioequivalent)
 end
 
@@ -3053,27 +3053,27 @@ function fit_emax_model(
     # Simple grid search for EC50 (production would use NLopt)
     best_r2 = -Inf
     best_params = (e0 = 0.0, emax = 0.0, ec50 = 1.0)
-    
+
     e0_est = minimum(responses)
     emax_est = maximum(responses) - minimum(responses)
-    
+
     for ec50_mult in 0.1:0.1:10.0
         ec50_test = median(exposures) * ec50_mult
-        
+
         # Predicted responses
         predicted = [e0_est + emax_est * c / (ec50_test + c) for c in exposures]
-        
+
         # R-squared
         ss_res = sum((responses[i] - predicted[i])^2 for i in 1:length(responses))
         ss_tot = sum((r - sum(responses)/length(responses))^2 for r in responses)
         r2 = 1.0 - ss_res / ss_tot
-        
+
         if r2 > best_r2
             best_r2 = r2
             best_params = (e0 = e0_est, emax = emax_est, ec50 = ec50_test, r_squared = r2)
         end
     end
-    
+
     return best_params
 end
 
@@ -3087,5 +3087,419 @@ export default_covariate_distributions, sample_covariate
 export DosingRegimen, dosing_times, TrialArm, TrialDesign
 export simulate_trial, bioequivalence_analysis, fit_emax_model
 
+
+# =============================================================================
+# BLOOD COMPARTMENT INTEGRATION FOR DYNAMIC PK
+# =============================================================================
+# This section integrates BloodCompartmentState with ODE solver for:
+# - Time-varying clearances (acute phase, disease progression)
+# - Dynamic fu adjustments based on protein binding state
+# - Hematocrit-dependent blood flow adjustments
+#
+# Uses DifferentialEquations.jl callbacks for state-dependent parameters
+
+export DynamicPBPKParams, solve_with_blood_state, simulate_with_blood_state
+export create_blood_state_callback
+
+"""
+    DynamicPBPKParams
+
+PBPK parameters that can change during simulation based on blood state.
+
+Unlike PBPKParams which is immutable, this holds mutable adjustment factors
+that are updated by the blood compartment integration callback.
+"""
+mutable struct DynamicPBPKParams
+    base_params::PBPKParams              # Base PBPK parameters
+    hepatic_cl_factor::Float64           # Dynamic hepatic CL multiplier
+    renal_cl_factor::Float64             # Dynamic renal CL multiplier
+    hepatic_flow_factor::Float64         # Dynamic hepatic flow multiplier
+    fu_factor::Float64                   # Dynamic fu multiplier
+    vd_factor::Float64                   # Dynamic Vd multiplier
+    rb::Float64                          # Blood:plasma ratio
+    time_last_update::Float64            # Time of last update
+
+    function DynamicPBPKParams(base::PBPKParams)
+        new(base, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0)
+    end
+end
+
+# Effective clearances accounting for dynamic factors
+effective_cl_hepatic(p::DynamicPBPKParams) = p.base_params.clearance_hepatic * p.hepatic_cl_factor
+effective_cl_renal(p::DynamicPBPKParams) = p.base_params.clearance_renal * p.renal_cl_factor
+
+"""
+    BloodStateODECallback
+
+Holds blood compartment state and drug properties for ODE callback.
+This is passed as part of the parameter tuple to the ODE system.
+"""
+mutable struct BloodStateODECallback
+    # Blood state (mutable, updated during simulation)
+    hematocrit::Float64
+    albumin_g_L::Float64
+    aag_g_L::Float64
+    il6_pg_mL::Float64
+    crp_mg_L::Float64
+    gfr::Float64
+    hepatic_flow::Float64
+
+    # Drug properties (immutable)
+    ke_p::Float64                        # RBC partition
+    fu_reference::Float64                # Reference fu
+    charge_type::Symbol                  # :acidic, :basic, :neutral
+    extraction_ratio::Float64            # Hepatic extraction
+
+    # Disease flags
+    is_acute_phase::Bool
+    time_since_onset::Float64
+
+    # Update interval (hours)
+    update_interval::Float64
+
+    function BloodStateODECallback(;
+        hematocrit::Float64 = 0.42,
+        albumin_g_L::Float64 = 40.0,
+        aag_g_L::Float64 = 0.8,
+        il6_pg_mL::Float64 = 5.0,
+        crp_mg_L::Float64 = 1.0,
+        gfr::Float64 = 100.0,
+        hepatic_flow::Float64 = 90.0,
+        ke_p::Float64 = 1.0,
+        fu_reference::Float64 = 0.5,
+        charge_type::Symbol = :neutral,
+        extraction_ratio::Float64 = 0.3,
+        is_acute_phase::Bool = false,
+        time_since_onset::Float64 = 0.0,
+        update_interval::Float64 = 1.0
+    )
+        new(hematocrit, albumin_g_L, aag_g_L, il6_pg_mL, crp_mg_L,
+            gfr, hepatic_flow, ke_p, fu_reference, charge_type,
+            extraction_ratio, is_acute_phase, time_since_onset,
+            update_interval)
+    end
+end
+
+"""
+    update_blood_state_ode!(callback::BloodStateODECallback, dt::Float64)
+
+Update blood state for ODE simulation step.
+Implements acute phase protein kinetics.
+"""
+function update_blood_state_ode!(callback::BloodStateODECallback, dt::Float64)
+    if !callback.is_acute_phase
+        return nothing
+    end
+
+    callback.time_since_onset += dt
+    t = callback.time_since_onset
+
+    # IL-6 decay (half-life ~2-4 hours)
+    il6_decay = t > 24.0 ? 0.02 : 0.1
+    callback.il6_pg_mL = max(5.0, callback.il6_pg_mL * exp(-il6_decay * dt))
+
+    # CRP kinetics (peaks at 48-72h)
+    crp_production = 0.5 * log10(max(1.0, callback.il6_pg_mL))
+    crp_clearance = 0.05 * callback.crp_mg_L
+    callback.crp_mg_L = clamp(callback.crp_mg_L + (crp_production - crp_clearance) * dt, 1.0, 500.0)
+
+    # AAG kinetics (peaks at 48-96h)
+    aag_target = min(3.0, 0.8 + 2.0 * (callback.il6_pg_mL / 200.0))
+    callback.aag_g_L = callback.aag_g_L + (aag_target - callback.aag_g_L) * 0.02 * dt
+
+    # Albumin kinetics (decreases during inflammation)
+    alb_target = max(20.0, 40.0 - 15.0 * (callback.il6_pg_mL / 200.0))
+    callback.albumin_g_L = callback.albumin_g_L + (alb_target - callback.albumin_g_L) * 0.01 * dt
+
+    return nothing
+end
+
+"""
+    calculate_dynamic_adjustments(callback::BloodStateODECallback)
+
+Calculate current PK adjustment factors from blood state.
+"""
+function calculate_dynamic_adjustments(callback::BloodStateODECallback)
+    # Reference values
+    ref_albumin = 40.0
+    ref_aag = 0.8
+    ref_gfr = 100.0
+    ref_hepatic_flow = 90.0
+
+    # fu adjustment based on drug type and proteins
+    fu_factor = 1.0
+    if callback.charge_type == :acidic
+        fu_factor = ref_albumin / callback.albumin_g_L
+    elseif callback.charge_type == :basic
+        fu_factor = ref_aag / callback.aag_g_L
+    end
+
+    # Blood:plasma ratio
+    rb = 1.0 - callback.hematocrit + (callback.hematocrit * callback.ke_p)
+
+    # Clearance adjustments
+    renal_cl_factor = callback.gfr / ref_gfr
+
+    # Hepatic clearance depends on extraction ratio
+    if callback.extraction_ratio > 0.7
+        # High extraction: flow-limited
+        hepatic_cl_factor = callback.hepatic_flow / ref_hepatic_flow
+    else
+        # Low extraction: capacity-limited, fu-dependent
+        fu_blood = (callback.fu_reference * fu_factor) / rb
+        hepatic_cl_factor = fu_blood / (callback.fu_reference / 1.0)
+    end
+
+    hepatic_flow_factor = callback.hepatic_flow / ref_hepatic_flow
+
+    return (
+        fu_factor = fu_factor,
+        rb = rb,
+        hepatic_cl_factor = hepatic_cl_factor,
+        renal_cl_factor = renal_cl_factor,
+        hepatic_flow_factor = hepatic_flow_factor
+    )
+end
+
+"""
+ODE system with dynamic blood state adjustments.
+
+Parameters are a tuple: (DynamicPBPKParams, BloodStateODECallback)
+"""
+function dynamic_ode_system!(du::AbstractVector{Float64}, u::AbstractVector{Float64},
+                              p::Tuple{DynamicPBPKParams, BloodStateODECallback}, t::Float64)
+    dyn_params, blood_callback = p
+    base = dyn_params.base_params
+
+    # Initialize derivatives
+    fill!(du, 0.0)
+
+    C_blood = u[BLOOD_IDX]
+
+    # Get current adjustment factors
+    adj = calculate_dynamic_adjustments(blood_callback)
+
+    # Update dynamic params
+    dyn_params.fu_factor = adj.fu_factor
+    dyn_params.rb = adj.rb
+    dyn_params.hepatic_cl_factor = adj.hepatic_cl_factor
+    dyn_params.renal_cl_factor = adj.renal_cl_factor
+    dyn_params.hepatic_flow_factor = adj.hepatic_flow_factor
+
+    # Organ dynamics (same as standard, but with flow adjustment)
+    @inbounds for i in 1:NUM_ORGANS
+        if i == BLOOD_IDX
+            continue
+        end
+
+        V_organ = base.volumes[i]
+        Q_organ = base.blood_flows[i]
+        Kp_organ = base.partition_coeffs[i]
+        C_organ = u[i]
+
+        # Apply hepatic flow adjustment to liver
+        if i == LIVER_IDX
+            Q_organ *= adj.hepatic_flow_factor
+        end
+
+        du[i] = (Q_organ / V_organ) * (C_blood - C_organ / Kp_organ)
+
+        V_blood = base.volumes[BLOOD_IDX]
+        du[BLOOD_IDX] -= (Q_organ / V_blood) * (C_blood - C_organ / Kp_organ)
+    end
+
+    # Dynamic hepatic clearance
+    if base.clearance_hepatic > 0.0
+        effective_cl = base.clearance_hepatic * adj.hepatic_cl_factor
+        clearance_rate = effective_cl / base.volumes[BLOOD_IDX]
+        du[BLOOD_IDX] -= clearance_rate * C_blood
+    end
+
+    # Dynamic renal clearance
+    if base.clearance_renal > 0.0
+        effective_cl = base.clearance_renal * adj.renal_cl_factor
+        clearance_rate = effective_cl / base.volumes[BLOOD_IDX]
+        du[BLOOD_IDX] -= clearance_rate * C_blood
+    end
+
+    return nothing
+end
+
+"""
+    create_blood_state_callback(blood_callback::BloodStateODECallback)
+
+Create a DifferentialEquations.jl callback that updates blood state at intervals.
+"""
+function create_blood_state_callback(blood_callback::BloodStateODECallback)
+    # Discrete callback that fires at regular intervals
+    function condition(u, t, integrator)
+        return t % blood_callback.update_interval ≈ 0.0
+    end
+
+    function affect!(integrator)
+        _, blood_cb = integrator.p
+        update_blood_state_ode!(blood_cb, blood_callback.update_interval)
+    end
+
+    # Use PeriodicCallback for simplicity
+    return PeriodicCallback(
+        (integrator) -> begin
+            _, blood_cb = integrator.p
+            update_blood_state_ode!(blood_cb, blood_callback.update_interval)
+        end,
+        blood_callback.update_interval;
+        initial_affect = false
+    )
+end
+
+"""
+    solve_with_blood_state(
+        pbpk_params::PBPKParams,
+        blood_callback::BloodStateODECallback,
+        dose::Float64,
+        tspan::Tuple{Float64, Float64};
+        time_points = nothing,
+        reltol = 1e-8,
+        abstol = 1e-10
+    )
+
+Solve PBPK with dynamic blood compartment state updates.
+
+# Arguments
+- `pbpk_params`: Base PBPK parameters
+- `blood_callback`: Blood state callback with initial conditions and drug properties
+- `dose`: Dose in mg
+- `tspan`: Time span (start, end) in hours
+
+# Returns
+Solution object with dynamic PK adjustments applied throughout
+
+# Example
+```julia
+# Create blood state for sepsis patient
+blood = BloodStateODECallback(
+    hematocrit = 0.30,
+    albumin_g_L = 20.0,
+    aag_g_L = 2.5,
+    il6_pg_mL = 200.0,
+    gfr = 40.0,
+    ke_p = 37.0,              # Tacrolimus
+    fu_reference = 0.01,
+    charge_type = :basic,
+    extraction_ratio = 0.3,
+    is_acute_phase = true
+)
+
+# Solve with dynamic adjustments
+sol = solve_with_blood_state(pbpk_params, blood, 5.0, (0.0, 72.0))
+```
+"""
+function solve_with_blood_state(
+    pbpk_params::PBPKParams,
+    blood_callback::BloodStateODECallback,
+    dose::Float64,
+    tspan::Tuple{Float64, Float64};
+    time_points::Union{Vector{Float64}, Nothing} = nothing,
+    reltol::Float64 = 1e-8,
+    abstol::Float64 = 1e-10,
+    alg = Tsit5()
+)
+    # Create dynamic params wrapper
+    dyn_params = DynamicPBPKParams(pbpk_params)
+
+    # Initial conditions
+    u0 = zeros(Float64, NUM_ORGANS)
+    u0[BLOOD_IDX] = dose / pbpk_params.volumes[BLOOD_IDX]
+
+    # Parameters tuple
+    p = (dyn_params, blood_callback)
+
+    # Create problem
+    prob = ODEProblem(dynamic_ode_system!, u0, tspan, p)
+
+    # Create blood state callback
+    cb = create_blood_state_callback(blood_callback)
+
+    # Solve with callback
+    if time_points !== nothing
+        sol = DifferentialEquations.solve(prob, alg;
+            reltol=reltol, abstol=abstol,
+            saveat=time_points,
+            callback=cb
+        )
+    else
+        sol = DifferentialEquations.solve(prob, alg;
+            reltol=reltol, abstol=abstol,
+            callback=cb
+        )
+    end
+
+    return sol
+end
+
+"""
+    simulate_with_blood_state(
+        pbpk_params::PBPKParams,
+        blood_callback::BloodStateODECallback,
+        dose::Float64;
+        t_max = 72.0,
+        num_points = 100
+    )
+
+Simulate PBPK with blood state integration and return results dict.
+
+# Returns
+Dict with:
+- Organ concentrations over time
+- Blood state evolution (albumin, AAG, IL-6)
+- Dynamic PK adjustments applied
+"""
+function simulate_with_blood_state(
+    pbpk_params::PBPKParams,
+    blood_callback::BloodStateODECallback,
+    dose::Float64;
+    t_max::Float64 = 72.0,
+    num_points::Int = 100,
+    reltol::Float64 = 1e-8,
+    abstol::Float64 = 1e-10
+)
+    time_points = collect(range(0.0, t_max, length=num_points))
+
+    # Make a copy of blood_callback to track evolution
+    blood_copy = deepcopy(blood_callback)
+
+    # Solve
+    sol = solve_with_blood_state(
+        pbpk_params, blood_copy, dose, (0.0, t_max);
+        time_points=time_points,
+        reltol=reltol, abstol=abstol
+    )
+
+    # Build results
+    results = Dict{String, Any}(
+        "time" => time_points,
+        "plasma" => [sol[i][BLOOD_IDX] for i in 1:length(sol)],
+        "blood" => [sol[i][BLOOD_IDX] * blood_copy.rb for i in 1:length(sol)]
+    )
+
+    # Organ concentrations
+    for (i, organ) in enumerate(PBPK_ORGANS)
+        results[organ] = [sol[j][i] for j in 1:length(sol)]
+    end
+
+    # Record blood state at key timepoints
+    # (Note: this is approximate since we're simulating the evolution)
+    results["blood_state"] = Dict(
+        "initial_albumin" => blood_callback.albumin_g_L,
+        "initial_aag" => blood_callback.aag_g_L,
+        "initial_il6" => blood_callback.il6_pg_mL,
+        "was_acute_phase" => blood_callback.is_acute_phase,
+        "ke_p" => blood_callback.ke_p,
+        "fu_reference" => blood_callback.fu_reference,
+        "charge_type" => blood_callback.charge_type
+    )
+
+    return results
+end
 
 end # module
