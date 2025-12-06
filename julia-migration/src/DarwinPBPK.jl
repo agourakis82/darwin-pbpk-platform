@@ -28,7 +28,13 @@ include("DarwinPBPK/compartments/lipoprotein_binding.jl")  # NEW: HDL/LDL/VLDL d
 include("DarwinPBPK/compartments/rbc_transporters.jl")  # NEW: RBC membrane transporters (Band3, OAT, OCT, GLUT1)
 include("DarwinPBPK/compartments/disease_state_binding.jl")  # NEW: Disease state PK adjustments
 include("DarwinPBPK/compartments/mab_pbpk.jl")  # NEW: mAb PBPK scaffold (FcRn, TMDD)
-include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # NEW: Fractal analysis of leukocyte morphology
+include("DarwinPBPK/compartments/immunoglobulin_isotypes.jl")  # NEW: IgM, IgA, IgE isotypes + complement
+include("DarwinPBPK/compartments/acute_phase_response.jl")  # NEW: IL-6, CRP, SAA acute phase dynamics
+include("DarwinPBPK/compartments/rbc_aging.jl")  # NEW: RBC age distribution, RDW effects
+include("DarwinPBPK/compartments/spleen_res_clearance.jl")  # NEW: Splenic macrophage clearance
+include("DarwinPBPK/compartments/circadian_effects.jl")  # NEW: Chronopharmacokinetic rhythms
+include("DarwinPBPK/compartments/disease_ontology_pk.jl")  # NEW: DOID + ICD-10/11 PK integration
+# include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # Temporarily disabled - needs Images package
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
 include("DarwinPBPK/dynamic_gnn.jl")  # FASE 2 ✅
@@ -69,7 +75,13 @@ using .LipoproteinBinding
 using .RBCTransporters
 using .DiseaseStateBinding
 using .mAbPBPK
-using .LeukocyteFractalAnalysis
+using .ImmunoglobulinIsotypes
+using .AcutePhaseResponse
+using .RBCAging
+using .SpleenRESClearance
+using .CircadianEffects
+using .DiseaseOntologyPK
+# using .LeukocyteFractalAnalysis  # Temporarily disabled
 using .ODEPBPKSolver
 using .DatasetGeneration
 using .DynamicGNN
@@ -217,5 +229,50 @@ export get_mab_data, get_target_data, create_mab_model
 export apply_ada_effect, calculate_immunogenicity_risk
 export MAB_DATABASE, TARGET_DATABASE
 export FCRN_PARAMETERS, TMDD_DEFAULT_PARAMS
+
+# Export Immunoglobulin Isotype functions
+export ImmunoglobulinProperties, ComplementSystem, ImmuneComplex
+export create_igg_subclass, create_igm, create_iga, create_ige
+export calculate_complement_activation, calculate_immune_complex_clearance
+export calculate_isotype_clearance, calculate_fc_receptor_binding
+export IMMUNOGLOBULIN_DATABASE, COMPLEMENT_PARAMETERS, FC_RECEPTOR_DATABASE
+
+# Export Acute Phase Response functions
+export AcutePhaseState, CytokineProfile, AcutePhaseProtein
+export create_acute_phase_state, simulate_acute_phase!, calculate_protein_changes
+export apply_acute_phase_binding, get_time_course, get_cytokine_profile
+export predict_pk_changes, get_dosing_recommendation
+export ACUTE_PHASE_PROTEINS, CYTOKINE_EFFECTS
+
+# Export RBC Aging functions
+export RBCPopulation, RBCAgeDistribution, ReticulocyteState
+export create_normal_rbc_population, create_disease_population
+export calculate_age_weighted_transport, calculate_rdw_effect
+export simulate_rbc_turnover, get_age_distribution
+export RBC_AGE_PARAMETERS, RETICULOCYTE_FACTORS
+
+# Export Spleen RES Clearance functions
+export SpleenState, RESCapacity, MacrophagePool
+export create_normal_spleen, create_disease_spleen
+export calculate_res_clearance, calculate_splenic_uptake
+export apply_splenectomy, calculate_fcr_mediated_clearance
+export SPLEEN_PARAMETERS, RES_TISSUE_WEIGHTS
+
+# Export Circadian Effects functions
+export CircadianState, CircadianParameter
+export create_default_parameters, get_circadian_factor, simulate_circadian_variation
+export calculate_optimal_dosing_time, get_chronotype_adjustment
+export calculate_circadian_pk_effect, calculate_chronotherapy_benefit
+export CIRCADIAN_PARAMETERS, CHRONOTYPE_SHIFTS
+
+# Export Disease Ontology PK functions
+export DiseaseCode, DiseasePKProfile, OntologyMapping
+export get_pk_adjustments_by_doid, get_pk_adjustments_by_icd10
+export get_pk_adjustments_by_icd11, search_disease_pk
+export map_disease_hierarchy, get_pk_with_fallback
+export combine_disease_profiles, list_supported_diseases
+export get_disease_summary
+export DOID_PK_DATABASE, ICD10_TO_DOID, ICD11_TO_DOID
+export DISEASE_HIERARCHY
 
 end # module
