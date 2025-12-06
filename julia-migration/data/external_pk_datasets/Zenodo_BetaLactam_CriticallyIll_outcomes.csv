@@ -1,0 +1,1084 @@
+study_id,outcome,outcome_clean,outcome_cleaner,outcome_category,significant,outcome_parameter,parameter_clean,comment
+1,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+1,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+1,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,decreasing the OFV by 32.3 points and reducing BSV on CL from 56.7% to 10.4%
+2,age,age,age,Patient characteristics,yes,kel,Ke,kel = total elimination rate constant; age dichotomised as adults and paediatric
+2,weight,weight,weight,Patient characteristics,yes,"Vd, kel","V, Ke",kel = total elimination rate constant
+2,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+2,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,kel,Ke,kel = total elimination rate constant
+3,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,yes,NA,NA,"retained, not reported as significant"
+3,CRRT downtime,CRRT downtime,CRRT parameters,Extracorporeal parameters,yes,NA,NA,"retained, not reported as significant"
+3,therapy fluid flow rate,therapy fluid flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+3,total effluent flow rate,CRRT total effluent flow rate,CRRT parameters,Extracorporeal parameters,yes,NA,NA,"retained, not reported as significant"
+3,ultrafiltrate flow rate,CRRT ultrafiltrate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+3,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+3,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+5,body mass index,body mass index,BMI,Patient characteristics,yes,V1,V,"retained: two categories of BMI (above and below 35 kg/m2), V1 = population volume of distribution of the central compartment"
+5,age,age,age,Patient characteristics,no,NA,NA,NA
+5,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+5,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+5,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+5,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+5,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+5,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+5,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+5,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+5,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"estimated by the Cockcroft-Gault equation by separately using TBW, LBW, and IBW"
+6,body mass index,body mass index,BMI,Patient characteristics,yes,V1,V,V1 = population volume of distribution of the central compartment
+6,age,age,age,Patient characteristics,no,NA,NA,NA
+6,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+6,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+6,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+6,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+6,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+6,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+6,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+6,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+6,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"measured and estimated using Cockcroft-Gault (separately using TBW, LBW, IBW), measured clearance was found to be significant"
+7,CRRT,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,presence or absence; significant on total clearance
+7,total body weight,total body weight,weight,Patient characteristics,yes,Vd,V,NA
+7,age,age,age,Patient characteristics,no,NA,NA,NA
+7,acute kidney injury,acute kidney injury,AKI,Organ dysfunction/support,no,NA,NA,NA
+7,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+7,mortality,mortality,mortality,Other,no,NA,NA,NA
+7,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+7,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+7,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+7,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+7,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,based on equations developed by Janmahasatian et al.
+7,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated using Cockcroft-Gault; significant on renal clearance of meropenem
+8,body weight,body weight,weight,Patient characteristics,yes,Vd,V,NA
+8,age,age,age,Patient characteristics,no,NA,NA,NA
+8,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+8,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+8,repository flow rate,CRRT repository flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+8,ultrafiltrate flow rate,CRRT ultrafiltrate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+8,drug sieving coefficient,drug sieving coefficient,drug sieving coefficient,Extracorporeal parameters,no,NA,NA,estimated as the ratio of area under the ultrafiltrate concentration curve to area under the serum concentration curve
+8,patient type,patient type,patient type,Patient characteristics,no,NA,NA,septic/polytraumatized
+8,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+8,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+8,total serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+8,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+8,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+8,unbound fraction of drug,unbound drug fraction,unbound drug fraction,Other,no,NA,NA,NA
+8,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+9,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,estimated
+9,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,"estimated based on creatinine, cystatin C, or both; log-normalised in model"
+9,weight,weight,weight,Patient characteristics,yes,Vd,V,log-normalised
+9,age,age,age,Patient characteristics,no,NA,NA,NA
+9,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+9,ethnicity,ethnicity,ethnicity,Patient characteristics,no,NA,NA,NA
+9,history of liver disease,history of liver disease,liver disease,Organ dysfunction/support,no,NA,NA,NA
+9,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+10,MELD score,MELD score,MELD score,Disease severity score,yes,CL,CL,NA
+10,acute-on-chronic liver failure,liver failure,liver disease,Organ dysfunction/support,yes,Vd,V,NA
+10,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+11,age,age,age,Patient characteristics,no,NA,NA,NA
+11,APACHE score,APACHE score,APACHE,Disease severity score,no,NA,NA,NA
+11,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+11,fluid overload,fluid overload,fluid balance,Physiological parameters,no,NA,NA,NA
+11,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,NA
+11,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+11,PCT,procalcitonin,procalcitonin,Biomarkers,no,NA,NA,NA
+11,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+11,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+11,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+11,total serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+11,serum urea,serum urea,serum urea,Biomarkers,no,NA,NA,NA
+11,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+11,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+12,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+13,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Vc,V,Vc = central compartment
+13,shock,shock,shock,Organ dysfunction/support,yes,Vp,V,defined as a clinical state requiring vasopressors or inotropes to maintain a mean arterial pressure greater than 65 mm Hg; Vp = peripheral compartment
+13,age,age,age,Patient characteristics,no,NA,NA,NA
+13,acute kidney injury,acute kidney injury,AKI,Organ dysfunction/support,no,NA,NA,NA
+13,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+13,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+13,fluid overload,fluid overload,fluid balance,Physiological parameters,no,NA,NA,NA
+13,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,estimated using the four- and six-variable modification of diet in renal disease study equation (GFRMDRD) and the chronic kidney disease epidemiology collaboration equation (GFREPI)
+13,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+13,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,based on the sepsis-3 criteria
+13,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+13,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+13,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+13,adjusted body weight,adjusted body weight,weight,Patient characteristics,no,NA,NA,NA
+13,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+13,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+13,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated by the Cockcroft-Gault equation (CLCR-CG) and by the Jelliffe equation (CLCR-JEL)
+14,residual diuresis,residual diuresis,diuresis,Physiological parameters,yes,CL,CL,found to be significant when SLED was not being used
+14,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+14,dialysate flow rate,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+14,ultrafiltrate flow rate,CRRT ultrafiltrate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+14,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+15,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,NA
+15,age,age,age,Patient characteristics,no,NA,NA,NA
+15,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+15,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+16,comorbidities,comorbidity,comorbidity,Patient characteristics,yes,CL,CL,"categories: hematologic malignancy, oncologic malignancy, trauma, head injury"
+16,CVVH,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,NA
+16,age,age,age,Patient characteristics,no,NA,NA,NA
+16,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+16,furosemide use,furosemide use,diuretic use,Other,no,NA,NA,NA
+16,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,Cockcroft-Gault
+16,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+16,RIFLE score,RIFLE score,RIFLE score,Organ dysfunction/support,no,NA,NA,NA
+16,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+16,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+16,serum sodium,serum sodium,serum sodium,Biomarkers,no,NA,NA,NA
+16,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+16,site of infection,site of infection,site of infection,Other,no,NA,NA,NA
+16,noradrenaline use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+16,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+16,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CKD-EPI
+17,age,age,age,Patient characteristics,yes,CLno-crrt,CL,CLno-crrt = creatinine clearence in the absence of CRRT
+17,body weight,body weight,weight,Patient characteristics,yes,Vc,V,Vc = central compartment
+17,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+17,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CLno-crrt,CL,CLno-crrt = creatinine clearence in the absence of CRRT
+18,age,age,age,Patient characteristics,no,NA,NA,NA
+18,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+18,total serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+18,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+19,age,age,age,Patient characteristics,no,NA,NA,NA
+19,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+19,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+19,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+19,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+19,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+20,age,age,age,Patient characteristics,no,NA,NA,NA
+20,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+20,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+20,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+20,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+20,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+20,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,normalized to the population's mean creatinine clearance
+21,body mass index,body mass index,BMI,Patient characteristics,no,V,V,NA
+21,body weight,body weight,weight,Patient characteristics,no,V,V,NA
+21,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+22,age,age,age,Patient characteristics,no,NA,NA,NA
+22,SAPS 2 score,SAPS 2 score,SAPS,Disease severity score,no,NA,NA,NA
+22,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+22,total serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+22,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+22,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+22,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+23,lean body weight,lean body weight,weight,Patient characteristics,yes,V2,V,V2 = volume of distribution of the peripheral compartment
+23,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+23,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+23,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+23,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+24,ECMO,ECMO,ECMO,Organ dysfunction/support,yes,CL,CL,NA
+24,body weight,body weight,weight,Patient characteristics,yes,CL,CL,NA
+24,age,age,age,Patient characteristics,no,NA,NA,NA
+24,aspartate transaminase,AST,AST,Biomarkers,no,NA,NA,NA
+24,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+24,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+25,body mass index,body mass index,BMI,Patient characteristics,yes,"Vc, Vp",V,"Vc = central compartment volume of distribution, Vp = peripheral compartment volume of distribution"
+25,age,age,age,Patient characteristics,no,NA,NA,NA
+25,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+25,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+25,ECMO mode,ECMO mode,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+25,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+25,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+25,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+25,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+26,actual body weight,actual body weight,weight,Patient characteristics,yes,Vc,V,Vc = central compartment volume of distribution
+26,age,age,age,Patient characteristics,no,NA,NA,NA
+26,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+26,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+26,ECMO mode,ECMO mode,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+26,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+26,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+26,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,Cockcroft-Gault
+27,CRRT,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,NA
+27,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Vc,V,Vc = central compartment volume of distribution
+27,weight,weight,weight,Patient characteristics,yes,Vc,V,Vc = central compartment volume of distribution
+27,age,age,age,Patient characteristics,no,NA,NA,NA
+27,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+27,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+27,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+27,ECMO mode,ECMO mode,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+27,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+27,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+27,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+28,ICU,ICU,location,Other,yes,V1,V,NA
+28,total body weight,total body weight,weight,Patient characteristics,yes,"V1, V2",V,NA
+28,age,age,age,Patient characteristics,no,NA,NA,NA
+28,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+28,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+28,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+28,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+28,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+29,weight,weight,weight,Patient characteristics,yes,V,V,NA
+29,height,height,height,Patient characteristics,no,NA,NA,NA
+29,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+29,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+30,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,yes,V2,V,V2 = peripheral compartment volume of distribution
+30,serum creatinine,serum creatinine,serum creatinine,Biomarkers,yes,V2,V,V2 = peripheral compartment volume of distribution
+30,sex,sex,sex,Patient characteristics,yes,V2,V,V2 = peripheral compartment volume of distribution
+30,age,age,age,Patient characteristics,no,NA,NA,NA
+30,alkaline reserve,alkaline reserve,alkaline reserve,Other,no,NA,NA,NA
+30,alkaline phosphatase,ALP,ALP,Biomarkers,no,NA,NA,NA
+30,transaminase,ALT,ALT,Biomarkers,no,NA,NA,NA
+30,Baux index,Baux index,Baux index,Other,no,NA,NA,NA
+30,BUN,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+30,pulse oximetry,pulse oximetry,oxygenation,Organ dysfunction/support,no,NA,NA,NA
+30,pCO2,pCO2,pCO2,Biomarkers,no,NA,NA,NA
+30,total serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+30,serum sodium,serum sodium,serum sodium,Biomarkers,no,NA,NA,NA
+30,total body surface area,total body surface area,TBSA,Patient characteristics,no,NA,NA,NA
+30,Tobiasen index,Tobiasen index,Tobiasen index,Other,no,NA,NA,NA
+30,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+30,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+31,serum albumin,serum albumin,serum albumin,Biomarkers,yes,V1,V,V1 = central compartment volume of distribution
+31,total body weight,total body weight,weight,Patient characteristics,yes,V1,V,V1 = central compartment volume of distribution
+31,age,age,age,Patient characteristics,no,NA,NA,NA
+31,oedema score,oedema score,oedema,Other,no,NA,NA,NA
+31,P/F ratio,P/F ratio,oxygenation,Organ dysfunction/support,no,NA,NA,NA
+31,PEEP,PEEP,PEEP,Organ dysfunction/support,no,NA,NA,NA
+31,SAPS 2 score,SAPS 2 score,SAPS,Disease severity score,no,NA,NA,NA
+31,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+31,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+31,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+31,total body weight change,total body weight change,weight,Patient characteristics,no,NA,NA,between the 4th dose and admission
+31,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,4hr clearance
+32,adjusted body weight,adjusted body weight,weight,Patient characteristics,yes,V1,V,V1 = Volume of distribution of the central compartment
+32,age,age,age,Patient characteristics,no,NA,NA,NA
+32,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+32,ethnicity,ethnicity,ethnicity,Patient characteristics,no,NA,NA,NA
+32,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+32,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,calculated by using the Cockcroft–Gault equation: CrCl = (140 − age) × IBW/(serum creatinine × 72) (multiplied by 0.85 for females)
+34,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,Ke,Ke,"Ke = elimination rate constant; estimated by Cockgroft Gault, various formulae were examined, CKD-EPI Estimated Glomerular Filtration Rate was found to be significant"
+34,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+34,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+34,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+35,amikacin clearance,amikacin clearance,amikacin,Other,no,CL,CL,NA
+35,amikacin concentration measured 8 h after start of infusion,amikacin concentration,amikacin,Other,no,CL,CL,NA
+35,renal function,renal function,renal function,Physiological parameters,no,CL,CL,NA
+35,amikacin concentration measured 1 h after the start of infusion,amikacin concentration,amikacin,Other,no,V1,V,NA
+35,amikacin V1,amikacin V1,amikacin,Other,no,V1,V,NA
+36,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,data not shown but reported as 'did not improve the model fit'
+36,albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,data not shown but reported as 'did not improve the model fit'
+36,bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,data not shown but reported as 'did not improve the model fit'
+36,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,data not shown but reported as 'did not improve the model fit'
+36,weight,weight,weight,Patient characteristics,no,NA,NA,data not shown but reported as 'did not improve the model fit'
+36,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,Tested creatinine clearance measured in three different ways: urinary creatinine concentrations in an 8-h urinary collection using an indwelling urinary catheter; estimated glomerular filtration rate using the Modification of Diet in Renal Disease formula; estimated glomerular filtration rate using the Cockcroft–Gault formula - used the latter as had lowest AIC
+37,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,estimated using Cockgroft-Gault
+37,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,estimated according to MDRD
+37,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+37,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+37,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+37,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,measured
+38,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,measured
+38,age,age,age,Patient characteristics,no,NA,NA,NA
+38,APAHCE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+38,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+38,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+38,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+38,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+38,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+38,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated using Cockcroft–Gault
+39,age,age,age,Patient characteristics,no,NA,NA,NA
+39,location,location,location,Other,no,NA,NA,location of patient (ICU or general medicine department)
+39,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+39,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+39,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+39,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+39,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+39,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated using Cockgroft-Gault with patient's actual body weight
+40,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,CL,CL,estimated using Cockgroft-Gault
+40,augmented renal clearance,augmented renal clearance,ARC,Physiological parameters,no,CL,CL,defined as either eCLCrCG >130 mL/min or eGFRCKD-EPI >96.5 mL/min/1.73 m2
+40,predicted probability of ARC,augmented renal clearance,ARC,Physiological parameters,yes,CL,CL,on the next day
+40,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,estimated using CKD-EPI
+40,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,CL,CL,NA
+40,body weight,body weight,weight,Patient characteristics,no,"CL, V","CL, V",NA
+40,serum albumin,serum albumin,serum albumin,Biomarkers,no,protein binding,protein binding,NA
+41,age,age,age,Patient characteristics,yes,CL,CL,NA
+41,serum creatinine,serum creatinine,serum creatinine,Biomarkers,yes,CL,CL,NA
+41,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+41,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+41,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+41,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+42,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,measured
+42,cholinesterase,cholinesterase,cholinesterase,Biomarkers,yes,CL,CL,NA
+42,factor V,factor V,factor V,Biomarkers,yes,CL,CL,NA
+42,heart rate,heart rate,HR,Vital signs,yes,CL,CL,NA
+42,hydrogencarbonate,hydrogencarbonate,hydrogencarbonate,Biomarkers,yes,CL,CL,NA
+42,serum urea,serum urea,serum urea,Biomarkers,yes,CL,CL,NA
+42,age,age,age,Patient characteristics,yes,V1,V,V1 = central volume of distribution
+42,lactate,lactate,lactate,Biomarkers,yes,V1,V,V1 = central volume of distribution
+42,sex,sex,sex,Patient characteristics,yes,V1,V,NA
+42,body weight,body weight,weight,Patient characteristics,yes,V1,V,V1 = central volume of distribution
+42,cardiovascular system,cardiovascular system,cardiovascular system,Vital signs,yes,"V1, CL","V, CL","extracted from APACHE II score heart rate, categorical; V1 = central volume of distribution"
+42,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,yes,"V1, V2",V,"V1 = central volume of distribution, V2 = peripheral volume of distribution"
+42,CRP,CRP,CRP,Biomarkers,yes,V2,V,V2 = peripheral volume of distribution
+42,pH,pH,pH,Biomarkers,yes,V2,V,V2 = peripheral volume of distribution
+42,serum albumin,serum albumin,serum albumin,Biomarkers,yes,V2,V,V2 = peripheral volume of distribution
+42,antithrombin,antithrombin,antithrombin,Biomarkers,no,NA,NA,NA
+42,ARDS,ARDS,ARDS,Organ dysfunction/support,no,NA,NA,NA
+42,mean arterial pressure,MAP,BP,Vital signs,no,NA,NA,NA
+42,CD64 index,CD64 index,CD64 index,Biomarkers,no,NA,NA,NA
+42,ECMO,ECMO,ECMO,Organ dysfunction/support,no,NA,NA,NA
+42,fibrinogen,fibrinogen,fibrinogen,Biomarkers,no,NA,NA,NA
+42,interleukin-6,interleukin-6,IL-6,Biomarkers,no,NA,NA,NA
+42,lung transplantation,lung transplantation,lung transplant,Organ dysfunction/support,no,NA,NA,NA
+42,peritonitis,peritonitis,peritonitis,Organ dysfunction/support,no,NA,NA,NA
+42,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+42,serum sodium,serum sodium,serum sodium,Biomarkers,no,NA,NA,NA
+42,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated Cockgroft-Gault
+43,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,estimated by Cockgroft-Gault
+43,infusion volume,infusion volume,infusion volume,Other,no,NA,NA,NA
+43,study site,study site,study site,Other,no,NA,NA,NA
+43,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+43,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+43,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated by Cockgroft-Gault using IBW
+44,age,age,age,Patient characteristics,NA,"CLS, CLdial, VC","CL, V","CLS = systemic clearance, CLdial = dialytic clearance, VC = central volume of distribution"
+44,weight,weight,weight,Patient characteristics,NA,"CLS, CLdial, VC","CL, V","CLS = systemic clearance, CLdial = dialytic clearance, VC = central volume of distribution"
+46,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,NA,CL,CL,NA
+46,body weight,body weight,weight,Patient characteristics,NA,Vc,V,Vc = central volume of distribution
+47,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated by Cockgroft-Gault
+48,ECMO,ECMO,ECMO,Organ dysfunction/support,no,NA,NA,NA
+49,body weight,body weight,weight,Patient characteristics,yes,V1,V,"body weight on admission, V1 = central volume of distribution"
+49,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+49,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+49,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+49,total body surface area,total body surface area,TBSA,Patient characteristics,no,NA,NA,NA
+49,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+49,body weight gain,body weight gain,weight,Patient characteristics,no,NA,NA,defined as BW − BWADM when BW > BWADM and zero otherwise
+49,body weight loss,body weight loss,weight,Patient characteristics,no,NA,NA,defined as BWADM − BW when BWADM > BW and zero otherwise
+49,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated by the Cockcroft-Gault equation
+50,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,estimated based on Cockcroft-Gault
+50,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,measured
+50,body size,body size,body size,Patient characteristics,no,NA,NA,NA
+51,weight,weight,weight,Patient characteristics,yes,V,V,NA
+51,age,age,age,Patient characteristics,no,NA,NA,NA
+51,bacteraemia,bacteraemia,bacteraemia,Other,no,NA,NA,NA
+51,cirrhosis,cirrhosis,cirrhosis,Organ dysfunction/support,no,NA,NA,NA
+51,SAPS 3 score,SAPS 3 score,SAPS,Disease severity score,no,NA,NA,NA
+51,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+51,severe sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+51,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+51,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+51,surgical drain,surgical drain,surgical drain,Other,no,NA,NA,NA
+51,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+52,age,age,age,Patient characteristics,no,NA,NA,NA
+52,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+52,daily fluid intake,daily fluid intake,fluid balance,Physiological parameters,no,NA,NA,NA
+52,haematocrit,haematocrit,haematocrit,Biomarkers,no,NA,NA,NA
+52,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+52,SAPS 2 score,SAPS 2 score,SAPS,Disease severity score,no,NA,NA,NA
+52,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+52,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+52,severe sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+52,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+52,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+52,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+52,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+52,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+52,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+52,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,measured
+53,SAPS 2 score,SAPS 2 score,SAPS,Disease severity score,yes,CL,CL,NA
+53,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,yes,"CL, V1","CL, V",V1 = central volume of distribution
+53,reason for admission,reason for admission,diagnosis,Patient characteristics,yes,"CL, V2","CL, V",V2 = peripheral volume of distribution
+53,age,age,age,Patient characteristics,no,NA,NA,NA
+53,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+53,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+53,haemoglobin,haemoglobin,haemoglobin,Biomarkers,no,NA,NA,NA
+53,height,height,height,Patient characteristics,no,NA,NA,NA
+53,SAPS 1 score,SAPS 1 score,SAPS,Disease severity score,no,NA,NA,NA
+53,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+53,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+53,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+53,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+53,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+53,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"Cockgroft-Gault based on TBW and LBW, Kirkpatrick clearance, MDRD"
+54,age,age,age,Patient characteristics,no,NA,NA,NA
+54,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+54,predicted probability of ARC,augmented renal clearance,ARC,Physiological parameters,no,NA,NA,on the day of sampling according to ARC predictor
+54,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+54,fluid balance,fluid balance,fluid balance,Physiological parameters,no,NA,NA,NA
+54,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,"estimated according to the MDRD equation, CKD-EPI, mCrCl24h"
+54,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+54,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+54,adjusted body weight,adjusted body weight,weight,Patient characteristics,no,NA,NA,NA
+54,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+54,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+54,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated according to Cockgroft-Gault
+55,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,NA
+55,Charlson comorbidity index,Charlson comorbidity index,Charlson comorbidity index,Patient characteristics,no,NA,NA,NA
+55,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+57,ECMO,ECMO,ECMO,Organ dysfunction/support,yes,CL,CL,NA
+57,CRRT,CRRT,CRRT,Organ dysfunction/support,yes,V1,V,V1 = central volume of distribution
+57,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,yes,V1,V,V1 = central volume of distribution
+57,age,age,age,Patient characteristics,no,NA,NA,NA
+57,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+57,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+57,CRRT duration,CRRT duration,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+57,dialysate flow rate,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+57,ECMO duration,ECMO duration,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+57,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+57,ECMO pump speed,ECMO pump speed,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+57,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,NA
+57,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+57,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+57,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+57,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+57,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated using Cockgroft-Gault
+58,age,age,age,Patient characteristics,no,NA,NA,NA
+58,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+58,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+58,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+58,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+58,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated from Cockgroft-Gault
+60,age,age,age,Patient characteristics,no,NA,NA,NA
+60,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+60,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+60,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+60,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,estimated from Cockgroft-Gault using TBW
+61,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+61,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+61,acute and chronic kidney disease,acute and chronic kidney disease,CKD,Organ dysfunction/support,no,NA,NA,NA
+61,other comorbidities,comorbidity,comorbidity,Patient characteristics,no,NA,NA,NA
+61,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+61,days in ICU,days in ICU,days in ICU,Other,no,NA,NA,NA
+61,infectious diagnosis,infectious diagnosis,diagnosis,Patient characteristics,no,NA,NA,NA
+61,height,height,height,Patient characteristics,no,NA,NA,NA
+61,liver failure,liver failure,liver disease,Organ dysfunction/support,no,NA,NA,NA
+61,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+61,mortality,mortality,mortality,Other,no,NA,NA,"in-hospital, at 14 days"
+61,procalcitonin,procalcitonin,procalcitonin,Biomarkers,no,NA,NA,NA
+61,re-admission,re-admission,re-admission,Other,no,NA,NA,at 30 days
+61,SAPS 3 score,SAPS 3 score,SAPS,Disease severity score,no,NA,NA,on first day of ICU
+61,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+61,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+61,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+61,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,worst on admission
+61,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,on first day of ICU
+61,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+61,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+61,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,calculated by CKD-EPI
+63,dialysate plus ultrafiltrate flow,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,yes,CL,CL,NA
+63,patient type,patient type,patient type,Patient characteristics,yes,"CL, V1","CL, V","sepsis or trauma, V1 = central volume of distribution"
+63,age,age,age,Patient characteristics,no,NA,NA,NA
+63,CRRT mode,CRRT mode,CRRT parameters,Extracorporeal parameters,no,NA,NA,CVVHDF or CVVH
+63,membrane type,CRRT membrane type,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+63,unbound drug fraction,unbound drug fraction,unbound drug fraction,Other,no,NA,NA,NA
+63,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+63,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+64,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,measured
+65,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,calculated from measured creatinine in urine collected for 4 or 6 h
+65,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Bmax,Bmax,Bmax = maximum binding capacity
+65,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,estimated using CKD-EPI
+65,age,age,age,Patient characteristics,no,NA,NA,NA
+65,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+65,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+65,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+65,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+65,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+66,age,age,age,Patient characteristics,no,NA,NA,NA
+66,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+66,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+66,diastolic blood pressure,diastolic blood pressure,BP,Vital signs,no,NA,NA,NA
+66,systolic blood pressure,SBP,BP,Vital signs,no,NA,NA,NA
+66,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+66,fluid intake,fluid intake,fluid balance,Physiological parameters,no,NA,NA,per day
+66,pH,pH,pH,Biomarkers,no,NA,NA,NA
+66,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+66,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+66,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+66,fluid output,urine output,urine output,Physiological parameters,no,NA,NA,per day
+66,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+66,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,Cockgroft-Gault and MDRD (only MDRD significant)
+67,APACHE II score,APACHE II score,APACHE,Disease severity score,yes,"CL, k10","CL, K10",NA
+67,SOFA score,SOFA score,SOFA,Disease severity score,yes,"t1/2β, k10, Cmin","t1/2β, K10, Cmin",NA
+67,age,age,age,Patient characteristics,no,NA,NA,NA
+67,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+67,concomitant medications,concomitant medications,concomitant medications,Other,no,NA,NA,NA
+67,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+67,fluid balance,fluid balance,fluid balance,Physiological parameters,no,NA,NA,NA
+67,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+67,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+67,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+67,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,"CL, k10","CL, K10",Cockgroft-Gault
+70,day after burn injury,day after burn injury,day after burn injury,Other,yes,CL,CL,NA
+70,sepsis,sepsis,sepsis,Organ dysfunction/support,yes,V1,V,V1 = central volume of distribution
+70,abbreviated burn severity index,abbreviated burn severity index,abbreviated burn severity index,Disease severity score,no,NA,NA,NA
+70,age,age,age,Patient characteristics,no,NA,NA,NA
+70,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+70,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+70,dehydration,dehydration,dehydration,Patient characteristics,no,NA,NA,NA
+70,oedema,oedema,oedema,Patient characteristics,no,NA,NA,NA
+70,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+70,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+70,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+70,total body surface area,total body surface area,TBSA,Patient characteristics,no,NA,NA,NA
+70,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+70,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,Cockgroft-Gault
+71,measured creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,urine
+71,age,age,age,Patient characteristics,no,NA,NA,NA
+71,cystatin C,cystatin C,cystatin C,Biomarkers,no,NA,NA,NA
+71,KIM-1,KIM-1,KIM-1,Biomarkers,no,NA,NA,NA
+71,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+71,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+71,urea,serum urea,serum urea,Biomarkers,no,NA,NA,NA
+71,uromodulin,uromodulin,uromodulin,Biomarkers,no,NA,NA,NA
+71,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+71,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,multiple equations used; Cockgroft-Gault most significant
+73,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,using Cockgroft-Gault
+73,CRRT,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,NA
+73,age,age,age,Patient characteristics,no,NA,NA,NA
+73,alcohol consumption,alcohol consumption,alcohol use,Patient characteristics,no,NA,NA,NA
+73,alanine transaminase,ALT,ALT,Biomarkers,no,NA,NA,NA
+73,aspartate aminotransferase,AST,AST,Biomarkers,no,NA,NA,NA
+73,blood pressure,blood pressure,BP,Vital signs,no,NA,NA,NA
+73,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+73,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+73,CRRT 6h prior to urine output,CRRT 6h prior to urine output,CRRT,Organ dysfunction/support,no,NA,NA,NA
+73,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+73,dialysate flow rate,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+73,ECMO,ECMO,ECMO,Organ dysfunction/support,no,NA,NA,on ECMO or weaned off
+73,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+73,ECMO termination,ECMO termination,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+73,time since ECMO initiation,time since ECMO initiation,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+73,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,using MDRD
+73,haemoglobin,haemoglobin,haemoglobin,Biomarkers,no,NA,NA,NA
+73,height,height,height,Patient characteristics,no,NA,NA,NA
+73,platelets,platelets,platelets,Biomarkers,no,NA,NA,NA
+73,procalcitonin,procalcitonin,procalcitonin,Biomarkers,no,NA,NA,NA
+73,red cell count,red cell count,red cell count,Biomarkers,no,NA,NA,NA
+73,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+73,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+73,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+73,smoking status,smoking status,smoking,Patient characteristics,no,NA,NA,NA
+73,body temperature,body temperature,temperature,Vital signs,no,NA,NA,tympanic
+73,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+73,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+74,CRRT,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,SLED
+74,age,age,age,Patient characteristics,no,NA,NA,NA
+74,targeted hourly fluid removal,targeted hourly fluid removal,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+74,ultrafiltrate flow rate,CRRT ultrafiltrate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+74,height,height,height,Patient characteristics,no,NA,NA,NA
+74,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+74,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+74,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+76,cystatin C,cystatin C,cystatin C,Biomarkers,yes,CL,CL,1/cystatin C was significant
+76,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,estimated according to Hoek
+76,age,age,age,Patient characteristics,no,NA,NA,NA
+76,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+76,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+76,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+76,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,measured
+76,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,Cockgroft-Gault
+77,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,"estimated using Cockgroft-Gault, MDRD, modified MDRD, CKD-EPI, modified CKD-EPI; CKD-EPI equation using cystatin C was significant"
+77,ECMO,ECMO,ECMO,Organ dysfunction/support,yes,Vc,V,Vc = central volume of distribution
+77,age,age,age,Patient characteristics,no,NA,NA,NA
+77,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+77,comorbidity,comorbidity,comorbidity,Patient characteristics,no,NA,NA,NA
+77,cystatin C,cystatin C,cystatin C,Biomarkers,no,NA,NA,NA
+77,primary diagnosis,primary diagnosis,diagnosis,Patient characteristics,no,NA,NA,NA
+77,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+77,ECMO type,ECMO type,ECMO parameters,Extracorporeal parameters,no,NA,NA,VV or VA
+77,rotations per minute,ECMO rotations per minute,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+77,height,height,height,Patient characteristics,no,NA,NA,NA
+77,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+77,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+77,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+77,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+79,age,age,age,Patient characteristics,no,NA,NA,NA
+79,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,time-varying
+79,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+79,body weight,body weight,weight,Patient characteristics,no,NA,NA,time-varying
+79,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"derived, time-varying"
+81,body weight,body weight,weight,Patient characteristics,yes,Vc,V,NA
+81,SLED,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+84,age,age,age,Patient characteristics,yes,NA,NA,NA
+84,serum alanine aminotransferase,ALT,ALT,Biomarkers,no,NA,NA,NA
+84,APACHE score,APACHE score,APACHE,Disease severity score,no,NA,NA,NA
+84,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+84,CSF protein concentration,CSF protein concentration,CSF,Other,no,NA,NA,NA
+84,CSF protein:serum albumin ratio,CSF protein:serum albumin ratio,CSF,Other,no,NA,NA,"CSF protein concentration, and CSF protein:serum albumin ratio"
+84,volume of CSF drained over sampling interval,volume of CSF drained over sampling interval,CSF,Other,no,NA,NA,NA
+84,height,height,height,Patient characteristics,no,NA,NA,NA
+84,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+84,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+84,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+84,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+84,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,NA,NA,calculated using Cockgroft-Gault using TBW
+85,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+85,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+85,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+86,renal function,renal function,renal function,Physiological parameters,yes,CL,CL,"estimated by CG, CKD-EPI, modified CKD-EPI, MDRD, modified MDRD"
+86,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,yes,Vc,V,NA
+86,age,age,age,Patient characteristics,no,NA,NA,NA
+86,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+86,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+86,comorbidity,comorbidity,comorbidity,Patient characteristics,no,NA,NA,NA
+86,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+86,primary diagnosis,primary diagnosis,diagnosis,Patient characteristics,no,NA,NA,NA
+86,ECMO type,ECMO type,ECMO parameters,Extracorporeal parameters,no,NA,NA,VV or VA
+86,height,height,height,Patient characteristics,no,NA,NA,NA
+86,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+86,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+86,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+86,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+86,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+86,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+87,renal function,renal function,renal function,Physiological parameters,yes,CL,CL,"estimated by CG, CKD-EPI, modified CKD-EPI, MDRD, modified MDRD"
+87,age,age,age,Patient characteristics,no,NA,NA,NA
+87,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+87,comorbidity,comorbidity,comorbidity,Patient characteristics,no,NA,NA,NA
+87,cystatin C,cystatin C,cystatin C,Biomarkers,no,NA,NA,NA
+87,primary diagnosis,primary diagnosis,diagnosis,Patient characteristics,no,NA,NA,NA
+87,ECMO flow rate,ECMO flow rate,ECMO parameters,Extracorporeal parameters,no,NA,NA,NA
+87,ECMO type,ECMO type,ECMO parameters,Extracorporeal parameters,no,NA,NA,VV or VA
+87,height,height,height,Patient characteristics,no,NA,NA,NA
+87,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+87,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+87,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+87,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+87,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+88,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Bmax,Bmax,NA
+88,mode of administration,mode of administration,mode of administration,Other,yes,Vd,V,CI or II
+88,age,age,age,Patient characteristics,no,NA,NA,NA
+88,APACHE IV score,APACHE IV score,APACHE,Disease severity score,no,NA,NA,NA
+88,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+88,fluid balance,fluid balance,fluid balance,Physiological parameters,no,NA,NA,NA
+88,SAPS 2 score,SAPS 2 score,SAPS,Disease severity score,no,NA,NA,NA
+88,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+88,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+88,adjusted body weight,adjusted body weight,weight,Patient characteristics,no,NA,NA,NA
+88,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG
+90,degree of diuresis,diuresis,diuresis,Physiological parameters,yes,CL,CL,"anuria, oliguria, preserved urine output"
+90,patient type,patient type,patient type,Patient characteristics,yes,CL,CL,burns or non-burns
+90,age,age,age,Patient characteristics,no,NA,NA,NA
+90,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+90,percentage of burned total body surface area,percentage of burned total body surface area,burns,Patient characteristics,no,NA,NA,NA
+90,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+90,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+90,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+91,dialysate flow rate,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,yes,CL,CL,NA
+91,age,age,age,Patient characteristics,no,NA,NA,NA
+91,acute kidney injury,acute kidney injury,AKI,Organ dysfunction/support,no,NA,NA,NA
+91,APACHE score,APACHE score,APACHE,Disease severity score,no,NA,NA,NA
+91,course of treatment,course of treatment,course of treatment,Other,no,NA,NA,NA
+91,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+91,replacement fluid flow rate,CRRT replacement fluid flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+91,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+91,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+91,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+91,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+91,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+91,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+91,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+91,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+92,total body weight,total body weight,weight,Patient characteristics,NA,V1,V,NA
+92,serum albumin,serum albumin,serum albumin,Biomarkers,yes,V2,V,NA
+92,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG
+95,actual body weight,actual body weight,weight,Patient characteristics,yes,Vc,V,NA
+95,age,age,age,Patient characteristics,no,NA,NA,NA
+95,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+95,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,Ke,Ke,CG
+96,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,CG
+96,sepsis severity,sepsis,sepsis,Organ dysfunction/support,yes,CL,CL,"sepsis, severe sepsis or septic shock"
+96,sex,sex,sex,Patient characteristics,yes,CL,CL,NA
+96,age,age,age,Patient characteristics,yes,V,V,NA
+96,serum albumin,serum albumin,serum albumin,Biomarkers,yes,V,V,NA
+96,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+96,height,height,height,Patient characteristics,no,NA,NA,NA
+96,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+96,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+97,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"CLCRCG_WT, CLCRCG_WT_adj, CLCRJEL, CLCRJEL_adj, CKD-EPI, CKD-EPIadj, MDRD, MDRDadj, CLCRCG_WT_mod, CLCRCG_IBW, CLCRCG_LBW, CLCRCG_ABW"
+99,postoperative central nervous system infection,postoperative central nervous system infection,CNS infection,Other,yes,CL,CL,NA
+99,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,estimated
+99,age,age,age,Patient characteristics,no,NA,NA,NA
+99,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+99,height,height,height,Patient characteristics,no,NA,NA,NA
+99,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+99,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+99,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+100,race,ethnicity,ethnicity,Patient characteristics,yes,CL,CL,"white, black, Hispanic/Latino, Asian, Native Hawaiian/other Pacific islander, other"
+100,body weight,body weight,weight,Patient characteristics,yes,"Vc, Q, Vp","Q, V",NA
+100,age,age,age,Patient characteristics,yes,Vp,V,NA
+100,alkaline phosphatase,ALP,ALP,Biomarkers,no,NA,NA,NA
+100,alanine aminotransferase,ALT,ALT,Biomarkers,no,NA,NA,NA
+100,aspartate aminotransferase,AST,AST,Biomarkers,no,NA,NA,NA
+100,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+100,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+100,concomitant medications used,concomitant medications,concomitant medications,Other,no,NA,NA,"heparin, metamizole, ciprofloxacin, paracetamol, acetylsalicylic acid, metoclopramide, enalapril, metformin, and clonixin"
+100,gamma glutamyl transferase,GGT,GGT,Biomarkers,no,NA,NA,NA
+100,health status,health status,health status,Patient characteristics,no,NA,NA,"healthy subject, complicated UTI/pyelonephritis"
+100,height,height,height,Patient characteristics,no,NA,NA,NA
+100,lactate dehydrogenase,LDH,LDH,Biomarkers,no,NA,NA,NA
+100,occasion number,occasion number,occasion number,Other,no,NA,NA,"1, 2, or 3, consistent with the sampling period"
+100,renal function,renal function,renal function,Physiological parameters,no,NA,NA,"normal [creatinine clearance (CLCR) > 80 ml/min], mild [50 ≤ creatinine clearance ≤ 80 ml/min], moderate [30 ≤ creatinine clearance < 50 ml/min], or severe [10 < creatinine clearance < 30 ml/min]"
+100,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+100,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+100,serum protein,serum protein,serum protein,Biomarkers,no,NA,NA,NA
+100,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+100,study phase,study phase,study phase,Other,no,NA,NA,NA
+100,treatment,treatment,treatment,Other,no,NA,NA,"according to dose, infusion duration, and dosing frequency"
+100,lean body mass,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+100,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,"CL, Vp","CL, V",NA
+101,body weight,body weight,weight,Patient characteristics,yes,V1,V,NA
+101,age,age,age,Patient characteristics,no,NA,NA,NA
+101,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+101,ethnicity,ethnicity,ethnicity,Patient characteristics,no,NA,NA,NA
+101,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+101,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,K10,K10,NA
+102,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,NA
+102,age,age,age,Patient characteristics,no,NA,NA,NA
+102,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+102,CHDF hemofilter,CHDF hemofilter,CHDF hemofilter,Extracorporeal parameters,no,NA,NA,NA
+102,CHDF intensity,CHDF intensity,CHDF intensity,Extracorporeal parameters,no,NA,NA,NA
+102,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+102,interleukin-6,interleukin-6,IL-6,Biomarkers,no,NA,NA,NA
+102,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+102,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+102,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+102,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+102,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+102,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+103,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,NA
+103,CRP,CRP,CRP,Biomarkers,yes,CL,CL,NA
+103,age,age,age,Patient characteristics,no,NA,NA,NA
+103,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+103,patient population,patient type,patient type,Patient characteristics,no,NA,NA,postoperative or medical patients
+103,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+103,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+103,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+103,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+103,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+104,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+104,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+104,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG
+105,dialysis,dialysis,dialysis,Organ dysfunction/support,yes,CL,CL,continuous and semi-continuous
+105,residual diuresis volume,residual diuresis,diuresis,Physiological parameters,yes,CL,CL,NA
+105,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,NA
+105,renal function,renal function,renal function,Physiological parameters,yes,CL,CL,NA
+105,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+105,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+105,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+106,age,age,age,Patient characteristics,no,NA,NA,NA
+106,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+106,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+106,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+106,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+107,serum albumin,serum albumin,serum albumin,Biomarkers,yes,V1,V,NA
+107,age,age,age,Patient characteristics,no,NA,NA,NA
+107,type of anticoagulation,type of anticoagulation,anticoagulation,Extracorporeal parameters,no,NA,NA,NA
+107,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+107,CRRT blood flow,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+107,CRRT dialysate flow,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+107,CRRT ultrafiltrate net flow,CRRT ultrafiltrate net flow,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+107,day of filter usage,day of filter usage,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+107,day of antibiotic therapy,day of antibiotic therapy,day of antibiotic therapy,Other,no,NA,NA,NA
+107,diuresis,diuresis,diuresis,Physiological parameters,no,NA,NA,estimated using CG
+107,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,estimated using MDRD
+107,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+107,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+107,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+107,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+107,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+108,age,age,age,Patient characteristics,no,NA,NA,NA
+108,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+108,fluid flow rate,fluid flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+108,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+108,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+109,age,age,age,Patient characteristics,no,NA,NA,NA
+109,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+109,ascitic fluid albumin,ascitic fluid albumin,ascitic fluid albumin,Biomarkers,no,NA,NA,NA
+109,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+109,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+109,height,height,height,Patient characteristics,no,NA,NA,NA
+109,plasma albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+109,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+109,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+109,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,urinary
+110,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,CG
+110,lean body weight,lean body weight,weight,Patient characteristics,yes,CL,CL,calculated using Janmahasatian's formula
+110,total body weight,total body weight,weight,Patient characteristics,yes,"CL, Vc","CL, V",NA
+110,serum albumin,serum albumin,serum albumin,Biomarkers,yes,"Vp, Vc",V,NA
+110,age,age,age,Patient characteristics,no,NA,NA,NA
+110,total burn surface area,total burn surface area,burns,Patient characteristics,no,NA,NA,NA
+110,total second-degree burn surface area,total second-degree burn surface area,burns,Patient characteristics,no,NA,NA,NA
+110,total third-degree burn surface area,total third-degree burn surface area,burns,Patient characteristics,no,NA,NA,NA
+110,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+110,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+115,age,age,age,Patient characteristics,no,NA,NA,NA
+115,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+115,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+115,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+115,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+115,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+115,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,measured by 8 h urine collection and creatinine clearance estimated via Cockroft–Gault equation (using total body weight) normalized to 6 L/h
+116,total body weight,total body weight,weight,Patient characteristics,yes,CL,CL,NA
+118,total body weight,total body weight,weight,Patient characteristics,yes,V2,V,NA
+118,age,age,age,Patient characteristics,no,NA,NA,NA
+118,height,height,height,Patient characteristics,no,NA,NA,NA
+118,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+118,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+118,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG
+119,age,age,age,Patient characteristics,no,NA,NA,NA
+119,CVVHDF settings,CVVHDF settings,CRRT parameters,Extracorporeal parameters,yes,NA,NA,The finding of a significant correlation between the intensity of CVVHDF (as determined by the replacement fluid rate) and doripenem CLCRRT represents a key observation from our analysis
+119,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+119,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+120,total body weight,total body weight,weight,Patient characteristics,yes,"CL, Vd","CL, V",NA
+121,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Vc,V,normalized to 24 g/L
+121,total body weight,total body weight,weight,Patient characteristics,yes,Vc,V,normalized by 80 kg (to the power of 0.75)
+121,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,normalized to 100 mL/min and
+122,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,NA
+122,serum albumin,serum albumin,serum albumin,Biomarkers,yes,CL,CL,NA
+122,age,age,age,Patient characteristics,no,NA,NA,NA
+122,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+122,CRP,CRP,CRP,Biomarkers,no,NA,NA,NA
+122,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+122,fluid balance,fluid balance,fluid balance,Physiological parameters,no,NA,NA,NA
+122,height,height,height,Patient characteristics,no,NA,NA,NA
+122,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+122,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+122,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+122,body temperature,body temperature,temperature,Vital signs,no,NA,NA,NA
+122,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+122,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+123,age,age,age,Patient characteristics,no,NA,NA,NA
+123,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+123,height,height,height,Patient characteristics,no,NA,NA,NA
+123,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+123,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+123,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+123,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+124,age,age,age,Patient characteristics,no,NA,NA,NA
+124,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+124,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+124,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+124,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"measured by 8 hour urine collection, CG estimate"
+125,weight,weight,weight,Patient characteristics,yes,Vc,V,NA
+125,age,age,age,Patient characteristics,no,NA,NA,NA
+125,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+125,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+125,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,"measured by 8 hour urine collection, CG estimate"
+126,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,NA
+126,age,age,age,Patient characteristics,yes,CL,CL,NA
+126,body surface area,body surface area,BSA,Patient characteristics,yes,CL,CL,NA
+126,height,height,height,Patient characteristics,yes,CL,CL,NA
+126,weight,weight,weight,Patient characteristics,yes,CL,CL,NA
+126,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+127,age,age,age,Patient characteristics,no,NA,NA,NA
+127,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+127,height,height,height,Patient characteristics,no,NA,NA,NA
+127,MODS score,MODS score,MODS score,Disease severity score,no,NA,NA,NA
+127,SAPS 3 score,SAPS 3 score,SAPS,Disease severity score,no,NA,NA,NA
+127,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+127,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+127,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+127,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+127,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+127,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG and CKD-EPI
+128,age,age,age,Patient characteristics,no,NA,NA,NA
+128,burns,burns,burns,Patient characteristics,no,NA,NA,NA
+128,total burn surface area,total burn surface area,burns,Patient characteristics,no,NA,NA,NA
+128,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+128,urine output,urine output,urine output,Physiological parameters,no,NA,NA,24 hours
+128,lean body mass,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+128,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+128,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+129,total burn surface area,total burn surface area,burns,Patient characteristics,yes,Vp,V,NA
+129,age,age,age,Patient characteristics,no,NA,NA,NA
+129,total second degree burn surface area,total second-degree burn surface area,burns,Patient characteristics,no,NA,NA,NA
+129,total third degree burn surface area,total third-degree burn surface area,burns,Patient characteristics,no,NA,NA,NA
+129,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+129,urine output,urine output,urine output,Physiological parameters,no,NA,NA,NA
+129,lean body mass,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+129,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+129,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG
+131,RRT,CRRT,CRRT,Organ dysfunction/support,yes,CL,CL,For patients receiving RRT
+131,age,age,age,Patient characteristics,no,NA,NA,NA
+131,ECMO,ECMO,ECMO,Organ dysfunction/support,no,NA,NA,NA
+131,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+131,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+131,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+131,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,CG; For patients not receiving RRT
+132,CRRT effluent rate,CRRT effluent rate,CRRT parameters,Extracorporeal parameters,yes,k,k,For piperacillin and tazobactam individually
+132,Body weight,body weight,weight,Patient characteristics,yes,V,V,For piperacillin
+132,age,age,age,Patient characteristics,no,NA,NA,NA
+132,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+133,total body weight,total body weight,weight,Patient characteristics,yes,V1,V,For both ceftolazone and tazobactam
+133,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+133,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+133,albumin concentration,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+133,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+133,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+133,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,For both ceftolazone and tazobactam
+134,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+134,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+134,body surface area,body surface area,BSA,Patient characteristics,no,NA,NA,NA
+134,blood flow rate,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+134,dialysate slow rate,CRRT dialysate flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+134,filter type,CRRT filter type,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+134,transmembrane pressure,CRRT transmembrane pressure,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+134,height,height,height,Patient characteristics,no,NA,NA,NA
+134,albumin concentration,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+134,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+134,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+134,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+134,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+135,body weight,body weight,weight,Patient characteristics,yes,Vc,V,NA
+135,CSF compartment,CSF compartment,CSF,Other,yes,Vcsf,V,NA
+135,age,age,age,Patient characteristics,no,NA,NA,NA
+135,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+135,Presence of CSF infection,CSF infection,CSF,Other,no,NA,NA,NA
+135,volume of CSF collected from ventricular drain,volume of CSF collected from ventricular drain,CSF,Other,no,NA,NA,NA
+135,height,height,height,Patient characteristics,no,NA,NA,NA
+135,albumin concentration,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+135,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+135,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+135,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+135,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CLplasma,CL,NA
+136,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,of both ceftazidime and avibactem
+138,mean arterial pressure,MAP,BP,Vital signs,yes,CL,CL,NA
+138,adjusted body weight,adjusted body weight,weight,Patient characteristics,yes,V1,V,NA
+138,age,age,age,Patient characteristics,no,NA,NA,NA
+138,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+138,total amount of resuscitation fluids daily,total amount of resuscitation fluids daily,fluid balance,Physiological parameters,no,NA,NA,NA
+138,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+138,albumin concentration,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+138,bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+138,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+138,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+138,vasoactive medications,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+138,ideal body weight,ideal body weight,weight,Patient characteristics,no,NA,NA,NA
+138,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+138,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+139,burns,burns,burns,Patient characteristics,no,NA,NA,NA
+139,day of antibiotic therapy,day of antibiotic therapy,day of antibiotic therapy,Other,no,NA,NA,NA
+139,SAPS 3 score,SAPS 3 score,SAPS,Disease severity score,no,NA,NA,NA
+139,weight,weight,weight,Patient characteristics,no,NA,NA,at ICU admission
+139,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+140,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+140,effluent rate,CRRT effluent rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+140,effluent volume,CRRT effluent volume,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+140,fluid removal volume,CRRT fluid removal volume,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+140,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+143,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,yes,CL,CL,NA
+143,age,age,age,Patient characteristics,no,NA,NA,NA
+143,unit,unit,location,Other,no,NA,NA,ICU or general medicine department
+143,mechanical ventilation,mechanical ventilation,mechanical ventilation,Organ dysfunction/support,no,NA,NA,NA
+143,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+143,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+143,actual body weight,actual body weight,weight,Patient characteristics,no,NA,NA,NA
+143,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+144,indwelling catheter,indwelling catheter,indwelling catheter,Other,yes,V,V,"indwelling catheter for pleural, abdominal, or cerebrospinal fluid drainage"
+144,age,age,age,Patient characteristics,no,NA,NA,NA
+144,diuretic use,diuretic use,diuretic use,Other,no,NA,NA,NA
+144,fluid balance,fluid balance,fluid balance,Physiological parameters,no,NA,NA,24 hour
+144,sepsis,sepsis,sepsis,Organ dysfunction/support,no,NA,NA,NA
+144,septic shock,septic shock,sepsis,Organ dysfunction/support,no,NA,NA,NA
+144,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+144,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+144,total body weight,total body weight,weight,Patient characteristics,no,NA,NA,NA
+144,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,8 hour clearance on the day of PK sampling
+145,total body weight,total body weight,weight,Patient characteristics,yes,V,V,NA
+145,age,age,age,Patient characteristics,no,NA,NA,NA
+145,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+145,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+145,height,height,height,Patient characteristics,no,NA,NA,NA
+145,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+145,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+145,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+145,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+145,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+145,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+146,actual body weight,actual body weight,weight,Patient characteristics,yes,V,V,NA
+146,age,age,age,Patient characteristics,no,NA,NA,NA
+146,ethnicity,ethnicity,ethnicity,Patient characteristics,no,NA,NA,NA
+146,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+146,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+146,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+146,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+146,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,NA
+146,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+147,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+148,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,measured by 4 or 6 h urine collection
+148,body mass index,body mass index,BMI,Patient characteristics,yes,CL,CL,NA
+148,age,age,age,Patient characteristics,no,NA,NA,NA
+148,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+148,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+148,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+148,serum creatinine,serum creatinine,serum creatinine,Biomarkers,no,NA,NA,NA
+148,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+148,lean body weight,lean body weight,weight,Patient characteristics,no,NA,NA,NA
+148,weight,weight,weight,Patient characteristics,no,NA,NA,NA
+149,residual diuresis,residual diuresis,diuresis,Physiological parameters,yes,CL,CL,NA
+149,total body weight,total body weight,weight,Patient characteristics,yes,V,V,on admission
+149,age,age,age,Patient characteristics,no,NA,NA,NA
+149,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+149,CRRT blood flow,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+149,CRRT intensity,CRRT intensity,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+149,CRRT membrane type,CRRT membrane type,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+149,filter downtime,CRRT filter downtime,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+149,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+149,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+150,CRRT membrane type,CRRT membrane type,CRRT parameters,Extracorporeal parameters,yes,CL,CL,NA
+150,total body weight,total body weight,weight,Patient characteristics,yes,CL,CL,NA
+150,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+150,CRRT blood flow,CRRT blood flow rate,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+150,CRRT intensity,CRRT intensity,CRRT parameters,Extracorporeal parameters,no,NA,NA,"defined as (filtrate + dialysate flow rate)/(ideal body weight), using 24 kg/m2 as ideal BMI"
+150,residual diuresis,residual diuresis,diuresis,Physiological parameters,no,NA,NA,NA
+150,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+150,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+151,serum albumin,serum albumin,serum albumin,Biomarkers,yes,fu,fu,NA
+151,total body weight,total body weight,weight,Patient characteristics,no,"V1, CL","V, CL",at admission
+151,age,age,age,Patient characteristics,no,NA,NA,NA
+151,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+151,CRRT blood flow,CRRT parameters,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+151,CRRT intensity,CRRT parameters,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+151,CRRT membrane type,CRRT parameters,CRRT parameters,Extracorporeal parameters,no,NA,NA,NA
+151,residual diuresis,residual diuresis,diuresis,Physiological parameters,no,NA,NA,NA
+151,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+151,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+156,body mass index,body mass index,BMI,Patient characteristics,no,NA,NA,NA
+156,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+156,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+157,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,24 hour
+157,serum albumin,serum albumin,serum albumin,Biomarkers,yes,Bmax,Bmax,NA
+157,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,"estimated by MDRD, CKD-EPIcreat, CKD-EPIcysC, CKD-EPIcreat-cysC, CG"
+157,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+157,CRRT,CRRT,CRRT,Organ dysfunction/support,no,NA,NA,NA
+157,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+158,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,no,NA,NA,"MDRD, CKD-EPIcreat, CKD-EPIcysC, CKD-EPIcreat-cysC"
+158,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,24 hour
+159,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,no,NA,NA,CG
+159,time on RRT,time on RRT,CRRT parameters,Extracorporeal parameters,yes,CL,CL,NA
+159,residual diuresis,residual diuresis,diuresis,Physiological parameters,yes,CL,CL,NA
+159,serum creatinine,serum creatinine,serum creatinine,Biomarkers,yes,CL,CL,NA
+159,CRRT type,CRRT type,CRRT parameters,Extracorporeal parameters,no,NA,NA,SLED or CVVHDF
+160,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,CL,CL,NA
+160,APACHE II score,APACHE II score,APACHE,Disease severity score,no,NA,NA,NA
+160,serum albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+160,serum bilirubin,serum bilirubin,serum bilirubin,Biomarkers,no,NA,NA,NA
+160,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+161,glomerular filtration rate,glomerular filtration rate,GFR,Physiological parameters,yes,CL,CL,estimated using EPI-CKD
+161,lean body weight,lean body weight,weight,Patient characteristics,yes,CL,CL,termed fat-free mass
+161,age,age,age,Patient characteristics,no,NA,NA,NA
+161,albumin binding,serum albumin,serum albumin,Biomarkers,yes,NA,NA,NA
+161,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+161,total body weight,total body weight,weight,Patient characteristics,yes,NA,NA,NA
+162,uric acid,uric acid,uric acid,Biomarkers,yes,"CL, V","CL, V",NA
+162,age,age,age,Patient characteristics,no,NA,NA,NA
+162,alanine aminotransferase,ALT,ALT,Biomarkers,no,NA,NA,NA
+162,aminotransferase,aminotransferase,aminotransferase,Biomarkers,no,NA,NA,NA
+162,APACHE score,APACHE score,APACHE,Disease severity score,no,NA,NA,NA
+162,blood urea nitrogen,blood urea nitrogen,BUN,Biomarkers,no,NA,NA,NA
+162,creatinine clearance,creatinine clearance,creatinine clearance,Physiological parameters,yes,NA,NA,CG
+162,haemoglobin,haemoglobin,haemoglobin,Biomarkers,no,NA,NA,NA
+162,platelets,platelets,platelets,Biomarkers,no,NA,NA,NA
+162,red cell count,red cell count,red cell count,Biomarkers,no,NA,NA,NA
+162,albumin,serum albumin,serum albumin,Biomarkers,no,NA,NA,NA
+162,sex,sex,sex,Patient characteristics,no,NA,NA,NA
+162,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+162,white cell count,white cell count,white cell count,Biomarkers,no,NA,NA,NA
+163,age,age,age,Patient characteristics,no,NA,NA,NA
+163,body weight,body weight,weight,Patient characteristics,no,NA,NA,NA
+163,serum creatinine,serum creatinine,serum creatinine,Biomarkers,yes,CL,CL,NA
+163,APACHE score,APACHE score,APACHE,Disease severity score,no,NA,NA,NA
+163,SOFA score,SOFA score,SOFA,Disease severity score,no,NA,NA,NA
+163,vasopressor use,vasopressor use,vasopressor use,Organ dysfunction/support,no,NA,NA,amount of noradrenaline infusion given during the third dosing interval

@@ -24,15 +24,14 @@ using ..Validation: validate_scientific
 
 # Import Semantic Web modules
 using ..SemanticCore: DARWIN_CONTEXT, DRUG_CONTEXT, DDI_CONTEXT, PARAMETER_CONTEXT,
-                      EVIDENCE_CONTEXT, PROVENANCE_CONTEXT, OBO_PREFIXES,
+                      EVIDENCE_CONTEXT, PROVENANCE_CONTEXT,
                       QUDT_UNITS, get_qudt_unit, QUDTUnit, SemanticQuantity,
                       to_jsonld_drug, to_jsonld_ddi, to_jsonld_parameter,
                       to_jsonld_simulation, to_jsonld_evidence, to_turtle,
                       ProvenanceRecord, ProvenanceActivity, ProvenanceAgent,
                       create_simulation_provenance, DARWIN_SOFTWARE_AGENT,
                       SchemaOrgDrug, SchemaOrgMedicalStudy, SchemaOrgPropertyValue,
-                      to_schema_org_drug, map_pk_parameter_to_schema,
-                      list_supported_ontologies
+                      to_schema_org_drug, map_pk_parameter_to_schema
 
 """
 Request struct (type-safe).

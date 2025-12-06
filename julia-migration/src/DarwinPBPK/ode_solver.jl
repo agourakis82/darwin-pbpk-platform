@@ -21,6 +21,11 @@ using DifferentialEquations
 using ForwardDiff
 using StaticArrays
 using Unitful
+using QuadGK  # For numerical integration (convolution)
+
+# Import FractalBlood module for transit time distribution
+include("fractal_blood.jl")
+using .FractalBlood
 
 # 14 compartimentos PBPK padrão
 const PBPK_ORGANS = [
@@ -55,6 +60,7 @@ Inovações:
 - SIMD-friendly - compilador otimiza automaticamente
 - Type-stable - zero runtime overhead
 - Immutable - thread-safe
+- Blood partitioning support for mechanistic B:P ratio calculation
 """
 struct PBPKParams
     volumes::SVector{14, Float64}           # Volumes (L)
@@ -63,19 +69,32 @@ struct PBPKParams
     clearance_renal::Float64                 # Clearance renal (L/h)
     partition_coeffs::SVector{14, Float64}  # Partition coefficients (Kp)
 
+    # Blood partitioning parameters (for B:P ratio calculation)
+    ke_p::Float64                            # Erythrocyte:plasma partition coefficient
+    hematocrit::Float64                      # Hematocrit fraction (0-1)
+    rbc_binding_type::Symbol                 # :passive, :active_uptake, :sequestration
+    fu_plasma::Float64                       # Fraction unbound in plasma
+    enable_bp_ratio::Bool                    # Enable blood partitioning (default false for backward compatibility)
+
     function PBPKParams(;
         volumes::Dict{String, Float64} = default_volumes(),
         blood_flows::Dict{String, Float64} = default_blood_flows(),
         clearance_hepatic::Float64 = 0.0,
         clearance_renal::Float64 = 0.0,
         partition_coeffs::Dict{String, Float64} = default_partition_coeffs(),
+        ke_p::Float64 = 1.0,                  # Default: equal RBC and plasma concentrations
+        hematocrit::Float64 = 0.45,           # Default: normal hematocrit
+        rbc_binding_type::Symbol = :passive,
+        fu_plasma::Float64 = 1.0,             # Default: fully unbound
+        enable_bp_ratio::Bool = false,        # Default: disabled for backward compatibility
     )
         # Converter dicts para SVectors (type-safe, stack-allocated)
         vol_vec = SVector{14, Float64}([get(volumes, organ, 1.0) for organ in PBPK_ORGANS])
         flow_vec = SVector{14, Float64}([get(blood_flows, organ, 0.0) for organ in PBPK_ORGANS])
         kp_vec = SVector{14, Float64}([get(partition_coeffs, organ, 1.0) for organ in PBPK_ORGANS])
 
-        new(vol_vec, flow_vec, clearance_hepatic, clearance_renal, kp_vec)
+        new(vol_vec, flow_vec, clearance_hepatic, clearance_renal, kp_vec,
+            ke_p, hematocrit, rbc_binding_type, fu_plasma, enable_bp_ratio)
     end
 end
 
@@ -122,6 +141,243 @@ function default_partition_coeffs()::Dict{String, Float64}
     return Dict(organ => 1.0 for organ in PBPK_ORGANS)
 end
 
+# =============================================================================
+# FRACTALBLOOD INTEGRATION
+# =============================================================================
+
+"""
+FractalBloodParams - Parameters for FractalBlood integration with PBPK
+
+Stores transit time distribution parameters from the fractal vascular network
+for use in convolution-based blood dynamics.
+
+Fields:
+- enabled: Whether to use FractalBlood dynamics (vs traditional well-stirred)
+- alpha: Power-law exponent for transit time distribution (typically 1.3-1.5)
+- tau_min: Minimum transit time through vasculature (seconds)
+- tau_mean: Mean transit time (seconds)
+- beta: CTRW anomalous diffusion exponent (0 < beta <= 1)
+- use_convolution: Use full convolution integral (slower but accurate)
+- n_convolution_points: Number of points for numerical convolution
+
+Physics:
+- Traditional PBPK assumes instantaneous mixing ("well-stirred tank")
+- FractalBlood accounts for realistic vascular transit times
+- Transit time distribution E(t) follows power law from fractal network topology
+- Drug concentration: C_blood(t) = ∫ dose(t-τ) × E(τ) dτ
+"""
+struct FractalBloodParams
+    enabled::Bool
+    alpha::Float64
+    tau_min::Float64
+    tau_mean::Float64
+    beta::Float64
+    use_convolution::Bool
+    n_convolution_points::Int
+
+    function FractalBloodParams(;
+        enabled::Bool = false,
+        alpha::Float64 = 1.37,
+        tau_min::Float64 = 0.1,      # 0.1 seconds
+        tau_mean::Float64 = 20.0,    # 20 seconds mean circulation time
+        beta::Float64 = 0.8,
+        use_convolution::Bool = false,
+        n_convolution_points::Int = 50
+    )
+        if enabled && alpha <= 1.0
+            error("FractalBlood alpha must be > 1.0 for finite moments")
+        end
+        if enabled && tau_min <= 0.0
+            error("FractalBlood tau_min must be > 0")
+        end
+        if enabled && !(0.0 < beta <= 1.0)
+            error("FractalBlood beta must be in (0, 1]")
+        end
+
+        new(enabled, alpha, tau_min, tau_mean, beta, use_convolution, n_convolution_points)
+    end
+end
+
+"""
+Extended PBPKParams with FractalBlood integration.
+
+This is a convenience constructor that combines standard PBPK parameters
+with FractalBlood transit time dynamics.
+"""
+struct PBPKParamsWithFractal
+    pbpk::PBPKParams
+    fractal::FractalBloodParams
+end
+
+"""
+integrate_fractal_blood!(pbpk_params, fractal_model)
+
+Extract transit time distribution parameters from a FractalBloodModel
+and integrate them into PBPK parameters.
+
+Args:
+- pbpk_params: Standard PBPK parameters
+- fractal_model: FractalBloodModel from fractal_blood.jl
+
+Returns:
+- PBPKParamsWithFractal combining both parameter sets
+"""
+function integrate_fractal_blood!(
+    pbpk_params::PBPKParams,
+    fractal_model::FractalBlood.FractalBloodModel
+)::PBPKParamsWithFractal
+
+    fractal_params = FractalBloodParams(
+        enabled = true,
+        alpha = fractal_model.alpha,
+        tau_min = fractal_model.tau_min,
+        tau_mean = fractal_model.tau_mean,
+        beta = fractal_model.beta,
+        use_convolution = true,
+        n_convolution_points = 50
+    )
+
+    return PBPKParamsWithFractal(pbpk_params, fractal_params)
+end
+
+"""
+create_fractal_pbpk_params(; kwargs...)
+
+Convenience function to create PBPK parameters with FractalBlood enabled.
+
+Example:
+```julia
+params = create_fractal_pbpk_params(
+    alpha = 1.37,
+    tau_min = 0.1,
+    tau_mean = 20.0
+)
+```
+"""
+function create_fractal_pbpk_params(;
+    volumes::Dict{String, Float64} = default_volumes(),
+    blood_flows::Dict{String, Float64} = default_blood_flows(),
+    clearance_hepatic::Float64 = 0.0,
+    clearance_renal::Float64 = 0.0,
+    partition_coeffs::Dict{String, Float64} = default_partition_coeffs(),
+    alpha::Float64 = 1.37,
+    tau_min::Float64 = 0.1,
+    tau_mean::Float64 = 20.0,
+    beta::Float64 = 0.8,
+    use_convolution::Bool = false
+)::PBPKParamsWithFractal
+
+    pbpk = PBPKParams(
+        volumes = volumes,
+        blood_flows = blood_flows,
+        clearance_hepatic = clearance_hepatic,
+        clearance_renal = clearance_renal,
+        partition_coeffs = partition_coeffs
+    )
+
+    fractal = FractalBloodParams(
+        enabled = true,
+        alpha = alpha,
+        tau_min = tau_min,
+        tau_mean = tau_mean,
+        beta = beta,
+        use_convolution = use_convolution,
+        n_convolution_points = 50
+    )
+
+    return PBPKParamsWithFractal(pbpk, fractal)
+end
+
+"""
+fractal_transit_time_distribution(t, fractal_params)
+
+Compute the transit time distribution E(t) from FractalBlood parameters.
+
+This is the power-law PDF: E(t) = (α-1)/τ_min × (t/τ_min)^(-α) for t ≥ τ_min
+
+Used for convolution: C_blood(t) = ∫ dose(t-τ) × E(τ) dτ
+"""
+function fractal_transit_time_distribution(t::Float64, fractal_params::FractalBloodParams)::Float64
+    if !fractal_params.enabled || t < fractal_params.tau_min
+        return 0.0
+    end
+
+    alpha = fractal_params.alpha
+    tau_min = fractal_params.tau_min
+
+    # Power-law PDF
+    return (alpha - 1.0) / tau_min * (t / tau_min)^(-alpha)
+end
+
+"""
+apply_fractal_dispersion(C_input, t, history, fractal_params)
+
+Apply fractal vascular dispersion to input concentration via convolution.
+
+For FractalBlood dynamics, the output concentration is:
+C_out(t) = ∫₀ᵗ C_in(t-τ) × E(τ) dτ
+
+where E(τ) is the transit time distribution.
+
+This captures the realistic dispersion of drug through the vascular network
+rather than assuming instantaneous mixing.
+"""
+function apply_fractal_dispersion(
+    C_input::Float64,
+    t::Float64,
+    history::Vector{Tuple{Float64, Float64}},  # (time, concentration) pairs
+    fractal_params::FractalBloodParams
+)::Float64
+
+    if !fractal_params.enabled || !fractal_params.use_convolution
+        # No dispersion - return input directly (well-stirred approximation)
+        return C_input
+    end
+
+    if isempty(history)
+        return C_input
+    end
+
+    # Numerical convolution using QuadGK
+    # C_out(t) = ∫₀ᵗ C_in(t-τ) × E(τ) dτ
+
+    function integrand(tau::Float64)::Float64
+        # Get C_in at time (t - tau) via linear interpolation
+        t_past = t - tau
+
+        if t_past <= 0.0
+            return 0.0
+        end
+
+        # Find bracketing points in history
+        idx = searchsortedlast([h[1] for h in history], t_past)
+
+        if idx == 0
+            C_past = history[1][2]  # Use first value
+        elseif idx >= length(history)
+            C_past = history[end][2]  # Use last value
+        else
+            # Linear interpolation
+            t1, C1 = history[idx]
+            t2, C2 = history[idx + 1]
+            C_past = C1 + (C2 - C1) * (t_past - t1) / (t2 - t1)
+        end
+
+        # E(tau)
+        E_tau = fractal_transit_time_distribution(tau, fractal_params)
+
+        return C_past * E_tau
+    end
+
+    # Integrate from tau_min to t
+    if t < fractal_params.tau_min
+        return 0.0
+    end
+
+    result, _ = quadgk(integrand, fractal_params.tau_min, t, rtol=1e-6)
+    return result
+end
+
 """
 Sistema ODE otimizado para PBPK.
 
@@ -130,8 +386,15 @@ Inovações:
 - Zero allocations (stack-only)
 - Type-stable (zero runtime overhead)
 - Validação de invariantes
+- Blood:Plasma ratio support for mechanistic drug distribution
 
-Equações:
+Equações (with B:P ratio enabled):
+- C_plasma = C_blood / Rb (where Rb = Blood:Plasma ratio)
+- Para cada órgão: dC_organ/dt = (Q_organ / V_organ) * (C_plasma - C_organ / Kp_organ)
+- Para blood: dC_blood/dt = Σ[fluxos] - clearance_rate * C_unbound
+- C_unbound = C_plasma * fu (only unbound drug clears)
+
+Equações (with B:P ratio disabled - backward compatible):
 - Para cada órgão: dC_organ/dt = (Q_organ / V_organ) * (C_blood - C_organ / Kp_organ)
 - Para blood: dC_blood/dt = Σ[fluxos] - clearance_rate * C_blood
 """
@@ -140,6 +403,15 @@ function ode_system!(du::AbstractVector{Float64}, u::AbstractVector{Float64}, p:
     fill!(du, 0.0)
 
     C_blood = u[BLOOD_IDX]
+
+    # Calculate Blood:Plasma ratio if enabled
+    Rb = calculate_blood_plasma_ratio(p)
+
+    # Plasma concentration (what tissues see)
+    C_plasma = C_blood / Rb
+
+    # Unbound plasma concentration (what drives clearance)
+    C_unbound = C_plasma * p.fu_plasma
 
     # Para cada órgão (exceto blood)
     @inbounds for i in 1:NUM_ORGANS
@@ -155,25 +427,29 @@ function ode_system!(du::AbstractVector{Float64}, u::AbstractVector{Float64}, p:
         # Concentração no órgão
         C_organ = u[i]
 
-        # Fluxo de entrada (blood -> organ)
-        # Taxa = Q * (C_blood - C_organ/Kp)
-        du[i] = (Q_organ / V_organ) * (C_blood - C_organ / Kp_organ)
+        # Fluxo de entrada (plasma -> organ)
+        # IMPORTANT: Use C_plasma instead of C_blood for tissue exchange
+        # Only unbound drug in plasma can distribute to tissues
+        du[i] = (Q_organ / V_organ) * (C_plasma - C_organ / Kp_organ)
 
         # Fluxo de saída (organ -> blood)
+        # Return flow affects blood compartment
         V_blood = p.volumes[BLOOD_IDX]
-        du[BLOOD_IDX] -= (Q_organ / V_blood) * (C_blood - C_organ / Kp_organ)
+        du[BLOOD_IDX] -= (Q_organ / V_blood) * Rb * (C_plasma - C_organ / Kp_organ)
     end
 
-    # Clearance hepático
+    # Clearance hepático (only unbound drug clears)
+    # IMPORTANT: Use C_unbound for clearance, not total C_blood
     if p.clearance_hepatic > 0.0
         clearance_rate = p.clearance_hepatic / p.volumes[BLOOD_IDX]
-        du[BLOOD_IDX] -= clearance_rate * C_blood
+        du[BLOOD_IDX] -= clearance_rate * C_unbound * Rb
     end
 
-    # Clearance renal
+    # Clearance renal (only unbound drug clears)
+    # IMPORTANT: Use C_unbound for clearance, not total C_blood
     if p.clearance_renal > 0.0
         clearance_rate = p.clearance_renal / p.volumes[BLOOD_IDX]
-        du[BLOOD_IDX] -= clearance_rate * C_blood
+        du[BLOOD_IDX] -= clearance_rate * C_unbound * Rb
     end
 
     return nothing
@@ -272,6 +548,11 @@ Valida conservação de massa (invariante físico).
 
 Massa_total(t) = Σ[C_organ(t) * V_organ] = constante (dose inicial)
 
+With Blood:Plasma ratio enabled, the blood compartment mass needs special handling:
+- Blood compartment stores total blood concentration
+- Total mass in blood = C_blood × V_blood
+- This already accounts for drug in plasma, RBC, and WBC
+
 Returns:
     true se conservação válida (erro relativo < 1e-6)
 """
@@ -292,6 +573,14 @@ function validate_mass_conservation(
         error = abs(total_mass - initial_mass) / initial_mass
         if error > tol
             @warn "Conservação de massa violada em t=$(sol.t[t_idx]): erro relativo = $error"
+            if p.enable_bp_ratio
+                # Provide additional diagnostics for blood partitioning
+                C_blood = sol[t_idx][BLOOD_IDX]
+                Rb = calculate_blood_plasma_ratio(p)
+                partitioned = partition_blood_concentration(C_blood, Rb, p.hematocrit)
+                @warn "  Blood partitioning: C_plasma=$(partitioned.C_plasma), C_rbc=$(partitioned.C_rbc)"
+                @warn "  B:P ratio=$(Rb), Hematocrit=$(p.hematocrit), Ke_p=$(p.ke_p)"
+            end
             return false
         end
     end
@@ -324,6 +613,320 @@ end
 
 export PBPKParams, solve, simulate, validate_mass_conservation, solve_with_sensitivity
 export PBPK_ORGANS, NUM_ORGANS
+
+#=============================================================================
+  7-SEGMENT DETAILED GI TRACT MODEL (PK-SIM STANDARD)
+
+  Implements physiologically accurate gastrointestinal absorption with:
+  - 7 anatomical segments (stomach → duodenum → jejunum → ileum → colon)
+  - pH-dependent ionization (Henderson-Hasselbalch)
+  - Transporter expression (P-gp, BCRP, OATP, PEPT1)
+  - Intestinal metabolism (CYP3A4, UGT1A1)
+  - Regional blood flow and permeability
+  - Fed vs. fasted state effects
+
+  References:
+  - Willmann S et al. J Med Chem 2004;47:4022-4031 (PK-Sim model)
+  - Amidon GL et al. Pharm Res 1995;12:413-420 (BCS)
+=============================================================================#
+
+# Import GI detailed module (already included in parent DarwinPBPK module)
+# Access via parent module to avoid duplicate inclusion
+using ..GIDetailed
+
+# State indices for 7 GI segments
+const GI_STOMACH_IDX = 31
+const GI_DUODENUM_IDX = 32
+const GI_JEJUNUM_UPPER_IDX = 33
+const GI_JEJUNUM_LOWER_IDX = 34
+const GI_ILEUM_UPPER_IDX = 35
+const GI_ILEUM_LOWER_IDX = 36
+const GI_COLON_IDX = 37
+
+const GI_SEGMENT_INDICES = [
+    GI_STOMACH_IDX, GI_DUODENUM_IDX, GI_JEJUNUM_UPPER_IDX, GI_JEJUNUM_LOWER_IDX,
+    GI_ILEUM_UPPER_IDX, GI_ILEUM_LOWER_IDX, GI_COLON_IDX
+]
+
+"""
+Extended ODE system with detailed 7-segment GI tract.
+
+State vector (37 elements):
+- u[1:14]: Organ concentrations (standard PBPK)
+- u[15:30]: (reserved for other extensions)
+- u[31:37]: Amount in each GI segment (mg)
+
+Equations:
+- Each GI segment:
+    * dA_seg/dt = -Ka_seg * A_seg - Ktr_seg * A_seg + Ktr_prev * A_prev
+    * Absorption: Ka_seg = Peff * SA / V (pH, transporter, metabolism corrected)
+    * Transit: Ktr = 1 / transit_time
+- Blood: dC_blood/dt = ... + Σ[absorbed from all segments] / V_blood
+"""
+function gi7_ode_system!(du::AbstractVector{Float64}, u::AbstractVector{Float64},
+                         p::Tuple{PBPKParams, GITract, DrugGIProperties}, t::Float64)
+    pbpk, gi_tract, drug = p
+
+    # Initialize derivatives
+    fill!(du, 0.0)
+
+    C_blood = u[BLOOD_IDX]
+
+    # Standard PBPK for organs
+    @inbounds for i in 1:NUM_ORGANS
+        if i == BLOOD_IDX
+            continue
+        end
+
+        V_organ = pbpk.volumes[i]
+        Q_organ = pbpk.blood_flows[i]
+        Kp_organ = pbpk.partition_coeffs[i]
+        C_organ = u[i]
+
+        du[i] = (Q_organ / V_organ) * (C_blood - C_organ / Kp_organ)
+        V_blood = pbpk.volumes[BLOOD_IDX]
+        du[BLOOD_IDX] -= (Q_organ / V_blood) * (C_blood - C_organ / Kp_organ)
+    end
+
+    # Clearance
+    if pbpk.clearance_hepatic > 0.0
+        du[BLOOD_IDX] -= (pbpk.clearance_hepatic / pbpk.volumes[BLOOD_IDX]) * C_blood
+    end
+    if pbpk.clearance_renal > 0.0
+        du[BLOOD_IDX] -= (pbpk.clearance_renal / pbpk.volumes[BLOOD_IDX]) * C_blood
+    end
+
+    # 7-segment GI dynamics
+    total_absorbed = 0.0
+
+    @inbounds for (seg_idx, state_idx) in enumerate(GI_SEGMENT_INDICES)
+        segment = gi_tract.segments[seg_idx]
+        amount_in_seg = max(0.0, u[state_idx])
+
+        # Calculate absorption from this segment
+        absorption_rate = calculate_gi_absorption(segment, drug, amount_in_seg, gi_tract.fed_state)
+
+        # Transit rate (first-order)
+        ktr = 1.0 / segment.transit_time_min  # 1/min
+        transit_out = ktr * amount_in_seg
+
+        # Transit in from previous segment (if not stomach)
+        transit_in = 0.0
+        if seg_idx > 1
+            prev_idx = GI_SEGMENT_INDICES[seg_idx - 1]
+            prev_segment = gi_tract.segments[seg_idx - 1]
+            prev_amount = max(0.0, u[prev_idx])
+            prev_ktr = 1.0 / prev_segment.transit_time_min
+            transit_in = prev_ktr * prev_amount
+        end
+
+        # Rate of change: inflow - outflow - absorption
+        du[state_idx] = transit_in - transit_out - absorption_rate
+
+        # Accumulate total absorbed (goes to blood)
+        total_absorbed += absorption_rate
+    end
+
+    # Add absorbed drug to blood (convert mg/min to rate in concentration units)
+    # Absorption gives first-pass through gut wall, then to portal vein → liver → systemic
+    # Simplified: direct to blood with effective Fg (fraction escaping gut metabolism)
+    fg = calculate_fg(gi_tract, drug)
+    du[BLOOD_IDX] += (total_absorbed * fg) / pbpk.volumes[BLOOD_IDX]
+
+    return nothing
+end
+
+"""
+Solve PBPK with detailed 7-segment GI model.
+
+Args:
+    pbpk_params: PBPK parameters
+    gi_tract: 7-segment GI tract model
+    drug: Drug GI properties
+    dose: Oral dose (mg)
+    tspan: Time span (min)
+
+Returns:
+    Solution object with 37 states
+"""
+function solve_gi7(
+    pbpk_params::PBPKParams,
+    gi_tract::GITract,
+    drug::DrugGIProperties,
+    dose::Float64,
+    tspan::Tuple{Float64, Float64};
+    time_points::Union{Vector{Float64}, Nothing} = nothing,
+    reltol::Float64 = 1e-8,
+    abstol::Float64 = 1e-10,
+    alg = Tsit5(),
+)
+    # Initial conditions: all dose in stomach
+    n_states = GI_COLON_IDX
+    u0 = zeros(Float64, n_states)
+    u0[GI_STOMACH_IDX] = dose
+
+    # Parameters
+    p = (pbpk_params, gi_tract, drug)
+
+    # Create ODE problem
+    prob = ODEProblem(gi7_ode_system!, u0, tspan, p)
+
+    # Solve
+    if time_points !== nothing
+        sol = DifferentialEquations.solve(prob, alg; reltol=reltol, abstol=abstol, saveat=time_points)
+    else
+        sol = DifferentialEquations.solve(prob, alg; reltol=reltol, abstol=abstol)
+    end
+
+    return sol
+end
+
+"""
+Simulate PBPK with detailed 7-segment GI model.
+
+Args:
+    pbpk_params: PBPK parameters
+    gi_tract: 7-segment GI tract model (use create_gi_tract())
+    drug: Drug GI properties
+    dose: Oral dose (mg)
+    t_max: Maximum time (min)
+    num_points: Number of time points
+
+Returns:
+    Dict with concentrations, GI amounts, and PK metrics
+"""
+function simulate_gi7(
+    pbpk_params::PBPKParams,
+    gi_tract::GITract,
+    drug::DrugGIProperties,
+    dose::Float64;
+    t_max::Float64 = 1440.0,  # 24h in minutes
+    num_points::Int = 200,
+    reltol::Float64 = 1e-8,
+    abstol::Float64 = 1e-10,
+)
+    time_points = collect(range(0.0, t_max, length=num_points))
+    tspan = (0.0, t_max)
+
+    # Solve ODE
+    sol = solve_gi7(pbpk_params, gi_tract, drug, dose, tspan;
+                    time_points=time_points, reltol=reltol, abstol=abstol)
+
+    # Build results
+    results = Dict{String, Any}()
+    results["time"] = time_points
+
+    # Organ concentrations
+    for (i, organ) in enumerate(PBPK_ORGANS)
+        results[organ] = [sol[j][i] for j in 1:length(sol)]
+    end
+    results["plasma"] = results["blood"]
+
+    # GI segment amounts
+    gi_names = ["stomach", "duodenum", "jejunum_upper", "jejunum_lower",
+                "ileum_upper", "ileum_lower", "colon"]
+    for (i, name) in enumerate(gi_names)
+        idx = GI_SEGMENT_INDICES[i]
+        results["gi_$name"] = [sol[j][idx] for j in 1:length(sol)]
+    end
+
+    # Total amount in GI tract
+    results["gi_total"] = zeros(num_points)
+    for j in 1:num_points
+        results["gi_total"][j] = sum(sol[j][idx] for idx in GI_SEGMENT_INDICES)
+    end
+
+    # PK metrics
+    plasma_conc = results["plasma"]
+
+    if !isempty(plasma_conc) && any(c -> c > 0, plasma_conc)
+        cmax_idx = argmax(plasma_conc)
+        results["cmax"] = plasma_conc[cmax_idx]
+        results["tmax"] = time_points[cmax_idx]
+    else
+        results["cmax"] = 0.0
+        results["tmax"] = 0.0
+    end
+
+    # AUC (trapezoidal rule)
+    auc = 0.0
+    for i in 2:length(time_points)
+        dt = time_points[i] - time_points[i-1]
+        auc += 0.5 * (plasma_conc[i] + plasma_conc[i-1]) * dt
+    end
+    results["auc"] = auc
+
+    # Fraction absorbed
+    fa = (dose - results["gi_total"][end]) / dose
+    results["fa"] = fa
+
+    # Effective bioavailability (accounting for gut metabolism)
+    fg = calculate_fg(gi_tract, drug)
+    results["fg"] = fg
+    results["f_oral"] = fa * fg  # Simplified (excludes hepatic first-pass)
+
+    # BCS classification
+    results["bcs_class"] = calculate_bcs_class(drug, dose)
+
+    # Regional absorption contributions
+    results["absorption_by_segment"] = Dict{String, Float64}()
+    for (i, name) in enumerate(gi_names)
+        # Approximate absorbed from each segment
+        seg_absorbed = dose * 0.0  # Placeholder - would need integration of absorption rates
+        results["absorption_by_segment"][name] = seg_absorbed
+    end
+
+    return results
+end
+
+"""
+Compare single gut vs. 7-segment GI model.
+
+Returns Dict with both simulations for comparison.
+"""
+function compare_gi_models(
+    pbpk_params::PBPKParams,
+    drug::DrugGIProperties,
+    dose::Float64;
+    t_max::Float64 = 1440.0,
+    num_points::Int = 200,
+)::Dict{String, Any}
+    # Create GI tract
+    gi_tract = create_gi_tract(fed_state=false)
+
+    # Simulate 7-segment model
+    results_7seg = simulate_gi7(pbpk_params, gi_tract, drug, dose;
+                                t_max=t_max, num_points=num_points)
+
+    # Simulate single-gut model (legacy)
+    oral_params = OralParams(1.0, 0.7)  # Approximate ka and F
+    results_1gut = simulate_oral(pbpk_params, oral_params, dose;
+                                  t_max=t_max/60.0, num_points=num_points)  # Convert to hours
+
+    comparison = Dict{String, Any}(
+        "gi7_model" => results_7seg,
+        "single_gut_model" => results_1gut,
+        "metrics_comparison" => Dict(
+            "cmax_7seg" => results_7seg["cmax"],
+            "cmax_1gut" => results_1gut["cmax"],
+            "tmax_7seg" => results_7seg["tmax"],
+            "tmax_1gut" => results_1gut["tmax"] * 60.0,  # Convert to min
+            "auc_7seg" => results_7seg["auc"],
+            "auc_1gut" => results_1gut["auc"],
+        )
+    )
+
+    return comparison
+end
+
+export gi7_ode_system!, solve_gi7, simulate_gi7, compare_gi_models
+export GI_STOMACH_IDX, GI_DUODENUM_IDX, GI_JEJUNUM_UPPER_IDX, GI_JEJUNUM_LOWER_IDX
+export GI_ILEUM_UPPER_IDX, GI_ILEUM_LOWER_IDX, GI_COLON_IDX, GI_SEGMENT_INDICES
+
+# FractalBlood integration exports
+export FractalBloodParams, PBPKParamsWithFractal
+export integrate_fractal_blood!, create_fractal_pbpk_params
+export fractal_transit_time_distribution, apply_fractal_dispersion
 
 #=============================================================================
   Oral Absorption PBPK Model
@@ -3506,5 +4109,208 @@ function simulate_with_blood_state(
 
     return results
 end
+
+# =============================================================================
+# BLOOD PARTITIONING HELPER FUNCTIONS
+# =============================================================================
+# Helper functions for calculating Blood:Plasma (B:P) ratios and partitioning
+# drug between plasma, RBC, and WBC compartments
+
+"""
+    calculate_blood_plasma_ratio(params::PBPKParams)
+
+Calculate Blood:Plasma concentration ratio using mechanistic equation.
+
+Formula: Rb = 1 - Hct + Hct × Ke_p
+
+Where:
+- Rb = Blood:Plasma ratio
+- Hct = Hematocrit (fraction)
+- Ke_p = Erythrocyte:plasma partition coefficient
+
+Reference:
+- Rodgers & Rowland (2006) J Pharm Sci
+- PK-Sim documentation
+
+# Returns
+- Blood:Plasma ratio (dimensionless)
+"""
+function calculate_blood_plasma_ratio(params::PBPKParams)::Float64
+    if !params.enable_bp_ratio
+        return 1.0  # Disabled: assume blood = plasma
+    end
+
+    Hct = params.hematocrit
+    Ke_p = params.ke_p
+
+    # Rb = 1 - Hct + Hct × Ke_p
+    Rb = (1.0 - Hct) + (Hct * Ke_p)
+
+    return Rb
+end
+
+# Note: For advanced blood binding calculations using the BloodBinding module,
+# use the module's calculate_blood_plasma_ratio function directly with
+# DrugProperties and BloodComposition objects.
+
+"""
+    partition_blood_concentration(C_blood::Float64, Rb::Float64, Hct::Float64)
+
+Partition whole blood concentration into plasma and RBC components.
+
+# Arguments
+- `C_blood`: Whole blood concentration
+- `Rb`: Blood:Plasma ratio
+- `Hct`: Hematocrit fraction
+
+# Returns
+NamedTuple with:
+- `C_plasma`: Plasma concentration
+- `C_rbc`: RBC concentration
+- `C_wbc`: WBC concentration (approximation)
+
+# Equations
+- C_plasma = C_blood / Rb
+- C_rbc = Ke_p × C_plasma = (Rb - (1 - Hct)) / Hct × C_plasma
+"""
+function partition_blood_concentration(C_blood::Float64, Rb::Float64, Hct::Float64)
+    # C_plasma = C_blood / Rb
+    C_plasma = C_blood / Rb
+
+    # Ke_p can be back-calculated from Rb and Hct
+    # Rb = 1 - Hct + Hct × Ke_p
+    # Ke_p = (Rb - (1 - Hct)) / Hct
+    Ke_p = (Rb - (1.0 - Hct)) / Hct
+
+    # C_rbc = Ke_p × C_plasma
+    C_rbc = Ke_p * C_plasma
+
+    # WBC concentration (approximate as similar to RBC for now)
+    # This can be refined using WBC-specific binding from BloodBinding module
+    C_wbc = C_rbc
+
+    return (C_plasma = C_plasma, C_rbc = C_rbc, C_wbc = C_wbc)
+end
+
+"""
+    get_unbound_plasma_concentration(C_blood::Float64, Rb::Float64, fu::Float64)
+
+Calculate unbound (free) plasma concentration from whole blood concentration.
+
+This is the pharmacologically active concentration that drives tissue distribution
+and clearance.
+
+# Arguments
+- `C_blood`: Whole blood concentration
+- `Rb`: Blood:Plasma ratio
+- `fu`: Fraction unbound in plasma
+
+# Returns
+- Unbound plasma concentration
+
+# Equation
+C_unbound = (C_blood / Rb) × fu
+"""
+function get_unbound_plasma_concentration(C_blood::Float64, Rb::Float64, fu::Float64)::Float64
+    C_plasma = C_blood / Rb
+    C_unbound = C_plasma * fu
+    return C_unbound
+end
+
+"""
+    calculate_fu_blood(fu_plasma::Float64, Rb::Float64)
+
+Calculate fraction unbound in whole blood from plasma fu and B:P ratio.
+
+# Arguments
+- `fu_plasma`: Fraction unbound in plasma
+- `Rb`: Blood:Plasma ratio
+
+# Returns
+- Fraction unbound in blood
+
+# Equation
+fu_blood = fu_plasma / Rb
+
+This accounts for the fact that drug in RBCs is generally not available
+for protein binding.
+"""
+function calculate_fu_blood(fu_plasma::Float64, Rb::Float64)::Float64
+    return fu_plasma / Rb
+end
+
+"""
+    apply_bp_ratio_to_clearance(CL_blood::Float64, Rb::Float64)
+
+Convert blood clearance to plasma clearance or vice versa.
+
+# Arguments
+- `CL_blood`: Clearance based on blood concentrations
+- `Rb`: Blood:Plasma ratio
+
+# Returns
+- Plasma clearance
+
+# Equation
+CL_plasma = CL_blood × Rb
+
+Note: Most hepatic and renal clearances are intrinsically based on
+unbound plasma concentrations, so this conversion is important when
+measured clearances are reported in different concentration units.
+"""
+function apply_bp_ratio_to_clearance(CL_blood::Float64, Rb::Float64)::Float64
+    return CL_blood * Rb
+end
+
+"""
+    estimate_ke_p_from_logP(logP::Float64, charge_type::Symbol, pKa::Vector{Float64})
+
+Estimate RBC partition coefficient from physicochemical properties.
+
+This is a simplified QSPR for when experimental Ke_p is not available.
+
+# Arguments
+- `logP`: Octanol-water partition coefficient (log scale)
+- `charge_type`: :acidic, :basic, :neutral, :zwitterion
+- `pKa`: pKa value(s)
+
+# Returns
+- Estimated Ke_p
+
+# Rules of thumb (from literature):
+- Neutral, lipophilic (logP > 2): Ke_p ≈ 0.5 - 1.5
+- Bases (pKa 7-10): Ke_p ≈ 0.8 - 2.0 (pH trapping in RBC)
+- Acids (pKa 3-5): Ke_p ≈ 0.3 - 0.8 (excluded from RBC)
+- Very polar (logP < 0): Ke_p ≈ 0.4 - 0.7 (water space only)
+
+Reference: Hinderling (1997) Clin Pharmacokinet
+"""
+function estimate_ke_p_from_logP(logP::Float64, charge_type::Symbol, pKa::Vector{Float64})::Float64
+    # Base estimate from lipophilicity
+    base_ke_p = if logP > 2.0
+        0.8 + 0.2 * min(logP - 2.0, 3.0)  # Lipophilic: higher partition
+    elseif logP < 0.0
+        0.5 + 0.1 * logP  # Polar: lower partition
+    else
+        0.7  # Moderate
+    end
+
+    # Adjust for ionization
+    if charge_type == :basic && !isempty(pKa)
+        # Bases accumulate in RBC (pH trapping)
+        base_ke_p *= 1.3
+    elseif charge_type == :acidic && !isempty(pKa)
+        # Acids are excluded from RBC
+        base_ke_p *= 0.6
+    end
+
+    # Clamp to reasonable range
+    return clamp(base_ke_p, 0.2, 3.0)
+end
+
+# Export new functions
+export calculate_blood_plasma_ratio, partition_blood_concentration
+export get_unbound_plasma_concentration, calculate_fu_blood
+export apply_bp_ratio_to_clearance, estimate_ke_p_from_logP
 
 end # module

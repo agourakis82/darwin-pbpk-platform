@@ -1,0 +1,1128 @@
+container_name,parameter_name,default_value,min_value,max_value
+AmnioticFluid,Allometric scale factor,0.75,0.75,0.75
+AmnioticFluid,Density (tissue),1.0,0.0,
+ArterialBlood,Allometric scale factor,0.75,0.75,0.75
+ArterialBlood,Density (tissue),1.0,0.0,
+ArterialBlood,Fraction vascular,1.0,0.0,1.0
+ArterialBlood,Peripheral blood flow fraction,0.0,0.0,1.0
+ArterialBlood_UmbilicalCord,Allometric scale factor,0.75,0.75,0.75
+ArterialBlood_UmbilicalCord,Density (tissue),1.0,0.0,
+Bone,Acidic phospholipids [mg/g] - RR,0.67,0.0,1000.0
+Bone,Albumin ratio (tissue/plasma),0.1,0.0,1.0
+Bone,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Bone,Allometric scale factor,2.0,2.0,2.0
+Bone,Density (tissue),1.0,0.0,
+Bone,Flow fraction via large pores,0.05,0.0,1.0
+Bone,Fluid recirculation flow proportionality factor,0.96,0.0,
+Bone,Fraction interstitial,0.1,0.0,1.0
+Bone,Fraction of blood for sampling,1.0,0.0,1.0
+Bone,Fraction vascular,0.034,0.0,1.0
+Bone,Hydraulic conductivity,9.0e-12,0.0,
+Bone,Lipoprotein ratio (tissue/plasma),0.05,0.0,1.0
+Bone,Lymph flow proportionality factor,0.000662,0.0,
+Bone,Organ volume mouse,0.00158,0.0,
+Bone,Peripheral blood flow fraction,0.0,0.0,1.0
+Bone,Radius (large pores),2.5e-7,0.0,
+Bone,Radius (small pores),4.5e-8,0.0,
+Bone,Vf (acidic phospholipids)-WS,0.0008,0.0,1.0
+Bone,Vf (extracellular water)-RR,0.1,0.0,1.0
+Bone,Vf (intracellular water)-RR,0.317,0.0,1.0
+Bone,Vf (lipid),0.268,0.0,1.0
+Bone,Vf (neutral lipid)-PT,0.074,0.0,1.0
+Bone,Vf (neutral lipid)-RR,0.0174,0.0,1.0
+Bone,Vf (neutral lipid)-WS,0.017,0.0,1.0
+Bone,Vf (neutral phospholipid)-RR,0.0016,0.0,1.0
+Bone,"Vf (neutral phospholipid, plasma)-WS",0.0022,0.0,1.0
+Bone,Vf (phospholipid)-PT,0.0011,0.0,1.0
+Bone,Vf (protein),0.268,0.0,1.0
+Bone,Vf (protein)-WS,0.21,0.0,1.0
+Bone,Vf (water),0.465,0.0,1.0
+Bone,Vf (water)-PT,0.439,0.0,1.0
+Bone,Vf (water)-WS,0.26,0.0,1.0
+Brain,Acidic phospholipids [mg/g] - RR,0.4,0.0,1000.0
+Brain,Albumin ratio (tissue/plasma),0.048,0.0,1.0
+Brain,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Brain,Allometric scale factor,0.0,0.0,0.0
+Brain,Density (tissue),1.0,0.0,
+Brain,Flow fraction via large pores,0.05,0.0,1.0
+Brain,Fluid recirculation flow proportionality factor,0.404,0.0,
+Brain,Fraction interstitial,0.004,0.0,1.0
+Brain,Fraction of blood for sampling,1.0,0.0,1.0
+Brain,Fraction vascular,0.039,0.0,1.0
+Brain,Hydraulic conductivity,5.0e-14,0.0,
+Brain,Lipoprotein ratio (tissue/plasma),0.041,0.0,1.0
+Brain,Lymph flow proportionality factor,7.27e-5,0.0,
+Brain,Organ volume mouse,0.00017,0.0,
+Brain,Radius (large pores),2.5e-7,0.0,
+Brain,Radius (small pores),4.5e-8,0.0,
+Brain,Vf (acidic phospholipids)-WS,0.0143,0.0,1.0
+Brain,Vf (extracellular water)-RR,0.162,0.0,1.0
+Brain,Vf (intracellular water)-RR,0.591,0.0,1.0
+Brain,Vf (lipid),0.11,0.0,1.0
+Brain,Vf (neutral lipid)-PT,0.051,0.0,1.0
+Brain,Vf (neutral lipid)-RR,0.0391,0.0,1.0
+Brain,Vf (neutral lipid)-WS,0.0429,0.0,1.0
+Brain,Vf (neutral phospholipid)-RR,0.0015,0.0,1.0
+Brain,"Vf (neutral phospholipid, plasma)-WS",0.0528,0.0,1.0
+Brain,Vf (phospholipid)-PT,0.0565,0.0,1.0
+Brain,Vf (protein),0.081,0.0,1.0
+Brain,Vf (protein)-WS,0.08,0.0,1.0
+Brain,Vf (water),0.808,0.0,1.0
+Brain,Vf (water)-PT,0.77,0.0,1.0
+Brain,Vf (water)-WS,0.79,0.0,1.0
+Breasts,Acidic phospholipids [mg/g] - RR,0.1,0.0,1000.0
+Breasts,Allometric scale factor,0.75,0.75,0.75
+Breasts,Density (tissue),1.0,0.0,
+Breasts,Fraction interstitial,0.298,0.0,1.0
+Breasts,Fraction vascular,0.1,0.0,1.0
+Breasts,Vf (acidic phospholipids)-WS,0.0001,0.0,1.0
+Breasts,Vf (extracellular water)-RR,0.331,0.0,1.0
+Breasts,Vf (intracellular water)-RR,0.344,0.0,1.0
+Breasts,Vf (lipid),0.074,0.0,1.0
+Breasts,Vf (neutral lipid)-PT,0.073,0.0,1.0
+Breasts,Vf (neutral lipid)-RR,0.073,0.0,1.0
+Breasts,Vf (neutral lipid)-WS,0.073,0.0,1.0
+Breasts,Vf (neutral phospholipid)-RR,0.0003,0.0,1.0
+Breasts,"Vf (neutral phospholipid, plasma)-WS",0.0003,0.0,1.0
+Breasts,Vf (phospholipid)-PT,0.0004,0.0,1.0
+Breasts,Vf (protein),0.2,0.0,1.0
+Breasts,Vf (protein)-WS,0.2,0.0,1.0
+Breasts,Vf (water),0.675,0.0,1.0
+Breasts,Vf (water)-PT,0.675,0.0,1.0
+Breasts,Vf (water)-WS,0.675,0.0,1.0
+Caecum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+Caecum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+Caecum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Caecum,Density (tissue),1.0,0.0,
+Caecum,Effective surface area enhancement factor,1.8,0.0,
+Caecum,Flow fraction via large pores,0.05,0.0,1.0
+Caecum,Fraction interstitial,0.73,0.0,1.0
+Caecum,Fraction mucosa,0.19,0.0,1.0
+Caecum,Fraction of blood for sampling,1.0,0.0,1.0
+Caecum,Fraction of regional blood flow rate,0.084706,0.0,
+Caecum,Fraction vascular,0.13,0.0,1.0
+Caecum,Fractional steady state fill level,0.0060009,0.0,
+Caecum,Hydraulic conductivity,1.86944444444444e-10,0.0,
+Caecum,Intestinal transit rate,18.3333,0.0,
+Caecum,L_p0,0.1152851235,,
+Caecum,L_p1,0.026864843,,
+Caecum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+Caecum,Microvilli factor,1.0,0.0,
+Caecum,Radius (large pores),2.5e-7,0.0,
+Caecum,Radius (small pores),4.5e-8,0.0,
+Caecum,Thickness_p1,-0.00877,,
+Caecum,Thickness_p2,0.0446435379,,
+Caecum,Thickness_p3,-0.0897885,,
+Caecum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+Caecum,Vf (extracellular water)-RR,0.282,0.0,1.0
+Caecum,Vf (intracellular water)-RR,0.456,0.0,1.0
+Caecum,Vf (lipid),0.06,0.0,1.0
+Caecum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+Caecum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+Caecum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+Caecum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+Caecum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+Caecum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+Caecum,Vf (protein),0.08,0.0,1.0
+Caecum,Vf (protein)-WS,0.15,0.0,1.0
+Caecum,Vf (water),0.8,0.0,1.0
+Caecum,Vf (water)-PT,0.718,0.0,1.0
+Caecum,Vf (water)-WS,0.78,0.0,1.0
+Caecum,pH,5.7,0.0,14.0
+Caecum,r1_p0,0.067256381,,
+Caecum,r1_p1,0.015672726,,
+Caecum,r2_p0,0.067256381,,
+Caecum,r2_p1,0.015672726,,
+ColonAscendens,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+ColonAscendens,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+ColonAscendens,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+ColonAscendens,Density (tissue),1.0,0.0,
+ColonAscendens,Effective surface area enhancement factor,2.5,0.0,
+ColonAscendens,Flow fraction via large pores,0.05,0.0,1.0
+ColonAscendens,Fraction interstitial,0.73,0.0,1.0
+ColonAscendens,Fraction mucosa,0.19,0.0,1.0
+ColonAscendens,Fraction of blood for sampling,1.0,0.0,1.0
+ColonAscendens,Fraction of regional blood flow rate,0.15529,0.0,
+ColonAscendens,Fraction vascular,0.13,0.0,1.0
+ColonAscendens,Fractional steady state fill level,0.0060009,0.0,
+ColonAscendens,Hydraulic conductivity,1.86944444444444e-10,0.0,
+ColonAscendens,Intestinal transit rate,10.0,0.0,
+ColonAscendens,L_p0,0.3117189273,,
+ColonAscendens,L_p1,0.075727844,,
+ColonAscendens,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+ColonAscendens,Microvilli factor,1.0,0.0,
+ColonAscendens,Radius (large pores),2.5e-7,0.0,
+ColonAscendens,Radius (small pores),4.5e-8,0.0,
+ColonAscendens,Thickness_p1,-0.00554,,
+ColonAscendens,Thickness_p2,0.0280138174,,
+ColonAscendens,Thickness_p3,-0.09106073,,
+ColonAscendens,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+ColonAscendens,Vf (extracellular water)-RR,0.282,0.0,1.0
+ColonAscendens,Vf (intracellular water)-RR,0.456,0.0,1.0
+ColonAscendens,Vf (lipid),0.06,0.0,1.0
+ColonAscendens,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+ColonAscendens,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+ColonAscendens,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+ColonAscendens,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+ColonAscendens,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+ColonAscendens,Vf (phospholipid)-PT,0.0163,0.0,1.0
+ColonAscendens,Vf (protein),0.08,0.0,1.0
+ColonAscendens,Vf (protein)-WS,0.15,0.0,1.0
+ColonAscendens,Vf (water),0.8,0.0,1.0
+ColonAscendens,Vf (water)-PT,0.718,0.0,1.0
+ColonAscendens,Vf (water)-WS,0.78,0.0,1.0
+ColonAscendens,pH,5.6,0.0,14.0
+ColonAscendens,r1_p0,0.067256381,,
+ColonAscendens,r1_p1,0.015672726,,
+ColonAscendens,r2_p0,0.067256381,,
+ColonAscendens,r2_p1,0.015672726,,
+ColonDescendens,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+ColonDescendens,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+ColonDescendens,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+ColonDescendens,Density (tissue),1.0,0.0,
+ColonDescendens,Effective surface area enhancement factor,2.5,0.0,
+ColonDescendens,Flow fraction via large pores,0.05,0.0,1.0
+ColonDescendens,Fraction interstitial,0.74,0.0,1.0
+ColonDescendens,Fraction mucosa,0.14,0.0,1.0
+ColonDescendens,Fraction of blood for sampling,1.0,0.0,1.0
+ColonDescendens,Fraction of regional blood flow rate,0.24,0.0,
+ColonDescendens,Fraction vascular,0.12,0.0,1.0
+ColonDescendens,Fractional steady state fill level,0.0060009,0.0,
+ColonDescendens,Hydraulic conductivity,1.86944444444444e-10,0.0,
+ColonDescendens,Intestinal transit rate,5.0,0.0,
+ColonDescendens,L_p0,0.4227543951,,
+ColonDescendens,L_p1,0.098514277,,
+ColonDescendens,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+ColonDescendens,Microvilli factor,1.0,0.0,
+ColonDescendens,Radius (large pores),2.5e-7,0.0,
+ColonDescendens,Radius (small pores),4.5e-8,0.0,
+ColonDescendens,Thickness_p1,-0.0118,,
+ColonDescendens,Thickness_p2,0.0601543776,,
+ColonDescendens,Thickness_p3,-0.08977747,,
+ColonDescendens,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+ColonDescendens,Vf (extracellular water)-RR,0.282,0.0,1.0
+ColonDescendens,Vf (intracellular water)-RR,0.456,0.0,1.0
+ColonDescendens,Vf (lipid),0.06,0.0,1.0
+ColonDescendens,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+ColonDescendens,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+ColonDescendens,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+ColonDescendens,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+ColonDescendens,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+ColonDescendens,Vf (phospholipid)-PT,0.0163,0.0,1.0
+ColonDescendens,Vf (protein),0.08,0.0,1.0
+ColonDescendens,Vf (protein)-WS,0.15,0.0,1.0
+ColonDescendens,Vf (water),0.8,0.0,1.0
+ColonDescendens,Vf (water)-PT,0.718,0.0,1.0
+ColonDescendens,Vf (water)-WS,0.78,0.0,1.0
+ColonDescendens,pH,6.6,0.0,14.0
+ColonDescendens,r1_p0,0.0384322177,,
+ColonDescendens,r1_p1,0.008955843,,
+ColonDescendens,r2_p0,0.0384322177,,
+ColonDescendens,r2_p1,0.008955843,,
+ColonSigmoid,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+ColonSigmoid,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+ColonSigmoid,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+ColonSigmoid,Density (tissue),1.0,0.0,
+ColonSigmoid,Effective surface area enhancement factor,2.5,0.0,
+ColonSigmoid,Flow fraction via large pores,0.05,0.0,1.0
+ColonSigmoid,Fraction interstitial,0.78,0.0,1.0
+ColonSigmoid,Fraction mucosa,0.3,0.0,1.0
+ColonSigmoid,Fraction of blood for sampling,1.0,0.0,1.0
+ColonSigmoid,Fraction of regional blood flow rate,0.135,0.0,
+ColonSigmoid,Fraction vascular,0.08,0.0,1.0
+ColonSigmoid,Fractional steady state fill level,0.0060009,0.0,
+ColonSigmoid,Hydraulic conductivity,1.86944444444444e-10,0.0,
+ColonSigmoid,Intestinal transit rate,4.0741,0.0,
+ColonSigmoid,L_p0,0.5337898629,,
+ColonSigmoid,L_p1,0.121300709,,
+ColonSigmoid,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+ColonSigmoid,Microvilli factor,1.0,0.0,
+ColonSigmoid,Radius (large pores),2.5e-7,0.0,
+ColonSigmoid,Radius (small pores),4.5e-8,0.0,
+ColonSigmoid,Thickness_p1,-0.00536,,
+ColonSigmoid,Thickness_p2,0.0274432593,,
+ColonSigmoid,Thickness_p3,-0.0889014,,
+ColonSigmoid,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+ColonSigmoid,Vf (extracellular water)-RR,0.282,0.0,1.0
+ColonSigmoid,Vf (intracellular water)-RR,0.456,0.0,1.0
+ColonSigmoid,Vf (lipid),0.06,0.0,1.0
+ColonSigmoid,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+ColonSigmoid,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+ColonSigmoid,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+ColonSigmoid,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+ColonSigmoid,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+ColonSigmoid,Vf (phospholipid)-PT,0.0163,0.0,1.0
+ColonSigmoid,Vf (protein),0.08,0.0,1.0
+ColonSigmoid,Vf (protein)-WS,0.15,0.0,1.0
+ColonSigmoid,Vf (water),0.8,0.0,1.0
+ColonSigmoid,Vf (water)-PT,0.718,0.0,1.0
+ColonSigmoid,Vf (water)-WS,0.78,0.0,1.0
+ColonSigmoid,pH,6.6,0.0,14.0
+ColonSigmoid,r1_p0,0.0384322177,,
+ColonSigmoid,r1_p1,0.008955843,,
+ColonSigmoid,r2_p0,0.0384322177,,
+ColonSigmoid,r2_p1,0.008955843,,
+ColonTransversum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+ColonTransversum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+ColonTransversum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+ColonTransversum,Density (tissue),1.0,0.0,
+ColonTransversum,Effective surface area enhancement factor,2.5,0.0,
+ColonTransversum,Flow fraction via large pores,0.05,0.0,1.0
+ColonTransversum,Fraction interstitial,0.74,0.0,1.0
+ColonTransversum,Fraction mucosa,0.21,0.0,1.0
+ColonTransversum,Fraction of blood for sampling,1.0,0.0,1.0
+ColonTransversum,Fraction of regional blood flow rate,0.32,0.0,
+ColonTransversum,Fraction vascular,0.12,0.0,1.0
+ColonTransversum,Fractional steady state fill level,0.0060009,0.0,
+ColonTransversum,Hydraulic conductivity,1.86944444444444e-10,0.0,
+ColonTransversum,Intestinal transit rate,3.3333,0.0,
+ColonTransversum,L_p0,0.6886041141,,
+ColonTransversum,L_p1,0.144607745,,
+ColonTransversum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+ColonTransversum,Microvilli factor,1.0,0.0,
+ColonTransversum,Radius (large pores),2.5e-7,0.0,
+ColonTransversum,Radius (small pores),4.5e-8,0.0,
+ColonTransversum,Thickness_p1,-0.0076,,
+ColonTransversum,Thickness_p2,0.0394956146,,
+ColonTransversum,Thickness_p3,-0.08637087,,
+ColonTransversum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+ColonTransversum,Vf (extracellular water)-RR,0.282,0.0,1.0
+ColonTransversum,Vf (intracellular water)-RR,0.456,0.0,1.0
+ColonTransversum,Vf (lipid),0.06,0.0,1.0
+ColonTransversum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+ColonTransversum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+ColonTransversum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+ColonTransversum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+ColonTransversum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+ColonTransversum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+ColonTransversum,Vf (protein),0.08,0.0,1.0
+ColonTransversum,Vf (protein)-WS,0.15,0.0,1.0
+ColonTransversum,Vf (water),0.8,0.0,1.0
+ColonTransversum,Vf (water)-PT,0.718,0.0,1.0
+ColonTransversum,Vf (water)-WS,0.78,0.0,1.0
+ColonTransversum,pH,5.7,0.0,14.0
+ColonTransversum,r1_p0,0.067256381,,
+ColonTransversum,r1_p1,0.015672726,,
+ColonTransversum,r2_p0,0.0384322177,,
+ColonTransversum,r2_p1,0.008955843,,
+Duodenum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+Duodenum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+Duodenum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Duodenum,Density (tissue),1.0,0.0,
+Duodenum,Effective surface area enhancement factor,292.6883,0.0,
+Duodenum,Flow fraction via large pores,0.05,0.0,1.0
+Duodenum,Fraction interstitial,0.42,0.0,1.0
+Duodenum,Fraction mucosa,0.26,0.0,1.0
+Duodenum,Fraction of blood for sampling,1.0,0.0,1.0
+Duodenum,Fraction of regional blood flow rate,0.093,0.0,
+Duodenum,Fraction vascular,0.13,0.0,1.0
+Duodenum,Fractional steady state fill level,0.06,0.0,
+Duodenum,Hydraulic conductivity,1.53888888888889e-10,0.0,
+Duodenum,Intestinal transit rate,116.0,0.0,
+Duodenum,L_p0,-0.0289872252,,
+Duodenum,L_p1,0.129622362,,
+Duodenum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+Duodenum,Microvilli factor,25.0,0.0,
+Duodenum,Radius (large pores),2.5e-7,0.0,
+Duodenum,Radius (small pores),4.5e-8,0.0,
+Duodenum,Thickness_p1,-0.0186500479,,
+Duodenum,Thickness_p2,0.0441002752,,
+Duodenum,Thickness_p3,-0.30705627,,
+Duodenum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+Duodenum,Vf (extracellular water)-RR,0.282,0.0,1.0
+Duodenum,Vf (intracellular water)-RR,0.456,0.0,1.0
+Duodenum,Vf (lipid),0.06,0.0,1.0
+Duodenum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+Duodenum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+Duodenum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+Duodenum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+Duodenum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+Duodenum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+Duodenum,Vf (protein),0.08,0.0,1.0
+Duodenum,Vf (protein)-WS,0.15,0.0,1.0
+Duodenum,Vf (water),0.8,0.0,1.0
+Duodenum,Vf (water)-PT,0.718,0.0,1.0
+Duodenum,Vf (water)-WS,0.78,0.0,1.0
+Duodenum,pH,6.0,0.0,14.0
+Duodenum,r1_p0,-0.002264627,,
+Duodenum,r1_p1,0.010126747,,
+Duodenum,r2_p0,-0.0020705161,,
+Duodenum,r2_p1,0.00925874,,
+EndogenousIgG,Flow fraction via large pores,0.05,0.0,1.0
+EndogenousIgG,Hydraulic conductivity,1.84722e-11,0.0,
+EndogenousIgG,"Kd (FcRn, endogenous IgG) in endosomal space",0.63,,
+EndogenousIgG,Radius (endogeneous IgG),5.34e-8,0.0,
+EndogenousIgG,Radius (large pores),2.5e-7,0.0,
+EndogenousIgG,Radius (small pores),4.5e-8,0.0,
+Endometrium,Acidic phospholipids [mg/g] - RR,0.909,0.0,1000.0
+Endometrium,Allometric scale factor,0.75,0.75,0.75
+Endometrium,Density (tissue),1.0,0.0,
+Endometrium,Fraction interstitial,0.255,0.0,1.0
+Endometrium,Fraction vascular,0.08,0.0,1.0
+Endometrium,Vf (acidic phospholipids)-WS,0.0009,0.0,1.0
+Endometrium,Vf (extracellular water)-RR,0.28,0.0,1.0
+Endometrium,Vf (intracellular water)-RR,0.54,0.0,1.0
+Endometrium,Vf (lipid),0.019,0.0,1.0
+Endometrium,Vf (neutral lipid)-PT,0.005,0.0,1.0
+Endometrium,Vf (neutral lipid)-RR,0.005,0.0,1.0
+Endometrium,Vf (neutral lipid)-WS,0.005,0.0,1.0
+Endometrium,Vf (neutral phospholipid)-RR,0.0135,0.0,1.0
+Endometrium,"Vf (neutral phospholipid, plasma)-WS",0.0135,0.0,1.0
+Endometrium,Vf (phospholipid)-PT,0.014,0.0,1.0
+Endometrium,Vf (protein),0.161,0.0,1.0
+Endometrium,Vf (protein)-WS,0.161,0.0,1.0
+Endometrium,Vf (water),0.82,0.0,1.0
+Endometrium,Vf (water)-PT,0.82,0.0,1.0
+Endometrium,Vf (water)-WS,0.82,0.0,1.0
+Endosome,Start concentration of free FcRn (endosome),80.8,0.0,
+Fat,Acidic phospholipids [mg/g] - RR,0.4,0.0,1000.0
+Fat,Albumin ratio (tissue/plasma),0.049,0.0,1.0
+Fat,Albumin ratio (tissue/plasma)-PT,0.0,0.0,1.0
+Fat,Allometric scale factor,2.0,2.0,2.0
+Fat,Density (tissue),1.0,0.0,
+Fat,Flow fraction via large pores,0.05,0.0,1.0
+Fat,Fluid recirculation flow proportionality factor,0.357,0.0,
+Fat,Fraction of blood for sampling,1.0,0.0,1.0
+Fat,Fraction vascular,0.018,0.0,1.0
+Fat,Hydraulic conductivity,9.0e-12,0.0,
+Fat,Lipoprotein ratio (tissue/plasma),0.068,0.0,1.0
+Fat,Lymph flow proportionality factor,0.00754,0.0,
+Fat,Organ volume mouse,0.001,0.0,
+Fat,Peripheral blood flow fraction,0.0,0.0,1.0
+Fat,Radius (large pores),2.5e-7,0.0,
+Fat,Radius (small pores),4.5e-8,0.0,
+Fat,Vf (acidic phospholipids)-WS,0.000552,0.0,1.0
+Fat,Vf (protein),0.05,0.0,1.0
+Fat,Vf (protein)-WS,0.06,0.0,1.0
+Fetus,Allometric scale factor,0.363346106,0.363346106,0.363346106
+Fetus,Density (tissue),1.0,0.0,
+Fetus,Fraction vascular,0.062,0.0,1.0
+Gallbladder,Gallbladder ejection fraction,0.65,0.0,1.0
+Gallbladder,Gallbladder ejection half-time,19.7,0.0,
+Gonads,Acidic phospholipids [mg/g] - RR,2.45,0.0,1000.0
+Gonads,Albumin ratio (tissue/plasma),0.048,0.0,1.0
+Gonads,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Gonads,Allometric scale factor,0.75,0.75,0.75
+Gonads,Density (tissue),1.0,0.0,
+Gonads,Flow fraction via large pores,0.05,0.0,1.0
+Gonads,Fluid recirculation flow proportionality factor,0.96,0.0,
+Gonads,Fraction interstitial,0.069,0.0,1.0
+Gonads,Fraction of blood for sampling,1.0,0.0,1.0
+Gonads,Fraction vascular,0.055,0.0,1.0
+Gonads,Hydraulic conductivity,9.0e-12,0.0,
+Gonads,Lipoprotein ratio (tissue/plasma),0.041,0.0,1.0
+Gonads,Lymph flow proportionality factor,0.0111,0.0,
+Gonads,Organ volume mouse,0.00025,0.0,
+Gonads,Radius (large pores),2.5e-7,0.0,
+Gonads,Radius (small pores),4.5e-8,0.0,
+Gonads,Vf (acidic phospholipids)-WS,0.0054,0.0,1.0
+Gonads,Vf (extracellular water)-RR,0.03,0.0,1.0
+Gonads,Vf (intracellular water)-RR,0.83,0.0,1.0
+Gonads,Vf (lipid),0.031,0.0,1.0
+Gonads,Vf (neutral lipid)-PT,0.0048,0.0,1.0
+Gonads,Vf (neutral lipid)-RR,0.0048,0.0,1.0
+Gonads,Vf (neutral lipid)-WS,0.0,0.0,1.0
+Gonads,Vf (neutral phospholipid)-RR,0.0116,0.0,1.0
+Gonads,"Vf (neutral phospholipid, plasma)-WS",0.0249,0.0,1.0
+Gonads,Vf (phospholipid)-PT,0.01405,0.0,1.0
+Gonads,Vf (protein),0.12,0.0,1.0
+Gonads,Vf (protein)-WS,0.13,0.0,1.0
+Gonads,Vf (water),0.8,0.0,1.0
+Gonads,Vf (water)-PT,0.8,0.0,1.0
+Gonads,Vf (water)-WS,0.78,0.0,1.0
+Heart,Acidic phospholipids [mg/g] - RR,2.25,0.0,1000.0
+Heart,Albumin ratio (tissue/plasma),0.157,0.0,1.0
+Heart,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Heart,Allometric scale factor,0.75,0.75,0.75
+Heart,Density (tissue),1.0,0.0,
+Heart,Flow fraction via large pores,0.05,0.0,1.0
+Heart,Fluid recirculation flow proportionality factor,0.96,0.0,
+Heart,Fraction interstitial,0.1,0.0,1.0
+Heart,Fraction of blood for sampling,1.0,0.0,1.0
+Heart,Fraction vascular,0.14,0.0,1.0
+Heart,Hydraulic conductivity,1.4333333333333298e-11,0.0,
+Heart,Lipoprotein ratio (tissue/plasma),0.16,0.0,1.0
+Heart,Lymph flow proportionality factor,0.00147,0.0,
+Heart,Organ volume mouse,9.5e-5,0.0,
+Heart,Radius (large pores),2.5e-7,0.0,
+Heart,Radius (small pores),4.5e-8,0.0,
+Heart,Vf (acidic phospholipids)-WS,0.0099,0.0,1.0
+Heart,Vf (extracellular water)-RR,0.32,0.0,1.0
+Heart,Vf (intracellular water)-RR,0.248,0.0,1.0
+Heart,Vf (lipid),0.1,0.0,1.0
+Heart,Vf (neutral lipid)-PT,0.0115,0.0,1.0
+Heart,Vf (neutral lipid)-RR,0.0135,0.0,1.0
+Heart,Vf (neutral lipid)-WS,0.0528,0.0,1.0
+Heart,Vf (neutral phospholipid)-RR,0.0106,0.0,1.0
+Heart,"Vf (neutral phospholipid, plasma)-WS",0.0473,0.0,1.0
+Heart,Vf (phospholipid)-PT,0.0166,0.0,1.0
+Heart,Vf (protein),0.168,0.0,1.0
+Heart,Vf (protein)-WS,0.19,0.0,1.0
+Heart,Vf (water),0.731,0.0,1.0
+Heart,Vf (water)-PT,0.758,0.0,1.0
+Heart,Vf (water)-WS,0.7,0.0,1.0
+Intracellular,pH,7.0,0.0,14.0
+Intracellular,pH,7.1,0.0,14.0
+Intracellular,pH,7.1,0.0,14.0
+Intracellular,pH,7.0,0.0,14.0
+Intracellular,pH,7.1,0.0,14.0
+Intracellular,pH,7.22,0.0,14.0
+Intracellular,pH,7.4,0.0,14.0
+Intracellular,pH,7.23,0.0,14.0
+Intracellular,pH,6.6,0.0,14.0
+Intracellular,pH,6.81,0.0,14.0
+Intracellular,pH,7.4,0.0,14.0
+Intracellular,pH,7.0,0.0,14.0
+Intracellular,pH,7.4,0.0,14.0
+Intracellular,pH,7.0,0.0,14.0
+Intracellular,pH,7.4,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Intracellular,pH,7.3,0.0,14.0
+Kidney,Acidic phospholipids [mg/g] - RR,5.03,0.0,1000.0
+Kidney,Albumin ratio (tissue/plasma),0.13,0.0,1.0
+Kidney,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Kidney,Allometric scale factor,0.75,0.75,0.75
+Kidney,Density (tissue),1.0,0.0,
+Kidney,Flow fraction via large pores,0.05,0.0,1.0
+Kidney,Fluid recirculation flow proportionality factor,0.761,0.0,
+Kidney,Fraction interstitial,0.2,0.0,1.0
+Kidney,Fraction of blood for sampling,1.0,0.0,1.0
+Kidney,Fraction vascular,0.23,0.0,1.0
+Kidney,Hydraulic conductivity,1.25e-10,0.0,
+Kidney,Lipoprotein ratio (tissue/plasma),0.137,0.0,1.0
+Kidney,Lymph flow proportionality factor,0.000709,0.0,
+Kidney,Organ volume mouse,0.00034,0.0,
+Kidney,Radius (large pores),2.5e-7,0.0,
+Kidney,Radius (small pores),4.5e-8,0.0,
+Kidney,Vf (acidic phospholipids)-WS,0.0078,0.0,1.0
+Kidney,Vf (extracellular water)-RR,0.273,0.0,1.0
+Kidney,Vf (intracellular water)-RR,0.399,0.0,1.0
+Kidney,Vf (lipid),0.052,0.0,1.0
+Kidney,Vf (neutral lipid)-PT,0.0207,0.0,1.0
+Kidney,Vf (neutral lipid)-RR,0.0121,0.0,1.0
+Kidney,Vf (neutral lipid)-WS,0.0156,0.0,1.0
+Kidney,Vf (neutral phospholipid)-RR,0.024,0.0,1.0
+Kidney,"Vf (neutral phospholipid, plasma)-WS",0.0366,0.0,1.0
+Kidney,Vf (phospholipid)-PT,0.0162,0.0,1.0
+Kidney,Vf (protein),0.171,0.0,1.0
+Kidney,Vf (protein)-WS,0.21,0.0,1.0
+Kidney,Vf (water),0.774,0.0,1.0
+Kidney,Vf (water)-PT,0.783,0.0,1.0
+Kidney,Vf (water)-WS,0.73,0.0,1.0
+Kidney,Volume (standard kidney),0.44,0.0,
+Kidney,fGFRpremat,0.258,0.258,0.258
+LargeIntestine,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+LargeIntestine,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+LargeIntestine,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+LargeIntestine,Allometric scale factor,0.75,0.75,0.75
+LargeIntestine,Density (tissue),1.0,0.0,
+LargeIntestine,Flow fraction via large pores,0.05,0.0,1.0
+LargeIntestine,Fluid recirculation flow proportionality factor,0.179,0.0,
+LargeIntestine,Fraction interstitial,0.094,0.0,1.0
+LargeIntestine,Fraction of blood for sampling,1.0,0.0,1.0
+LargeIntestine,Fraction vascular,0.024,0.0,1.0
+LargeIntestine,Hydraulic conductivity,1.86944444444444e-10,0.0,
+LargeIntestine,Large intestinal transit time factor intercept,47.6,,
+LargeIntestine,Large intestinal transit time factor slope,0.938,,
+LargeIntestine,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+LargeIntestine,Lymph flow proportionality factor,0.0144,0.0,
+LargeIntestine,Mucosa blood flow fraction,0.75,0.0,
+LargeIntestine,Organ volume mouse,0.000627,0.0,
+LargeIntestine,Radius (large pores),2.5e-7,0.0,
+LargeIntestine,Radius (small pores),4.5e-8,0.0,
+LargeIntestine,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+LargeIntestine,Vf (extracellular water)-RR,0.282,0.0,1.0
+LargeIntestine,Vf (intracellular water)-RR,0.456,0.0,1.0
+LargeIntestine,Vf (lipid),0.062,0.0,1.0
+LargeIntestine,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+LargeIntestine,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+LargeIntestine,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+LargeIntestine,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+LargeIntestine,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+LargeIntestine,Vf (phospholipid)-PT,0.0163,0.0,1.0
+LargeIntestine,Vf (protein),0.133,0.0,1.0
+LargeIntestine,Vf (protein)-WS,0.15,0.0,1.0
+LargeIntestine,Vf (water),0.792,0.0,1.0
+LargeIntestine,Vf (water)-PT,0.718,0.0,1.0
+LargeIntestine,Vf (water)-WS,0.78,0.0,1.0
+Liver,Acidic phospholipids [mg/g] - RR,4.56,0.0,1000.0
+Liver,Albumin ratio (tissue/plasma),0.086,0.0,1.0
+Liver,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Liver,Allometric scale factor,0.75,0.75,0.75
+Liver,Density (tissue),1.0,0.0,
+Liver,EHC continuous fraction,0.0,0.0,1.0
+Liver,Flow fraction via large pores,0.8,0.0,1.0
+Liver,Fluid recirculation flow proportionality factor,0.96,0.0,
+Liver,Fraction interstitial,0.163,0.0,1.0
+Liver,Fraction of blood for sampling,1.0,0.0,1.0
+Liver,Fraction vascular,0.17,0.0,1.0
+Liver,Hydraulic conductivity,3.88888888888889e-11,0.0,
+Liver,Lipoprotein ratio (tissue/plasma),0.161,0.0,1.0
+Liver,Lymph flow proportionality factor,0.0199,0.0,
+Liver,Microsomal protein mass/g tissue,0.04,0.0,1.0
+Liver,Number of cells/g tissue,139000.0,0.0,1.0e6
+Liver,Organ volume mouse,0.0013,0.0,
+Liver,Radius (large pores),3.3e-7,0.0,
+Liver,Radius (small pores),9.0e-8,0.0,
+Liver,Vf (acidic phospholipids)-WS,0.0088,0.0,1.0
+Liver,Vf (extracellular water)-RR,0.161,0.0,1.0
+Liver,Vf (intracellular water)-RR,0.481,0.0,1.0
+Liver,Vf (lipid),0.069,0.0,1.0
+Liver,Vf (neutral lipid)-PT,0.0348,0.0,1.0
+Liver,Vf (neutral lipid)-RR,0.0135,0.0,1.0
+Liver,Vf (neutral lipid)-WS,0.0232,0.0,1.0
+Liver,Vf (neutral phospholipid)-RR,0.0238,0.0,1.0
+Liver,"Vf (neutral phospholipid, plasma)-WS",0.0472,0.0,1.0
+Liver,Vf (phospholipid)-PT,0.0252,0.0,1.0
+Liver,Vf (protein),0.184,0.0,1.0
+Liver,Vf (protein)-WS,0.21,0.0,1.0
+Liver,Vf (water),0.747,0.0,1.0
+Liver,Vf (water)-PT,0.751,0.0,1.0
+Liver,Vf (water)-WS,0.68,0.0,1.0
+LowerIleum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+LowerIleum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+LowerIleum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+LowerIleum,Density (tissue),1.0,0.0,
+LowerIleum,Effective surface area enhancement factor,146.565,0.0,
+LowerIleum,Flow fraction via large pores,0.05,0.0,1.0
+LowerIleum,Fraction interstitial,0.32,0.0,1.0
+LowerIleum,Fraction mucosa,0.13,0.0,1.0
+LowerIleum,Fraction of blood for sampling,1.0,0.0,1.0
+LowerIleum,Fraction of regional blood flow rate,0.2345,0.0,
+LowerIleum,Fraction vascular,0.13,0.0,1.0
+LowerIleum,Fractional steady state fill level,0.064841,0.0,
+LowerIleum,Hydraulic conductivity,1.53888888888889e-10,0.0,
+LowerIleum,Intestinal transit rate,3.3745,0.0,
+LowerIleum,L_p0,-0.0996435866,,
+LowerIleum,L_p1,0.445576869,,
+LowerIleum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+LowerIleum,Microvilli factor,25.0,0.0,
+LowerIleum,Radius (large pores),2.5e-7,0.0,
+LowerIleum,Radius (small pores),4.5e-8,0.0,
+LowerIleum,Thickness_p1,-0.0148137399,,
+LowerIleum,Thickness_p2,0.0350288649,,
+LowerIleum,Thickness_p3,-0.30705627,,
+LowerIleum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+LowerIleum,Vf (extracellular water)-RR,0.282,0.0,1.0
+LowerIleum,Vf (intracellular water)-RR,0.456,0.0,1.0
+LowerIleum,Vf (lipid),0.06,0.0,1.0
+LowerIleum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+LowerIleum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+LowerIleum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+LowerIleum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+LowerIleum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+LowerIleum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+LowerIleum,Vf (protein),0.08,0.0,1.0
+LowerIleum,Vf (protein)-WS,0.15,0.0,1.0
+LowerIleum,Vf (water),0.8,0.0,1.0
+LowerIleum,Vf (water)-PT,0.718,0.0,1.0
+LowerIleum,Vf (water)-WS,0.78,0.0,1.0
+LowerIleum,pH,7.4583,0.0,14.0
+LowerIleum,r1_p0,-0.0015528871,,
+LowerIleum,r1_p1,0.006944055,,
+LowerIleum,r2_p0,-0.0012940725,,
+LowerIleum,r2_p1,0.005786713,,
+LowerJejunum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+LowerJejunum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+LowerJejunum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+LowerJejunum,Density (tissue),1.0,0.0,
+LowerJejunum,Effective surface area enhancement factor,372.9358,0.0,
+LowerJejunum,Flow fraction via large pores,0.05,0.0,1.0
+LowerJejunum,Fraction interstitial,0.32,0.0,1.0
+LowerJejunum,Fraction mucosa,0.26,0.0,1.0
+LowerJejunum,Fraction of blood for sampling,1.0,0.0,1.0
+LowerJejunum,Fraction of regional blood flow rate,0.219,0.0,
+LowerJejunum,Fraction vascular,0.13,0.0,1.0
+LowerJejunum,Fractional steady state fill level,0.064841,0.0,
+LowerJejunum,Hydraulic conductivity,1.53888888888889e-10,0.0,
+LowerJejunum,Intestinal transit rate,5.0162,0.0,
+LowerJejunum,L_p0,-0.0670329582,,
+LowerJejunum,L_p1,0.299751712,,
+LowerJejunum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+LowerJejunum,Microvilli factor,25.0,0.0,
+LowerJejunum,Radius (large pores),2.5e-7,0.0,
+LowerJejunum,Radius (small pores),4.5e-8,0.0,
+LowerJejunum,Thickness_p1,-0.0196976609,,
+LowerJejunum,Thickness_p2,0.0465856499,,
+LowerJejunum,Thickness_p3,-0.30703115,,
+LowerJejunum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+LowerJejunum,Vf (extracellular water)-RR,0.282,0.0,1.0
+LowerJejunum,Vf (intracellular water)-RR,0.456,0.0,1.0
+LowerJejunum,Vf (lipid),0.06,0.0,1.0
+LowerJejunum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+LowerJejunum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+LowerJejunum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+LowerJejunum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+LowerJejunum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+LowerJejunum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+LowerJejunum,Vf (protein),0.08,0.0,1.0
+LowerJejunum,Vf (protein)-WS,0.15,0.0,1.0
+LowerJejunum,Vf (water),0.8,0.0,1.0
+LowerJejunum,Vf (water)-PT,0.718,0.0,1.0
+LowerJejunum,Vf (water)-WS,0.78,0.0,1.0
+LowerJejunum,pH,6.9167,0.0,14.0
+LowerJejunum,r1_p0,-0.0019411088,,
+LowerJejunum,r1_p1,0.008680069,,
+LowerJejunum,r2_p0,-0.0018117016,,
+LowerJejunum,r2_p1,0.008101398,,
+Lung,Acidic phospholipids [mg/g] - RR,3.91,0.0,1000.0
+Lung,Albumin ratio (tissue/plasma),0.212,0.0,1.0
+Lung,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Lung,Allometric scale factor,0.75,0.75,0.75
+Lung,Density (tissue),1.0,0.0,
+Lung,Flow fraction via large pores,0.05,0.0,1.0
+Lung,Fluid recirculation flow proportionality factor,0.01,0.0,
+Lung,Fraction interstitial,0.188,0.0,1.0
+Lung,Fraction of blood for sampling,1.0,0.0,1.0
+Lung,Hydraulic conductivity,5.66666666666667e-12,0.0,
+Lung,Lipoprotein ratio (tissue/plasma),0.168,0.0,1.0
+Lung,Lymph flow proportionality factor,3.56e-5,0.0,
+Lung,Organ volume mouse,0.0001,0.0,
+Lung,Radius (large pores),2.5e-7,0.0,
+Lung,Radius (small pores),4.5e-8,0.0,
+Lung,Vf (acidic phospholipids)-WS,0.0044,0.0,1.0
+Lung,Vf (extracellular water)-RR,0.336,0.0,1.0
+Lung,Vf (intracellular water)-RR,0.238,0.0,1.0
+Lung,Vf (lipid),0.01,0.0,1.0
+Lung,Vf (neutral lipid)-PT,0.003,0.0,1.0
+Lung,Vf (neutral lipid)-RR,0.0215,0.0,1.0
+Lung,Vf (neutral lipid)-WS,0.0204,0.0,1.0
+Lung,Vf (neutral phospholipid)-RR,0.0123,0.0,1.0
+Lung,"Vf (neutral phospholipid, plasma)-WS",0.0152,0.0,1.0
+Lung,Vf (phospholipid)-PT,0.009,0.0,1.0
+Lung,Vf (protein),0.183,0.0,1.0
+Lung,Vf (protein)-WS,0.11,0.0,1.0
+Lung,Vf (water),0.807,0.0,1.0
+Lung,Vf (water)-PT,0.811,0.0,1.0
+Lung,Vf (water)-WS,0.74,0.0,1.0
+Muscle,Acidic phospholipids [mg/g] - RR,2.42,0.0,1000.0
+Muscle,Albumin ratio (tissue/plasma),0.064,0.0,1.0
+Muscle,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Muscle,Allometric scale factor,2.0,2.0,2.0
+Muscle,Density (tissue),1.0,0.0,
+Muscle,Flow fraction via large pores,0.05,0.0,1.0
+Muscle,Fluid recirculation flow proportionality factor,0.292,0.0,
+Muscle,Fraction of blood for sampling,1.0,0.0,1.0
+Muscle,Fraction vascular,0.025,0.0,1.0
+Muscle,Hydraulic conductivity,9.0e-12,0.0,
+Muscle,Lipoprotein ratio (tissue/plasma),0.059,0.0,1.0
+Muscle,Lymph flow proportionality factor,0.00201,0.0,
+Muscle,Organ volume mouse,0.01,0.0,
+Muscle,Peripheral blood flow fraction,0.287,0.0,1.0
+Muscle,Radius (large pores),2.5e-7,0.0,
+Muscle,Radius (small pores),4.5e-8,0.0,
+Muscle,Vf (acidic phospholipids)-WS,0.0009,0.0,1.0
+Myometrium,Acidic phospholipids [mg/g] - RR,0.0005,0.0,1000.0
+Myometrium,Allometric scale factor,0.75,0.75,0.75
+Myometrium,Density (tissue),1.0,0.0,
+Myometrium,Fraction interstitial,0.352,0.0,1.0
+Myometrium,Fraction vascular,0.08,0.0,1.0
+Myometrium,Vf (acidic phospholipids)-WS,0.455,0.0,1.0
+Myometrium,Vf (extracellular water)-RR,0.422,0.0,1.0
+Myometrium,Vf (intracellular water)-RR,0.403,0.0,1.0
+Myometrium,Vf (lipid),0.012,0.0,1.0
+Myometrium,Vf (neutral lipid)-PT,0.002,0.0,1.0
+Myometrium,Vf (neutral lipid)-RR,0.002,0.0,1.0
+Myometrium,Vf (neutral lipid)-WS,0.002,0.0,1.0
+Myometrium,Vf (neutral phospholipid)-RR,0.009,0.0,1.0
+Myometrium,"Vf (neutral phospholipid, plasma)-WS",0.009,0.0,1.0
+Myometrium,Vf (phospholipid)-PT,0.01,0.0,1.0
+Myometrium,Vf (protein),0.163,0.0,1.0
+Myometrium,Vf (protein)-WS,0.163,0.0,1.0
+Myometrium,Vf (water),0.825,0.0,1.0
+Myometrium,Vf (water)-PT,0.825,0.0,1.0
+Myometrium,Vf (water)-WS,0.825,0.0,1.0
+Organism,Acidic phospholipids (blood cells) [mg/g] - RR,0.57,0.0,1000.0
+Organism,Age,30.0,0.0,100.0
+Organism,Fraction endosomal (global),0.2,0.0,1.0
+Organism,Fraction of endosomal uptake from plasma (global),1.0,0.0,1.0
+Organism,Fraction recycled to plasma (global),1.0,0.0,1.0
+Organism,Gestational age,32.0,24.0,40.0
+Organism,Height,17.6,0.0,25.0
+Organism,Na,6.022e17,6.022e17,6.022e17
+Organism,Plasma protein scale factor,1.0,0.0,
+Organism,Protein ratio (interstial/plasma),0.37,0.0,1.0
+Organism,R*T,928.8,928.8,928.8
+Organism,Rate constant for endosomal uptake (global),0.294,0.0,
+Organism,Rate constant for recycling from endosomal space (global),0.0888,0.0,
+Organism,Scaling exponent for fluid recirculation flow rate,0.667,0.0,
+Organism,Surface/Volume ratio (blood cells),167000.0,167000.0,167000.0
+Organism,Thickness (endothelium),3.0e-6,1.0e-21,
+Organism,"Vf (acidic phospholipids, blood cells)-WS",0.001,0.0,1.0
+Organism,"Vf (intracellular water, blood cells)-RR",0.63,0.0,1.0
+Organism,"Vf (lipid, blood cells)",0.005,0.0,1.0
+Organism,"Vf (lipid, plasma)",0.007,0.0,1.0
+Organism,"Vf (neutral lipid, blood cells)-RR",0.0012,0.0,1.0
+Organism,"Vf (neutral lipid, blood cells)-WS",0.003,0.0,1.0
+Organism,"Vf (neutral lipid, plasma)-PT",0.0035,0.0,1.0
+Organism,"Vf (neutral lipid, plasma)-RR",0.0032,0.0,1.0
+Organism,"Vf (neutral phospholipid, blood cells)-RR",0.0033,0.0,1.0
+Organism,"Vf (neutral phospholipid, blood cells)-WS",0.0059,0.0,1.0
+Organism,"Vf (neutral phospholipid, plasma)-RR",0.0021,0.0,1.0
+Organism,"Vf (phospholipid, plasma)-PT",0.00225,0.0,1.0
+Organism,"Vf (protein,blood cells)",0.325,0.0,1.0
+Organism,"Vf (protein,plasma)",0.067,0.0,1.0
+Organism,"Vf (water,blood cells)",0.625,0.0,1.0
+Organism,"Vf (water,interstitial)",0.935,0.0,1.0
+Organism,"Vf (water,plasma)",0.926,0.0,1.0
+Organism,"Vf (water,plasma)-PT",0.945,0.0,1.0
+Organism,pH (blood cells),7.22,0.0,14.0
+Organism,pH (interstitial),7.4,0.0,14.0
+Organism,pH (intracellular),7.0,0.0,14.0
+Organism,pH (plasma),7.4,0.0,14.0
+Pancreas,Acidic phospholipids [mg/g] - RR,1.67,0.0,1000.0
+Pancreas,Albumin ratio (tissue/plasma),0.06,0.0,1.0
+Pancreas,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Pancreas,Allometric scale factor,0.75,0.75,0.75
+Pancreas,Density (tissue),1.0,0.0,
+Pancreas,Flow fraction via large pores,0.05,0.0,1.0
+Pancreas,Fluid recirculation flow proportionality factor,0.01,0.0,
+Pancreas,Fraction interstitial,0.12,0.0,1.0
+Pancreas,Fraction of blood for sampling,1.0,0.0,1.0
+Pancreas,Fraction vascular,0.2,0.0,1.0
+Pancreas,Hydraulic conductivity,3.22222222222222e-11,0.0,
+Pancreas,Lipoprotein ratio (tissue/plasma),0.06,0.0,1.0
+Pancreas,Lymph flow proportionality factor,0.0303,0.0,
+Pancreas,Organ volume mouse,0.00013,0.0,
+Pancreas,Radius (large pores),2.5e-7,0.0,
+Pancreas,Radius (small pores),4.5e-8,0.0,
+Pancreas,Vf (acidic phospholipids)-WS,0.00167,0.0,1.0
+Pancreas,Vf (extracellular water)-RR,0.12,0.0,1.0
+Pancreas,Vf (intracellular water)-RR,0.521,0.0,1.0
+Pancreas,Vf (lipid),0.08,0.0,1.0
+Pancreas,Vf (neutral lipid)-PT,0.0403,0.0,1.0
+Pancreas,Vf (neutral lipid)-RR,0.0403,0.0,1.0
+Pancreas,Vf (neutral lipid)-WS,0.0403,0.0,1.0
+Pancreas,Vf (neutral phospholipid)-RR,0.009,0.0,1.0
+Pancreas,"Vf (neutral phospholipid, plasma)-WS",0.009,0.0,1.0
+Pancreas,Vf (phospholipid)-PT,0.01067,0.0,1.0
+Pancreas,Vf (protein),0.13,0.0,1.0
+Pancreas,Vf (protein)-WS,0.13,0.0,1.0
+Pancreas,Vf (water),0.71,0.0,1.0
+Pancreas,Vf (water)-PT,0.71,0.0,1.0
+Pancreas,Vf (water)-WS,0.71,0.0,1.0
+PlacentaFetal,Acidic phospholipids [mg/g] - RR,0.831,0.0,1000.0
+PlacentaFetal,Allometric scale factor,0.75,0.75,0.75
+PlacentaFetal,Density (tissue),1.0,0.0,
+PlacentaFetal,Fraction interstitial,0.426,0.0,1.0
+PlacentaFetal,Fraction vascular,0.168,0.0,1.0
+PlacentaFetal,Vf (acidic phospholipids)-WS,0.001,0.0,1.0
+PlacentaFetal,Vf (extracellular water)-RR,0.432,0.0,1.0
+PlacentaFetal,Vf (intracellular water)-RR,0.388,0.0,1.0
+PlacentaFetal,Vf (lipid),0.006,0.0,1.0
+PlacentaFetal,Vf (neutral lipid)-PT,0.001,0.0,1.0
+PlacentaFetal,Vf (neutral lipid)-RR,0.001,0.0,1.0
+PlacentaFetal,Vf (neutral lipid)-WS,0.001,0.0,1.0
+PlacentaFetal,Vf (neutral phospholipid)-RR,0.004,0.0,1.0
+PlacentaFetal,"Vf (neutral phospholipid, plasma)-WS",0.004,0.0,1.0
+PlacentaFetal,Vf (phospholipid)-PT,0.005,0.0,1.0
+PlacentaFetal,Vf (protein),0.11,0.0,1.0
+PlacentaFetal,Vf (protein)-WS,0.11,0.0,1.0
+PlacentaFetal,Vf (water),0.82,0.0,1.0
+PlacentaFetal,Vf (water)-PT,0.82,0.0,1.0
+PlacentaFetal,Vf (water)-WS,0.82,0.0,1.0
+PlacentaMaternal,Acidic phospholipids [mg/g] - RR,0.831,0.0,1000.0
+PlacentaMaternal,Allometric scale factor,0.75,0.75,0.75
+PlacentaMaternal,Density (tissue),1.0,0.0,
+PlacentaMaternal,Fraction interstitial,0.09,0.0,1.0
+PlacentaMaternal,Fraction vascular,0.674,0.0,1.0
+PlacentaMaternal,Vf (acidic phospholipids)-WS,0.001,0.0,1.0
+PlacentaMaternal,Vf (extracellular water)-RR,0.432,0.0,1.0
+PlacentaMaternal,Vf (intracellular water)-RR,0.388,0.0,1.0
+PlacentaMaternal,Vf (lipid),0.006,0.0,1.0
+PlacentaMaternal,Vf (neutral lipid)-PT,0.001,0.0,1.0
+PlacentaMaternal,Vf (neutral lipid)-RR,0.001,0.0,1.0
+PlacentaMaternal,Vf (neutral lipid)-WS,0.001,0.0,1.0
+PlacentaMaternal,Vf (neutral phospholipid)-RR,0.004,0.0,1.0
+PlacentaMaternal,"Vf (neutral phospholipid, plasma)-WS",0.004,0.0,1.0
+PlacentaMaternal,Vf (phospholipid)-PT,0.005,0.0,1.0
+PlacentaMaternal,Vf (protein),0.11,0.0,1.0
+PlacentaMaternal,Vf (protein)-WS,0.11,0.0,1.0
+PlacentaMaternal,Vf (water),0.82,0.0,1.0
+PlacentaMaternal,Vf (water)-PT,0.82,0.0,1.0
+PlacentaMaternal,Vf (water)-WS,0.82,0.0,1.0
+Plasma,Start concentration of free endogenous IgG (plasma),70.0,0.0,
+PortalVein,Allometric scale factor,0.75,0.75,0.75
+PortalVein,Density (tissue),1.0,0.0,
+PortalVein,Fraction vascular,1.0,0.0,1.0
+Rectum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+Rectum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+Rectum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Rectum,Density (tissue),1.0,0.0,
+Rectum,Effective surface area enhancement factor,3.56,0.0,
+Rectum,Flow fraction via large pores,0.05,0.0,1.0
+Rectum,Fraction interstitial,0.69,0.0,1.0
+Rectum,Fraction mucosa,0.3,0.0,1.0
+Rectum,Fraction of blood for sampling,1.0,0.0,1.0
+Rectum,Fraction of regional blood flow rate,0.055,0.0,
+Rectum,Fraction vascular,0.08,0.0,1.0
+Rectum,Fractional steady state fill level,0.0060009,0.0,
+Rectum,Hydraulic conductivity,1.86944444444444e-10,0.0,
+Rectum,Intestinal transit rate,315.618,0.0,
+Rectum,L_p0,0.1569046761,,
+Rectum,L_p1,0.052420808,,
+Rectum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+Rectum,Microvilli factor,1.0,0.0,
+Rectum,Radius (large pores),2.5e-7,0.0,
+Rectum,Radius (small pores),4.5e-8,0.0,
+Rectum,Thickness_p1,-0.00665,,
+Rectum,Thickness_p2,0.0324721331,,
+Rectum,Thickness_p3,-0.10014267,,
+Rectum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+Rectum,Vf (extracellular water)-RR,0.282,0.0,1.0
+Rectum,Vf (intracellular water)-RR,0.456,0.0,1.0
+Rectum,Vf (lipid),0.06,0.0,1.0
+Rectum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+Rectum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+Rectum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+Rectum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+Rectum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+Rectum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+Rectum,Vf (protein),0.08,0.0,1.0
+Rectum,Vf (protein)-WS,0.15,0.0,1.0
+Rectum,Vf (water),0.8,0.0,1.0
+Rectum,Vf (water)-PT,0.718,0.0,1.0
+Rectum,Vf (water)-WS,0.78,0.0,1.0
+Rectum,pH,6.6,0.0,14.0
+Rectum,r1_p0,0.0384322177,,
+Rectum,r1_p1,0.008955843,,
+Rectum,r2_p0,0.0240201361,,
+Rectum,r2_p1,0.005597402,,
+Saliva,Density (tissue),1.0,0.0,
+Saliva,Saliva flow rate,0.001,0.0001,0.01
+Saliva,pH (saliva),7.4,0.0,14.0
+Skin,Acidic phospholipids [mg/g] - RR,1.32,0.0,1000.0
+Skin,Albumin ratio (tissue/plasma),0.277,0.0,1.0
+Skin,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Skin,Allometric scale factor,1.6,1.6,1.6
+Skin,Density (tissue),1.0,0.0,
+Skin,Flow fraction via large pores,0.05,0.0,1.0
+Skin,Fluid recirculation flow proportionality factor,0.617,0.0,
+Skin,Fraction interstitial,0.302,0.0,1.0
+Skin,Fraction of blood for sampling,1.0,0.0,1.0
+Skin,Fraction vascular,0.046,0.0,1.0
+Skin,Hydraulic conductivity,1.94722e-11,0.0,
+Skin,Lipoprotein ratio (tissue/plasma),0.096,0.0,1.0
+Skin,Lymph flow proportionality factor,0.00352,0.0,
+Skin,Organ volume mouse,0.0029,0.0,
+Skin,Peripheral blood flow fraction,0.713,0.0,1.0
+Skin,Radius (large pores),2.5e-7,0.0,
+Skin,Radius (small pores),4.5e-8,0.0,
+Skin,Vf (acidic phospholipids)-WS,0.0028,0.0,1.0
+Skin,Vf (extracellular water)-RR,0.382,0.0,1.0
+Skin,Vf (intracellular water)-RR,0.276,0.0,1.0
+Skin,Vf (lipid),0.1,0.0,1.0
+Skin,Vf (neutral lipid)-PT,0.0284,0.0,1.0
+Skin,Vf (neutral lipid)-RR,0.0603,0.0,1.0
+Skin,Vf (neutral lipid)-WS,0.126,0.0,1.0
+Skin,Vf (neutral phospholipid)-RR,0.0044,0.0,1.0
+Skin,"Vf (neutral phospholipid, plasma)-WS",0.0112,0.0,1.0
+Skin,Vf (phospholipid)-PT,0.0111,0.0,1.0
+Skin,Vf (protein),0.288,0.0,1.0
+Skin,Vf (protein)-WS,0.41,0.0,1.0
+Skin,Vf (water),0.612,0.0,1.0
+Skin,Vf (water)-PT,0.718,0.0,1.0
+Skin,Vf (water)-WS,0.47,0.0,1.0
+SmallIntestine,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+SmallIntestine,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+SmallIntestine,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+SmallIntestine,Allometric scale factor,0.75,0.75,0.75
+SmallIntestine,Density (tissue),1.0,0.0,
+SmallIntestine,Flow fraction via large pores,0.05,0.0,1.0
+SmallIntestine,Fluid recirculation flow proportionality factor,0.179,0.0,
+SmallIntestine,Fraction interstitial,0.094,0.0,1.0
+SmallIntestine,Fraction of blood for sampling,1.0,0.0,1.0
+SmallIntestine,Fraction vascular,0.024,0.0,1.0
+SmallIntestine,Hydraulic conductivity,1.53888888888889e-10,0.0,
+SmallIntestine,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+SmallIntestine,Lymph flow proportionality factor,0.00195,0.0,
+SmallIntestine,Mucosa blood flow fraction,0.75,0.0,
+SmallIntestine,Organ volume mouse,0.001406,0.0,
+SmallIntestine,Radius (large pores),2.5e-7,0.0,
+SmallIntestine,Radius (small pores),4.5e-8,0.0,
+SmallIntestine,Small intestinal transit time,126.0,27.2,1200.0
+SmallIntestine,Small intestinal transit time factor intercept,-4.52,,
+SmallIntestine,Small intestinal transit time factor slope,0.602,,
+SmallIntestine,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+SmallIntestine,Vf (extracellular water)-RR,0.282,0.0,1.0
+SmallIntestine,Vf (intracellular water)-RR,0.456,0.0,1.0
+SmallIntestine,Vf (lipid),0.062,0.0,1.0
+SmallIntestine,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+SmallIntestine,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+SmallIntestine,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+SmallIntestine,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+SmallIntestine,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+SmallIntestine,Vf (phospholipid)-PT,0.0163,0.0,1.0
+SmallIntestine,Vf (protein),0.133,0.0,1.0
+SmallIntestine,Vf (protein)-WS,0.15,0.0,1.0
+SmallIntestine,Vf (water),0.792,0.0,1.0
+SmallIntestine,Vf (water)-PT,0.718,0.0,1.0
+SmallIntestine,Vf (water)-WS,0.78,0.0,1.0
+Spleen,Acidic phospholipids [mg/g] - RR,3.18,0.0,1000.0
+Spleen,Albumin ratio (tissue/plasma),0.097,0.0,1.0
+Spleen,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Spleen,Allometric scale factor,0.75,0.75,0.75
+Spleen,Density (tissue),1.0,0.0,
+Spleen,Flow fraction via large pores,0.8,0.0,1.0
+Spleen,Fluid recirculation flow proportionality factor,0.01,0.0,
+Spleen,Fraction interstitial,0.15,0.0,1.0
+Spleen,Fraction of blood for sampling,1.0,0.0,1.0
+Spleen,Fraction vascular,0.33,0.0,1.0
+Spleen,Hydraulic conductivity,3.88888888888889e-11,0.0,
+Spleen,Lipoprotein ratio (tissue/plasma),0.207,0.0,1.0
+Spleen,Lymph flow proportionality factor,0.0199,0.0,
+Spleen,Organ volume mouse,0.0001,0.0,
+Spleen,Radius (large pores),3.3e-7,0.0,
+Spleen,Radius (small pores),9.0e-8,0.0,
+Spleen,Vf (acidic phospholipids)-WS,0.003,0.0,1.0
+Spleen,Vf (extracellular water)-RR,0.207,0.0,1.0
+Spleen,Vf (intracellular water)-RR,0.355,0.0,1.0
+Spleen,Vf (lipid),0.016,0.0,1.0
+Spleen,Vf (neutral lipid)-PT,0.0201,0.0,1.0
+Spleen,Vf (neutral lipid)-RR,0.0071,0.0,1.0
+Spleen,Vf (neutral lipid)-WS,0.006,0.0,1.0
+Spleen,Vf (neutral phospholipid)-RR,0.0107,0.0,1.0
+Spleen,"Vf (neutral phospholipid, plasma)-WS",0.0108,0.0,1.0
+Spleen,Vf (phospholipid)-PT,0.0198,0.0,1.0
+Spleen,Vf (protein),0.194,0.0,1.0
+Spleen,Vf (protein)-WS,0.23,0.0,1.0
+Spleen,Vf (water),0.778,0.0,1.0
+Spleen,Vf (water)-PT,0.788,0.0,1.0
+Spleen,Vf (water)-WS,0.75,0.0,1.0
+Stomach,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+Stomach,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+Stomach,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+Stomach,Allometric scale factor,0.75,0.75,0.75
+Stomach,Density (tissue),1.0,0.0,
+Stomach,Flow fraction via large pores,0.05,0.0,1.0
+Stomach,Fluid recirculation flow proportionality factor,0.96,0.0,
+Stomach,Fraction interstitial,0.1,0.0,1.0
+Stomach,Fraction of blood for sampling,1.0,0.0,1.0
+Stomach,Fraction vascular,0.032,0.0,1.0
+Stomach,Fractional steady state fill level,0.030169,0.0,
+Stomach,Gastric emptying time,15.0,1.0,10000.0
+Stomach,Hydraulic conductivity,3.97222222222222e-11,0.0,
+Stomach,Inverse rate of inflow of liquid into stomach,15.0,1.0,10000.0
+Stomach,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+Stomach,Lymph flow proportionality factor,0.00204,0.0,
+Stomach,Organ volume mouse,0.00011,0.0,
+Stomach,Radius (large pores),2.5e-7,0.0,
+Stomach,Radius (small pores),4.5e-8,0.0,
+Stomach,Thickness of gut wall,0.022668,0.0,
+Stomach,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+Stomach,Vf (extracellular water)-RR,0.282,0.0,1.0
+Stomach,Vf (intracellular water)-RR,0.456,0.0,1.0
+Stomach,Vf (lipid),0.062,0.0,1.0
+Stomach,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+Stomach,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+Stomach,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+Stomach,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+Stomach,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+Stomach,Vf (phospholipid)-PT,0.0163,0.0,1.0
+Stomach,Vf (protein),0.133,0.0,1.0
+Stomach,Vf (protein)-WS,0.15,0.0,1.0
+Stomach,Vf (water),0.792,0.0,1.0
+Stomach,Vf (water)-PT,0.718,0.0,1.0
+Stomach,Vf (water)-WS,0.78,0.0,1.0
+Stomach,pH in fasted state,2.0,0.0,14.0
+Stomach,pH in fed state,5.5,0.0,14.0
+UpperIleum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+UpperIleum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+UpperIleum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+UpperIleum,Density (tissue),1.0,0.0,
+UpperIleum,Effective surface area enhancement factor,260.7527,0.0,
+UpperIleum,Flow fraction via large pores,0.05,0.0,1.0
+UpperIleum,Fraction interstitial,0.31,0.0,1.0
+UpperIleum,Fraction mucosa,0.13,0.0,1.0
+UpperIleum,Fraction of blood for sampling,1.0,0.0,1.0
+UpperIleum,Fraction of regional blood flow rate,0.2345,0.0,
+UpperIleum,Fraction vascular,0.13,0.0,1.0
+UpperIleum,Fractional steady state fill level,0.064841,0.0,
+UpperIleum,Hydraulic conductivity,1.53888888888889e-10,0.0,
+UpperIleum,Intestinal transit rate,3.3745,0.0,
+UpperIleum,L_p0,-0.0996435866,,
+UpperIleum,L_p1,0.445576869,,
+UpperIleum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+UpperIleum,Microvilli factor,25.0,0.0,
+UpperIleum,Radius (large pores),2.5e-7,0.0,
+UpperIleum,Radius (small pores),4.5e-8,0.0,
+UpperIleum,Thickness_p1,-0.0260258863,,
+UpperIleum,Thickness_p2,0.061552122,,
+UpperIleum,Thickness_p3,-0.30703115,,
+UpperIleum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+UpperIleum,Vf (extracellular water)-RR,0.282,0.0,1.0
+UpperIleum,Vf (intracellular water)-RR,0.456,0.0,1.0
+UpperIleum,Vf (lipid),0.06,0.0,1.0
+UpperIleum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+UpperIleum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+UpperIleum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+UpperIleum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+UpperIleum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+UpperIleum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+UpperIleum,Vf (protein),0.08,0.0,1.0
+UpperIleum,Vf (protein)-WS,0.15,0.0,1.0
+UpperIleum,Vf (water),0.8,0.0,1.0
+UpperIleum,Vf (water)-PT,0.718,0.0,1.0
+UpperIleum,Vf (water)-WS,0.78,0.0,1.0
+UpperIleum,pH,7.2083,0.0,14.0
+UpperIleum,r1_p0,-0.0018117016,,
+UpperIleum,r1_p1,0.008101398,,
+UpperIleum,r2_p0,-0.0015528871,,
+UpperIleum,r2_p1,0.006944055,,
+UpperJejunum,Acidic phospholipids [mg/g] - RR,2.41,0.0,1000.0
+UpperJejunum,Albumin ratio (tissue/plasma),0.158,0.0,1.0
+UpperJejunum,Albumin ratio (tissue/plasma)-PT,0.5,0.0,1.0
+UpperJejunum,Density (tissue),1.0,0.0,
+UpperJejunum,Effective surface area enhancement factor,447.9877,0.0,
+UpperJejunum,Flow fraction via large pores,0.05,0.0,1.0
+UpperJejunum,Fraction interstitial,0.35,0.0,1.0
+UpperJejunum,Fraction mucosa,0.26,0.0,1.0
+UpperJejunum,Fraction of blood for sampling,1.0,0.0,1.0
+UpperJejunum,Fraction of regional blood flow rate,0.219,0.0,
+UpperJejunum,Fraction vascular,0.13,0.0,1.0
+UpperJejunum,Fractional steady state fill level,0.064841,0.0,
+UpperJejunum,Hydraulic conductivity,1.53888888888889e-10,0.0,
+UpperJejunum,Intestinal transit rate,5.0162,0.0,
+UpperJejunum,L_p0,-0.0670329582,,
+UpperJejunum,L_p1,0.299751712,,
+UpperJejunum,Lipoprotein ratio (tissue/plasma),0.141,0.0,1.0
+UpperJejunum,Microvilli factor,25.0,0.0,
+UpperJejunum,Radius (large pores),2.5e-7,0.0,
+UpperJejunum,Radius (small pores),4.5e-8,0.0,
+UpperJejunum,Thickness_p1,-0.024936327,,
+UpperJejunum,Thickness_p2,0.0589752766,,
+UpperJejunum,Thickness_p3,-0.30703115,,
+UpperJejunum,Vf (acidic phospholipids)-WS,0.0035,0.0,1.0
+UpperJejunum,Vf (extracellular water)-RR,0.282,0.0,1.0
+UpperJejunum,Vf (intracellular water)-RR,0.456,0.0,1.0
+UpperJejunum,Vf (lipid),0.06,0.0,1.0
+UpperJejunum,Vf (neutral lipid)-PT,0.0487,0.0,1.0
+UpperJejunum,Vf (neutral lipid)-RR,0.0375,0.0,1.0
+UpperJejunum,Vf (neutral lipid)-WS,0.0483,0.0,1.0
+UpperJejunum,Vf (neutral phospholipid)-RR,0.0124,0.0,1.0
+UpperJejunum,"Vf (neutral phospholipid, plasma)-WS",0.0182,0.0,1.0
+UpperJejunum,Vf (phospholipid)-PT,0.0163,0.0,1.0
+UpperJejunum,Vf (protein),0.08,0.0,1.0
+UpperJejunum,Vf (protein)-WS,0.15,0.0,1.0
+UpperJejunum,Vf (water),0.8,0.0,1.0
+UpperJejunum,Vf (water)-PT,0.718,0.0,1.0
+UpperJejunum,Vf (water)-WS,0.78,0.0,1.0
+UpperJejunum,pH,6.25,0.0,14.0
+UpperJejunum,r1_p0,-0.0020705161,,
+UpperJejunum,r1_p1,0.00925874,,
+UpperJejunum,r2_p0,-0.0019411088,,
+UpperJejunum,r2_p1,0.008680069,,
+VenousBlood,Allometric scale factor,0.75,0.75,0.75
+VenousBlood,Density (tissue),1.0,0.0,
+VenousBlood,Fraction vascular,1.0,0.0,1.0
+VenousBlood_UmbilicalCord,Allometric scale factor,0.75,0.75,0.75
+VenousBlood_UmbilicalCord,Density (tissue),1.0,0.0,

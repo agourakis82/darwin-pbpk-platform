@@ -14,6 +14,7 @@ module DarwinPBPK
 include("DarwinPBPK/patient_profile.jl")  # Patient demographics & scaling
 include("DarwinPBPK/compartment_models.jl")  # Physiological compartment models
 include("DarwinPBPK/fractal_blood.jl")  # NEW: Fractal blood dynamics (CTRW, multi-phase)
+include("DarwinPBPK/compartments/gi_detailed.jl")  # NEW: 7-segment GI tract model (PK-Sim standard)
 include("DarwinPBPK/compartments/white_blood_cells.jl")  # NEW: Detailed WBC modeling with subpopulations
 include("DarwinPBPK/compartments/platelets.jl")  # NEW: Platelet compartment with activation dynamics
 include("DarwinPBPK/compartments/coagulation.jl")  # NEW: Coagulation cascade ODE model (Wajima/Hockin-Mann)
@@ -51,19 +52,23 @@ include("DarwinPBPK/ml/bayesian_uq.jl")         # Q1 2025 ✅ (Bayesian UQ)
 # Validation (FASE 4)
 include("DarwinPBPK/validation.jl")              # FASE 4 ✅
 
-# API (FASE 5)
-include("DarwinPBPK/api/rest_api.jl")           # FASE 5 ✅
-
 # MedLang DSL (First Real Implementation)
 include("DarwinPBPK/medlang/MedLang.jl")        # MedLang DSL ✅
 
-# Semantic Web Layer (FAIR Data)
+# Semantic Web Layer (FAIR Data) - must be before REST API
 include("DarwinPBPK/semantic/SemanticCore.jl")  # JSON-LD + OBO Foundry ✅
+
+# API (FASE 5) - depends on SemanticCore
+include("DarwinPBPK/api/rest_api.jl")           # FASE 5 ✅
+
+# External Validation Datasets
+include("DarwinPBPK/external_datasets.jl")      # OSP, Zenodo, PK-DB ✅
 
 # Re-export principais
 using .PatientProfile
 using .CompartmentModels
 using .FractalBlood
+using .GIDetailed
 using .WhiteBloodCells
 using .Platelets
 using .Coagulation
@@ -99,6 +104,7 @@ using .Validation
 using .RESTAPI
 using .MedLang
 using .SemanticCore
+using .ExternalDatasets
 
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang
@@ -323,5 +329,41 @@ export get_binding_adjustments_by_icd10, create_state_from_icd10
 export DynamicPBPKParams, BloodStateODECallback
 export solve_with_blood_state, simulate_with_blood_state
 export create_blood_state_callback
+
+# Export External Datasets functions
+export ExternalDataSource, PKDBStudy, OSPRecord, ZenodoRecord
+export list_available_datasets, load_osp_ddi, load_osp_pediatrics
+export load_zenodo_betalactam, query_pkdb_api, list_pkdb_studies
+export get_ddi_auc_ratios, get_pediatric_clearance
+export validate_against_external_data, summarize_external_datasets
+export AVAILABLE_DATASETS
+
+# Export 7-Segment GI Tract functions
+export GISegment, GITract, DrugGIProperties
+export create_gi_tract, calculate_gi_absorption, simulate_gi_transit
+export calculate_ionization_fraction, calculate_permeability
+export calculate_bcs_class, calculate_fg
+export example_drug_metoprolol, example_drug_atorvastatin, example_drug_lisinopril
+export GI_SEGMENTS, SEGMENT_NAMES
+export gi7_ode_system!, solve_gi7, simulate_gi7, compare_gi_models
+export GI_STOMACH_IDX, GI_DUODENUM_IDX, GI_JEJUNUM_UPPER_IDX, GI_JEJUNUM_LOWER_IDX
+export GI_ILEUM_UPPER_IDX, GI_ILEUM_LOWER_IDX, GI_COLON_IDX, GI_SEGMENT_INDICES
+
+# Export FractalBlood + ODE integration functions
+export FractalBloodParams, PBPKParamsWithFractal
+export integrate_fractal_blood!, create_fractal_pbpk_params
+export fractal_transit_time_distribution, apply_fractal_dispersion
+
+# Export core ODE solver functions
+export PBPKParams, solve, simulate, validate_mass_conservation
+export PBPK_ORGANS, NUM_ORGANS
+
+# Export Oral absorption functions
+export OralParams, effective_f, solve_oral, simulate_oral
+
+# Export PK-Sim Database functions
+export load_compartment_database, create_liver_compartment, create_kidney_compartment
+export create_brain_compartment, create_adipose_compartment, create_blood_compartment
+export create_all_compartments, validate_compartment_parameters
 
 end # module
