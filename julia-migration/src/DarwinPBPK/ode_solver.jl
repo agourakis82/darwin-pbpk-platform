@@ -3098,8 +3098,10 @@ export simulate_trial, bioequivalence_analysis, fit_emax_model
 #
 # Uses DifferentialEquations.jl callbacks for state-dependent parameters
 
-export DynamicPBPKParams, solve_with_blood_state, simulate_with_blood_state
-export create_blood_state_callback
+export DynamicPBPKParams, BloodStateODECallback
+export solve_with_blood_state, simulate_with_blood_state
+export create_blood_state_callback, update_blood_state_ode!
+export calculate_dynamic_adjustments, effective_cl_hepatic, effective_cl_renal
 
 """
     DynamicPBPKParams
@@ -3475,11 +3477,14 @@ function simulate_with_blood_state(
         reltol=reltol, abstol=abstol
     )
 
+    # Calculate Rb from blood state
+    rb = 1.0 - blood_copy.hematocrit + (blood_copy.hematocrit * blood_copy.ke_p)
+
     # Build results
     results = Dict{String, Any}(
         "time" => time_points,
         "plasma" => [sol[i][BLOOD_IDX] for i in 1:length(sol)],
-        "blood" => [sol[i][BLOOD_IDX] * blood_copy.rb for i in 1:length(sol)]
+        "blood" => [sol[i][BLOOD_IDX] * rb for i in 1:length(sol)]
     )
 
     # Organ concentrations
