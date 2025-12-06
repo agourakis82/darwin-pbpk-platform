@@ -24,6 +24,10 @@ include("DarwinPBPK/compartments/coagulation_extended.jl")  # NEW: FXI feedback,
 include("DarwinPBPK/compartments/tga_validation.jl")  # NEW: Thrombin Generation Assay validation
 include("DarwinPBPK/compartments/sensitivity_analysis.jl")  # NEW: Local and global sensitivity analysis
 include("DarwinPBPK/compartments/lattice_boltzmann.jl")  # NEW: Lattice Boltzmann Method for blood flow simulation
+include("DarwinPBPK/compartments/lipoprotein_binding.jl")  # NEW: HDL/LDL/VLDL drug binding
+include("DarwinPBPK/compartments/rbc_transporters.jl")  # NEW: RBC membrane transporters (Band3, OAT, OCT, GLUT1)
+include("DarwinPBPK/compartments/disease_state_binding.jl")  # NEW: Disease state PK adjustments
+include("DarwinPBPK/compartments/mab_pbpk.jl")  # NEW: mAb PBPK scaffold (FcRn, TMDD)
 include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # NEW: Fractal analysis of leukocyte morphology
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
@@ -61,6 +65,10 @@ using .CoagulationExtended
 using .TGAValidation
 using .SensitivityAnalysis
 using .LatticeBoltzmann
+using .LipoproteinBinding
+using .RBCTransporters
+using .DiseaseStateBinding
+using .mAbPBPK
 using .LeukocyteFractalAnalysis
 using .ODEPBPKSolver
 using .DatasetGeneration
@@ -175,5 +183,39 @@ export create_straight_tube, create_stenosis_geometry, create_bifurcation_geomet
 export create_curved_vessel
 export carreau_yasuda_viscosity, hematocrit_viscosity_correction
 export validate_poiseuille_flow
+
+# Export Lipoprotein Binding functions
+export LipoproteinProfile, DrugLipoproteinBinding, LipoproteinBindingResult
+export calculate_lipoprotein_binding, calculate_fu_with_lipoproteins
+export get_lipoprotein_drug_data, create_lipoprotein_profile
+export apply_disease_lipoproteins, partition_drug_to_lipoproteins
+export LIPOPROTEIN_DRUG_DATABASE, NORMAL_LIPOPROTEIN_LEVELS
+export HYPERCHOLESTEROLEMIA_PROFILE, DIABETIC_DYSLIPIDEMIA_PROFILE
+
+# Export RBC Transporter functions
+export RBCTransporter, RBCTransporterProfile, DrugRBCTransport, RBCTransportResult
+export calculate_rbc_transport, calculate_rbc_accumulation
+export get_transporter_drug_data, create_rbc_transporter_profile
+export apply_disease_transporters, simulate_rbc_uptake
+export RBC_TRANSPORTER_DATABASE, RBC_DRUG_TRANSPORT_DATABASE
+export NORMAL_RBC_TRANSPORTERS, SICKLE_CELL_TRANSPORTERS
+
+# Export Disease State Binding functions
+export DiseaseState, PlasmaProteinState, BindingAdjustments, DiseaseBindingResult
+export calculate_binding_adjustments, calculate_adjusted_fu
+export get_disease_state, create_disease_binding_model
+export apply_disease_adjustments, get_clinical_examples
+export DISEASE_BINDING_DATABASE, CKD_STAGES, CIRRHOSIS_STAGES
+export PREGNANCY_TRIMESTERS, SEPSIS_SEVERITY
+
+# Export mAb PBPK functions
+export mAbProperties, TargetProperties, TMDDParameters, FcRnParameters
+export mAbPKResult, mAbSimulationResult
+export calculate_tmdd_clearance, calculate_fcrn_recycling
+export simulate_mab_pk, calculate_target_occupancy
+export get_mab_data, get_target_data, create_mab_model
+export apply_ada_effect, calculate_immunogenicity_risk
+export MAB_DATABASE, TARGET_DATABASE
+export FCRN_PARAMETERS, TMDD_DEFAULT_PARAMS
 
 end # module
