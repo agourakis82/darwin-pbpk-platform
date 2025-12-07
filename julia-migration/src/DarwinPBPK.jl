@@ -82,6 +82,9 @@ include("DarwinPBPK/scaling/AllometricScaling.jl")  # Multi-species scaling/IVIV
 # Regulatory Reports (Q1 2025)
 include("DarwinPBPK/regulatory/RegulatoryReports.jl")  # FDA/EMA report generation ✅
 
+# Mechanistic DDI (Q1 2025)
+include("DarwinPBPK/ddi/MechanisticDDI.jl")  # IVIVE-DDI, multi-inhibitor, Monte Carlo UQ ✅
+
 # Re-export principais
 using .PatientProfile
 using .CompartmentModels
@@ -135,6 +138,7 @@ using .ExternalDatasets
 using .ClinicalDataIntegration
 using .AllometricScaling
 using .RegulatoryReports
+using .MechanisticDDI
 
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang
@@ -470,6 +474,27 @@ export generate_fda_report, generate_ema_report, generate_ich_m12_report
 export generate_validation_summary, generate_ddi_assessment
 export export_report_markdown, export_report_json
 export FDA_ACCEPTANCE_CRITERIA, EMA_ACCEPTANCE_CRITERIA
+
+# Export Mechanistic DDI functions (IVIVE-DDI, Monte Carlo UQ)
+export IVIVEParams, EnzymeKinetics, InhibitorParams, InducerParams
+export SubstrateDepletion, MultiInhibitorState, DDIUncertainty
+export DDIPredictionResult, TransporterDDI, CombinedDDI
+export calculate_fu_mic, calculate_fu_inc, scale_clint_ivive
+export predict_fm_ivive, calculate_hepatic_clint, calculate_gut_clint
+export mppgl_scaling, hpgl_scaling, isef_adjustment
+export competitive_inhibition, noncompetitive_inhibition, uncompetitive_inhibition
+export mixed_inhibition, mechanism_based_inhibition, calculate_kinact_ki
+export multi_inhibitor_saturation, calculate_fmcyp_inhibited
+export calculate_induction_magnitude, pxr_car_activation
+export net_effect_inhibition_induction, delayed_induction_onset
+export substrate_depletion_factor, time_course_depletion
+export calculate_transporter_ddi, oatp_inhibition, pgp_inhibition, bcrp_inhibition
+export combined_cyp_transporter_ddi, hepatic_uptake_inhibition
+export monte_carlo_ddi_prediction, ddi_sensitivity_analysis
+export calculate_ddi_confidence_interval, classify_ddi_severity
+export predict_ddi_mechanistic, simulate_ddi_time_course
+export create_ddi_report, validate_against_clinical
+export PHYSIOLOGICAL_PARAMS, CYP_ABUNDANCE, TRANSPORTER_ABUNDANCE
 
 # Export 7-Segment GI Tract functions
 export GISegment, GITract, DrugGIProperties
