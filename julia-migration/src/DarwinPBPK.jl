@@ -72,6 +72,12 @@ include("DarwinPBPK/api/rest_api.jl")           # FASE 5 ✅
 # External Validation Datasets
 include("DarwinPBPK/external_datasets.jl")      # OSP, Zenodo, PK-DB ✅
 
+# Clinical Data Integration (Q1 2025)
+include("DarwinPBPK/clinical/ClinicalDataIntegration.jl")  # Clinical trial data import/NCA ✅
+
+# Allometric Scaling (Q1 2025)
+include("DarwinPBPK/scaling/AllometricScaling.jl")  # Multi-species scaling/IVIVE ✅
+
 # Re-export principais
 using .PatientProfile
 using .CompartmentModels
@@ -121,6 +127,8 @@ using .RESTAPI
 using .MedLang
 using .SemanticCore
 using .ExternalDatasets
+using .ClinicalDataIntegration
+using .AllometricScaling
 
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang
@@ -419,6 +427,25 @@ export load_zenodo_betalactam, query_pkdb_api, list_pkdb_studies
 export get_ddi_auc_ratios, get_pediatric_clearance
 export validate_against_external_data, summarize_external_datasets
 export AVAILABLE_DATASETS
+
+# Export Clinical Data Integration functions (Q1 2025)
+export ClinicalStudy, PKObservation, Subject, DosingRecord
+export NCAResult, BioequivalenceResult, ValidationMetrics
+export load_clinical_study, load_sdtm_pc, load_adam_adpc
+export compute_nca, compute_nca_population
+export validate_model_against_clinical, bioequivalence_assessment
+export literature_pk_entry, aggregate_literature_data, LiteraturePKEntry
+export ClinicalPKDatabase, add_study!, query_studies
+
+# Export Allometric Scaling functions (Q1 2025)
+export Species, SpeciesData, AllometricModel, ScalingResult
+export MOUSE, RAT, RABBIT, DOG, CYNOMOLGUS_MONKEY, RHESUS_MONKEY, MINIPIG, HUMAN
+export get_species_data, scale_clearance, scale_volume, scale_half_life
+export simple_allometry, rule_of_exponents, brain_weight_correction
+export mlp_correction, dedrick_plot, predict_human_pk, predict_first_in_human_dose
+export ivive_clearance, hepatocyte_scaling, microsomal_scaling
+export calculate_allometric_exponent, fit_allometric_model
+export SPECIES_DATABASE, STANDARD_EXPONENTS
 
 # Export 7-Segment GI Tract functions
 export GISegment, GITract, DrugGIProperties
