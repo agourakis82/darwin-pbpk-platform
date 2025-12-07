@@ -46,6 +46,7 @@ include("bayesian_cns_model.jl")
 include("bayesian_ddi_model.jl")
 include("ddi_ontology.jl")
 include("ddi_knowledge_base.jl")
+include("gnn_integration.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -306,6 +307,14 @@ export list_cyp_substrates, list_cyp_inhibitors, list_cyp_inducers
 export list_transporter_substrates, list_transporter_inhibitors
 export get_all_ddis_for_drug, calculate_polypharmacy_risk
 export knowledge_base_summary
+
+# Re-export GNN-MedLang Integration
+using .GNNMedLangIntegration
+export GNNPKPredictor, PKPrediction, PKPredictionWithUQ
+export predict_pk_params, predict_pk_params_with_uq
+export generate_medlang_from_gnn, simulate_from_smiles
+export create_population_medlang, GNNPBPKPipeline
+export generate_medlang_with_uncertainty
 
 #=============================================================================
   High-Level API
