@@ -147,6 +147,13 @@ export estimate_renal_clearance_contribution, estimate_transporter_effect_kidney
 export calculate_lysosomal_trapping_kidney, calculate_effective_K_tissue_kidney
 export calculate_tubular_secretion_ratio, calculate_reabsorption_fraction
 export estimate_nephrotoxicity_risk
+# SOTA 2024 Q1+ exports - Michaelis-Menten Transporter Kinetics
+export RenalTransporterKinetics, calculate_saturable_secretion
+export calculate_saturable_reabsorption, calculate_transporter_ddi
+export OAT1_RENAL_KINETICS, OAT3_RENAL_KINETICS, OCT2_RENAL_KINETICS
+export MATE1_RENAL_KINETICS, MATE2K_RENAL_KINETICS, URAT1_KINETICS
+export calculate_complete_renal_clearance_mm, estimate_renal_ddi_risk
+export TransporterDDIResult, RenalClearanceComponents
 # SOTA 2020-2024 exports
 export CKDStage, CKD_G1, CKD_G2, CKD_G3a, CKD_G3b, CKD_G4, CKD_G5, CKD_G5D
 export PatientKidneyStatus, TransporterPolymorphisms, WILDTYPE_TRANSPORTERS
@@ -1842,5 +1849,845 @@ const IVIVE_SCALING = (
     microsomal_protein = 40.0, # mg protein per g kidney
     renal_plasma_flow = 600.0  # mL/min
 )
+
+# ============================================================================
+# MICHAELIS-MENTEN TRANSPORTER KINETICS - Q1+ SOTA 2024
+# ============================================================================
+#
+# Scientific Foundation:
+# - Zamek-Gliszczynski et al. (2013) J Pharmacol Exp Ther - Renal transporter DDI
+# - Müller et al. (2017) Clin Pharmacokinet - OAT1/3 IVIVE
+# - Motohashi & Inui (2013) AAPS J - OCT2/MATE interplay
+# - Giacomini et al. (2010) Nat Rev Drug Discov - ITC white paper
+# - Prasad & Bhatt (2023) Drug Metab Dispos - Transporter proteomics IVIVE
+#
+# Replaces linear transporter factors with saturable kinetics:
+#   v = (Vmax × [S]) / (Km + [S])
+#
+# This captures:
+# 1. Concentration-dependent clearance (non-linear PK)
+# 2. Transporter DDI via competitive/non-competitive inhibition
+# 3. Genetic polymorphism effects on Vmax (expression) and Km (affinity)
+# ============================================================================
+
+"""
+    RenalTransporterKinetics
+
+Michaelis-Menten kinetic parameters for renal transporters.
+
+# Fields
+- `name::String`: Transporter identifier (e.g., "OAT1", "OCT2")
+- `gene::String`: Gene symbol (e.g., "SLC22A6", "SLC22A2")
+- `location::Symbol`: Membrane location (:basolateral or :apical)
+- `direction::Symbol`: Transport direction (:uptake, :efflux, or :reabsorption)
+- `Km::Float64`: Michaelis constant (µM) - substrate affinity
+- `Vmax::Float64`: Maximum velocity (pmol/min/mg protein)
+- `Km_cv::Float64`: Coefficient of variation for Km (population variability)
+- `Vmax_cv::Float64`: Coefficient of variation for Vmax
+- `substrates::Vector{String}`: Representative substrates
+- `inhibitors::Vector{String}`: Known inhibitors with IC50
+- `polymorphisms::Dict{String,NamedTuple}`: Genetic variants affecting kinetics
+
+# Reference Values
+Kinetic parameters derived from:
+- Quantitative proteomics (Prasad et al., 2016)
+- In vitro transport assays in transfected cells
+- Clinical DDI studies with probe substrates
+"""
+struct RenalTransporterKinetics
+    name::String
+    gene::String
+    location::Symbol
+    direction::Symbol
+    Km::Float64              # µM
+    Vmax::Float64            # pmol/min/mg protein
+    Km_cv::Float64           # Coefficient of variation
+    Vmax_cv::Float64
+    substrates::Vector{String}
+    inhibitors::Dict{String,Float64}  # Inhibitor => IC50 (µM)
+    polymorphisms::Dict{String,NamedTuple}
+end
+
+# ============================================================================
+# KINETIC CONSTANTS FOR MAJOR RENAL TRANSPORTERS
+# ============================================================================
+
+"""
+OAT1 (SLC22A6) - Organic Anion Transporter 1
+
+Major basolateral uptake transporter for:
+- β-lactam antibiotics (penicillins, cephalosporins)
+- NSAIDs (indomethacin, ibuprofen)
+- Antivirals (adefovir, cidofovir, tenofovir)
+- Diuretics (furosemide, bumetanide)
+
+Km values: highly substrate-dependent (0.1-100 µM range)
+Representative Km for PAH (prototypical substrate): 14-22 µM
+"""
+const OAT1_RENAL_KINETICS = RenalTransporterKinetics(
+    "OAT1",
+    "SLC22A6",
+    :basolateral,
+    :uptake,
+    20.0,           # Km (µM) - PAH reference
+    450.0,          # Vmax (pmol/min/mg protein)
+    0.35,           # Km CV
+    0.40,           # Vmax CV
+    ["PAH", "tenofovir", "adefovir", "cidofovir", "furosemide", "methotrexate"],
+    Dict(
+        "probenecid" => 1.5,      # Classic OAT inhibitor
+        "NSAIDs" => 5.0,          # General class
+        "penicillin_G" => 45.0,
+        "cimetidine" => 120.0
+    ),
+    Dict(
+        "rs11568626" => (effect = :reduced_function, Vmax_factor = 0.7, frequency = 0.02),
+        "R50H" => (effect = :reduced_function, Vmax_factor = 0.5, frequency = 0.005)
+    )
+)
+
+"""
+OAT3 (SLC22A8) - Organic Anion Transporter 3
+
+Basolateral uptake transporter with broader substrate specificity than OAT1.
+Key substrates:
+- Statins (pravastatin, rosuvastatin)
+- Antivirals (acyclovir, zidovudine)
+- Antibiotics (cephalosporins, benzylpenicillin)
+- Endogenous compounds (estrone sulfate, DHEAS)
+
+Km typically higher than OAT1 (lower affinity, higher capacity).
+"""
+const OAT3_RENAL_KINETICS = RenalTransporterKinetics(
+    "OAT3",
+    "SLC22A8",
+    :basolateral,
+    :uptake,
+    33.0,           # Km (µM) - estrone sulfate reference
+    680.0,          # Vmax (pmol/min/mg protein)
+    0.40,           # Km CV
+    0.38,           # Vmax CV
+    ["estrone_sulfate", "pravastatin", "rosuvastatin", "benzylpenicillin", "cimetidine"],
+    Dict(
+        "probenecid" => 0.8,
+        "novobiocin" => 2.5,
+        "benzbromarone" => 0.3,
+        "febuxostat" => 1.2
+    ),
+    Dict(
+        "rs4149182" => (effect = :reduced_function, Vmax_factor = 0.75, frequency = 0.08),
+        "I260R" => (effect = :loss_of_function, Vmax_factor = 0.1, frequency = 0.001)
+    )
+)
+
+"""
+OCT2 (SLC22A2) - Organic Cation Transporter 2
+
+Major basolateral uptake transporter for cationic drugs.
+Key substrates:
+- Metformin (diabetes)
+- Cisplatin (oncology - nephrotoxicity!)
+- Oxaliplatin
+- Amiloride
+
+Clinically important for metformin PK and cisplatin nephrotoxicity.
+Works in tandem with apical MATE1/MATE2-K for net secretion.
+"""
+const OCT2_RENAL_KINETICS = RenalTransporterKinetics(
+    "OCT2",
+    "SLC22A2",
+    :basolateral,
+    :uptake,
+    95.0,           # Km (µM) - metformin reference
+    1200.0,         # Vmax (pmol/min/mg protein) - high capacity
+    0.32,           # Km CV
+    0.35,           # Vmax CV
+    ["metformin", "cisplatin", "oxaliplatin", "amiloride", "cimetidine", "ranitidine"],
+    Dict(
+        "cimetidine" => 95.0,
+        "dolutegravir" => 1.9,
+        "trimethoprim" => 32.0,
+        "vandetanib" => 2.8,
+        "ondansetron" => 12.0
+    ),
+    Dict(
+        # 808G>T (rs316019) - reduced function allele
+        "808G>T" => (effect = :reduced_function, Km_factor = 1.5, Vmax_factor = 0.85, frequency = 0.13),
+        "596C>T" => (effect = :reduced_function, Vmax_factor = 0.6, frequency = 0.02)
+    )
+)
+
+"""
+MATE1 (SLC47A1) - Multidrug and Toxin Extrusion 1
+
+Apical efflux transporter - H⁺/cation antiporter.
+Works in series with OCT2 for net tubular secretion.
+Inhibition causes accumulation of cations in proximal tubule cells.
+
+Key substrates: metformin, oxaliplatin, acyclovir, ganciclovir
+"""
+const MATE1_RENAL_KINETICS = RenalTransporterKinetics(
+    "MATE1",
+    "SLC47A1",
+    :apical,
+    :efflux,
+    220.0,          # Km (µM) - metformin reference
+    850.0,          # Vmax (pmol/min/mg protein)
+    0.38,           # Km CV
+    0.40,           # Vmax CV
+    ["metformin", "cimetidine", "oxaliplatin", "acyclovir", "thiamine"],
+    Dict(
+        "cimetidine" => 3.8,
+        "pyrimethamine" => 0.08,   # Very potent inhibitor
+        "trimethoprim" => 5.5,
+        "ondansetron" => 0.45,
+        "dolutegravir" => 6.2
+    ),
+    Dict(
+        "rs2289669" => (effect = :reduced_expression, Vmax_factor = 0.8, frequency = 0.45),
+        "rs8065082" => (effect = :increased_expression, Vmax_factor = 1.15, frequency = 0.30)
+    )
+)
+
+"""
+MATE2-K (SLC47A2) - Multidrug and Toxin Extrusion 2-K
+
+Kidney-specific apical efflux transporter.
+Lower expression than MATE1 but important for some substrates.
+Complementary to MATE1 for cation efflux.
+"""
+const MATE2K_RENAL_KINETICS = RenalTransporterKinetics(
+    "MATE2K",
+    "SLC47A2",
+    :apical,
+    :efflux,
+    310.0,          # Km (µM) - metformin reference
+    420.0,          # Vmax (pmol/min/mg protein)
+    0.42,           # Km CV
+    0.45,           # Vmax CV
+    ["metformin", "oxaliplatin", "cimetidine", "procainamide"],
+    Dict(
+        "pyrimethamine" => 0.03,   # Extremely potent
+        "cimetidine" => 7.5,
+        "ondansetron" => 0.85
+    ),
+    Dict(
+        "rs12943590" => (effect = :reduced_expression, Vmax_factor = 0.65, frequency = 0.35)
+    )
+)
+
+"""
+URAT1 (SLC22A12) - Urate Transporter 1
+
+Apical reabsorption transporter specific for uric acid.
+Target for uricosuric drugs (probenecid, benzbromarone, lesinurad).
+Mutations cause renal hypouricemia (increased urate excretion).
+"""
+const URAT1_KINETICS = RenalTransporterKinetics(
+    "URAT1",
+    "SLC22A12",
+    :apical,
+    :reabsorption,
+    370.0,          # Km (µM) - uric acid
+    520.0,          # Vmax (pmol/min/mg protein)
+    0.35,           # Km CV
+    0.38,           # Vmax CV
+    ["uric_acid", "lactate", "nicotinate", "pyrazinoate"],
+    Dict(
+        "benzbromarone" => 0.018,  # Very potent uricosuric
+        "lesinurad" => 3.5,
+        "probenecid" => 12.0,
+        "losartan" => 4.2,
+        "RDEA3170" => 0.8
+    ),
+    Dict(
+        # Loss-of-function mutations cause renal hypouricemia
+        "W258X" => (effect = :loss_of_function, Vmax_factor = 0.0, frequency = 0.025),  # Japanese
+        "R90H" => (effect = :reduced_function, Vmax_factor = 0.3, frequency = 0.003)
+    )
+)
+
+# ============================================================================
+# MICHAELIS-MENTEN CALCULATION FUNCTIONS
+# ============================================================================
+
+"""
+    calculate_saturable_secretion(
+        substrate_conc::Float64,
+        kinetics::RenalTransporterKinetics;
+        inhibitor_conc::Float64 = 0.0,
+        inhibitor_name::String = "",
+        inhibition_type::Symbol = :competitive,
+        polymorphism::String = ""
+    ) -> NamedTuple
+
+Calculate saturable secretion rate using Michaelis-Menten kinetics.
+
+# Arguments
+- `substrate_conc`: Unbound substrate concentration at transporter (µM)
+- `kinetics`: Transporter kinetic parameters
+- `inhibitor_conc`: Inhibitor concentration (µM), default 0
+- `inhibitor_name`: Name of inhibitor (must match kinetics.inhibitors key)
+- `inhibition_type`: `:competitive`, `:noncompetitive`, or `:uncompetitive`
+- `polymorphism`: Genetic variant to apply (e.g., "808G>T")
+
+# Returns
+NamedTuple with:
+- `velocity`: Transport rate (pmol/min/mg protein)
+- `fraction_of_vmax`: How saturated is the transporter (0-1)
+- `apparent_Km`: Km after inhibition adjustment
+- `ddi_ratio`: Fold-change due to inhibition
+
+# Equations
+
+**Competitive inhibition** (inhibitor competes for binding site):
+```
+v = Vmax × [S] / (Km × (1 + [I]/Ki) + [S])
+```
+
+**Non-competitive inhibition** (inhibitor binds separate site):
+```
+v = (Vmax / (1 + [I]/Ki)) × [S] / (Km + [S])
+```
+
+**Uncompetitive inhibition** (inhibitor binds ES complex):
+```
+v = Vmax × [S] / (Km + [S] × (1 + [I]/Ki))
+```
+"""
+function calculate_saturable_secretion(
+    substrate_conc::Float64,
+    kinetics::RenalTransporterKinetics;
+    inhibitor_conc::Float64 = 0.0,
+    inhibitor_name::String = "",
+    inhibition_type::Symbol = :competitive,
+    polymorphism::String = ""
+)
+    # Get base kinetic parameters
+    Km = kinetics.Km
+    Vmax = kinetics.Vmax
+
+    # Apply polymorphism effects
+    if polymorphism != "" && haskey(kinetics.polymorphisms, polymorphism)
+        poly = kinetics.polymorphisms[polymorphism]
+        if haskey(poly, :Km_factor)
+            Km *= poly.Km_factor
+        end
+        if haskey(poly, :Vmax_factor)
+            Vmax *= poly.Vmax_factor
+        end
+    end
+
+    # Calculate inhibition factor
+    Ki = 0.0
+    inhibition_factor = 1.0
+    if inhibitor_conc > 0.0 && inhibitor_name != "" && haskey(kinetics.inhibitors, inhibitor_name)
+        Ki = kinetics.inhibitors[inhibitor_name]
+        inhibition_factor = 1.0 + inhibitor_conc / Ki
+    end
+
+    # Calculate velocity based on inhibition type
+    apparent_Km = Km
+    effective_Vmax = Vmax
+
+    if inhibition_type == :competitive
+        # Increases apparent Km, Vmax unchanged
+        apparent_Km = Km * inhibition_factor
+        velocity = (Vmax * substrate_conc) / (apparent_Km + substrate_conc)
+    elseif inhibition_type == :noncompetitive
+        # Decreases effective Vmax, Km unchanged
+        effective_Vmax = Vmax / inhibition_factor
+        velocity = (effective_Vmax * substrate_conc) / (Km + substrate_conc)
+    elseif inhibition_type == :uncompetitive
+        # Decreases both apparent Km and Vmax
+        apparent_Km = Km / inhibition_factor
+        effective_Vmax = Vmax / inhibition_factor
+        velocity = (effective_Vmax * substrate_conc) / (apparent_Km + substrate_conc)
+    else
+        # Default: no inhibition
+        velocity = (Vmax * substrate_conc) / (Km + substrate_conc)
+    end
+
+    # Calculate uninhibited velocity for DDI ratio
+    velocity_uninhibited = (Vmax * substrate_conc) / (Km + substrate_conc)
+    ddi_ratio = velocity_uninhibited > 0 ? velocity / velocity_uninhibited : 1.0
+
+    # Fraction of Vmax (saturation)
+    fraction_of_vmax = velocity / effective_Vmax
+
+    return (
+        velocity = velocity,
+        fraction_of_vmax = fraction_of_vmax,
+        apparent_Km = apparent_Km,
+        effective_Vmax = effective_Vmax,
+        ddi_ratio = ddi_ratio,
+        transporter = kinetics.name,
+        direction = kinetics.direction
+    )
+end
+
+"""
+    calculate_saturable_reabsorption(
+        filtrate_conc::Float64,
+        kinetics::RenalTransporterKinetics;
+        urine_flow::Float64 = 1.0,
+        kwargs...
+    ) -> NamedTuple
+
+Calculate saturable tubular reabsorption.
+
+For reabsorption, the driving concentration is in the tubular filtrate,
+not the plasma. Flow rate affects residence time and thus efficiency.
+
+# Arguments
+- `filtrate_conc`: Concentration in tubular fluid (µM)
+- `kinetics`: Transporter kinetics (must have direction = :reabsorption)
+- `urine_flow`: Urine flow rate (mL/min), affects contact time
+
+# Returns
+Same as `calculate_saturable_secretion` plus:
+- `reabsorption_efficiency`: Fraction reabsorbed (0-1)
+"""
+function calculate_saturable_reabsorption(
+    filtrate_conc::Float64,
+    kinetics::RenalTransporterKinetics;
+    urine_flow::Float64 = 1.0,
+    inhibitor_conc::Float64 = 0.0,
+    inhibitor_name::String = "",
+    inhibition_type::Symbol = :competitive,
+    polymorphism::String = ""
+)
+    # Verify this is a reabsorption transporter
+    if kinetics.direction != :reabsorption
+        @warn "Using secretion transporter $(kinetics.name) for reabsorption calculation"
+    end
+
+    # Calculate base transport rate
+    result = calculate_saturable_secretion(
+        filtrate_conc,
+        kinetics;
+        inhibitor_conc = inhibitor_conc,
+        inhibitor_name = inhibitor_name,
+        inhibition_type = inhibition_type,
+        polymorphism = polymorphism
+    )
+
+    # Reabsorption efficiency depends on flow rate
+    # Higher flow = less contact time = less reabsorption
+    # Model: efficiency = transport_rate / (transport_rate + flow_factor)
+    reference_flow = 1.0  # mL/min reference
+    flow_factor = urine_flow / reference_flow
+
+    # Maximum possible reabsorption rate
+    max_reabsorption = filtrate_conc * urine_flow  # µmol/min (if 100% reabsorbed)
+
+    # Actual reabsorption limited by transporter capacity
+    # Convert pmol/min/mg to scaled rate
+    scaling = IVIVE_SCALING.PTCPGK * IVIVE_SCALING.kidney_weight *
+              IVIVE_SCALING.PT_fraction / 1e9  # Convert to µmol/min
+
+    reabsorption_rate = result.velocity * scaling
+    reabsorption_efficiency = min(1.0, reabsorption_rate / max(max_reabsorption, 1e-10))
+
+    # Adjust for flow
+    reabsorption_efficiency *= exp(-0.1 * (flow_factor - 1.0))
+    reabsorption_efficiency = clamp(reabsorption_efficiency, 0.0, 0.99)
+
+    return (
+        result...,
+        reabsorption_efficiency = reabsorption_efficiency,
+        reabsorption_rate = reabsorption_rate,
+        urine_flow = urine_flow
+    )
+end
+
+"""
+    TransporterDDIResult
+
+Result of transporter-mediated drug-drug interaction analysis.
+"""
+struct TransporterDDIResult
+    perpetrator::String
+    victim::String
+    transporter::String
+    inhibition_type::Symbol
+    Ki::Float64
+    perpetrator_conc::Float64  # Cmax or Css
+    ddi_ratio::Float64         # Fold-change in CL
+    clinical_significance::Symbol  # :none, :weak, :moderate, :strong
+    recommendation::String
+end
+
+"""
+    calculate_transporter_ddi(
+        perpetrator::String,
+        victim::String,
+        perpetrator_conc::Float64,
+        kinetics::RenalTransporterKinetics;
+        victim_conc::Float64 = 10.0,
+        inhibition_type::Symbol = :competitive
+    ) -> TransporterDDIResult
+
+Predict renal transporter-mediated DDI.
+
+Uses the basic static model (R-value approach):
+- R = 1 + [I]/Ki for competitive inhibition
+
+Clinical significance thresholds (FDA 2020 guidance):
+- R < 1.25: No clinical DDI
+- 1.25 ≤ R < 2: Weak DDI
+- 2 ≤ R < 5: Moderate DDI
+- R ≥ 5: Strong DDI
+
+# Arguments
+- `perpetrator`: Inhibitor drug name
+- `victim`: Substrate drug name
+- `perpetrator_conc`: Unbound Cmax or Css of inhibitor (µM)
+- `kinetics`: Transporter kinetics
+- `victim_conc`: Victim drug concentration (µM)
+- `inhibition_type`: Type of inhibition
+
+# Returns
+`TransporterDDIResult` with prediction and recommendation
+"""
+function calculate_transporter_ddi(
+    perpetrator::String,
+    victim::String,
+    perpetrator_conc::Float64,
+    kinetics::RenalTransporterKinetics;
+    victim_conc::Float64 = 10.0,
+    inhibition_type::Symbol = :competitive
+)
+    # Look up Ki for perpetrator
+    if !haskey(kinetics.inhibitors, perpetrator)
+        return TransporterDDIResult(
+            perpetrator, victim, kinetics.name, inhibition_type,
+            NaN, perpetrator_conc, 1.0, :unknown,
+            "No inhibition data available for $perpetrator on $(kinetics.name)"
+        )
+    end
+
+    Ki = kinetics.inhibitors[perpetrator]
+
+    # Calculate DDI ratio (R-value)
+    if inhibition_type == :competitive
+        R = 1.0 + perpetrator_conc / Ki
+    elseif inhibition_type == :noncompetitive
+        # For secretion: decreased clearance = increased exposure
+        R = 1.0 + perpetrator_conc / Ki
+    else
+        R = 1.0 + perpetrator_conc / Ki  # Simplified
+    end
+
+    # For secretory clearance, inhibition DECREASES CL, INCREASES AUC
+    # DDI ratio for exposure = R (fold increase)
+    ddi_ratio = R
+
+    # Clinical significance
+    significance = if R < 1.25
+        :none
+    elseif R < 2.0
+        :weak
+    elseif R < 5.0
+        :moderate
+    else
+        :strong
+    end
+
+    # Recommendation
+    recommendation = if significance == :none
+        "No dose adjustment required"
+    elseif significance == :weak
+        "Monitor patient; dose adjustment usually not required"
+    elseif significance == :moderate
+        "Consider 50% dose reduction; monitor renal function"
+    else
+        "Avoid combination or use 75% reduced dose with close monitoring"
+    end
+
+    return TransporterDDIResult(
+        perpetrator, victim, kinetics.name, inhibition_type,
+        Ki, perpetrator_conc, ddi_ratio, significance, recommendation
+    )
+end
+
+"""
+    RenalClearanceComponents
+
+Breakdown of renal clearance into component processes.
+"""
+struct RenalClearanceComponents
+    CLfiltration::Float64      # GFR × fu
+    CLsecretion::Float64       # Active tubular secretion
+    CLreabsorption::Float64    # Tubular reabsorption (negative contribution)
+    CLrenal_total::Float64     # Net renal clearance
+    fraction_filtered::Float64
+    fraction_secreted::Float64
+    fraction_reabsorbed::Float64
+    secretion_saturation::Float64  # How saturated are secretory transporters
+    rate_limiting_step::Symbol     # :filtration, :secretion, or :reabsorption
+end
+
+"""
+    calculate_complete_renal_clearance_mm(
+        plasma_conc::Float64,
+        fu::Float64,
+        GFR::Float64;
+        OAT1_substrate::Bool = false,
+        OAT3_substrate::Bool = false,
+        OCT2_substrate::Bool = false,
+        reabsorption_kinetics::Union{RenalTransporterKinetics,Nothing} = nothing,
+        inhibitors::Dict{String,Float64} = Dict{String,Float64}(),
+        polymorphisms::Dict{String,String} = Dict{String,String}()
+    ) -> RenalClearanceComponents
+
+Calculate complete renal clearance with Michaelis-Menten kinetics.
+
+Integrates:
+1. Glomerular filtration (linear with fu × GFR)
+2. Active tubular secretion (saturable, multiple transporters)
+3. Tubular reabsorption (saturable or passive)
+
+# The Renal Clearance Equation
+
+```
+CLrenal = fu × GFR + CLsecretion - CLreabsorption
+```
+
+Where:
+- `CLsecretion` = Σ (Vmax,i × [S]) / (Km,i + [S]) for each transporter i
+- `CLreabsorption` = saturable or fraction reabsorbed × filtered load
+
+# Arguments
+- `plasma_conc`: Total plasma concentration (µM)
+- `fu`: Fraction unbound in plasma
+- `GFR`: Glomerular filtration rate (mL/min)
+- `OAT1_substrate`: Drug is OAT1 substrate
+- `OAT3_substrate`: Drug is OAT3 substrate
+- `OCT2_substrate`: Drug is OCT2 substrate (enables MATE efflux)
+- `reabsorption_kinetics`: Reabsorption transporter if applicable
+- `inhibitors`: Dict of inhibitor => concentration (µM)
+- `polymorphisms`: Dict of transporter => polymorphism (e.g., "OCT2" => "808G>T")
+
+# Returns
+`RenalClearanceComponents` with detailed breakdown
+"""
+function calculate_complete_renal_clearance_mm(
+    plasma_conc::Float64,
+    fu::Float64,
+    GFR::Float64;
+    OAT1_substrate::Bool = false,
+    OAT3_substrate::Bool = false,
+    OCT2_substrate::Bool = false,
+    reabsorption_kinetics::Union{RenalTransporterKinetics,Nothing} = nothing,
+    inhibitors::Dict{String,Float64} = Dict{String,Float64}(),
+    polymorphisms::Dict{String,String} = Dict{String,String}()
+)
+    # Unbound concentration at transporters
+    Cu = plasma_conc * fu
+
+    # 1. Filtration clearance (always linear)
+    CLfiltration = fu * GFR
+
+    # 2. Secretion clearance (saturable)
+    CLsecretion = 0.0
+    max_saturation = 0.0
+
+    # IVIVE scaling factor
+    scaling = IVIVE_SCALING.PTCPGK * IVIVE_SCALING.kidney_weight *
+              IVIVE_SCALING.PT_fraction * IVIVE_SCALING.microsomal_protein / 1e6
+    # Units: cells × g × fraction × mg/g / 1e6 → normalization factor
+
+    # OAT1 contribution
+    if OAT1_substrate
+        inhibitor_name = ""
+        inhibitor_conc = 0.0
+        for (inh, conc) in inhibitors
+            if haskey(OAT1_RENAL_KINETICS.inhibitors, inh)
+                inhibitor_name = inh
+                inhibitor_conc = conc
+                break
+            end
+        end
+        poly = get(polymorphisms, "OAT1", "")
+
+        result = calculate_saturable_secretion(
+            Cu, OAT1_RENAL_KINETICS;
+            inhibitor_conc = inhibitor_conc,
+            inhibitor_name = inhibitor_name,
+            polymorphism = poly
+        )
+
+        # Convert velocity to clearance: CL = v/[S] when not saturated
+        # At saturation: CL approaches Vmax/[S] which decreases with [S]
+        intrinsic_cl = result.velocity / max(Cu, 0.001) * scaling * 0.001  # mL/min
+
+        # Well-stirred model for secretion
+        Qkidney = IVIVE_SCALING.renal_plasma_flow
+        CLsecretion += (intrinsic_cl * Qkidney) / (Qkidney + intrinsic_cl)
+
+        max_saturation = max(max_saturation, result.fraction_of_vmax)
+    end
+
+    # OAT3 contribution
+    if OAT3_substrate
+        inhibitor_name = ""
+        inhibitor_conc = 0.0
+        for (inh, conc) in inhibitors
+            if haskey(OAT3_RENAL_KINETICS.inhibitors, inh)
+                inhibitor_name = inh
+                inhibitor_conc = conc
+                break
+            end
+        end
+        poly = get(polymorphisms, "OAT3", "")
+
+        result = calculate_saturable_secretion(
+            Cu, OAT3_RENAL_KINETICS;
+            inhibitor_conc = inhibitor_conc,
+            inhibitor_name = inhibitor_name,
+            polymorphism = poly
+        )
+
+        intrinsic_cl = result.velocity / max(Cu, 0.001) * scaling * 0.001
+        Qkidney = IVIVE_SCALING.renal_plasma_flow
+        CLsecretion += (intrinsic_cl * Qkidney) / (Qkidney + intrinsic_cl)
+
+        max_saturation = max(max_saturation, result.fraction_of_vmax)
+    end
+
+    # OCT2 contribution (requires MATE for efflux)
+    if OCT2_substrate
+        inhibitor_name = ""
+        inhibitor_conc = 0.0
+        for (inh, conc) in inhibitors
+            if haskey(OCT2_RENAL_KINETICS.inhibitors, inh)
+                inhibitor_name = inh
+                inhibitor_conc = conc
+                break
+            end
+        end
+        poly = get(polymorphisms, "OCT2", "")
+
+        # OCT2 uptake
+        oct2_result = calculate_saturable_secretion(
+            Cu, OCT2_RENAL_KINETICS;
+            inhibitor_conc = inhibitor_conc,
+            inhibitor_name = inhibitor_name,
+            polymorphism = poly
+        )
+
+        # MATE1 + MATE2-K efflux (in series with OCT2)
+        mate1_result = calculate_saturable_secretion(Cu * 2.0, MATE1_RENAL_KINETICS)  # Intracellular accumulation
+        mate2k_result = calculate_saturable_secretion(Cu * 2.0, MATE2K_RENAL_KINETICS)
+
+        # Rate-limiting step determines overall secretion
+        oct2_velocity = oct2_result.velocity
+        mate_velocity = mate1_result.velocity + mate2k_result.velocity
+        effective_velocity = min(oct2_velocity, mate_velocity)
+
+        intrinsic_cl = effective_velocity / max(Cu, 0.001) * scaling * 0.0005
+        Qkidney = IVIVE_SCALING.renal_plasma_flow
+        CLsecretion += (intrinsic_cl * Qkidney) / (Qkidney + intrinsic_cl)
+
+        max_saturation = max(max_saturation, oct2_result.fraction_of_vmax)
+    end
+
+    # 3. Reabsorption (if applicable)
+    CLreabsorption = 0.0
+    if reabsorption_kinetics !== nothing
+        # Tubular fluid concentration (after filtration and secretion)
+        tubular_conc = Cu * (1.0 + CLsecretion / max(CLfiltration, 1.0))
+
+        result = calculate_saturable_reabsorption(
+            tubular_conc,
+            reabsorption_kinetics;
+            urine_flow = 1.0
+        )
+
+        # Reabsorption reduces effective clearance
+        filtered_load = CLfiltration + CLsecretion
+        CLreabsorption = result.reabsorption_efficiency * filtered_load
+    end
+
+    # Net renal clearance
+    CLrenal_total = max(0.0, CLfiltration + CLsecretion - CLreabsorption)
+
+    # Fractions
+    total_handling = CLfiltration + CLsecretion
+    fraction_filtered = CLfiltration / max(total_handling, 1e-10)
+    fraction_secreted = CLsecretion / max(total_handling, 1e-10)
+    fraction_reabsorbed = CLreabsorption / max(total_handling, 1e-10)
+
+    # Rate-limiting step
+    rate_limiting = if CLsecretion > CLfiltration * 2
+        :secretion
+    elseif CLreabsorption > CLfiltration * 0.5
+        :reabsorption
+    else
+        :filtration
+    end
+
+    return RenalClearanceComponents(
+        CLfiltration,
+        CLsecretion,
+        CLreabsorption,
+        CLrenal_total,
+        fraction_filtered,
+        fraction_secreted,
+        fraction_reabsorbed,
+        max_saturation,
+        rate_limiting
+    )
+end
+
+"""
+    estimate_renal_ddi_risk(
+        perpetrator::String,
+        perpetrator_cmax::Float64;
+        transporters::Vector{Symbol} = [:OAT1, :OAT3, :OCT2, :MATE1]
+    ) -> Dict{Symbol, TransporterDDIResult}
+
+Screen a perpetrator drug for renal transporter DDI risk.
+
+# Arguments
+- `perpetrator`: Drug name (must match inhibitor entries)
+- `perpetrator_cmax`: Unbound Cmax (µM)
+- `transporters`: Which transporters to screen
+
+# Returns
+Dictionary mapping transporter to DDI result
+"""
+function estimate_renal_ddi_risk(
+    perpetrator::String,
+    perpetrator_cmax::Float64;
+    transporters::Vector{Symbol} = [:OAT1, :OAT3, :OCT2, :MATE1]
+)
+    results = Dict{Symbol, TransporterDDIResult}()
+
+    kinetics_map = Dict(
+        :OAT1 => OAT1_RENAL_KINETICS,
+        :OAT3 => OAT3_RENAL_KINETICS,
+        :OCT2 => OCT2_RENAL_KINETICS,
+        :MATE1 => MATE1_RENAL_KINETICS,
+        :MATE2K => MATE2K_RENAL_KINETICS,
+        :URAT1 => URAT1_KINETICS
+    )
+
+    for transporter in transporters
+        if haskey(kinetics_map, transporter)
+            kinetics = kinetics_map[transporter]
+            result = calculate_transporter_ddi(
+                perpetrator,
+                "probe_substrate",
+                perpetrator_cmax,
+                kinetics
+            )
+            results[transporter] = result
+        end
+    end
+
+    return results
+end
 
 end # module

@@ -1,14 +1,23 @@
 """
-Multimodal Encoder - Real Implementation with MolecularGraph.jl
+Multimodal Encoder - SOTA Implementation for Molecular Property Prediction
 
-SOTA Q1 2025 Implementation:
-- Real SMILES tokenization with learned embeddings
+SOTA Q1 2025 Implementation (December 2025 Update):
+- ChemBERTa integration via PyCall (768d pre-trained embeddings)
+- D-MPNN (Directed Message Passing) for molecular graphs
+- Real SMILES tokenization with learned embeddings (fallback)
 - GNN encoder with MolecularGraph.jl for molecular graph construction
-- Cross-attention fusion
+- Cross-attention fusion with multi-head attention
+- Quantum descriptor integration
+
+This module provides the complete multimodal molecular encoder stack:
+1. ChemBERTa (primary) / GRU (fallback) for SMILES sequences
+2. D-MPNN / GAT for molecular graph structure
+3. Quantum descriptors for electronic properties
+4. Cross-attention fusion for unified representation
 
 Autor: Dr. Demetrios Agourakis + AI Assistant
 Data: Novembro 2025
-Atualizado: 2025-11-28 - Real encoder implementation
+Atualizado: 2025-12-07 - ChemBERTa + D-MPNN integration
 """
 
 module MultimodalEncoder
@@ -65,9 +74,9 @@ Features (32-dim total):
 function atom_features(mol, atom_idx::Int)::Vector{Float32}
     features = zeros(Float32, GNN_NODE_DIM)
 
-    symbols = atomsymbol(mol)
-    charges = charge(mol)
-    aromatic = isaromatic(mol)
+    symbols = atom_symbol(mol)
+    charges = atom_charge(mol)
+    aromatic = is_aromatic(mol)
 
     symbol = symbols[atom_idx]
 
@@ -84,8 +93,8 @@ function atom_features(mol, atom_idx::Int)::Vector{Float32}
     # Is in ring (16) - approximate from aromatic
     features[16] = aromatic[atom_idx] ? 1.0f0 : 0.0f0
 
-    # Degree (17-22) - count neighbors
-    n_neighbors = length(mol.neighbormap[atom_idx])
+    # Degree (17-22) - count neighbors using adjacency list
+    n_neighbors = length(mol.graph.fadjlist[atom_idx])
     if n_neighbors <= 6
         features[16+n_neighbors] = 1.0f0
     end
@@ -99,20 +108,24 @@ Convert SMILES to GNNGraph with node features.
 function smiles_to_graph(smiles::String)::Union{GNNGraph,Nothing}
     try
         mol = smilestomol(smiles)
-        n_atoms = atomcount(mol)
+        n_atoms = length(mol.graph.fadjlist)  # Number of atoms = number of vertices
 
         if n_atoms == 0
             return nothing
         end
 
-        # Build edge list (undirected)
+        # Build edge list (undirected) from adjacency list
         sources = Int[]
         targets = Int[]
-        for (src, tgt) in mol.edges
-            push!(sources, src)
-            push!(targets, tgt)
-            push!(sources, tgt)
-            push!(targets, src)
+        for src in 1:n_atoms
+            for tgt in mol.graph.fadjlist[src]
+                if src < tgt  # Only add each edge once
+                    push!(sources, src)
+                    push!(targets, tgt)
+                    push!(sources, tgt)
+                    push!(targets, src)
+                end
+            end
         end
 
         # Handle molecules with no bonds (single atoms)
@@ -549,10 +562,328 @@ function (encoder::EnhancedMultimodalEncoder)(smiles_batch::Vector{String})::Mat
     return hcat(outputs...)
 end
 
+# ============================================================================
+# SOTA MULTIMODAL ENCODER V2 (December 2025)
+# ChemBERTa + D-MPNN + Quantum
+# ============================================================================
+
+# Try to import ChemBERTa and D-MPNN modules
+# These are optional - fallback to basic encoders if unavailable
+
+const CHEMBERTA_AVAILABLE = Ref{Bool}(false)
+const DMPNN_AVAILABLE = Ref{Bool}(false)
+
+"""
+Check if ChemBERTa is available (requires PyCall + transformers).
+"""
+function check_chemberta_available()::Bool
+    try
+        # Check if ChemBERTaBridge module exists and is available
+        # The module should be loaded at top level in DarwinPBPK.jl
+        if isdefined(Main, :DarwinPBPK) && isdefined(Main.DarwinPBPK, :ChemBERTaBridge)
+            CHEMBERTA_AVAILABLE[] = Main.DarwinPBPK.ChemBERTaBridge.is_available()
+        else
+            CHEMBERTA_AVAILABLE[] = false
+        end
+    catch
+        CHEMBERTA_AVAILABLE[] = false
+    end
+    return CHEMBERTA_AVAILABLE[]
+end
+
+"""
+Check if D-MPNN module is available.
+"""
+function check_dmpnn_available()::Bool
+    try
+        # Check if DMPNN module exists
+        # The module should be loaded at top level in DarwinPBPK.jl
+        if isdefined(Main, :DarwinPBPK) && isdefined(Main.DarwinPBPK, :DMPNN)
+            DMPNN_AVAILABLE[] = true
+        else
+            DMPNN_AVAILABLE[] = false
+        end
+    catch
+        DMPNN_AVAILABLE[] = false
+    end
+    return DMPNN_AVAILABLE[]
+end
+
+const CHEMBERTA_DIM = 768
+const DMPNN_DIM = 256
+
+"""
+SOTA Multimodal Encoder V2 - Publication-Ready Architecture
+
+Combines the best available encoders:
+1. **ChemBERTa** (768d): Pre-trained transformer on 77M SMILES
+   - Falls back to GRU encoder if PyCall unavailable
+2. **D-MPNN** (256d): Directed message passing for molecular graphs
+   - Falls back to GAT encoder if unavailable
+3. **Quantum** (128d): Electronic structure descriptors
+4. **Cross-Attention Fusion** (512d): Multi-head attention fusion
+
+This is the recommended encoder for Q1 publication.
+
+# Example
+```julia
+encoder = SOTAMultimodalEncoderV2()
+emb = encoder("CCO")  # 512d unified embedding
+batch_emb = encoder(["CCO", "CC(=O)O"])  # [512, 2]
+```
+"""
+struct SOTAMultimodalEncoderV2
+    # Primary encoders (SOTA when available)
+    chemberta_available::Bool
+    dmpnn_available::Bool
+
+    # Fallback encoders (always available)
+    smiles_encoder::SMILESEncoder
+    gnn_encoder::GNNEncoder
+    quantum_encoder::QuantumEncoder
+
+    # Fusion layer
+    fusion::CrossAttentionFusion
+
+    # Configuration
+    use_quantum::Bool
+    output_dim::Int
+end
+
+@functor SOTAMultimodalEncoderV2
+
+function SOTAMultimodalEncoderV2(;
+    use_quantum::Bool = true,
+    output_dim::Int = FUSION_DIM,
+    force_fallback::Bool = false  # For testing without PyCall
+)
+    # Check SOTA encoder availability
+    chemberta_ok = force_fallback ? false : check_chemberta_available()
+    dmpnn_ok = force_fallback ? false : check_dmpnn_available()
+
+    if chemberta_ok
+        @info "SOTAMultimodalEncoderV2: Using ChemBERTa (768d)"
+    else
+        @info "SOTAMultimodalEncoderV2: Using GRU fallback for SMILES (768d)"
+    end
+
+    if dmpnn_ok
+        @info "SOTAMultimodalEncoderV2: Using D-MPNN (256d)"
+    else
+        @info "SOTAMultimodalEncoderV2: Using GAT fallback for graphs (256d)"
+    end
+
+    # Create fallback encoders (always needed)
+    smiles_encoder = SMILESEncoder()
+    gnn_encoder = GNNEncoder()
+    quantum_encoder = QuantumEncoder()
+
+    # Calculate fusion dimensions based on what's available
+    input_dims = Int[]
+
+    # SMILES: ChemBERTa (768) or GRU (768)
+    push!(input_dims, SMILES_OUTPUT_DIM)  # Both output 768d
+
+    # Graph: D-MPNN (256) or GAT (256)
+    push!(input_dims, GNN_OUTPUT_DIM)  # Both output 256d
+
+    # Quantum descriptors (optional)
+    if use_quantum
+        push!(input_dims, QUANTUM_OUTPUT_DIM)  # 128d
+    end
+
+    fusion = CrossAttentionFusion(input_dims; output_dim = output_dim)
+
+    return SOTAMultimodalEncoderV2(
+        chemberta_ok,
+        dmpnn_ok,
+        smiles_encoder,
+        gnn_encoder,
+        quantum_encoder,
+        fusion,
+        use_quantum,
+        output_dim
+    )
+end
+
+"""
+Encode a single molecule with SOTA multimodal encoder.
+"""
+function (encoder::SOTAMultimodalEncoderV2)(smiles::String)::Vector{Float32}
+    embeddings = Vector{Vector{Float32}}()
+
+    # ========================================
+    # SMILES Encoding (ChemBERTa or GRU)
+    # ========================================
+    if encoder.chemberta_available
+        try
+            # Use ChemBERTa via bridge
+            smiles_emb = Main.DarwinPBPK.ChemBERTaBridge.encode(smiles)
+            push!(embeddings, smiles_emb)
+        catch e
+            @warn "ChemBERTa encoding failed, using fallback" exception=e
+            smiles_emb = encoder.smiles_encoder(smiles)
+            push!(embeddings, smiles_emb)
+        end
+    else
+        # Use GRU fallback
+        smiles_emb = encoder.smiles_encoder(smiles)
+        push!(embeddings, smiles_emb)
+    end
+
+    # ========================================
+    # Graph Encoding (D-MPNN or GAT)
+    # ========================================
+    if encoder.dmpnn_available
+        try
+            # Use D-MPNN via module
+            graph_emb = Main.DarwinPBPK.DMPNN.encode_molecule(
+                Main.DarwinPBPK.DMPNN.DMPNNEncoder(),
+                smiles
+            )
+            if graph_emb !== nothing
+                push!(embeddings, graph_emb)
+            else
+                push!(embeddings, zeros(Float32, GNN_OUTPUT_DIM))
+            end
+        catch e
+            @warn "D-MPNN encoding failed, using fallback" exception=e
+            graph_emb = encoder.gnn_encoder(smiles)
+            push!(embeddings, graph_emb !== nothing ? graph_emb : zeros(Float32, GNN_OUTPUT_DIM))
+        end
+    else
+        # Use GAT fallback
+        graph_emb = encoder.gnn_encoder(smiles)
+        if graph_emb !== nothing
+            push!(embeddings, graph_emb)
+        else
+            push!(embeddings, zeros(Float32, GNN_OUTPUT_DIM))
+        end
+    end
+
+    # ========================================
+    # Quantum Descriptors (optional)
+    # ========================================
+    if encoder.use_quantum
+        quantum_emb = encoder.quantum_encoder(smiles)
+        if quantum_emb !== nothing
+            push!(embeddings, quantum_emb)
+        else
+            push!(embeddings, zeros(Float32, QUANTUM_OUTPUT_DIM))
+        end
+    end
+
+    # ========================================
+    # Fusion
+    # ========================================
+    unified = encoder.fusion(embeddings)
+
+    return unified
+end
+
+"""
+Batch encode molecules with SOTA encoder.
+"""
+function (encoder::SOTAMultimodalEncoderV2)(smiles_batch::Vector{String})::Matrix{Float32}
+    n = length(smiles_batch)
+    embeddings = Matrix{Float32}(undef, encoder.output_dim, n)
+
+    # Use batch encoding when ChemBERTa available for efficiency
+    if encoder.chemberta_available && n > 1
+        try
+            # Batch SMILES encoding
+            smiles_embs = Main.DarwinPBPK.ChemBERTaBridge.encode_batch(smiles_batch)
+
+            # Individual encoding for graphs and quantum (can't easily batch)
+            for (i, smiles) in enumerate(smiles_batch)
+                emb_list = Vector{Vector{Float32}}()
+
+                # SMILES from batch
+                push!(emb_list, smiles_embs[:, i])
+
+                # Graph (fallback to GAT since D-MPNN doesn't batch well)
+                graph_emb = encoder.gnn_encoder(smiles)
+                push!(emb_list, graph_emb !== nothing ? graph_emb : zeros(Float32, GNN_OUTPUT_DIM))
+
+                # Quantum
+                if encoder.use_quantum
+                    quantum_emb = encoder.quantum_encoder(smiles)
+                    push!(emb_list, quantum_emb !== nothing ? quantum_emb : zeros(Float32, QUANTUM_OUTPUT_DIM))
+                end
+
+                # Fuse
+                embeddings[:, i] = encoder.fusion(emb_list)
+            end
+
+            return embeddings
+        catch e
+            @warn "Batch encoding failed, falling back to individual" exception=e
+        end
+    end
+
+    # Individual encoding fallback
+    for (i, smiles) in enumerate(smiles_batch)
+        embeddings[:, i] = encoder(smiles)
+    end
+
+    return embeddings
+end
+
+"""
+Get encoder configuration info.
+"""
+function encoder_info(encoder::SOTAMultimodalEncoderV2)::Dict{String, Any}
+    return Dict(
+        "name" => "SOTAMultimodalEncoderV2",
+        "smiles_encoder" => encoder.chemberta_available ? "ChemBERTa" : "GRU",
+        "graph_encoder" => encoder.dmpnn_available ? "D-MPNN" : "GAT",
+        "quantum_enabled" => encoder.use_quantum,
+        "output_dim" => encoder.output_dim,
+        "total_input_dim" => SMILES_OUTPUT_DIM + GNN_OUTPUT_DIM + (encoder.use_quantum ? QUANTUM_OUTPUT_DIM : 0),
+    )
+end
+
+# ============================================================================
+# CONVENIENCE FUNCTIONS
+# ============================================================================
+
+"""
+Create the recommended encoder for production use.
+
+Returns SOTAMultimodalEncoderV2 which uses the best available components.
+"""
+function create_sota_encoder(; kwargs...)::SOTAMultimodalEncoderV2
+    return SOTAMultimodalEncoderV2(; kwargs...)
+end
+
+"""
+Quick molecular encoding for single SMILES.
+
+Uses a cached encoder instance for efficiency.
+"""
+const _cached_encoder = Ref{Union{SOTAMultimodalEncoderV2, Nothing}}(nothing)
+
+function quick_encode(smiles::String)::Vector{Float32}
+    if _cached_encoder[] === nothing
+        _cached_encoder[] = SOTAMultimodalEncoderV2(; use_quantum=false)
+    end
+    return _cached_encoder[](smiles)
+end
+
+function quick_encode(smiles_batch::Vector{String})::Matrix{Float32}
+    if _cached_encoder[] === nothing
+        _cached_encoder[] = SOTAMultimodalEncoderV2(; use_quantum=false)
+    end
+    return _cached_encoder[](smiles_batch)
+end
+
+export SOTAMultimodalEncoderV2, create_sota_encoder, quick_encode, encoder_info
+
 # Export public API
 export MultimodalMolecularEncoder, SMILESEncoder, GNNEncoder, CrossAttentionFusion
 export EnhancedMultimodalEncoder, QuantumEncoder, get_quantum_descriptors
 export smiles_to_graph, atom_features
 export SMILES_OUTPUT_DIM, GNN_OUTPUT_DIM, QUANTUM_OUTPUT_DIM, FUSION_DIM
+export CHEMBERTA_DIM, DMPNN_DIM
 
 end # module

@@ -38,6 +38,7 @@ include("DarwinPBPK/compartments/disease_ontology_pk.jl")  # NEW: DOID + ICD-10/
 include("DarwinPBPK/compartments/anemia_polycythemia.jl")  # NEW: Hematocrit-dependent PK adjustments
 include("DarwinPBPK/compartments/plasma_viscosity.jl")  # NEW: Blood rheology and viscosity effects
 include("DarwinPBPK/compartments/blood_compartment_integrated.jl")  # NEW: Integration layer for all blood modules
+include("DarwinPBPK/compartments/transporter_ontogeny.jl")  # NEW: Pediatric transporter ontogeny (Hunt 2024)
 # include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # Temporarily disabled - needs Images package
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
@@ -48,9 +49,15 @@ include("DarwinPBPK/training.jl")     # FASE 2 ✅
 include("DarwinPBPK/ml/multimodal_encoder.jl")  # FASE 3 ✅ (Real implementation with MolecularGraph.jl)
 include("DarwinPBPK/ml/evidential.jl")          # FASE 3 ✅
 include("DarwinPBPK/ml/bayesian_uq.jl")         # Q1 2025 ✅ (Bayesian UQ)
+include("DarwinPBPK/ml/turing_pbpk.jl")         # Q1 2025 ✅ (Turing.jl PBPK Models)
+include("DarwinPBPK/ml/chemberta_bridge.jl")    # Q1 2025 ✅ (ChemBERTa via PyCall)
+include("DarwinPBPK/ml/dmpnn.jl")               # Q1 2025 ✅ (D-MPNN encoder)
+include("DarwinPBPK/ml/mc_dropout.jl")          # Q1 2025 ✅ (MC-Dropout for UQ)
+include("DarwinPBPK/ml/calibration.jl")         # Q1 2025 ✅ (Calibration metrics)
 
 # Validation (FASE 4)
 include("DarwinPBPK/validation.jl")              # FASE 4 ✅
+include("DarwinPBPK/validation/external_validation.jl")  # Q1 2025 ✅ (External validation protocol)
 
 # MedLang DSL (First Real Implementation)
 include("DarwinPBPK/medlang/MedLang.jl")        # MedLang DSL ✅
@@ -92,6 +99,7 @@ using .DiseaseOntologyPK
 using .AnemiaPolycythemia
 using .PlasmaViscosity
 using .BloodCompartmentIntegrated
+using .TransporterOntogeny
 # using .LeukocyteFractalAnalysis  # Temporarily disabled
 using .ODEPBPKSolver
 using .DatasetGeneration
@@ -100,7 +108,13 @@ using .Training
 using .MultimodalEncoder
 using .Evidential
 using .BayesianUQ
+using .TuringPBPK
+using .ChemBERTaBridge
+using .DMPNN
+using .MCDropout
+using .Calibration
 using .Validation
+using .ExternalValidation
 using .RESTAPI
 using .MedLang
 using .SemanticCore
@@ -116,6 +130,51 @@ export sample_posterior, variational_inference, default_pbpk_priors
 export credible_interval, posterior_predictive, uncertainty_calibration
 export VariationalPosterior, sample_variational, create_clearance_model
 
+# Export Turing.jl PBPK functions (Q1 2025)
+export bayesian_one_compartment, bayesian_two_compartment, bayesian_pbpk_5organ
+export bayesian_population_pk, sample_nuts, sample_advi, sample_fast
+export posterior_summary, check_diagnostics, trace_data
+export quick_bayesian_pk, predict_with_uncertainty
+
+# Export ChemBERTa functions (Q1 2025)
+export ChemBERTaEncoder  # From ChemBERTaBridge module
+# Note: ChemBERTaBridge.initialize!, encode, encode_batch available via module
+
+# Export D-MPNN functions (Q1 2025)
+export DMPNNEncoder, DMPNNConv, encode_molecule, encode_molecules
+export AttentionReadout, StandardGNNEncoder
+
+# Export MC-Dropout functions (Q1 2025)
+export MCDropoutWrapper, UncertaintyResult
+export predict_with_uncertainty, predict_batch_with_uncertainty
+export decompose_uncertainty, calibration_metrics, prediction_intervals
+export pbpk_predict_with_uncertainty, pk_parameter_uncertainty
+export add_dropout, has_dropout
+
+# Export Calibration functions (Q1 2025)
+export CalibrationResult, CalibrationMetrics
+export expected_calibration_error, maximum_calibration_error
+export reliability_diagram, calibration_curve
+export continuous_ranked_probability_score, crps_gaussian, sharpness
+export recalibrate_predictions, isotonic_calibration
+export full_calibration_analysis, pk_calibration_analysis, multi_parameter_calibration
+
+# Export External Validation functions (Q1 2025)
+export ExternalValidationDataset, BlindValidationResult, ValidationReport
+export load_pkdb_dataset, create_validation_dataset, example_validation_dataset
+export run_blind_validation, generate_validation_report
+export check_fda_criteria, get_failed_compounds
+
+# Export SOTA Multimodal Encoder V2 (Q1 2025)
+export SOTAMultimodalEncoderV2, create_sota_encoder, quick_encode, encoder_info
+export CHEMBERTA_DIM, DMPNN_DIM
+
+# Export Bootstrap validation functions (Q1 2025)
+export BootstrapResult, bootstrap_metric
+export gmfe_with_ci, afe_with_ci, aafe_with_ci, r_squared_with_ci
+export percent_within_fold_with_ci, regulatory_metrics_with_ci
+export format_bootstrap_result, latex_metrics_row
+
 # Export Semantic Web functions
 export DARWIN_CONTEXT, DRUG_CONTEXT, DDI_CONTEXT, PARAMETER_CONTEXT
 export QUDTUnit, SemanticQuantity, QUDT_UNITS, get_qudt_unit
@@ -129,6 +188,20 @@ export annotate_with_provenance, validate_jsonld
 export DOIDTerm, DOIDIndex, load_doid, search_doid
 export get_disease_by_id, get_disease_by_name, get_disease_xrefs
 export get_disease_hierarchy, get_diseases_for_drug_class
+
+# Export Transporter Ontogeny functions (Q1+ SOTA 2024 - Hunt et al.)
+export OntogenyProfile, TransporterOntogenyData, PediatricAge, AgeCategory
+export OntogenyFunction, SigmoidalMaturation, BiphasicMaturation, LinearMaturation
+export calculate_maturation, get_transporter_ontogeny, apply_ontogeny_scaling
+export get_renal_transporter_ontogeny, get_hepatic_transporter_ontogeny
+export get_intestinal_transporter_ontogeny, get_bbb_transporter_ontogeny
+export predict_pediatric_clearance, generate_ontogeny_curve, validate_ontogeny_prediction
+export get_pediatric_disease_modifiers, get_doid_pediatric_conditions, get_icd_codes_for_condition
+export RENAL_TRANSPORTER_ONTOGENY, HEPATIC_TRANSPORTER_ONTOGENY
+export INTESTINAL_TRANSPORTER_ONTOGENY, BBB_TRANSPORTER_ONTOGENY
+export OBO_FOUNDRY_PREFIXES, UBERON_TERMS, CL_TERMS, GO_TERMS, PR_TERMS
+export ICD_CLASSIFICATIONS, DOID_PEDIATRIC_CONDITIONS
+export export_transporter_to_jsonld
 
 # Export Platelet functions
 export PlateletCompartment, PlateletGranules, PlateletActivation

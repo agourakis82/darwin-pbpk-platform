@@ -53,6 +53,17 @@ export LiverProperties, calculate_kp_liver, calculate_liver_contribution
 export estimate_transporter_effect, calculate_lysosomal_trapping_liver
 export calculate_hepatic_extraction, calculate_first_pass_bioavailability
 export calculate_effective_K_tissue_liver
+# SOTA 2024 Q1+ exports - Hepatic Clearance Models
+export HepaticClearanceModel, WellStirredModel, ParallelTubeModel, DispersionModel
+export calculate_hepatic_clearance, calculate_biliary_clearance
+export BiliaryClearanceParams, EnterohepatiCirculation, EHCState
+export simulate_ehc_ode!, calculate_ehc_auc_ratio
+# Transporter Saturation (Michaelis-Menten)
+export TransporterKinetics, calculate_saturable_uptake, calculate_saturable_efflux
+export OATP1B1_KINETICS, OATP1B3_KINETICS, OCT1_KINETICS, PGP_KINETICS
+# CYP Zonation
+export HepaticZonation, calculate_zonal_metabolism, ZonalCYPExpression
+export PERIPORTAL_ZONE, CENTRILOBULAR_ZONE, calculate_zone_weighted_clearance
 
 """
 Liver physiological properties
@@ -691,5 +702,962 @@ const LIVER_DRUG_EXAMPLES = Dict(
     "diazepam"     => (logP=2.8, pKa=3.4, is_base=false,
                        Kp_observed=3.5, note="Lipophilic neutral, lipoprotein binding"),
 )
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SOTA 2024 Q1+ ENHANCEMENTS
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Based on Socratic Discussion Method - achieving Brain-level rigor for Liver
+#
+# New implementations:
+# 1. Parallel-Tube and Dispersion hepatic clearance models
+# 2. Biliary clearance (CLbiliary)
+# 3. Michaelis-Menten transporter saturation kinetics
+# 4. Enterohepatic recirculation as coupled ODE system
+# 5. Quantitative CYP zonation (periportal vs centrilobular)
+#
+# References:
+# - Pang KS, Rowland M (1977) J Pharmacokinet Biopharm - Parallel-tube model
+# - Roberts MS, Rowland M (1986) J Pharmacokinet Biopharm - Dispersion model
+# - Watanabe T et al. (2009) Drug Metab Dispos - OATP Km/Vmax
+# - Jungermann K, Kietzmann T (1996) Hepatology - Liver zonation
+# - Yang J et al. (2007) Curr Drug Metab - EHC modeling
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 1. HEPATIC CLEARANCE MODELS - Beyond Well-Stirred
+# ═══════════════════════════════════════════════════════════════════════════════
+
+"""
+Abstract type for hepatic clearance models.
+
+Three classical models with different assumptions:
+1. Well-Stirred: Instant equilibration (current implementation)
+2. Parallel-Tube: Plug flow, concentration gradient
+3. Dispersion: Intermediate, accounts for axial mixing
+"""
+abstract type HepaticClearanceModel end
+
+struct WellStirredModel <: HepaticClearanceModel end
+struct ParallelTubeModel <: HepaticClearanceModel end
+struct DispersionModel <: HepaticClearanceModel
+    dispersion_number::Float64  # DN = D/(v×L), typically 0.2-0.5
+end
+
+# Default dispersion number for liver (intermediate mixing)
+DispersionModel() = DispersionModel(0.3)
+
+"""
+    calculate_hepatic_clearance(model, fub, CLint, Q)
+
+Calculate hepatic clearance using specified model.
+
+# Well-Stirred Model (current)
+CLH = Q × E = Q × (fub × CLint) / (Q + fub × CLint)
+
+# Parallel-Tube Model
+E = 1 - exp(-fub × CLint / Q)
+CLH = Q × E
+
+# Dispersion Model
+E = 1 - 4a / [(1+a)² × exp(a/DN) - (1-a)² × exp(-a/DN)]
+where a = √(1 + 4×Rn×DN), Rn = fub×CLint/Q
+
+KEY INSIGHT: The three models give DIFFERENT predictions for:
+- High extraction drugs: Parallel-tube > Well-stirred > Dispersion
+- Low extraction drugs: All models converge
+- Intermediate: Dispersion is most physiologically realistic
+
+Clinical Relevance:
+- Well-stirred: Overestimates CLH for high-extraction drugs
+- Parallel-tube: Overestimates extraction ratio
+- Dispersion: Best matches in vivo data for most drugs
+
+# Arguments
+- `model`: HepaticClearanceModel type
+- `fub`: Fraction unbound in blood
+- `CLint`: Intrinsic clearance (L/min)
+- `Q`: Hepatic blood flow (L/min), default 1.5
+
+# Returns
+NamedTuple with:
+- `CLH`: Hepatic clearance (L/min)
+- `E`: Extraction ratio
+- `model_name`: String identifier
+"""
+function calculate_hepatic_clearance(
+    model::WellStirredModel,
+    fub::Float64,
+    CLint::Float64,
+    Q::Float64 = 1.5
+)
+    # E = (fub × CLint) / (Q + fub × CLint)
+    numerator = fub * CLint
+    E = numerator / (Q + numerator)
+    CLH = Q * E
+
+    return (CLH=CLH, E=E, model_name="Well-Stirred")
+end
+
+function calculate_hepatic_clearance(
+    model::ParallelTubeModel,
+    fub::Float64,
+    CLint::Float64,
+    Q::Float64 = 1.5
+)
+    # E = 1 - exp(-fub × CLint / Q)
+    # This assumes drug concentration decreases exponentially along sinusoid
+
+    exponent = -fub * CLint / Q
+    E = 1.0 - exp(exponent)
+    CLH = Q * E
+
+    # For very high CLint, E approaches 1.0 (complete extraction)
+    E = clamp(E, 0.0, 0.999)
+
+    return (CLH=CLH, E=E, model_name="Parallel-Tube")
+end
+
+function calculate_hepatic_clearance(
+    model::DispersionModel,
+    fub::Float64,
+    CLint::Float64,
+    Q::Float64 = 1.5
+)
+    # Dispersion model (Roberts & Rowland 1986)
+    # E = 1 - 4a / [(1+a)² × exp(a/DN) - (1-a)² × exp(-a/DN)]
+    # where a = √(1 + 4×Rn×DN), Rn = fub×CLint/Q
+
+    DN = model.dispersion_number
+    Rn = fub * CLint / Q  # Efficiency number
+
+    # Calculate 'a' parameter
+    a = sqrt(1.0 + 4.0 * Rn * DN)
+
+    # Calculate extraction ratio
+    exp_pos = exp(a / DN)
+    exp_neg = exp(-a / DN)
+
+    numerator = 4.0 * a
+    denominator = (1.0 + a)^2 * exp_pos - (1.0 - a)^2 * exp_neg
+
+    E = 1.0 - numerator / denominator
+    E = clamp(E, 0.0, 0.999)
+
+    CLH = Q * E
+
+    return (CLH=CLH, E=E, model_name="Dispersion(DN=$(DN))")
+end
+
+"""
+Compare all three hepatic clearance models.
+
+Useful for sensitivity analysis and understanding model impact.
+"""
+function compare_hepatic_models(fub::Float64, CLint::Float64, Q::Float64 = 1.5)
+    ws = calculate_hepatic_clearance(WellStirredModel(), fub, CLint, Q)
+    pt = calculate_hepatic_clearance(ParallelTubeModel(), fub, CLint, Q)
+    dp = calculate_hepatic_clearance(DispersionModel(), fub, CLint, Q)
+
+    return (
+        well_stirred = ws,
+        parallel_tube = pt,
+        dispersion = dp,
+        max_difference_pct = 100 * (maximum([ws.E, pt.E, dp.E]) - minimum([ws.E, pt.E, dp.E]))
+    )
+end
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 2. BILIARY CLEARANCE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+"""
+Parameters for biliary clearance calculation.
+
+Biliary excretion is the primary route for:
+- Glucuronide conjugates (MW > 400)
+- Glutathione conjugates
+- Drugs with active efflux (MRP2, P-gp, BCRP, BSEP)
+
+Rule of 5 for Biliary Excretion (Watanabe et al.):
+- MW > 400-500 (glucuronides add ~176 Da)
+- Amphiphilic (logP 2-5)
+- Carboxylic acid or conjugate
+- MRP2/BCRP substrate
+"""
+struct BiliaryClearanceParams
+    # Efflux transporter kinetics (Vmax in pmol/min/mg, Km in μM)
+    MRP2_Vmax::Float64
+    MRP2_Km::Float64
+    BCRP_Vmax::Float64
+    BCRP_Km::Float64
+    Pgp_Vmax::Float64
+    Pgp_Km::Float64
+    BSEP_Vmax::Float64   # Bile salt export pump
+    BSEP_Km::Float64
+
+    # Bile flow parameters
+    bile_flow_mL_min::Float64  # ~0.5-1.0 mL/min in adults
+
+    # Drug-specific
+    is_glucuronide::Bool
+    is_glutathione_conj::Bool
+    MW::Float64
+end
+
+# Default biliary parameters (healthy adult)
+function BiliaryClearanceParams(;
+    MRP2_Vmax::Float64 = 100.0,
+    MRP2_Km::Float64 = 50.0,
+    BCRP_Vmax::Float64 = 80.0,
+    BCRP_Km::Float64 = 30.0,
+    Pgp_Vmax::Float64 = 50.0,
+    Pgp_Km::Float64 = 20.0,
+    BSEP_Vmax::Float64 = 200.0,
+    BSEP_Km::Float64 = 10.0,
+    bile_flow_mL_min::Float64 = 0.7,
+    is_glucuronide::Bool = false,
+    is_glutathione_conj::Bool = false,
+    MW::Float64 = 400.0
+)
+    return BiliaryClearanceParams(
+        MRP2_Vmax, MRP2_Km, BCRP_Vmax, BCRP_Km,
+        Pgp_Vmax, Pgp_Km, BSEP_Vmax, BSEP_Km,
+        bile_flow_mL_min, is_glucuronide, is_glutathione_conj, MW
+    )
+end
+
+"""
+    calculate_biliary_clearance(C_hepatocyte, params; transporters)
+
+Calculate biliary clearance using mechanistic transporter model.
+
+CLbiliary = Σ (Vmax × C) / (Km + C) × scaling_factors
+
+For conjugates (glucuronides, GSH):
+- MRP2 is primary efflux pump
+- MW > 400 required for significant biliary excretion
+
+For parent drugs:
+- P-gp and BCRP for lipophilic compounds
+- Often minor compared to metabolism
+
+# Arguments
+- `C_hepatocyte`: Intracellular drug concentration (μM)
+- `params`: BiliaryClearanceParams
+- `is_mrp2_substrate`, etc.: Transporter substrate flags
+
+# Returns
+NamedTuple with:
+- `CLbiliary`: Biliary clearance (mL/min)
+- `fraction_biliary`: Estimated fraction of total hepatic CL
+- `rate_limiting`: Which transporter is rate-limiting
+"""
+function calculate_biliary_clearance(
+    C_hepatocyte::Float64,
+    params::BiliaryClearanceParams;
+    is_mrp2_substrate::Bool = false,
+    is_bcrp_substrate::Bool = false,
+    is_pgp_substrate::Bool = false,
+    is_bsep_substrate::Bool = false,
+    hepatocyte_protein_mg::Float64 = 40.0  # mg protein per g liver × 1800g
+)
+    # Michaelis-Menten for each transporter
+    clearances = Float64[]
+    transporters = String[]
+
+    if is_mrp2_substrate || params.is_glucuronide || params.is_glutathione_conj
+        # MRP2 - primary for conjugates
+        v_mrp2 = params.MRP2_Vmax * C_hepatocyte / (params.MRP2_Km + C_hepatocyte)
+        cl_mrp2 = v_mrp2 / C_hepatocyte * hepatocyte_protein_mg / 1000  # mL/min
+        push!(clearances, cl_mrp2)
+        push!(transporters, "MRP2")
+    end
+
+    if is_bcrp_substrate
+        v_bcrp = params.BCRP_Vmax * C_hepatocyte / (params.BCRP_Km + C_hepatocyte)
+        cl_bcrp = v_bcrp / C_hepatocyte * hepatocyte_protein_mg / 1000
+        push!(clearances, cl_bcrp)
+        push!(transporters, "BCRP")
+    end
+
+    if is_pgp_substrate
+        v_pgp = params.Pgp_Vmax * C_hepatocyte / (params.Pgp_Km + C_hepatocyte)
+        cl_pgp = v_pgp / C_hepatocyte * hepatocyte_protein_mg / 1000
+        push!(clearances, cl_pgp)
+        push!(transporters, "P-gp")
+    end
+
+    if is_bsep_substrate
+        v_bsep = params.BSEP_Vmax * C_hepatocyte / (params.BSEP_Km + C_hepatocyte)
+        cl_bsep = v_bsep / C_hepatocyte * hepatocyte_protein_mg / 1000
+        push!(clearances, cl_bsep)
+        push!(transporters, "BSEP")
+    end
+
+    # Total biliary clearance (sum of transporters)
+    CLbiliary = sum(clearances)
+
+    # Bile flow limitation
+    # CLbiliary cannot exceed bile flow × unbound fraction in hepatocyte
+    CLbiliary = min(CLbiliary, params.bile_flow_mL_min * 10)  # 10× safety margin
+
+    # Determine rate-limiting transporter
+    if isempty(clearances)
+        rate_limiting = "None (not a biliary substrate)"
+    else
+        max_idx = argmax(clearances)
+        rate_limiting = transporters[max_idx]
+    end
+
+    # MW-based biliary excretion likelihood
+    # Glucuronides add ~176 Da, GSH conjugates add ~307 Da
+    effective_MW = params.MW
+    if params.is_glucuronide
+        effective_MW += 176
+    end
+    if params.is_glutathione_conj
+        effective_MW += 307
+    end
+
+    mw_factor = if effective_MW < 350
+        0.1  # Minimal biliary
+    elseif effective_MW < 500
+        0.3 + 0.4 * (effective_MW - 350) / 150
+    else
+        0.7 + 0.3 * min((effective_MW - 500) / 200, 1.0)
+    end
+
+    CLbiliary *= mw_factor
+
+    return (
+        CLbiliary = CLbiliary,
+        mw_factor = mw_factor,
+        rate_limiting = rate_limiting,
+        individual_CL = Dict(zip(transporters, clearances))
+    )
+end
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3. MICHAELIS-MENTEN TRANSPORTER SATURATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+"""
+Transporter kinetic parameters for saturable transport.
+
+At low concentrations: CLuptake ≈ Vmax/Km (linear)
+At high concentrations: CLuptake → 0 (saturation)
+
+Clinical relevance:
+- Statins: OATP1B1 saturation at high doses → nonlinear PK
+- Rifampin: Saturates its own uptake → autoinhibition
+- Metformin: OCT1 saturation affects hepatic accumulation
+"""
+struct TransporterKinetics
+    name::String
+    Vmax::Float64    # pmol/min/mg protein
+    Km::Float64      # μM
+    Pdiff::Float64   # Passive diffusion clearance (μL/min/mg)
+
+    # Population variability
+    CV_Vmax::Float64  # Coefficient of variation
+    CV_Km::Float64
+
+    # Genetic polymorphism effects
+    polymorphism_scaling::Dict{String, Float64}
+end
+
+# Literature-based transporter kinetics
+# References: Watanabe 2009, Hirano 2006, Noe 2007
+
+const OATP1B1_KINETICS = TransporterKinetics(
+    "OATP1B1",
+    200.0,    # Vmax (pmol/min/mg) - typical for statins
+    5.0,      # Km (μM) - varies by substrate: rosuvastatin ~5, atorvastatin ~10
+    1.0,      # Pdiff - minimal passive for hydrophilic statins
+    0.35,     # CV Vmax
+    0.40,     # CV Km
+    Dict(
+        "wildtype" => 1.0,
+        "*5/*5" => 0.3,      # SLCO1B1 c.521T>C - 70% reduced function
+        "*5/*1" => 0.65,     # Heterozygous
+        "*15/*15" => 0.25,   # *15 = *1b + *5 haplotype
+        "*1b/*1b" => 1.2     # Slightly increased function
+    )
+)
+
+const OATP1B3_KINETICS = TransporterKinetics(
+    "OATP1B3",
+    150.0,    # Vmax
+    8.0,      # Km - generally higher than OATP1B1
+    1.0,      # Pdiff
+    0.40,
+    0.45,
+    Dict("wildtype" => 1.0, "reduced" => 0.5)
+)
+
+const OCT1_KINETICS = TransporterKinetics(
+    "OCT1",
+    500.0,    # Vmax - high for metformin
+    200.0,    # Km - metformin Km ~200-500 μM
+    0.5,      # Some passive for lipophilic cations
+    0.45,
+    0.50,
+    Dict(
+        "wildtype" => 1.0,
+        "*2/*2" => 0.4,      # M420del - common reduced function
+        "*3/*3" => 0.3,      # R61C
+        "*4/*4" => 0.5,      # G401S
+        "*5/*5" => 0.2       # G465R - severely reduced
+    )
+)
+
+const PGP_KINETICS = TransporterKinetics(
+    "P-gp",
+    100.0,    # Vmax (efflux)
+    15.0,     # Km
+    5.0,      # Significant passive for P-gp substrates (lipophilic)
+    0.50,
+    0.55,
+    Dict(
+        "wildtype" => 1.0,
+        "3435C>T" => 0.8,    # Common variant, modest effect
+        "2677G>T/A" => 0.85
+    )
+)
+
+"""
+    calculate_saturable_uptake(C_plasma, kinetics; fu, polymorphism)
+
+Calculate saturable transporter-mediated uptake clearance.
+
+CLuptake = fu × (Vmax / (Km + C_unbound) + Pdiff)
+
+At C << Km: CLuptake ≈ fu × (Vmax/Km + Pdiff) [linear]
+At C >> Km: CLuptake ≈ fu × Pdiff [saturated, only passive]
+
+# Arguments
+- `C_plasma`: Total plasma concentration (μM)
+- `kinetics`: TransporterKinetics struct
+- `fu`: Fraction unbound in plasma
+- `polymorphism`: Genetic variant key (e.g., "*5/*5")
+
+# Returns
+NamedTuple with clearance values and saturation fraction
+"""
+function calculate_saturable_uptake(
+    C_plasma::Float64,
+    kinetics::TransporterKinetics;
+    fu::Float64 = 0.1,
+    polymorphism::String = "wildtype",
+    hepatocyte_scaling::Float64 = 40.0  # mg protein per g liver × scaling
+)
+    C_unbound = C_plasma * fu
+
+    # Apply polymorphism scaling
+    poly_factor = get(kinetics.polymorphism_scaling, polymorphism, 1.0)
+    Vmax_adj = kinetics.Vmax * poly_factor
+
+    # Michaelis-Menten + passive diffusion
+    active_CL = Vmax_adj * C_unbound / (kinetics.Km + C_unbound)
+    passive_CL = kinetics.Pdiff * C_unbound
+
+    total_uptake_rate = active_CL + passive_CL  # pmol/min/mg
+
+    # Convert to intrinsic clearance (μL/min/mg)
+    CLint_uptake = (active_CL / C_unbound + kinetics.Pdiff)  # μL/min/mg
+
+    # Scale to whole liver
+    CLint_liver = CLint_uptake * hepatocyte_scaling / 1000  # mL/min
+
+    # Saturation fraction (how close to Vmax)
+    saturation_fraction = C_unbound / (kinetics.Km + C_unbound)
+
+    return (
+        CLint_uptake = CLint_uptake,
+        CLint_liver = CLint_liver,
+        saturation_fraction = saturation_fraction,
+        active_fraction = active_CL / (active_CL + passive_CL + 1e-10),
+        is_saturated = saturation_fraction > 0.5,
+        polymorphism_effect = poly_factor
+    )
+end
+
+"""
+    calculate_saturable_efflux(C_hepatocyte, kinetics)
+
+Calculate saturable efflux clearance (P-gp, MRP2, BCRP to bile).
+"""
+function calculate_saturable_efflux(
+    C_hepatocyte::Float64,
+    kinetics::TransporterKinetics;
+    fu_hepatocyte::Float64 = 0.3,
+    polymorphism::String = "wildtype"
+)
+    C_unbound = C_hepatocyte * fu_hepatocyte
+
+    poly_factor = get(kinetics.polymorphism_scaling, polymorphism, 1.0)
+    Vmax_adj = kinetics.Vmax * poly_factor
+
+    # Efflux rate (Michaelis-Menten)
+    efflux_rate = Vmax_adj * C_unbound / (kinetics.Km + C_unbound)
+
+    # Intrinsic efflux clearance
+    CLint_efflux = efflux_rate / C_unbound  # μL/min/mg
+
+    saturation_fraction = C_unbound / (kinetics.Km + C_unbound)
+
+    return (
+        CLint_efflux = CLint_efflux,
+        efflux_rate = efflux_rate,
+        saturation_fraction = saturation_fraction,
+        is_saturated = saturation_fraction > 0.5
+    )
+end
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4. ENTEROHEPATIC RECIRCULATION (EHC) ODE SYSTEM
+# ═══════════════════════════════════════════════════════════════════════════════
+
+"""
+Enterohepatic circulation state for ODE system.
+
+EHC creates secondary plasma peaks and prolongs half-life for:
+- Glucuronide conjugates (morphine, mycophenolate)
+- Drugs excreted unchanged in bile
+- Estrogens, bile acids
+
+Mechanism:
+1. Drug/metabolite excreted in bile
+2. Enters intestine
+3. Bacterial β-glucuronidase deconjugates glucuronides
+4. Free drug reabsorbed
+5. Returns to liver via portal vein
+6. Cycle repeats (can recycle 2-5x)
+"""
+struct EHCState
+    A_plasma::Float64      # Amount in plasma (mg)
+    A_liver::Float64       # Amount in liver (mg)
+    A_bile::Float64        # Amount in bile/gallbladder (mg)
+    A_intestine::Float64   # Amount in intestinal lumen (mg)
+    A_portal::Float64      # Amount in portal circulation (mg)
+    A_eliminated::Float64  # Cumulative eliminated (mg)
+end
+
+"""
+Parameters for EHC simulation.
+"""
+struct EnterohepatiCirculation
+    # Rate constants (1/h)
+    k_bile_secretion::Float64    # Liver → Bile
+    k_gallbladder_empty::Float64 # Bile → Intestine (meal-triggered)
+    k_intestinal_transit::Float64 # Movement through intestine
+    k_deconjugation::Float64     # Glucuronide hydrolysis rate
+    k_reabsorption::Float64      # Intestine → Portal
+    k_portal_liver::Float64      # Portal → Liver
+    k_elimination::Float64       # Hepatic elimination (non-biliary)
+    k_renal::Float64             # Renal elimination from plasma
+
+    # Fractions
+    f_biliary::Float64           # Fraction of hepatic CL that is biliary
+    f_deconjugation::Float64     # Fraction deconjugated in gut
+    f_reabsorption::Float64      # Fraction reabsorbed (of deconjugated)
+
+    # Volumes (L)
+    V_plasma::Float64
+    V_liver::Float64
+
+    # Timing
+    meal_times_h::Vector{Float64}  # Hours when meals trigger gallbladder emptying
+end
+
+# Default EHC parameters
+function EnterohepatiCirculation(;
+    k_bile_secretion::Float64 = 0.5,
+    k_gallbladder_empty::Float64 = 2.0,
+    k_intestinal_transit::Float64 = 0.2,
+    k_deconjugation::Float64 = 1.0,
+    k_reabsorption::Float64 = 0.5,
+    k_portal_liver::Float64 = 5.0,
+    k_elimination::Float64 = 0.1,
+    k_renal::Float64 = 0.05,
+    f_biliary::Float64 = 0.3,
+    f_deconjugation::Float64 = 0.8,
+    f_reabsorption::Float64 = 0.7,
+    V_plasma::Float64 = 3.0,
+    V_liver::Float64 = 1.8,
+    meal_times_h::Vector{Float64} = [0.0, 6.0, 12.0]  # Breakfast, lunch, dinner
+)
+    return EnterohepatiCirculation(
+        k_bile_secretion, k_gallbladder_empty, k_intestinal_transit,
+        k_deconjugation, k_reabsorption, k_portal_liver,
+        k_elimination, k_renal, f_biliary, f_deconjugation, f_reabsorption,
+        V_plasma, V_liver, meal_times_h
+    )
+end
+
+"""
+    simulate_ehc_ode!(du, u, p, t)
+
+ODE system for enterohepatic recirculation.
+
+State vector u:
+1. A_plasma - Amount in systemic plasma
+2. A_liver - Amount in liver
+3. A_bile - Amount in bile/gallbladder
+4. A_intestine - Amount in intestinal lumen
+5. A_portal - Amount in portal blood
+6. A_eliminated - Cumulative elimination
+
+This creates the characteristic secondary peaks seen with EHC drugs.
+"""
+function simulate_ehc_ode!(du, u, p, t)
+    ehc = p.ehc
+
+    A_plasma = u[1]
+    A_liver = u[2]
+    A_bile = u[3]
+    A_intestine = u[4]
+    A_portal = u[5]
+    A_eliminated = u[6]
+
+    # Meal-triggered gallbladder emptying
+    # Increases emptying rate around meal times
+    gb_empty_rate = ehc.k_gallbladder_empty
+    for meal_time in ehc.meal_times_h
+        time_from_meal = mod(t - meal_time, 24.0)
+        if time_from_meal < 1.0  # Within 1 hour of meal
+            gb_empty_rate *= 3.0  # Triple emptying rate
+        end
+    end
+
+    # Fluxes
+    flux_plasma_liver = 0.3 * A_plasma  # Distribution to liver
+    flux_liver_plasma = 0.2 * A_liver   # Return from liver
+
+    flux_liver_bile = ehc.k_bile_secretion * A_liver * ehc.f_biliary
+    flux_bile_intestine = gb_empty_rate * A_bile
+    flux_intestine_deconj = ehc.k_deconjugation * A_intestine * ehc.f_deconjugation
+    flux_reabsorption = ehc.k_reabsorption * flux_intestine_deconj * ehc.f_reabsorption
+    flux_intestine_feces = ehc.k_intestinal_transit * A_intestine * (1 - ehc.f_reabsorption)
+    flux_portal_liver = ehc.k_portal_liver * A_portal
+
+    flux_hepatic_elim = ehc.k_elimination * A_liver * (1 - ehc.f_biliary)
+    flux_renal_elim = ehc.k_renal * A_plasma
+
+    # ODEs
+    du[1] = flux_liver_plasma - flux_plasma_liver - flux_renal_elim  # Plasma
+    du[2] = flux_plasma_liver + flux_portal_liver - flux_liver_plasma - flux_liver_bile - flux_hepatic_elim  # Liver
+    du[3] = flux_liver_bile - flux_bile_intestine  # Bile
+    du[4] = flux_bile_intestine - flux_intestine_deconj - flux_intestine_feces  # Intestine
+    du[5] = flux_reabsorption - flux_portal_liver  # Portal
+    du[6] = flux_hepatic_elim + flux_renal_elim + flux_intestine_feces  # Eliminated
+
+    return nothing
+end
+
+"""
+Calculate AUC ratio with vs without EHC.
+
+Drugs with significant EHC can have:
+- 20-50% increase in AUC
+- Secondary plasma peaks 4-8h post-dose
+- Prolonged terminal half-life
+
+Examples:
+- Morphine-6-glucuronide: 30% AUC from EHC
+- Mycophenolate: Secondary peak doubles exposure
+- Ezetimibe glucuronide: Major EHC component
+"""
+function calculate_ehc_auc_ratio(ehc::EnterohepatiCirculation)
+    # Simplified steady-state analysis
+    # Fraction recycled = f_biliary × f_deconjugation × f_reabsorption
+    f_recycled = ehc.f_biliary * ehc.f_deconjugation * ehc.f_reabsorption
+
+    # AUC ratio = 1 / (1 - f_recycled) for infinite recycling
+    # In practice, limited by intestinal transit
+    n_cycles = 3  # Typical number of EHC cycles
+
+    auc_ratio = 0.0
+    for i in 0:n_cycles
+        auc_ratio += f_recycled^i
+    end
+
+    secondary_peak_time = 1.0 / ehc.k_gallbladder_empty + 1.0 / ehc.k_intestinal_transit +
+                          1.0 / ehc.k_reabsorption + 1.0 / ehc.k_portal_liver
+
+    return (
+        auc_ratio = auc_ratio,
+        f_recycled_per_cycle = f_recycled,
+        expected_secondary_peak_h = secondary_peak_time,
+        clinical_significance = f_recycled > 0.3 ? "High" : (f_recycled > 0.15 ? "Moderate" : "Low")
+    )
+end
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 5. HEPATIC ZONATION - CYP Expression Gradients
+# ═══════════════════════════════════════════════════════════════════════════════
+
+"""
+Hepatic zonation - CYP enzyme expression by zone.
+
+Liver lobule has THREE zones:
+- Zone 1 (Periportal): High O₂, gluconeogenesis, Phase II conjugation
+- Zone 2 (Mid-zonal): Transitional
+- Zone 3 (Centrilobular): Low O₂, CYP450 HIGH, glycolysis, lipogenesis
+
+KEY CLINICAL INSIGHTS:
+- Acetaminophen toxicity: Zone 3 (CYP2E1 high + glutathione depleted)
+- Alcohol damage: Zone 3 (CYP2E1, hypoxia)
+- Viral hepatitis: Zone 1 preference (portal entry)
+
+CYP Distribution (Zone 3 / Zone 1 ratios):
+- CYP3A4: 2.0-2.5× higher in Zone 3
+- CYP2E1: 3-5× higher in Zone 3 (toxicologically important!)
+- CYP1A2: 1.5× higher in Zone 3
+- CYP2D6: Relatively uniform
+- UGT1A1: 1.5× higher in Zone 1 (conjugation)
+- SULT: 2× higher in Zone 1
+"""
+struct ZonalCYPExpression
+    zone::Symbol  # :periportal, :midzonal, :centrilobular
+
+    # Relative expression (Zone 1 periportal = 1.0 reference)
+    CYP3A4::Float64
+    CYP3A5::Float64
+    CYP2E1::Float64
+    CYP2D6::Float64
+    CYP2C9::Float64
+    CYP2C19::Float64
+    CYP1A2::Float64
+    UGT1A1::Float64
+    UGT2B7::Float64
+    SULT1A1::Float64
+
+    # Blood flow fraction
+    blood_flow_fraction::Float64
+
+    # Oxygen tension
+    pO2_mmHg::Float64
+end
+
+# Zone-specific CYP expression based on Jungermann & Kietzmann (1996)
+const PERIPORTAL_ZONE = ZonalCYPExpression(
+    :periportal,
+    1.0,   # CYP3A4 (reference)
+    1.0,   # CYP3A5
+    1.0,   # CYP2E1 (reference)
+    1.0,   # CYP2D6 (relatively uniform)
+    1.0,   # CYP2C9
+    1.0,   # CYP2C19
+    1.0,   # CYP1A2
+    1.5,   # UGT1A1 (higher in Zone 1!)
+    1.3,   # UGT2B7
+    2.0,   # SULT1A1 (higher in Zone 1)
+    0.33,  # Blood flow fraction (~1/3 each zone)
+    65.0   # pO2 (high oxygen)
+)
+
+const MIDZONAL_ZONE = ZonalCYPExpression(
+    :midzonal,
+    1.5,   # CYP3A4
+    1.3,   # CYP3A5
+    2.0,   # CYP2E1
+    1.0,   # CYP2D6
+    1.2,   # CYP2C9
+    1.2,   # CYP2C19
+    1.25,  # CYP1A2
+    1.0,   # UGT1A1
+    1.0,   # UGT2B7
+    1.0,   # SULT1A1
+    0.33,
+    45.0   # pO2 (intermediate)
+)
+
+const CENTRILOBULAR_ZONE = ZonalCYPExpression(
+    :centrilobular,
+    2.5,   # CYP3A4 (2.5× Zone 1!)
+    2.0,   # CYP3A5
+    5.0,   # CYP2E1 (5× Zone 1! - acetaminophen toxicity)
+    1.0,   # CYP2D6 (uniform)
+    1.5,   # CYP2C9
+    1.5,   # CYP2C19
+    1.5,   # CYP1A2
+    0.7,   # UGT1A1 (lower - conjugation mainly Zone 1)
+    0.8,   # UGT2B7
+    0.5,   # SULT1A1 (lower)
+    0.33,
+    30.0   # pO2 (hypoxic - relevant for redox)
+)
+
+"""
+Full hepatic zonation model.
+"""
+struct HepaticZonation
+    periportal::ZonalCYPExpression
+    midzonal::ZonalCYPExpression
+    centrilobular::ZonalCYPExpression
+end
+
+HepaticZonation() = HepaticZonation(PERIPORTAL_ZONE, MIDZONAL_ZONE, CENTRILOBULAR_ZONE)
+
+"""
+    calculate_zonal_metabolism(zonation, enzyme, CLint_reference)
+
+Calculate zone-weighted metabolic clearance.
+
+For high-extraction drugs metabolized mainly by CYP3A4:
+- Zone 3 (centrilobular) contributes most
+- Portal blood "sees" Zone 1 first but Zone 3 has 2.5× enzyme
+
+For CYP2E1 substrates (acetaminophen, halogenated anesthetics):
+- Zone 3 is 5× more active
+- Explains selective Zone 3 necrosis in overdose
+
+# Arguments
+- `zonation`: HepaticZonation struct
+- `enzyme`: Symbol (:CYP3A4, :CYP2E1, etc.)
+- `CLint_reference`: Intrinsic clearance at Zone 1 expression level
+
+# Returns
+Zone-weighted total CLint accounting for expression gradients
+"""
+function calculate_zonal_metabolism(
+    zonation::HepaticZonation,
+    enzyme::Symbol,
+    CLint_reference::Float64
+)
+    # Get enzyme expression for each zone
+    z1_expr = getfield(zonation.periportal, enzyme)
+    z2_expr = getfield(zonation.midzonal, enzyme)
+    z3_expr = getfield(zonation.centrilobular, enzyme)
+
+    # Blood flow fractions
+    f1 = zonation.periportal.blood_flow_fraction
+    f2 = zonation.midzonal.blood_flow_fraction
+    f3 = zonation.centrilobular.blood_flow_fraction
+
+    # Zone-weighted CLint
+    # Note: Blood flows through zones sequentially (portal → central)
+    # So Zone 1 "sees" full concentration, Zone 3 sees depleted
+    #
+    # For simplicity, use weighted average here
+    # Full model would use sequential extraction
+
+    weighted_expression = f1 * z1_expr + f2 * z2_expr + f3 * z3_expr
+    CLint_zonal = CLint_reference * weighted_expression
+
+    return (
+        CLint_total = CLint_zonal,
+        zone1_contribution = f1 * z1_expr / weighted_expression,
+        zone2_contribution = f2 * z2_expr / weighted_expression,
+        zone3_contribution = f3 * z3_expr / weighted_expression,
+        zone3_zone1_ratio = z3_expr / z1_expr
+    )
+end
+
+"""
+    calculate_zone_weighted_clearance(zonation, CLint_per_enzyme)
+
+Calculate total hepatic CLint with all enzymes and zonation.
+
+# Arguments
+- `zonation`: HepaticZonation
+- `CLint_per_enzyme`: Dict{Symbol, Float64} with CLint for each enzyme
+
+# Example
+```julia
+CLint = Dict(:CYP3A4 => 10.0, :CYP2D6 => 2.0, :UGT1A1 => 5.0)
+result = calculate_zone_weighted_clearance(HepaticZonation(), CLint)
+```
+"""
+function calculate_zone_weighted_clearance(
+    zonation::HepaticZonation,
+    CLint_per_enzyme::Dict{Symbol, Float64}
+)
+    total_CLint = 0.0
+    contributions = Dict{Symbol, Float64}()
+
+    for (enzyme, CLint_ref) in CLint_per_enzyme
+        try
+            zonal = calculate_zonal_metabolism(zonation, enzyme, CLint_ref)
+            total_CLint += zonal.CLint_total
+            contributions[enzyme] = zonal.CLint_total
+        catch
+            # If enzyme not in zonation struct, use reference value
+            total_CLint += CLint_ref
+            contributions[enzyme] = CLint_ref
+        end
+    end
+
+    return (
+        CLint_total = total_CLint,
+        contributions = contributions,
+        fractional = Dict(k => v/total_CLint for (k,v) in contributions)
+    )
+end
+
+"""
+Predict acetaminophen toxicity risk based on zonation.
+
+Zone 3 CYP2E1 converts APAP to NAPQI (toxic).
+Zone 1 SULT conjugates APAP (safe).
+
+Risk factors:
+- Alcohol (induces CYP2E1)
+- Fasting (depletes glutathione)
+- High dose (saturates sulfation)
+"""
+function predict_apap_toxicity_zone(
+    dose_mg::Float64,
+    is_alcoholic::Bool = false,
+    is_fasting::Bool = false
+)
+    zonation = HepaticZonation()
+
+    # CYP2E1 (toxic pathway) - Zone 3 dominant
+    cyp2e1_zone3 = zonation.centrilobular.CYP2E1  # 5×
+
+    # SULT (safe pathway) - Zone 1 dominant
+    sult_zone1 = zonation.periportal.SULT1A1  # 2×
+
+    # Baseline toxic/safe ratio
+    toxic_safe_ratio = cyp2e1_zone3 / sult_zone1
+
+    # Risk modifiers
+    if is_alcoholic
+        toxic_safe_ratio *= 2.0  # CYP2E1 induction
+    end
+    if is_fasting
+        toxic_safe_ratio *= 1.5  # Glutathione depletion, favors CYP
+    end
+
+    # Dose-dependent (SULT saturates at high doses)
+    if dose_mg > 3000
+        toxic_safe_ratio *= 1.5
+    elseif dose_mg > 4000
+        toxic_safe_ratio *= 2.5
+    end
+
+    risk_level = if toxic_safe_ratio < 3
+        "Low"
+    elseif toxic_safe_ratio < 5
+        "Moderate"
+    elseif toxic_safe_ratio < 8
+        "High"
+    else
+        "Severe - Zone 3 necrosis likely"
+    end
+
+    return (
+        toxic_safe_ratio = toxic_safe_ratio,
+        risk_level = risk_level,
+        zone3_cyp2e1 = cyp2e1_zone3,
+        zone1_sult = sult_zone1,
+        recommendation = toxic_safe_ratio > 5 ?
+            "Consider N-acetylcysteine if presenting within 8h" :
+            "Standard monitoring"
+    )
+end
 
 end # module

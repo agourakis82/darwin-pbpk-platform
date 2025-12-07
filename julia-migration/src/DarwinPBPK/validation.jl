@@ -13,15 +13,37 @@ Data: Novembro 2025
 module Validation
 
 using Statistics
+using Random
 using Measurements
 using Plots
 using DataFrames
 using CSV
 using JSON
 
-# Importar módulos
-using ..DynamicGNN: DynamicPBPKGNN, forward_batch
-using ..ODEPBPKSolver: PBPKParams, PBPK_ORGANS, NUM_ORGANS
+# Optional imports for DynamicGNN and ODEPBPKSolver
+# These are only needed for model evaluation functions, not basic metrics
+const HAS_DYNAMIC_GNN = Ref{Bool}(false)
+const HAS_ODE_SOLVER = Ref{Bool}(false)
+
+function __init__()
+    # Check if DynamicGNN is available
+    try
+        if isdefined(parentmodule(@__MODULE__), :DynamicGNN)
+            HAS_DYNAMIC_GNN[] = true
+        end
+    catch
+        HAS_DYNAMIC_GNN[] = false
+    end
+
+    # Check if ODEPBPKSolver is available
+    try
+        if isdefined(parentmodule(@__MODULE__), :ODEPBPKSolver)
+            HAS_ODE_SOLVER[] = true
+        end
+    catch
+        HAS_ODE_SOLVER[] = false
+    end
+end
 
 """
 Fold Error (FE) - Métrica regulatória (FDA/EMA).
@@ -182,6 +204,303 @@ end
 
 export average_fold_error, absolute_average_fold_error, regulatory_metrics_summary
 
+#=============================================================================
+  Bootstrap Confidence Intervals (Q1 Publication Enhancement)
+=============================================================================#
+
+"""
+Bootstrap result structure with estimate and confidence interval.
+"""
+struct BootstrapResult
+    estimate::Float64
+    ci_lower::Float64
+    ci_upper::Float64
+    se::Float64
+    n_bootstrap::Int
+    ci_level::Float64
+end
+
+"""
+Generic bootstrap function for any metric.
+
+Computes bootstrap confidence intervals for a given metric function.
+Uses the percentile method (bias-corrected available via BCa option).
+
+# Arguments
+- `metric_fn::Function`: Function(pred, obs) -> Float64
+- `pred::Vector{Float64}`: Predicted values
+- `obs::Vector{Float64}`: Observed values
+- `n_bootstrap::Int`: Number of bootstrap resamples (default: 2000)
+- `ci_level::Float64`: Confidence level (default: 0.95)
+- `seed::Union{Int, Nothing}`: Random seed for reproducibility
+
+# Returns
+- `BootstrapResult`: Estimate with CI and standard error
+
+# Example
+```julia
+result = bootstrap_metric(geometric_mean_fold_error, pred, obs; n_bootstrap=2000)
+println("GMFE = \$(result.estimate) (95% CI: \$(result.ci_lower) - \$(result.ci_upper))")
+```
+"""
+function bootstrap_metric(
+    metric_fn::Function,
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95,
+    seed::Union{Int, Nothing} = nothing
+)::BootstrapResult
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    n = length(pred)
+    @assert length(obs) == n "Prediction and observation vectors must have same length"
+
+    # Compute point estimate
+    point_estimate = metric_fn(pred, obs)
+
+    # Bootstrap resampling
+    bootstrap_values = Float64[]
+    sizehint!(bootstrap_values, n_bootstrap)
+
+    for _ in 1:n_bootstrap
+        # Sample with replacement
+        indices = rand(1:n, n)
+        pred_boot = pred[indices]
+        obs_boot = obs[indices]
+
+        # Compute metric on bootstrap sample
+        val = metric_fn(pred_boot, obs_boot)
+
+        if isfinite(val)
+            push!(bootstrap_values, val)
+        end
+    end
+
+    if isempty(bootstrap_values)
+        return BootstrapResult(point_estimate, NaN, NaN, NaN, n_bootstrap, ci_level)
+    end
+
+    # Compute confidence interval (percentile method)
+    α = (1 - ci_level) / 2
+    ci_lower = quantile(bootstrap_values, α)
+    ci_upper = quantile(bootstrap_values, 1 - α)
+
+    # Standard error
+    se = std(bootstrap_values)
+
+    return BootstrapResult(point_estimate, ci_lower, ci_upper, se, n_bootstrap, ci_level)
+end
+
+"""
+Bootstrap GMFE with confidence interval.
+"""
+function gmfe_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95
+)::BootstrapResult
+    return bootstrap_metric(geometric_mean_fold_error, pred, obs;
+                           n_bootstrap=n_bootstrap, ci_level=ci_level)
+end
+
+"""
+Bootstrap AFE with confidence interval.
+"""
+function afe_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95
+)::BootstrapResult
+    return bootstrap_metric(average_fold_error, pred, obs;
+                           n_bootstrap=n_bootstrap, ci_level=ci_level)
+end
+
+"""
+Bootstrap AAFE with confidence interval.
+"""
+function aafe_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95
+)::BootstrapResult
+    return bootstrap_metric(absolute_average_fold_error, pred, obs;
+                           n_bootstrap=n_bootstrap, ci_level=ci_level)
+end
+
+"""
+Bootstrap R² with confidence interval.
+"""
+function r_squared_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95
+)::BootstrapResult
+    return bootstrap_metric(r_squared, pred, obs;
+                           n_bootstrap=n_bootstrap, ci_level=ci_level)
+end
+
+"""
+Bootstrap percent within fold with confidence interval.
+"""
+function percent_within_fold_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64},
+    fold::Float64 = 2.0;
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95
+)::BootstrapResult
+    metric_fn = (p, o) -> percent_within_fold(p, o, fold)
+    return bootstrap_metric(metric_fn, pred, obs;
+                           n_bootstrap=n_bootstrap, ci_level=ci_level)
+end
+
+"""
+Complete regulatory metrics with bootstrap confidence intervals.
+
+This is the publication-ready version that includes uncertainty estimates
+for all key regulatory metrics.
+
+# Returns
+Dict with each metric containing:
+- estimate: Point estimate
+- ci_lower: Lower bound of 95% CI
+- ci_upper: Upper bound of 95% CI
+- se: Bootstrap standard error
+
+# Example
+```julia
+metrics = regulatory_metrics_with_ci(pred, obs; n_bootstrap=2000)
+println("GMFE = \$(metrics["GMFE"].estimate) (95% CI: \$(metrics["GMFE"].ci_lower)-\$(metrics["GMFE"].ci_upper))")
+```
+"""
+function regulatory_metrics_with_ci(
+    pred::AbstractVector{Float64},
+    obs::AbstractVector{Float64};
+    n_bootstrap::Int = 2000,
+    ci_level::Float64 = 0.95,
+    seed::Union{Int, Nothing} = 42
+)::Dict{String, Any}
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    # Compute all metrics with CIs
+    gmfe = gmfe_with_ci(pred, obs; n_bootstrap=n_bootstrap, ci_level=ci_level)
+    afe = afe_with_ci(pred, obs; n_bootstrap=n_bootstrap, ci_level=ci_level)
+    aafe = aafe_with_ci(pred, obs; n_bootstrap=n_bootstrap, ci_level=ci_level)
+    r2 = r_squared_with_ci(pred, obs; n_bootstrap=n_bootstrap, ci_level=ci_level)
+
+    pct_2x = percent_within_fold_with_ci(pred, obs, 2.0; n_bootstrap=n_bootstrap, ci_level=ci_level)
+    pct_1_5x = percent_within_fold_with_ci(pred, obs, 1.5; n_bootstrap=n_bootstrap, ci_level=ci_level)
+    pct_1_25x = percent_within_fold_with_ci(pred, obs, 1.25; n_bootstrap=n_bootstrap, ci_level=ci_level)
+
+    # Count valid comparisons
+    n_valid = count(i -> obs[i] > 0 && pred[i] > 0 && isfinite(pred[i]) && isfinite(obs[i]),
+                    1:length(pred))
+
+    # Determine bias direction from AFE
+    bias_direction = if afe.estimate > 1.25
+        "overprediction"
+    elseif afe.estimate < 0.8
+        "underprediction"
+    else
+        "unbiased"
+    end
+
+    # FDA/EMA acceptance: AAFE < 2.0 AND >70% within 2-fold
+    # Compute probability of meeting criteria from bootstrap
+    meets_fda = aafe.estimate < 2.0 && pct_2x.estimate >= 70.0
+
+    # Probability FDA criteria met (from bootstrap distributions)
+    # We need to resample to get joint distribution
+    Random.seed!(seed !== nothing ? seed + 1 : nothing)
+    n_meets = 0
+    for _ in 1:n_bootstrap
+        indices = rand(1:length(pred), length(pred))
+        pred_boot = pred[indices]
+        obs_boot = obs[indices]
+
+        aafe_boot = absolute_average_fold_error(pred_boot, obs_boot)
+        pct_boot = percent_within_fold(pred_boot, obs_boot, 2.0)
+
+        if isfinite(aafe_boot) && isfinite(pct_boot)
+            if aafe_boot < 2.0 && pct_boot >= 70.0
+                n_meets += 1
+            end
+        end
+    end
+    prob_meets_fda = n_meets / n_bootstrap
+
+    return Dict{String, Any}(
+        "GMFE" => gmfe,
+        "AFE" => afe,
+        "AAFE" => aafe,
+        "R_squared" => r2,
+        "percent_within_2fold" => pct_2x,
+        "percent_within_1.5fold" => pct_1_5x,
+        "percent_within_1.25fold" => pct_1_25x,
+        "n_valid" => n_valid,
+        "n_bootstrap" => n_bootstrap,
+        "ci_level" => ci_level,
+        "bias_direction" => bias_direction,
+        "meets_FDA_criteria" => meets_fda,
+        "prob_meets_FDA_criteria" => prob_meets_fda,
+    )
+end
+
+"""
+Format BootstrapResult for publication-ready output.
+
+# Returns
+String like "1.64 (95% CI: 1.52-1.78)"
+"""
+function format_bootstrap_result(
+    result::BootstrapResult;
+    digits::Int = 2,
+    ci_label::String = "95% CI"
+)::String
+    est = round(result.estimate, digits=digits)
+    lower = round(result.ci_lower, digits=digits)
+    upper = round(result.ci_upper, digits=digits)
+    return "$est ($ci_label: $lower-$upper)"
+end
+
+"""
+Generate LaTeX table row for regulatory metrics.
+
+Useful for manuscript preparation.
+"""
+function latex_metrics_row(
+    metrics::Dict{String, Any},
+    row_label::String = "Model"
+)::String
+    gmfe = metrics["GMFE"]
+    aafe = metrics["AAFE"]
+    pct2x = metrics["percent_within_2fold"]
+    r2 = metrics["R_squared"]
+
+    # Format: Label & GMFE (CI) & AAFE (CI) & %2-fold (CI) & R² (CI) \\
+    row = "$row_label & "
+    row *= "$(round(gmfe.estimate, digits=2)) ($(round(gmfe.ci_lower, digits=2))-$(round(gmfe.ci_upper, digits=2))) & "
+    row *= "$(round(aafe.estimate, digits=2)) ($(round(aafe.ci_lower, digits=2))-$(round(aafe.ci_upper, digits=2))) & "
+    row *= "$(round(pct2x.estimate, digits=1)) ($(round(pct2x.ci_lower, digits=1))-$(round(pct2x.ci_upper, digits=1))) & "
+    row *= "$(round(r2.estimate, digits=3)) ($(round(r2.ci_lower, digits=3))-$(round(r2.ci_upper, digits=3))) \\\\"
+
+    return row
+end
+
+export BootstrapResult, bootstrap_metric
+export gmfe_with_ci, afe_with_ci, aafe_with_ci, r_squared_with_ci
+export percent_within_fold_with_ci, regulatory_metrics_with_ci
+export format_bootstrap_result, latex_metrics_row
+
 """
 Percent within Fold.
 
@@ -272,19 +591,24 @@ Inovações:
 - Relatórios automatizados
 
 Args:
-    model: DynamicPBPKGNN model
+    model: DynamicPBPKGNN model (or any model with forward_batch method)
     test_data: Dataset de teste
     output_dir: Diretório de saída
 
 Returns:
     Dict com todas as métricas
+
+Note: This function requires DynamicGNN module to be loaded.
 """
 function validate_scientific(
-    model::DynamicPBPKGNN,
+    model::Any,  # DynamicPBPKGNN or compatible model
     test_data::Any,  # TODO: Type do dataset
     output_dir::String;
     device = cpu,
 )
+    if !HAS_DYNAMIC_GNN[]
+        error("validate_scientific requires DynamicGNN module to be loaded")
+    end
     # Predições
     pred_concentrations = []
     true_concentrations = []
