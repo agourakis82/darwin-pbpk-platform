@@ -1,0 +1,140 @@
+# ===========================================================================
+# Darwin PBPK Platform - Docker Compose Configuration
+# ===========================================================================
+# Production-ready orchestration for PBPK simulations
+#
+# Usage:
+#   docker-compose up -d              # Start all services
+#   docker-compose up julia           # Start Julia REPL only
+#   docker-compose up api             # Start API server only
+#   docker-compose --profile gpu up   # Enable GPU support
+# ===========================================================================
+
+version: "3.9"
+
+services:
+  # ===========================================================================
+  # Julia PBPK Simulation Engine
+  # ===========================================================================
+  julia:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    image: darwin-pbpk:2.11.0
+    container_name: darwin-pbpk-julia
+    volumes:
+      - ../data:/app/data:ro
+      - ../models:/app/models:ro
+      - simulation-results:/app/results
+    environment:
+      - JULIA_NUM_THREADS=auto
+      - DARWIN_PBPK_VERSION=2.11.0
+    networks:
+      - darwin-network
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+
+  # ===========================================================================
+  # FastAPI REST Server
+  # ===========================================================================
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    image: darwin-pbpk:2.11.0
+    container_name: darwin-pbpk-api
+    command: ["python3", "-m", "uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../data:/app/data:ro
+      - ../models:/app/models:ro
+      - simulation-results:/app/results
+    environment:
+      - DARWIN_PBPK_VERSION=2.11.0
+      - PYTHONPATH=/app
+    networks:
+      - darwin-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - julia
+
+  # ===========================================================================
+  # Batch Simulation Worker
+  # ===========================================================================
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    image: darwin-pbpk:2.11.0
+    container_name: darwin-pbpk-worker
+    command: ["julia", "--project=/app/julia-migration", "-e", "using DarwinPBPK; println(\"Worker ready\"); sleep(Inf)"]
+    volumes:
+      - ../data:/app/data:ro
+      - ../models:/app/models:ro
+      - simulation-results:/app/results
+    environment:
+      - JULIA_NUM_THREADS=auto
+    networks:
+      - darwin-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  # ===========================================================================
+  # GPU-Enabled Service (optional profile)
+  # ===========================================================================
+  julia-gpu:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: cuda
+    image: darwin-pbpk:2.11.0-cuda
+    container_name: darwin-pbpk-julia-gpu
+    profiles:
+      - gpu
+    volumes:
+      - ../data:/app/data:ro
+      - ../models:/app/models:ro
+      - simulation-results:/app/results
+    environment:
+      - JULIA_NUM_THREADS=auto
+      - JULIA_CUDA_MEMORY_POOL=none
+    networks:
+      - darwin-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+# ===========================================================================
+# Networks
+# ===========================================================================
+networks:
+  darwin-network:
+    driver: bridge
+
+# ===========================================================================
+# Volumes
+# ===========================================================================
+volumes:
+  simulation-results:
+    driver: local

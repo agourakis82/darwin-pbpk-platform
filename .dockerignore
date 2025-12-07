@@ -1,0 +1,75 @@
+# ===========================================================================
+# Docker Build Ignore File
+# ===========================================================================
+
+# Git
+.git
+.gitignore
+.gitmodules
+
+# Documentation (not needed in runtime)
+*.md
+!README.md
+docs/
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv/
+*.egg-info/
+.eggs/
+
+# Julia
+julia-migration/.julia/
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+.hypothesis/
+
+# Large files (download separately)
+*.tar.gz
+*.zip
+*.h5
+*.hdf5
+
+# Temporary
+tmp/
+temp/
+*.tmp
+*.temp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Analysis notebooks (large)
+analysis/**/*.ipynb
+analysis/**/*.html
+
+# Exclude large model files (mount as volume instead)
+# models/**/*.pt
+# Uncomment above to exclude checkpoints from image
