@@ -54,6 +54,7 @@ include("DarwinPBPK/ml/chemberta_bridge.jl")    # Q1 2025 ✅ (ChemBERTa via PyC
 include("DarwinPBPK/ml/dmpnn.jl")               # Q1 2025 ✅ (D-MPNN encoder)
 include("DarwinPBPK/ml/mc_dropout.jl")          # Q1 2025 ✅ (MC-Dropout for UQ)
 include("DarwinPBPK/ml/calibration.jl")         # Q1 2025 ✅ (Calibration metrics)
+include("DarwinPBPK/ml/neural_ode.jl")          # Q1 2025 ✅ (Neural ODE PBPK)
 
 # Validation (FASE 4)
 include("DarwinPBPK/validation.jl")              # FASE 4 ✅
@@ -113,6 +114,7 @@ using .ChemBERTaBridge
 using .DMPNN
 using .MCDropout
 using .Calibration
+using .NeuralODE
 using .Validation
 using .ExternalValidation
 using .RESTAPI
@@ -174,6 +176,13 @@ export BootstrapResult, bootstrap_metric
 export gmfe_with_ci, afe_with_ci, aafe_with_ci, r_squared_with_ci
 export percent_within_fold_with_ci, regulatory_metrics_with_ci
 export format_bootstrap_result, latex_metrics_row
+
+# Export Neural ODE functions (Q1 2025)
+export NeuralODEPBPK, NeuralDynamics, HybridDynamics
+export PhysicsInformedNeuralODE, AugmentedNeuralODE
+export predict_concentrations, predict_pk, extract_pk_parameters
+export create_neural_ode_pbpk, quick_predict, train_neural_ode!
+export NODE_HIDDEN_DIM, NODE_LATENT_DIM
 
 # Export Semantic Web functions
 export DARWIN_CONTEXT, DRUG_CONTEXT, DDI_CONTEXT, PARAMETER_CONTEXT
