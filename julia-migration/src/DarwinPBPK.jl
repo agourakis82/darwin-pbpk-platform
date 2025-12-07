@@ -78,6 +78,9 @@ include("DarwinPBPK/clinical/ClinicalDataIntegration.jl")  # Clinical trial data
 # Allometric Scaling (Q1 2025)
 include("DarwinPBPK/scaling/AllometricScaling.jl")  # Multi-species scaling/IVIVE ✅
 
+# Regulatory Reports (Q1 2025)
+include("DarwinPBPK/regulatory/RegulatoryReports.jl")  # FDA/EMA report generation ✅
+
 # Re-export principais
 using .PatientProfile
 using .CompartmentModels
@@ -129,6 +132,7 @@ using .SemanticCore
 using .ExternalDatasets
 using .ClinicalDataIntegration
 using .AllometricScaling
+using .RegulatoryReports
 
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang
@@ -446,6 +450,14 @@ export mlp_correction, dedrick_plot, predict_human_pk, predict_first_in_human_do
 export ivive_clearance, hepatocyte_scaling, microsomal_scaling
 export calculate_allometric_exponent, fit_allometric_model
 export SPECIES_DATABASE, STANDARD_EXPONENTS
+
+# Export Regulatory Reports functions (Q1 2025)
+export RegulatoryReport, ModelDocumentation, ValidationSummary
+export DDIAssessment, SensitivitySummary, PopulationCovariates
+export generate_fda_report, generate_ema_report, generate_ich_m12_report
+export generate_validation_summary, generate_ddi_assessment
+export export_report_markdown, export_report_json
+export FDA_ACCEPTANCE_CRITERIA, EMA_ACCEPTANCE_CRITERIA
 
 # Export 7-Segment GI Tract functions
 export GISegment, GITract, DrugGIProperties
