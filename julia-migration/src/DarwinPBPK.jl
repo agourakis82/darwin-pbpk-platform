@@ -39,6 +39,7 @@ include("DarwinPBPK/compartments/anemia_polycythemia.jl")  # NEW: Hematocrit-dep
 include("DarwinPBPK/compartments/plasma_viscosity.jl")  # NEW: Blood rheology and viscosity effects
 include("DarwinPBPK/compartments/blood_compartment_integrated.jl")  # NEW: Integration layer for all blood modules
 include("DarwinPBPK/compartments/transporter_ontogeny.jl")  # NEW: Pediatric transporter ontogeny (Hunt 2024)
+include("DarwinPBPK/compartments/rbc_dynamics_integrated.jl")  # NEW: Closed-loop RBC dynamics (hematopoiesis, EPO feedback, organ clearance)
 # include("DarwinPBPK/image_analysis/leukocyte_fractal_analysis.jl")  # Temporarily disabled - needs Images package
 include("DarwinPBPK/ode_solver.jl")
 include("DarwinPBPK/dataset_generation.jl")
@@ -110,6 +111,7 @@ using .AnemiaPolycythemia
 using .PlasmaViscosity
 using .BloodCompartmentIntegrated
 using .TransporterOntogeny
+using .RBCDynamicsIntegrated
 # using .LeukocyteFractalAnalysis  # Temporarily disabled
 using .ODEPBPKSolver
 using .DatasetGeneration
@@ -392,6 +394,16 @@ export calculate_rbc_partitioning, estimate_reticulocyte_effect
 export simulate_epo_therapy, calculate_transfusion_effect
 export ANEMIA_PROFILES, POLYCYTHEMIA_PROFILES, RBC_PARTITION_DATABASE
 export NORMAL_HEMATOLOGY, EPO_PARAMETERS
+
+# Export RBC Dynamics Integrated functions (Closed-loop hematopoiesis)
+export RBCDynamicsState, HematopoiesisParams, EPOFeedback, OrganRBCClearance
+export IronMetabolism, BilirubinState, RBCTurnoverResult, RBCAgeDistribution
+export initialize_rbc_dynamics, update_rbc_dynamics!, simulate_rbc_dynamics
+export calculate_organ_rbc_clearance, calculate_epo_response
+export calculate_reticulocyte_release, calculate_age_weighted_transport
+export get_effective_hematocrit, get_rbc_mediated_clearance
+export apply_rbc_dynamics_to_pk, create_rbc_ode_system
+export NORMAL_RBC_PARAMS, DISEASE_RBC_DYNAMICS
 
 # Export Plasma Viscosity functions
 export ViscosityState, BloodRheology, PerfusionState
