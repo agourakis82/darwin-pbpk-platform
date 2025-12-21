@@ -1,0 +1,374 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://darwin-pbpk.org/schemas/pbpk-exchange-v1.json",
+  "title": "Darwin PBPK Exchange Format",
+  "description": "Shared data format for Julia ↔ Demetrios PBPK model exchange",
+  "version": "1.0.0",
+
+  "definitions": {
+    "EpistemicValue": {
+      "type": "object",
+      "description": "Value with epistemic confidence and provenance",
+      "properties": {
+        "value": { "type": "number" },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Epistemic confidence (epsilon in Demetrios)"
+        },
+        "provenance": {
+          "type": "string",
+          "description": "Source of the value"
+        }
+      },
+      "required": ["value", "confidence"]
+    },
+
+    "Drug": {
+      "type": "object",
+      "description": "Drug molecular and physicochemical properties",
+      "properties": {
+        "name": { "type": "string" },
+        "smiles": { "type": "string" },
+        "inchi_key": { "type": "string" },
+        "drugbank_id": { "type": "string" },
+        "chebi_id": { "type": "string" },
+
+        "mw": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Molecular weight (Da)"
+        },
+        "logp": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Octanol-water partition coefficient"
+        },
+        "tpsa": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Topological polar surface area (Å²)"
+        },
+        "fu_plasma": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Fraction unbound in plasma (0-1)"
+        },
+        "bp_ratio": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Blood:plasma ratio"
+        },
+        "pka_acidic": {
+          "type": ["number", "null"],
+          "description": "pKa for acidic groups"
+        },
+        "pka_basic": {
+          "type": ["number", "null"],
+          "description": "pKa for basic groups"
+        },
+        "drug_class": {
+          "type": "string",
+          "enum": ["acidic", "basic", "neutral", "zwitterionic"]
+        },
+        "bcs_class": {
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }
+      },
+      "required": ["name", "mw", "logp", "fu_plasma"]
+    },
+
+    "Patient": {
+      "type": "object",
+      "description": "Patient demographics and physiology",
+      "properties": {
+        "id": { "type": "string" },
+        "weight_kg": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 500,
+          "description": "Body weight (kg)"
+        },
+        "height_cm": {
+          "type": "number",
+          "minimum": 30,
+          "maximum": 250,
+          "description": "Height (cm)"
+        },
+        "age_years": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120
+        },
+        "sex": {
+          "type": "string",
+          "enum": ["male", "female"]
+        },
+        "egfr_ml_min": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 200,
+          "description": "Estimated glomerular filtration rate (mL/min)"
+        },
+        "liver_function": {
+          "type": "string",
+          "enum": ["normal", "mild_impairment", "moderate_impairment", "severe_impairment"]
+        },
+        "bsa_m2": {
+          "type": ["number", "null"],
+          "description": "Body surface area (m²)"
+        },
+        "bmi": {
+          "type": ["number", "null"],
+          "description": "Body mass index (kg/m²)"
+        },
+        "albumin_g_l": {
+          "type": ["number", "null"],
+          "description": "Serum albumin (g/L)"
+        },
+        "hematocrit": {
+          "type": ["number", "null"],
+          "minimum": 0.1,
+          "maximum": 0.7,
+          "description": "Hematocrit (0-1)"
+        }
+      },
+      "required": ["weight_kg", "age_years", "sex"]
+    },
+
+    "PBPKParams": {
+      "type": "object",
+      "description": "PBPK model parameters",
+      "properties": {
+        "cl_hepatic_l_h": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Hepatic clearance (L/h)"
+        },
+        "cl_renal_l_h": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Renal clearance (L/h)"
+        },
+        "vd_l": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Volume of distribution (L)"
+        },
+        "ka_per_h": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Absorption rate constant (1/h)"
+        },
+        "f_oral": {
+          "allOf": [{ "$ref": "#/definitions/EpistemicValue" }],
+          "description": "Oral bioavailability (0-1)"
+        },
+        "kp_values": {
+          "type": "object",
+          "description": "Tissue:plasma partition coefficients",
+          "properties": {
+            "liver": { "type": "number" },
+            "kidney": { "type": "number" },
+            "brain": { "type": "number" },
+            "heart": { "type": "number" },
+            "lung": { "type": "number" },
+            "muscle": { "type": "number" },
+            "adipose": { "type": "number" },
+            "gut": { "type": "number" },
+            "skin": { "type": "number" },
+            "bone": { "type": "number" },
+            "spleen": { "type": "number" },
+            "pancreas": { "type": "number" },
+            "rest": { "type": "number" }
+          }
+        }
+      },
+      "required": ["cl_hepatic_l_h", "vd_l"]
+    },
+
+    "SimulationRequest": {
+      "type": "object",
+      "description": "Request to run a PBPK simulation",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "model": {
+          "type": "string",
+          "enum": [
+            "darwin_pbpk_14comp",
+            "darwin_full_pbpk",
+            "mechanistic_ddi",
+            "neural_ode_pbpk",
+            "rbc_dynamics"
+          ]
+        },
+        "drug": { "$ref": "#/definitions/Drug" },
+        "patient": { "$ref": "#/definitions/Patient" },
+        "params": { "$ref": "#/definitions/PBPKParams" },
+        "dose_mg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "route": {
+          "type": "string",
+          "enum": ["oral", "iv", "iv_bolus", "iv_infusion", "im", "sc"]
+        },
+        "duration_h": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dt_h": {
+          "type": "number",
+          "minimum": 0.001,
+          "description": "Time step for ODE integration (h)"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "solver": {
+              "type": "string",
+              "enum": ["euler", "rk4", "tsit5", "dopri5"]
+            },
+            "monte_carlo_n": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "include_metabolites": { "type": "boolean" },
+            "track_tissue_conc": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["model", "drug", "patient", "dose_mg", "duration_h"]
+    },
+
+    "PKMetrics": {
+      "type": "object",
+      "description": "Pharmacokinetic metrics from simulation",
+      "properties": {
+        "cmax": { "$ref": "#/definitions/EpistemicValue" },
+        "cmax_unit": { "type": "string", "default": "mg/L" },
+        "tmax_h": { "type": "number" },
+        "auc_0_inf": { "$ref": "#/definitions/EpistemicValue" },
+        "auc_unit": { "type": "string", "default": "mg*h/L" },
+        "auc_0_t": { "$ref": "#/definitions/EpistemicValue" },
+        "half_life_h": { "$ref": "#/definitions/EpistemicValue" },
+        "cl_apparent_l_h": { "type": "number" },
+        "vd_apparent_l": { "type": "number" },
+        "mrt_h": { "type": "number" }
+      }
+    },
+
+    "SimulationResult": {
+      "type": "object",
+      "description": "Result from a PBPK simulation",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "request_id": { "type": "string", "format": "uuid" },
+        "success": { "type": "boolean" },
+        "error_message": { "type": ["string", "null"] },
+
+        "times_h": {
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "plasma_conc_mg_l": {
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "confidence": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Epistemic confidence at each time point"
+        },
+
+        "tissue_conc": {
+          "type": "object",
+          "description": "Tissue concentrations (optional)",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        },
+
+        "metrics": { "$ref": "#/definitions/PKMetrics" },
+
+        "computation_time_ms": { "type": "number" },
+        "demetrios_version": { "type": "string" },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "required": ["id", "request_id", "success", "times_h", "plasma_conc_mg_l", "metrics"]
+    },
+
+    "DDIRequest": {
+      "type": "object",
+      "description": "Request for DDI prediction",
+      "properties": {
+        "perpetrator": { "$ref": "#/definitions/Drug" },
+        "victim": { "$ref": "#/definitions/Drug" },
+        "perpetrator_dose_mg": { "type": "number" },
+        "victim_dose_mg": { "type": "number" },
+        "inhibition_type": {
+          "type": "string",
+          "enum": ["competitive", "noncompetitive", "mixed", "mechanism_based"]
+        },
+        "target_enzymes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["CYP3A4", "CYP3A5", "CYP2D6", "CYP2C9", "CYP2C19", "CYP2C8", "CYP1A2", "CYP2B6"]
+          }
+        },
+        "monte_carlo_n": { "type": "integer", "default": 1000 }
+      },
+      "required": ["perpetrator", "victim", "inhibition_type", "target_enzymes"]
+    },
+
+    "DDIResult": {
+      "type": "object",
+      "properties": {
+        "auc_ratio": { "$ref": "#/definitions/EpistemicValue" },
+        "cmax_ratio": { "$ref": "#/definitions/EpistemicValue" },
+        "severity": {
+          "type": "string",
+          "enum": ["none", "weak", "moderate", "strong", "contraindicated"]
+        },
+        "fda_classification": { "type": "string" },
+        "ci_90_lower": { "type": "number" },
+        "ci_90_upper": { "type": "number" },
+        "p_exceeds_2fold": { "type": "number" },
+        "cyp_contributions": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+
+    "ValidationMetrics": {
+      "type": "object",
+      "description": "FDA/EMA-compliant validation metrics",
+      "properties": {
+        "n_compounds": { "type": "integer" },
+        "gmfe": { "type": "number", "description": "Geometric mean fold error" },
+        "afe": { "type": "number", "description": "Average fold error (bias)" },
+        "aafe": { "type": "number", "description": "Absolute average fold error" },
+        "within_2fold_percent": { "type": "number" },
+        "within_1_5fold_percent": { "type": "number" },
+        "r_squared": { "type": "number" },
+        "correlation": { "type": "number" },
+        "mean_confidence": { "type": "number" },
+        "regulatory_compliant": { "type": "boolean" }
+      }
+    }
+  },
+
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/definitions/SimulationRequest" },
+    { "$ref": "#/definitions/SimulationResult" },
+    { "$ref": "#/definitions/DDIRequest" },
+    { "$ref": "#/definitions/DDIResult" }
+  ]
+}
