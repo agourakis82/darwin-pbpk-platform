@@ -1,0 +1,27 @@
+model OneCompPK {
+  # Simple one-compartment PK model
+
+  parameters {
+    Ka: RateConst;      # Absorption rate constant (1/h)
+    Ke: RateConst;      # Elimination rate constant (1/h)
+    V: Volume;          # Volume of distribution (L)
+  }
+
+  states {
+    A_gut: Mass = 100;  # Amount in gut (mg)
+    A_central: Mass = 0; # Amount in central compartment (mg)
+  }
+
+  odes {
+    dA_gut/dt = -Ka * A_gut;
+    dA_central/dt = Ka * A_gut - Ke * A_central;
+  }
+
+  derived {
+    C_plasma: Concentration = A_central / V;
+  }
+
+  observations {
+    measure C_plasma ~ Normal(C_plasma, 0.1);
+  }
+}

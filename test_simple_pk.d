@@ -1,0 +1,73 @@
+// Simple One-Compartment PK Model
+// Demonstrates MedLang → Demetrios code generation
+
+struct PKParams {
+    ka: f64,          // Absorption rate constant (1/h)
+    ke: f64,          // Elimination rate constant (1/h)
+    v: f64            // Volume of distribution (L)
+}
+
+struct PKState {
+    a_gut: f64,       // Amount in gut compartment (mg)
+    a_central: f64    // Amount in central compartment (mg)
+}
+
+fn ode_system(state: PKState, params: PKParams, dt: f64) -> PKState {
+    // Euler integration
+    // dA_gut/dt = -Ka * A_gut
+    let da_gut = 0.0 - params.ka * state.a_gut * dt
+
+    // dA_central/dt = Ka * A_gut - Ke * A_central
+    let da_central = (params.ka * state.a_gut - params.ke * state.a_central) * dt
+
+    return PKState {
+        a_gut: state.a_gut + da_gut,
+        a_central: state.a_central + da_central
+    }
+}
+
+fn simulate_pk(initial: PKState, params: PKParams, t_end: f64, dt: f64) -> PKState {
+    let mut state = initial
+    let mut t = 0.0
+    let n_steps = (t_end / dt) as i32
+
+    let mut i = 0
+    while i < n_steps {
+        state = ode_system(state, params, dt)
+        t = t + dt
+        i = i + 1
+    }
+
+    return state
+}
+
+fn calculate_concentration(a_central: f64, v: f64) -> f64 {
+    return a_central / v
+}
+
+fn main() -> i32 {
+    // Initial state: 100 mg oral dose
+    let initial_state = PKState {
+        a_gut: 100.0,
+        a_central: 0.0
+    }
+
+    // PK parameters (typical oral drug)
+    let params = PKParams {
+        ka: 1.0,      // Absorption: 1/h
+        ke: 0.3,      // Elimination: 0.3/h (t1/2 ≈ 2.3h)
+        v: 50.0       // Volume: 50 L
+    }
+
+    // Simulate 24 hours with 0.1h timestep
+    let final_state = simulate_pk(initial_state, params, 24.0, 0.1)
+
+    // Calculate final concentration
+    let c_final = calculate_concentration(final_state.a_central, params.v)
+
+    // At 24h, most drug should be eliminated
+    // Expected: ~0.06% remaining (e^(-0.3*24) ≈ 0.0006)
+    // Final amount ≈ 0.06 mg, concentration ≈ 0.0012 mg/L
+
+    return 0
+}

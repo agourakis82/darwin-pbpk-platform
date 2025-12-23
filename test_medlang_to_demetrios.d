@@ -1,0 +1,117 @@
+// PBPK One-Compartment Model
+// Generated from MedLang via Demetrios codegen
+// This demonstrates MedLang → Demetrios compilation
+
+module test_medlang_pk
+
+// =============================================================================
+// UNIT DEFINITIONS
+// =============================================================================
+
+unit mg      // milligram (mass)
+unit L       // liter (volume)
+unit h       // hour (time)
+
+unit mg_per_L   = mg / L     // concentration
+unit per_h      = 1 / h      // rate constant
+unit L_per_h    = L / h      // clearance
+
+// =============================================================================
+// PHARMACOKINETIC PARAMETERS
+// =============================================================================
+
+struct PKParams {
+    ka: per_h@f64,          // Absorption rate constant
+    ke: per_h@f64,          // Elimination rate constant
+    v: L@f64                // Volume of distribution
+}
+
+struct PKState {
+    a_gut: mg@f64,          // Amount in gut compartment
+    a_central: mg@f64       // Amount in central compartment
+}
+
+// =============================================================================
+// ODE SYSTEM
+// =============================================================================
+
+fn ode_system(state: PKState, params: PKParams) -> PKState {
+    // dA_gut/dt = -Ka * A_gut
+    let da_gut = 0.0@mg - params.ka * state.a_gut
+
+    // dA_central/dt = Ka * A_gut - Ke * A_central
+    let da_central = params.ka * state.a_gut - params.ke * state.a_central
+
+    return PKState {
+        a_gut: da_gut,
+        a_central: da_central
+    }
+}
+
+// =============================================================================
+// SIMPLE EULER INTEGRATOR
+// =============================================================================
+
+fn simulate_pk(initial: PKState, params: PKParams, t_end: f64, dt: f64) -> PKState {
+    let mut state = initial
+    let mut t = 0.0
+    let n_steps = (t_end / dt) as i32
+
+    let mut i = 0
+    while i < n_steps {
+        let derivs = ode_system(state, params)
+        state = PKState {
+            a_gut: state.a_gut + derivs.a_gut * (dt@h),
+            a_central: state.a_central + derivs.a_central * (dt@h)
+        }
+        t = t + dt
+        i = i + 1
+    }
+
+    return state
+}
+
+// =============================================================================
+// DERIVED OUTPUTS
+// =============================================================================
+
+fn calculate_concentration(a_central: mg@f64, v: L@f64) -> mg_per_L@f64 {
+    return a_central / v
+}
+
+fn calculate_auc(c_plasma: mg_per_L@f64, dt: h@f64) -> f64 {
+    return c_plasma * dt
+}
+
+// =============================================================================
+// MAIN SIMULATION
+// =============================================================================
+
+fn main() -> i32 {
+    // Initial state: 100 mg oral dose
+    let initial_state = PKState {
+        a_gut: 100.0@mg,
+        a_central: 0.0@mg
+    }
+
+    // PK parameters (typical values for oral drug)
+    let params = PKParams {
+        ka: 1.0@per_h,      // Absorption: 1/h
+        ke: 0.3@per_h,      // Elimination: 0.3/h (t1/2 ≈ 2.3h)
+        v: 50.0@L           // Volume: 50 L
+    }
+
+    // Simulate 24 hours
+    let t_end = 24.0
+    let dt = 0.1
+
+    let final_state = simulate_pk(initial_state, params, t_end, dt)
+
+    // Calculate final concentration
+    let c_final = calculate_concentration(final_state.a_central, params.v)
+
+    // For verification: at 24h, most drug should be eliminated
+    // Expected: ~0.06% of dose remaining (e^(-0.3*24) ≈ 0.0006)
+
+    return 0
+}
