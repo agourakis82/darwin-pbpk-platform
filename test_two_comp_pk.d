@@ -1,0 +1,103 @@
+// Two-Compartment PK Model
+// Demonstrates MedLang → Demetrios with central + peripheral compartments
+
+struct PKParams {
+    ka: f64,     // Absorption rate (1/h)
+    cl: f64,     // Clearance (L/h)
+    vc: f64,     // Central volume (L)
+    vp: f64,     // Peripheral volume (L)
+    q: f64       // Inter-compartmental clearance (L/h)
+}
+
+struct PKState {
+    a_gut: f64,        // Amount in gut (mg)
+    a_central: f64,    // Amount in central compartment (mg)
+    a_periph: f64      // Amount in peripheral compartment (mg)
+}
+
+fn ode_system(state: PKState, params: PKParams, dt: f64) -> PKState {
+    // Concentrations
+    let c_central = state.a_central / params.vc
+    let c_periph = state.a_periph / params.vp
+
+    // dA_gut/dt = -Ka * A_gut
+    let da_gut = 0.0 - params.ka * state.a_gut * dt
+
+    // dA_central/dt = Ka*A_gut - CL/Vc*A_central - Q/Vc*A_central + Q/Vp*A_periph
+    let da_central = (
+        params.ka * state.a_gut -
+        (params.cl / params.vc) * state.a_central -
+        (params.q / params.vc) * state.a_central +
+        (params.q / params.vp) * state.a_periph
+    ) * dt
+
+    // dA_periph/dt = Q/Vc*A_central - Q/Vp*A_periph
+    let da_periph = (
+        (params.q / params.vc) * state.a_central -
+        (params.q / params.vp) * state.a_periph
+    ) * dt
+
+    return PKState {
+        a_gut: state.a_gut + da_gut,
+        a_central: state.a_central + da_central,
+        a_periph: state.a_periph + da_periph
+    }
+}
+
+fn simulate_pk(initial: PKState, params: PKParams, t_end: f64, dt: f64) -> PKState {
+    let mut state = initial
+    let mut t = 0.0
+    let n_steps = (t_end / dt) as i32
+
+    let mut i = 0
+    while i < n_steps {
+        state = ode_system(state, params, dt)
+        // Ensure non-negative (physical constraint)
+        if state.a_gut < 0.0 { state.a_gut = 0.0 }
+        if state.a_central < 0.0 { state.a_central = 0.0 }
+        if state.a_periph < 0.0 { state.a_periph = 0.0 }
+
+        t = t + dt
+        i = i + 1
+    }
+
+    return state
+}
+
+fn calculate_auc(c_initial: f64, c_final: f64, t: f64) -> f64 {
+    // Trapezoidal rule approximation
+    return ((c_initial + c_final) / 2.0) * t
+}
+
+fn main() -> i32 {
+    // === Two-Compartment Oral PK Model ===
+
+    // Initial state: 100 mg oral dose
+    let initial_state = PKState {
+        a_gut: 100.0,
+        a_central: 0.0,
+        a_periph: 0.0
+    }
+
+    // PK parameters (typical two-compartment drug)
+    let params = PKParams {
+        ka: 1.2,      // 1.2/h absorption
+        cl: 10.0,     // 10 L/h clearance
+        vc: 30.0,     // 30 L central volume
+        vp: 50.0,     // 50 L peripheral volume
+        q: 20.0       // 20 L/h inter-compartmental clearance
+    }
+
+    // Simulate 24 hours with 0.1h timestep
+    let final_state = simulate_pk(initial_state, params, 24.0, 0.1)
+
+    // Calculate final plasma concentration
+    let c_final = final_state.a_central / params.vc
+
+    // Two-compartment models show:
+    // - Rapid distribution phase (alpha)
+    // - Slower elimination phase (beta)
+    // - Complex PK profile with tissue distribution
+
+    return 0
+}

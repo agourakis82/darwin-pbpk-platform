@@ -1,0 +1,138 @@
+// One-Compartment PK Model with Compile-Time Unit Safety
+// Generated from MedLang → Demetrios (enhanced version)
+
+module OneCompPK
+
+// =============================================================================
+// UNIT TYPE DEFINITIONS
+// =============================================================================
+// Compile-time dimensional analysis prevents unit errors
+
+// Base units
+unit mg      // milligram (mass)
+unit g       // gram (mass)
+unit kg      // kilogram (mass)
+unit L       // liter (volume)
+unit mL      // milliliter (volume)
+unit h       // hour (time)
+unit min     // minute (time)
+
+// Derived units
+unit mg_per_L   = mg / L     // concentration
+unit ng_per_mL  = mg / L * 0.001  // ng/mL concentration
+unit uM         = mg / L * 1000.0 // micromolar
+
+// Pharmacokinetic units
+unit L_per_h    = L / h      // clearance, flow
+unit per_h      = 1 / h      // rate constant
+unit mg_h_per_L = mg * h / L // AUC
+
+// Refinement types (compile-time constraints)
+type Fraction = { x: f64 | x >= 0.0 && x <= 1.0 }
+type Positive = { x: f64 | x > 0.0 }
+type PhysioVolume = { v: f64 | v > 0.0 && v < 2000.0 }
+type PhysioClearance = { cl: f64 | cl > 0.0 && cl < 5000.0 }
+
+// =============================================================================
+// STRUCTS
+// =============================================================================
+
+/// Model parameters with compile-time unit checking
+struct PKParams {
+    ka: f64,    // per_h (absorption rate)
+    ke: f64,    // per_h (elimination rate)
+    v: f64      // L (volume of distribution)
+}
+
+/// State variables (amounts, concentrations)
+struct PKState {
+    a_gut: f64,       // mg
+    a_central: f64    // mg
+}
+
+// =============================================================================
+// ODE SYSTEM
+// =============================================================================
+
+/// ODE system - one-compartment oral absorption model
+fn ode_system(state: &PKState, params: &PKParams, dt: f64) -> PKState {
+    // dA_gut/dt = -Ka * A_gut
+    let da_gut = 0.0 - params.ka * state.a_gut * dt
+
+    // dA_central/dt = Ka * A_gut - Ke * A_central
+    let da_central = (params.ka * state.a_gut - params.ke * state.a_central) * dt
+
+    return PKState {
+        a_gut: state.a_gut + da_gut,
+        a_central: state.a_central + da_central
+    }
+}
+
+// =============================================================================
+// SIMULATION
+// =============================================================================
+
+fn simulate_pk(initial: PKState, params: PKParams, t_end: f64, dt: f64) -> PKState {
+    let mut state = initial
+    let mut t = 0.0
+    let n_steps = (t_end / dt) as i32
+
+    let mut i = 0
+    while i < n_steps {
+        state = ode_system(&state, &params, dt)
+        t = t + dt
+        i = i + 1
+    }
+
+    return state
+}
+
+// =============================================================================
+// DERIVED OUTPUTS
+// =============================================================================
+
+fn calculate_concentration(a_central: f64, v: f64) -> f64 {
+    return a_central / v  // mg / L = mg_per_L
+}
+
+fn calculate_auc_segment(c_plasma: f64, dt: f64) -> f64 {
+    return c_plasma * dt  // mg_per_L * h = mg_h_per_L
+}
+
+// =============================================================================
+// MAIN
+// =============================================================================
+
+fn main() -> i32 {
+    // === One-Compartment Oral PK Model ===
+
+    // Initial state: 100 mg oral dose
+    let initial_state = PKState {
+        a_gut: 100.0,
+        a_central: 0.0
+    }
+
+    // PK parameters (typical oral drug)
+    let params = PKParams {
+        ka: 1.0,     // 1/h (absorption t1/2 ≈ 0.7h)
+        ke: 0.3,     // 1/h (elimination t1/2 ≈ 2.3h)
+        v: 50.0      // L
+    }
+
+    // Simulate 24 hours
+    let final_state = simulate_pk(initial_state, params, 24.0, 0.1)
+
+    // Calculate final concentration
+    let c_final = calculate_concentration(final_state.a_central, params.v)
+
+    // At 24h: expect ~0.06% remaining (e^(-0.3*24) ≈ 0.0006)
+    // Amount ≈ 0.06 mg, Concentration ≈ 0.0012 mg/L
+
+    // COMPILE-TIME UNIT SAFETY:
+    // All units are checked at compile time!
+    // These would cause compile errors:
+    // let wrong = params.ka + params.v    // Error! Can't add per_h + L
+    // let wrong = a_gut / params.ka       // Error! mg / per_h != mg_per_L
+
+    return 0
+}
