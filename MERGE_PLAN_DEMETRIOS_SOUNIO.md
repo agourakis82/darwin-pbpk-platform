@@ -33,11 +33,28 @@ Demetrios v0.83.0  ──────rebrand──────▶  Sounio
 | Component | Demetrios | Sounio | Action |
 |-----------|-----------|--------|--------|
 | Language name | Demetrios | Sounio | Rename |
-| File extension | `.d` | `.sou` (TBD) | Convert all |
-| Compiler binary | `dc` | `souc` (TBD) | Rename |
-| CLI commands | `dc build` | `souc build` | Update |
-| Module imports | `import demetrios.*` | `import sounio.*` | Sed replace |
-| Stdlib path | `darwin_pbpk/` | Keep or rename? | TBD |
+| File extension | `.d` | **`.sio`** | Convert all |
+| Compiler binary | `dc` | **`souc`** | Update refs |
+| CLI commands | `dc build` | `souc run` | Update |
+| Module imports | `import demetrios.*` | `import stdlib.*` | Sed replace |
+| Stdlib path | `darwin_pbpk/` | `stdlib.medlang::pbpk::*` | Restructure |
+| Version | v0.83.0 | **v0.93.0** | Continue |
+
+### Additional Sounio Tooling
+
+| Binary | Purpose |
+|--------|---------|
+| `souc` | Main compiler |
+| `sounio-lsp` | Language Server Protocol (IDE support) |
+| `sounio-ontology-build` | Ontology/knowledge graph tooling |
+
+### Sounio Tech Stack
+
+- **Lexer**: Logos
+- **Diagnostics**: Miette + Codespan
+- **Backends**: Cranelift JIT, LLVM 14-17, SPIR-V (GPU)
+- **SMT Solver**: Z3 (refinement types)
+- **Ontology**: SQLite + RDF/OWL parsing
 
 ### What Stays the Same
 
@@ -83,7 +100,7 @@ run(`dc build model.d`)
 # After
 struct SounioCompiler ... end
 compile_sounio(source_file)
-run(`souc build model.sou`)
+run(`souc run model.sio`)
 ```
 
 #### 1.3 MedLang Compiler Updates
@@ -100,18 +117,18 @@ run(`souc build model.sou`)
 mlc compile model.medlang --backend demetrios -o model.d
 
 # After
-mlc compile model.medlang --backend sounio -o model.sou
+mlc compile model.medlang --backend sounio -o model.sio
 ```
 
 #### 1.4 Example File Conversions
 
 | Current | New |
 |---------|-----|
-| `test_simple_pk.d` | `test_simple_pk.sou` |
-| `test_two_comp_pk.d` | `test_two_comp_pk.sou` |
-| `test_enhanced_pk.d` | `test_enhanced_pk.sou` |
-| `test_epistemic_pk.d` | `test_epistemic_pk.sou` |
-| `test_medlang_to_demetrios.d` | `test_medlang_to_sounio.sou` |
+| `test_simple_pk.d` | `test_simple_pk.sio` |
+| `test_two_comp_pk.d` | `test_two_comp_pk.sio` |
+| `test_enhanced_pk.d` | `test_enhanced_pk.sio` |
+| `test_epistemic_pk.d` | `test_epistemic_pk.sio` |
+| `test_medlang_to_demetrios.d` | `test_medlang_to_sounio.sio` |
 
 #### 1.5 Submodule Update
 
@@ -175,7 +192,7 @@ souc --version
 
 #### 2.3 File Extension Registration
 
-- Extension: `.sou`
+- Extension: `.sio`
 - MIME type: `text/x-sounio`
 - VSCode language ID: `sounio`
 
@@ -193,7 +210,8 @@ find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" -o -name "*.toml"
 find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" -o -name "*.toml" \) \
   -exec sed -i 's/demetrios/sounio/g' {} \;
 
-find . -type f -name "*.d" -exec rename 's/\.d$/.sou/' {} \;
+# Rename .d files to .sio
+find . -type f -name "*.d" | while read f; do mv "$f" "${f%.d}.sio"; done
 ```
 
 #### 3.2 Specific Replacements
@@ -203,9 +221,10 @@ find . -type f -name "*.d" -exec rename 's/\.d$/.sou/' {} \;
 | `Demetrios` | `Sounio` |
 | `demetrios` | `sounio` |
 | `DEMETRIOS` | `SOUNIO` |
-| `.d` (extension) | `.sou` |
+| `.d` (extension) | `.sio` |
 | `dc` (compiler) | `souc` |
 | `Darwin-demetrios` | `Darwin-sounio` |
+| `darwin_pbpk` | `stdlib.medlang::pbpk` |
 
 ---
 
@@ -223,12 +242,22 @@ find . -type f -name "*.d" -exec rename 's/\.d$/.sou/' {} \;
 
 ---
 
-## Open Questions
+## Resolved Questions
 
-1. **File extension**: Is `.sou` correct, or different?
-2. **Compiler binary**: Is `souc` the name, or something else?
-3. **Stdlib namespace**: Keep `darwin_pbpk` or rename to `sounio.pbpk`?
-4. **Version**: Start at v1.0.0 or continue from v0.83.x?
+| Question | Answer | Source |
+|----------|--------|--------|
+| File extension | **`.sio`** | Sounio README examples |
+| Compiler binary | **`souc`** | Cargo.toml [[bin]] |
+| Stdlib namespace | **`stdlib.*`** (e.g., `stdlib.medlang::pk::*`) | Sounio imports |
+| Version | **v0.93.0** (continue numbering) | compiler/Cargo.toml |
+
+### Additional Sounio Binaries
+
+| Binary | Purpose |
+|--------|---------|
+| `souc` | Main compiler/runner |
+| `sounio-lsp` | Language Server Protocol |
+| `sounio-ontology-build` | Ontology tooling |
 
 ---
 
@@ -245,7 +274,7 @@ find . -type f -name "*.d" -exec rename 's/\.d$/.sou/' {} \;
 - [ ] Rename `medlang_demetrios_compiler.jl` → `medlang_sounio_compiler.jl`
 - [ ] Update MedLang codegen (`demetrios.rs` → `sounio.rs`)
 - [ ] Update MedLang CLI (`--backend sounio`)
-- [ ] Convert all `.d` files to `.sou`
+- [ ] Convert all `.d` files to `.sio`
 - [ ] Update submodule reference
 - [ ] Run tests
 - [ ] Update version numbers
@@ -284,9 +313,9 @@ mv julia-migration/src/DarwinPBPK/sounio/DemetriosIntegration.jl \
 mv Darwin-medlang/compiler/src/codegen/demetrios.rs \
    Darwin-medlang/compiler/src/codegen/sounio.rs
 
-# 4. Convert .d files to .sou
+# 4. Convert .d files to .sio
 find . -name "*.d" -type f | while read f; do
-  mv "$f" "${f%.d}.sou"
+  mv "$f" "${f%.d}.sio"
 done
 
 # 5. Global search & replace
@@ -295,7 +324,7 @@ find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
 find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
   -exec sed -i 's/demetrios/sounio/g' {} \;
 find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
-  -exec sed -i 's/\.d"/.sou"/g' {} \;
+  -exec sed -i 's/\.d"/.sio"/g' {} \;
 
 # 6. Update submodule
 git submodule deinit -f Darwin-demetrios || true
