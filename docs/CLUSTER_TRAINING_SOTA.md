@@ -1,7 +1,7 @@
 # 🔬 Treinamento Científico SOTA - Cluster Distribuído
 
 **Criado:** 2025-11-08
-**Autor:** Dr. Demetrios Chiuratto Agourakis
+**Autor:** Dr. Sounio Chiuratto Agourakis
 **Status:** ✅ Pronto para execução no cluster
 
 ---

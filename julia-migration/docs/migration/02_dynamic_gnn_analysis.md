@@ -2,7 +2,7 @@
 
 **Arquivo Python:** `apps/pbpk_core/simulation/dynamic_gnn_pbpk.py` (760 linhas)
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 
 ---
 

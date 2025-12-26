@@ -1,5 +1,5 @@
 // Two-Compartment PK Model
-// Demonstrates MedLang → Demetrios with central + peripheral compartments
+// Demonstrates MedLang → Sounio with central + peripheral compartments
 
 struct PKParams {
     ka: f64,     // Absorption rate (1/h)

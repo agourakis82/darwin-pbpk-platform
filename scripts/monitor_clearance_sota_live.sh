@@ -1,6 +1,6 @@
 #!/bin/bash
 # Monitoramento em tempo real do treinamento científico SOTA
-# Autor: Dr. Demetrios Agourakis
+# Autor: Dr. Sounio Agourakis
 # Data: 2025-11-08
 
 set -e

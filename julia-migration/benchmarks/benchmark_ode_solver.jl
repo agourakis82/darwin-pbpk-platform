@@ -1,7 +1,7 @@
 """
 Benchmark - ODE Solver vs Python
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

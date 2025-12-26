@@ -13,7 +13,7 @@
 # - Multi-dose perpetrator scenarios
 #
 # Darwin PBPK Platform v2.10.0
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

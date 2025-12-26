@@ -1,7 +1,7 @@
 # SAM-3 Testing: Python vs Julia - Análise de Performance
 
 **Data**: 2025-12-01  
-**Autor**: Dr. Demetrios Agourakis + AI Assistant
+**Autor**: Dr. Sounio Agourakis + AI Assistant
 
 ---
 

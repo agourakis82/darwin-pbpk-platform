@@ -2,7 +2,7 @@
 
 **Date:** 2025-01-30  
 **Version:** v2.4.1 (PATCH: Probabilistic and Multi-Scale Enhancements for Real-World Impact)  
-**Authors:** Dr. Demetrios Agourakis + AI Assistant  
+**Authors:** Dr. Sounio Agourakis + AI Assistant  
 **Description:** This document summarizes advancements in the Darwin PBPK Platform, focusing on probabilistic DDI modeling, multi-scale Kp,uu prediction, polypharmacy simulation, synthetic cohorts, and GNN-QSP hybrid integration. All work is designed for real clinical impact, such as reducing adverse drug reactions (ADRs) in polypharmacy patients, without emphasis on publication. Methods are drawn from Q1+ literature, with full reproducibility.
 
 ## Executive Summary

@@ -168,7 +168,7 @@
 - Modelo gerando 100 pontos temporais corretamente ✅
 
 **Treinamentos em andamento:**
-1. **Node DemetriosPCS (RTX 4000 Ada):**
+1. **Node SounioPCS (RTX 4000 Ada):**
    - Status: ✅ Rodando (Época 2, Val Loss: 9.82)
    - Batch size: 16
    - Tempo estimado: ~12-13 horas

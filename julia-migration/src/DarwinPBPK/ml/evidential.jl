@@ -6,7 +6,7 @@ Inovações SOTA:
 - Uncertainty quantification (Distributions.jl)
 - Type-safe evidential heads
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

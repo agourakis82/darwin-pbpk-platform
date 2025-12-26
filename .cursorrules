@@ -1,10 +1,10 @@
 # Darwin Workspace — Configuração de Autonomia do Agente
 # Criado: 2025-11-07 23:45:00 -03
 # Atualizado: 2025-11-08 - Workspace Unification
-# Autor: Dr. Demetrios Agourakis
+# Autor: Dr. Sounio Agourakis
 
 [metadata]
-owner = "Dr. Demetrios Agourakis"
+owner = "Dr. Sounio Agourakis"
 project = "Darwin Workspace"
 repository = "darwin-workspace"
 last_updated = "2025-11-08T00:00:00-03:00"
@@ -58,7 +58,7 @@ Este documento explica **EXATAMENTE** como você deve trabalhar aqui sem causar 
 
 ## 🎯 **SUA MISSÃO**
 
-Ajudar Dr. Demetrios Agourakis a implementar o sistema DARWIN Biomaterials **SEM BAGUNÇAR A ESTRUTURA**.
+Ajudar Dr. Sounio Agourakis a implementar o sistema DARWIN Biomaterials **SEM BAGUNÇAR A ESTRUTURA**.
 
 **Contexto Crítico:**
 - ✅ Projeto tem expectativas REAIS

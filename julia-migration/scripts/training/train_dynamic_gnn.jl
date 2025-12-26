@@ -4,7 +4,7 @@ Training script for Dynamic GNN PBPK model (Julia version)
 
 Migrado de: scripts/train_dynamic_gnn_pbpk.py
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

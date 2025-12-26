@@ -1,34 +1,34 @@
-# End-to-End MedLang → Demetrios Pipeline Verification
+# End-to-End MedLang → Sounio Pipeline Verification
 
 **Date**: December 23, 2025
 **Status**: ✅ **COMPLETE AND WORKING**
 
 ## Executive Summary
 
-The MedLang → Demetrios integration has been **successfully verified end-to-end**:
+The MedLang → Sounio integration has been **successfully verified end-to-end**:
 
-1. ✅ MedLang IR → Demetrios codegen implemented
-2. ✅ Demetrios compiler builds successfully
-3. ✅ Generated Demetrios PBPK code **compiles**
+1. ✅ MedLang IR → Sounio codegen implemented
+2. ✅ Sounio compiler builds successfully
+3. ✅ Generated Sounio PBPK code **compiles**
 4. ✅ Compiled binary **executes successfully**
 
 ## Pipeline Verification
 
 ### Step 1: Code Generation ✅
 
-Created standalone test demonstrating Demetrios code generation:
+Created standalone test demonstrating Sounio code generation:
 
 ```bash
-$ rustc test_demetrios_codegen.rs -o test_demetrios_bin
-$ ./test_demetrios_bin > test_output.d
-✓ Demetrios code generated successfully!
+$ rustc test_sounio_codegen.rs -o test_sounio_bin
+$ ./test_sounio_bin > test_output.d
+✓ Sounio code generated successfully!
 ```
 
 **Output** (`test_output.d`):
-```demetrios
+```sounio
 module SimpleOralPK
 
-// Demetrios standard library imports
+// Sounio standard library imports
 import std.math.{exp, log, sqrt}
 import std.effects.{Mut, IO, Alloc}
 
@@ -42,12 +42,12 @@ fn main() -> effect[IO] {
 }
 ```
 
-### Step 2: Demetrios Compiler Build ✅
+### Step 2: Sounio Compiler Build ✅
 
 ```bash
-$ cd Darwin-demetrios/compiler
+$ cd Darwin-sounio/compiler
 $ cargo build --release
-   Compiling demetrios v0.83.0
+   Compiling sounio v0.83.0
    Finished `release` profile [optimized] target(s) in 0.82s
 ```
 
@@ -58,7 +58,7 @@ $ cargo build --release
 Created `test_simple_pk.d` - a one-compartment oral PK model:
 
 ```bash
-$ cd Darwin-demetrios
+$ cd Darwin-sounio
 $ ./compiler/target/release/dc compile ../test_simple_pk.d
 Compiled ../test_simple_pk.d (6 items, 4 functions)
 ```
@@ -85,9 +85,9 @@ $ ./compiler/target/release/dc run ../test_simple_pk.d
 
 ## Code Structure
 
-### Generated Demetrios PBPK Model
+### Generated Sounio PBPK Model
 
-```demetrios
+```sounio
 struct PKParams {
     ka: f64,          // Absorption rate constant (1/h)
     ke: f64,          // Elimination rate constant (1/h)
@@ -145,7 +145,7 @@ For the test parameters:
 
 ### Compile-Time Safety
 
-Demetrios provides guarantees that MedLang inherits:
+Sounio provides guarantees that MedLang inherits:
 
 1. **Type Safety**: All types checked at compile time
 2. **Memory Safety**: No manual memory management, no segfaults
@@ -162,10 +162,10 @@ Demetrios provides guarantees that MedLang inherits:
 
 | Component | Status | Location |
 |-----------|--------|----------|
-| MedLang Codegen | ✅ Complete | `Darwin-medlang/compiler/src/codegen/demetrios.rs` |
+| MedLang Codegen | ✅ Complete | `Darwin-medlang/compiler/src/codegen/sounio.rs` |
 | CLI Integration | ✅ Complete | `Darwin-medlang/compiler/src/bin/mlc.rs` |
-| Demetrios Compiler | ✅ Working | `Darwin-demetrios/compiler/` |
-| PBPK stdlib | ✅ Available | `Darwin-demetrios/stdlib/darwin_pbpk/` |
+| Sounio Compiler | ✅ Working | `Darwin-sounio/compiler/` |
+| PBPK stdlib | ✅ Available | `Darwin-sounio/stdlib/darwin_pbpk/` |
 | Example Code | ✅ Verified | `test_simple_pk.d` |
 
 ## Files Created/Modified
@@ -176,24 +176,24 @@ Demetrios provides guarantees that MedLang inherits:
 Darwin-medlang/
 ├── compiler/src/
 │   ├── codegen/
-│   │   ├── demetrios.rs          (NEW - 510 lines)
+│   │   ├── sounio.rs          (NEW - 510 lines)
 │   │   └── mod.rs                (MODIFIED)
 │   └── bin/
 │       └── mlc.rs                (MODIFIED)
 
-Darwin-demetrios/
+Darwin-sounio/
 └── compiler/                      (BUILT)
 
-test_demetrios_codegen.rs          (NEW - 220 lines)
+test_sounio_codegen.rs          (NEW - 220 lines)
 test_simple_pk.d                   (NEW - working PBPK model)
 ```
 
 ### Documentation Files
 
 ```
-DEMETRIOS_INTEGRATION.md           (600 lines)
+SOUNIO_INTEGRATION.md           (600 lines)
 INTEGRATION_SUMMARY.md             (450 lines)
-DEMETRIOS_STDLIB_DISCOVERED.md     (550 lines)
+SOUNIO_STDLIB_DISCOVERED.md     (550 lines)
 FINAL_STATUS.md                    (~800 lines)
 END_TO_END_VERIFICATION.md         (THIS FILE)
 ```
@@ -202,8 +202,8 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
 
 ### Immediate
 
-1. **Add unit types** - Use Demetrios compile-time unit checking:
-   ```demetrios
+1. **Add unit types** - Use Sounio compile-time unit checking:
+   ```sounio
    unit mg
    unit L
    unit h
@@ -215,13 +215,13 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
    ```
 
 2. **Integrate darwin_pbpk stdlib** - Use production-ready components:
-   ```demetrios
+   ```sounio
    import darwin_pbpk.simulation::{SimulationConfig, run_pbpk_simulation}
    import darwin_pbpk.core.pbpk_params::{PBPKParams, PatientData}
    ```
 
 3. **Add epistemic types** - Track uncertainty and confidence:
-   ```demetrios
+   ```sounio
    struct Drug {
        mw: Knowledge[f64, epsilon >= 0.99]
    }
@@ -229,9 +229,9 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
 
 ### Medium-Term
 
-1. **MedLang CLI enhancement** - Fix trial data modules to enable `mlc compile --backend demetrios`
-2. **Julia FFI bridge** - Call Demetrios from Julia for hybrid workflows
-3. **Benchmarking suite** - Compare Demetrios vs Julia vs Python performance
+1. **MedLang CLI enhancement** - Fix trial data modules to enable `mlc compile --backend sounio`
+2. **Julia FFI bridge** - Call Sounio from Julia for hybrid workflows
+3. **Benchmarking suite** - Compare Sounio vs Julia vs Python performance
 4. **Extended examples** - Multi-compartment models, DDI prediction
 
 ### Long-Term
@@ -245,7 +245,7 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
 
 ### What Works
 
-✅ **MedLang → Demetrios compilation pipeline is COMPLETE**
+✅ **MedLang → Sounio compilation pipeline is COMPLETE**
 - Code generation: Working
 - Compilation: Working
 - Execution: Working
@@ -266,7 +266,7 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Code generation | 🟢 Production-ready | 510 lines, full IR support |
-| Demetrios compiler | 🟢 Stable (v0.83.0) | 116 warnings, 0 errors |
+| Sounio compiler | 🟢 Stable (v0.83.0) | 116 warnings, 0 errors |
 | PBPK examples | 🟢 Working | Verified execution |
 | Unit types | 🟡 Available | Not yet used in generated code |
 | Epistemic types | 🟡 Available | Not yet used in generated code |
@@ -284,27 +284,27 @@ END_TO_END_VERIFICATION.md         (THIS FILE)
 - **Type checking**: Compile-time only
 
 ### Comparison to Julia
-| Metric | Julia | Demetrios | Winner |
+| Metric | Julia | Sounio | Winner |
 |--------|-------|-----------|--------|
-| Startup time | ~2-3s | <0.1s | Demetrios |
-| JIT compilation | Yes | No (AOT) | Demetrios |
-| Type checking | Runtime + compile | Compile-time | Demetrios |
+| Startup time | ~2-3s | <0.1s | Sounio |
+| JIT compilation | Yes | No (AOT) | Sounio |
+| Type checking | Runtime + compile | Compile-time | Sounio |
 | ODE solver | Very fast | Fast | Julia (mature) |
-| Unit checking | Runtime (Unitful.jl) | Compile-time | Demetrios |
-| Epistemic computing | No | Native | Demetrios |
+| Unit checking | Runtime (Unitful.jl) | Compile-time | Sounio |
+| Epistemic computing | No | Native | Sounio |
 | Maturity | High | Medium | Julia |
 
 ## References
 
 - **MedLang Compiler**: `Darwin-medlang/compiler/`
-- **Demetrios Compiler**: `Darwin-demetrios/compiler/`
-- **PBPK stdlib**: `Darwin-demetrios/stdlib/darwin_pbpk/`
-- **Examples**: `Darwin-demetrios/examples/pbpk/`
+- **Sounio Compiler**: `Darwin-sounio/compiler/`
+- **PBPK stdlib**: `Darwin-sounio/stdlib/darwin_pbpk/`
+- **Examples**: `Darwin-sounio/examples/pbpk/`
 - **Documentation**: All `*_INTEGRATION*.md` and `*_STATUS*.md` files
 
 ---
 
 **Generated**: December 23, 2025
 **Platform**: Darwin PBPK Platform v2.14.0
-**Demetrios**: v0.83.0 "Trust Gate Week"
+**Sounio**: v0.83.0 "Trust Gate Week"
 **Status**: ✅ **PRODUCTION-READY**

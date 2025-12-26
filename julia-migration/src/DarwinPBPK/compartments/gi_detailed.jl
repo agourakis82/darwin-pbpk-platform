@@ -26,7 +26,7 @@ References:
 - Lennernäs H et al. J Pharm Sci 1997;86:403-410 (Regional permeability)
 - DeSesso JM, Jacobson CF. Food Chem Toxicol 2001;39:209-228 (GI physiology)
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 """
 

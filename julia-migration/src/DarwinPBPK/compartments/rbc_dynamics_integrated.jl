@@ -20,7 +20,7 @@
 # - Higgins (2015) Red blood cell population dynamics
 # - Hunt et al. (2024) Transporter ontogeny
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================

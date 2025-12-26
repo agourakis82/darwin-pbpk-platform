@@ -1,7 +1,7 @@
 # Recomendações Científicas para Validação do DynamicPBPKGNN
 
 **Data:** 2025-11-17
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Contexto:** R² muito alto (~0.99999) em modelos PBPK com dados simulados
 
 ---

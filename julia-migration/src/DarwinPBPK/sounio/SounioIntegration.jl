@@ -1,75 +1,75 @@
 # ===========================================================================
-# DEMETRIOS INTEGRATION MODULE
+# SOUNIO INTEGRATION MODULE
 # ===========================================================================
-# FFI bindings and integration between Julia DarwinPBPK and Demetrios compiler.
+# FFI bindings and integration between Julia DarwinPBPK and Sounio compiler.
 #
 # This module provides:
-# - Compilation of Demetrios PBPK models
+# - Compilation of Sounio PBPK models
 # - Data exchange via shared JSON format
-# - Calling Demetrios functions from Julia
-# - Importing Demetrios simulation results
+# - Calling Sounio functions from Julia
+# - Importing Sounio simulation results
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================
 
-module DemetriosIntegration
+module SounioIntegration
 
 using JSON3
 using Dates
 using UUIDs
 
-export DemetriosCompiler, DemetriosModel, DemetriosResult
-export compile_demetrios, run_demetrios_pbpk, load_demetrios_result
-export drug_to_demetrios, patient_to_demetrios, params_to_demetrios
-export DemetriosDataFormat, export_for_demetrios, import_from_demetrios
+export SounioCompiler, SounioModel, SounioResult
+export compile_sounio, run_sounio_pbpk, load_sounio_result
+export drug_to_sounio, patient_to_sounio, params_to_sounio
+export SounioDataFormat, export_for_sounio, import_from_sounio
 
 # ===========================================================================
 # Constants
 # ===========================================================================
 
-const DEMETRIOS_COMPILER_PATH = Ref{String}("")
-const DEMETRIOS_VERSION = "0.78.1"
+const SOUNIO_COMPILER_PATH = Ref{String}("")
+const SOUNIO_VERSION = "0.78.1"
 
 """
-    set_demetrios_path!(path::String)
+    set_sounio_path!(path::String)
 
-Set the path to the Demetrios compiler binary.
+Set the path to the Sounio compiler binary.
 """
-function set_demetrios_path!(path::String)
+function set_sounio_path!(path::String)
     if !isfile(path)
-        error("Demetrios compiler not found at: $path")
+        error("Sounio compiler not found at: $path")
     end
-    DEMETRIOS_COMPILER_PATH[] = path
-    @info "Demetrios compiler set to: $path"
+    SOUNIO_COMPILER_PATH[] = path
+    @info "Sounio compiler set to: $path"
 end
 
 """
-    get_demetrios_path()
+    get_sounio_path()
 
-Get the current Demetrios compiler path, auto-detecting if not set.
+Get the current Sounio compiler path, auto-detecting if not set.
 """
-function get_demetrios_path()
-    if isempty(DEMETRIOS_COMPILER_PATH[])
+function get_sounio_path()
+    if isempty(SOUNIO_COMPILER_PATH[])
         # Try to find in common locations
         candidates = [
-            joinpath(@__DIR__, "..", "..", "..", "..", "Darwin-demetrios", "compiler", "target", "release", "dc"),
-            joinpath(homedir(), ".demetrios", "bin", "dc"),
+            joinpath(@__DIR__, "..", "..", "..", "..", "Darwin-sounio", "compiler", "target", "release", "dc"),
+            joinpath(homedir(), ".sounio", "bin", "dc"),
             "/usr/local/bin/dc",
         ]
 
         for candidate in candidates
             if isfile(candidate)
-                DEMETRIOS_COMPILER_PATH[] = candidate
-                @info "Auto-detected Demetrios compiler at: $candidate"
+                SOUNIO_COMPILER_PATH[] = candidate
+                @info "Auto-detected Sounio compiler at: $candidate"
                 return candidate
             end
         end
 
-        error("Demetrios compiler not found. Set path with set_demetrios_path!()")
+        error("Sounio compiler not found. Set path with set_sounio_path!()")
     end
-    return DEMETRIOS_COMPILER_PATH[]
+    return SOUNIO_COMPILER_PATH[]
 end
 
 # ===========================================================================
@@ -77,34 +77,34 @@ end
 # ===========================================================================
 
 """
-    DemetriosCompiler
+    SounioCompiler
 
-Handle to the Demetrios compiler with configuration.
+Handle to the Sounio compiler with configuration.
 """
-struct DemetriosCompiler
+struct SounioCompiler
     path::String
     version::String
     features::Vector{Symbol}
     output_dir::String
 end
 
-function DemetriosCompiler(;
-    path::String = get_demetrios_path(),
+function SounioCompiler(;
+    path::String = get_sounio_path(),
     features::Vector{Symbol} = [:units, :epistemic, :effects],
     output_dir::String = tempdir()
 )
     # Get version
     version_output = read(`$path --version`, String)
-    version = match(r"demetrios (\d+\.\d+\.\d+)", version_output)
+    version = match(r"sounio (\d+\.\d+\.\d+)", version_output)
     ver_str = version !== nothing ? version.captures[1] : "unknown"
 
-    DemetriosCompiler(path, ver_str, features, output_dir)
+    SounioCompiler(path, ver_str, features, output_dir)
 end
 
 """
-    compile_demetrios(compiler::DemetriosCompiler, source_file::String; target=:check)
+    compile_sounio(compiler::SounioCompiler, source_file::String; target=:check)
 
-Compile a Demetrios source file.
+Compile a Sounio source file.
 
 Targets:
 - `:check` - Type check only
@@ -112,8 +112,8 @@ Targets:
 - `:llvm` - Compile to LLVM IR
 - `:object` - Compile to object file
 """
-function compile_demetrios(
-    compiler::DemetriosCompiler,
+function compile_sounio(
+    compiler::SounioCompiler,
     source_file::String;
     target::Symbol = :check,
     show_types::Bool = false,
@@ -164,11 +164,11 @@ end
 # ===========================================================================
 
 """
-    DemetriosModel
+    SounioModel
 
-Wrapper for a compiled Demetrios PBPK model.
+Wrapper for a compiled Sounio PBPK model.
 """
-struct DemetriosModel
+struct SounioModel
     name::String
     source_file::String
     compiled::Bool
@@ -178,26 +178,26 @@ struct DemetriosModel
 end
 
 """
-    load_demetrios_model(source_file::String; entry_point="main")
+    load_sounio_model(source_file::String; entry_point="main")
 
-Load and validate a Demetrios PBPK model.
+Load and validate a Sounio PBPK model.
 """
-function load_demetrios_model(source_file::String; entry_point::String = "main")
-    compiler = DemetriosCompiler()
-    result = compile_demetrios(compiler, source_file, target=:check, show_types=true)
+function load_sounio_model(source_file::String; entry_point::String = "main")
+    compiler = SounioCompiler()
+    result = compile_sounio(compiler, source_file, target=:check, show_types=true)
 
     if !result.success
-        error("Failed to compile Demetrios model: $(result.errors)")
+        error("Failed to compile Sounio model: $(result.errors)")
     end
 
     # Extract model name from file
-    name = basename(source_file) |> x -> replace(x, ".d" => "")
+    name = basename(source_file) |> x -> replace(x, ".sio" => "")
 
     # Parse type information from compiler output to build schemas
     input_schema = parse_input_schema(result.output)
     output_schema = parse_output_schema(result.output)
 
-    DemetriosModel(name, source_file, true, entry_point, input_schema, output_schema)
+    SounioModel(name, source_file, true, entry_point, input_schema, output_schema)
 end
 
 function parse_input_schema(compiler_output::String)
@@ -223,12 +223,12 @@ end
 # ===========================================================================
 
 """
-    DemetriosDataFormat
+    SounioDataFormat
 
-Shared data format for Julia ↔ Demetrios exchange.
+Shared data format for Julia ↔ Sounio exchange.
 Uses JSON with schema validation.
 """
-module DemetriosDataFormat
+module SounioDataFormat
 
 using JSON3
 using Dates
@@ -236,7 +236,7 @@ using Dates
 export DrugData, PatientData, PBPKParamsData, SimulationRequest, SimulationResult
 
 """
-Drug data in Demetrios-compatible format.
+Drug data in Sounio-compatible format.
 """
 struct DrugData
     name::String
@@ -273,7 +273,7 @@ function DrugData(;
 end
 
 """
-Patient data in Demetrios-compatible format.
+Patient data in Sounio-compatible format.
 """
 struct PatientData
     id::String
@@ -306,7 +306,7 @@ function PatientData(;
 end
 
 """
-PBPK parameters in Demetrios-compatible format.
+PBPK parameters in Sounio-compatible format.
 """
 struct PBPKParamsData
     cl_hepatic_l_h::Float64
@@ -321,7 +321,7 @@ struct PBPKParamsData
 end
 
 """
-Simulation request to send to Demetrios.
+Simulation request to send to Sounio.
 """
 struct SimulationRequest
     id::String
@@ -364,7 +364,7 @@ function SimulationRequest(;
 end
 
 """
-Simulation result from Demetrios.
+Simulation result from Sounio.
 """
 struct SimulationResult
     id::String
@@ -388,24 +388,24 @@ struct SimulationResult
 
     # Metadata
     computation_time_ms::Float64
-    demetrios_version::String
+    sounio_version::String
     provenance::Dict{String, String}
 end
 
-end  # module DemetriosDataFormat
+end  # module SounioDataFormat
 
-using .DemetriosDataFormat
+using .SounioDataFormat
 
 # ===========================================================================
-# Julia → Demetrios Conversion
+# Julia → Sounio Conversion
 # ===========================================================================
 
 """
-    drug_to_demetrios(drug::Any) -> DrugData
+    drug_to_sounio(drug::Any) -> DrugData
 
-Convert a Julia Drug struct to Demetrios format.
+Convert a Julia Drug struct to Sounio format.
 """
-function drug_to_demetrios(drug)
+function drug_to_sounio(drug)
     # Handle different Julia drug representations
     if hasfield(typeof(drug), :name)
         name = drug.name
@@ -436,11 +436,11 @@ function drug_to_demetrios(drug)
 end
 
 """
-    patient_to_demetrios(patient::Any) -> PatientData
+    patient_to_sounio(patient::Any) -> PatientData
 
-Convert a Julia Patient struct to Demetrios format.
+Convert a Julia Patient struct to Sounio format.
 """
-function patient_to_demetrios(patient)
+function patient_to_sounio(patient)
     PatientData(
         id = string(get(patient, :id, get(patient, :patient_id, "SUBJ001"))),
         weight_kg = Float64(get(patient, :weight, get(patient, :body_weight, 70.0))),
@@ -453,11 +453,11 @@ function patient_to_demetrios(patient)
 end
 
 """
-    params_to_demetrios(params::Any) -> PBPKParamsData
+    params_to_sounio(params::Any) -> PBPKParamsData
 
-Convert Julia PBPK parameters to Demetrios format.
+Convert Julia PBPK parameters to Sounio format.
 """
-function params_to_demetrios(params)
+function params_to_sounio(params)
     # Extract Kp values
     kp_values = Dict{String, Float64}()
     organs = ["liver", "kidney", "brain", "heart", "lung", "muscle", "adipose", "gut", "skin", "bone", "spleen", "pancreas", "rest"]
@@ -485,11 +485,11 @@ end
 # ===========================================================================
 
 """
-    export_for_demetrios(request::SimulationRequest, filepath::String)
+    export_for_sounio(request::SimulationRequest, filepath::String)
 
-Export a simulation request to JSON for Demetrios consumption.
+Export a simulation request to JSON for Sounio consumption.
 """
-function export_for_demetrios(request::SimulationRequest, filepath::String)
+function export_for_sounio(request::SimulationRequest, filepath::String)
     json_str = JSON3.write(request)
     open(filepath, "w") do f
         write(f, json_str)
@@ -499,11 +499,11 @@ function export_for_demetrios(request::SimulationRequest, filepath::String)
 end
 
 """
-    import_from_demetrios(filepath::String) -> SimulationResult
+    import_from_sounio(filepath::String) -> SimulationResult
 
-Import a simulation result from Demetrios JSON output.
+Import a simulation result from Sounio JSON output.
 """
-function import_from_demetrios(filepath::String)
+function import_from_sounio(filepath::String)
     json_str = read(filepath, String)
     result = JSON3.read(json_str, SimulationResult)
     @info "Imported simulation result: $(result.id)"
@@ -511,31 +511,31 @@ function import_from_demetrios(filepath::String)
 end
 
 # ===========================================================================
-# Run Demetrios PBPK
+# Run Sounio PBPK
 # ===========================================================================
 
 """
-    run_demetrios_pbpk(model::DemetriosModel, request::SimulationRequest) -> SimulationResult
+    run_sounio_pbpk(model::SounioModel, request::SimulationRequest) -> SimulationResult
 
-Run a Demetrios PBPK simulation via subprocess.
+Run a Sounio PBPK simulation via subprocess.
 """
-function run_demetrios_pbpk(model::DemetriosModel, request::SimulationRequest)
-    compiler = DemetriosCompiler()
+function run_sounio_pbpk(model::SounioModel, request::SimulationRequest)
+    compiler = SounioCompiler()
 
     # Write request to temp file
-    request_file = joinpath(tempdir(), "demetrios_request_$(request.id).json")
-    result_file = joinpath(tempdir(), "demetrios_result_$(request.id).json")
+    request_file = joinpath(tempdir(), "sounio_request_$(request.id).json")
+    result_file = joinpath(tempdir(), "sounio_result_$(request.id).json")
 
-    export_for_demetrios(request, request_file)
+    export_for_sounio(request, request_file)
 
-    # Run Demetrios with input
+    # Run Sounio with input
     start_time = time()
     try
         run(`$(compiler.path) run $(model.source_file) --input $request_file --output $result_file`)
         computation_time = (time() - start_time) * 1000  # ms
 
         # Load result
-        result = import_from_demetrios(result_file)
+        result = import_from_sounio(result_file)
 
         # Clean up
         rm(request_file, force=true)
@@ -544,7 +544,7 @@ function run_demetrios_pbpk(model::DemetriosModel, request::SimulationRequest)
         return result
 
     catch e
-        @error "Demetrios execution failed" exception=e
+        @error "Sounio execution failed" exception=e
 
         # Return error result
         return SimulationResult(
@@ -555,18 +555,18 @@ function run_demetrios_pbpk(model::DemetriosModel, request::SimulationRequest)
             Float64[], Float64[], Float64[],
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             0.0,
-            DEMETRIOS_VERSION,
+            SOUNIO_VERSION,
             Dict("error" => "execution_failed")
         )
     end
 end
 
 """
-    run_demetrios_pbpk(model_name::String; drug, patient, dose_mg, kwargs...)
+    run_sounio_pbpk(model_name::String; drug, patient, dose_mg, kwargs...)
 
-Convenience function to run Demetrios PBPK with keyword arguments.
+Convenience function to run Sounio PBPK with keyword arguments.
 """
-function run_demetrios_pbpk(
+function run_sounio_pbpk(
     model_name::String;
     drug,
     patient,
@@ -576,26 +576,26 @@ function run_demetrios_pbpk(
     dt_h::Float64 = 0.1
 )
     # Find model source file
-    pbpk_dir = joinpath(@__DIR__, "..", "..", "..", "..", "Darwin-demetrios", "examples", "pbpk")
-    source_file = joinpath(pbpk_dir, "$model_name.d")
+    pbpk_dir = joinpath(@__DIR__, "..", "..", "..", "..", "Darwin-sounio", "examples", "pbpk")
+    source_file = joinpath(pbpk_dir, "$model_name.sio")
 
     if !isfile(source_file)
-        error("Demetrios model not found: $source_file")
+        error("Sounio model not found: $source_file")
     end
 
-    model = load_demetrios_model(source_file)
+    model = load_sounio_model(source_file)
 
     request = SimulationRequest(
         model = model_name,
-        drug = drug_to_demetrios(drug),
-        patient = patient_to_demetrios(patient),
+        drug = drug_to_sounio(drug),
+        patient = patient_to_sounio(patient),
         dose_mg = dose_mg,
         route = route,
         duration_h = duration_h,
         dt_h = dt_h
     )
 
-    run_demetrios_pbpk(model, request)
+    run_sounio_pbpk(model, request)
 end
 
 # ===========================================================================
@@ -603,12 +603,12 @@ end
 # ===========================================================================
 
 """
-    run_demetrios_batch(model_name::String, drugs::Vector, patient; kwargs...)
+    run_sounio_batch(model_name::String, drugs::Vector, patient; kwargs...)
 
-Run Demetrios PBPK for multiple drugs in batch.
+Run Sounio PBPK for multiple drugs in batch.
 Returns a vector of SimulationResult.
 """
-function run_demetrios_batch(
+function run_sounio_batch(
     model_name::String,
     drugs::Vector,
     patient;
@@ -617,12 +617,12 @@ function run_demetrios_batch(
 )
     results = SimulationResult[]
 
-    @info "Running Demetrios batch for $(length(drugs)) drugs..."
+    @info "Running Sounio batch for $(length(drugs)) drugs..."
 
     for (i, drug) in enumerate(drugs)
         @info "Processing drug $i/$(length(drugs)): $(drug.name)"
 
-        result = run_demetrios_pbpk(
+        result = run_sounio_pbpk(
             model_name;
             drug = drug,
             patient = patient,
@@ -642,20 +642,20 @@ end
 # ===========================================================================
 
 """
-    compare_julia_demetrios(julia_result, demetrios_result)
+    compare_julia_sounio(julia_result, sounio_result)
 
-Compare simulation results between Julia and Demetrios implementations.
+Compare simulation results between Julia and Sounio implementations.
 """
-function compare_julia_demetrios(julia_result, demetrios_result::SimulationResult)
+function compare_julia_sounio(julia_result, sounio_result::SimulationResult)
     # Extract Julia metrics
     julia_cmax = julia_result.metrics.cmax
     julia_tmax = julia_result.metrics.tmax
     julia_auc = julia_result.metrics.auc
 
-    # Demetrios metrics
-    dem_cmax = demetrios_result.cmax_mg_l
-    dem_tmax = demetrios_result.tmax_h
-    dem_auc = demetrios_result.auc_mg_h_l
+    # Sounio metrics
+    dem_cmax = sounio_result.cmax_mg_l
+    dem_tmax = sounio_result.tmax_h
+    dem_auc = sounio_result.auc_mg_h_l
 
     # Calculate fold errors
     cmax_fe = dem_cmax / julia_cmax
@@ -664,16 +664,16 @@ function compare_julia_demetrios(julia_result, demetrios_result::SimulationResul
 
     Dict(
         "cmax_julia" => julia_cmax,
-        "cmax_demetrios" => dem_cmax,
+        "cmax_sounio" => dem_cmax,
         "cmax_fold_error" => cmax_fe,
         "auc_julia" => julia_auc,
-        "auc_demetrios" => dem_auc,
+        "auc_sounio" => dem_auc,
         "auc_fold_error" => auc_fe,
         "tmax_julia" => julia_tmax,
-        "tmax_demetrios" => dem_tmax,
+        "tmax_sounio" => dem_tmax,
         "tmax_difference_h" => tmax_diff,
         "agreement" => abs(log10(cmax_fe)) < 0.1 && abs(log10(auc_fe)) < 0.1
     )
 end
 
-end  # module DemetriosIntegration
+end  # module SounioIntegration

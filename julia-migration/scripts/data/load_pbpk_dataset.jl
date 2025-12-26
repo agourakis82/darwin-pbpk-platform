@@ -6,7 +6,7 @@ Suporta:
 - JLD2 (Julia)
 - CSV/Parquet (via DataFrames)
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

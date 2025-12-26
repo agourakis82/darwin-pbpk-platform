@@ -2,6 +2,23 @@
 
 All notable changes to Darwin PBPK Platform will be documented in this file.
 
+## [2.15.0] - 2025-12-26
+
+### Changed
+
+#### Sounio Language Rebrand
+- **BREAKING**: Demetrios language rebranded to Sounio
+  - File extension: `.d` → `.sio`
+  - Compiler binary: `dc` → `souc`
+  - All documentation and code references updated
+  - Submodule: `Darwin-demetrios` → `Darwin-sounio`
+  - Integration module: `DemetriosIntegration.jl` → `SounioIntegration.jl`
+
+### Migration Notes
+- All `.d` files should be renamed to `.sio`
+- Update any scripts referencing `dc` compiler to use `souc`
+- Import statements using `demetrios` should use `sounio`
+
 ## [2.7.0] - 2025-12-05
 
 ### Added
@@ -118,7 +135,7 @@ All notable changes to Darwin PBPK Platform will be documented in this file.
 
 ### Added
 - MedLang DDI example
-- Demetrios demo integration
+- Sounio demo integration
 - DDI/MedLang enhancements
 
 ---

@@ -407,7 +407,7 @@ See `test/test_fractalblood_integration.jl`:
 ## Contact
 
 For questions or contributions:
-- **Maintainer**: Dr. Demetrios Agourakis
+- **Maintainer**: Dr. Sounio Agourakis
 - **Repository**: darwin-pbpk-platform
 - **Module**: julia-migration/src/DarwinPBPK/
 

@@ -11,7 +11,7 @@ External validation is critical for regulatory acceptance. This module
 implements a rigorous blind validation protocol where predictions are
 made without any parameter adjustment post-prediction.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

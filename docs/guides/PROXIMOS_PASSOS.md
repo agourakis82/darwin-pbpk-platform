@@ -189,7 +189,7 @@ Zenodo processará automaticamente:
    - Title: "Darwin PBPK Platform - Training Datasets v1.0.0"
    - Upload type: Dataset
    - Description: "ChemBERTa embeddings, molecular graphs, and processed parquets for Darwin PBPK Platform v1.0.0"
-   - Creators: Demetrios Chiuratto Agourakis
+   - Creators: Sounio Chiuratto Agourakis
    - Related identifier: Link to software DOI
    - License: CC-BY-4.0
 

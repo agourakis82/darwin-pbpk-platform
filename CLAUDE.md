@@ -21,7 +21,7 @@ darwin-pbpk-platform/
 │   │   └── ml/               # ML components (evidential, bayesian_uq)
 │   └── test/                 # Julia tests
 ├── Darwin-medlang/           # Submodule: MedLang compiler (Rust)
-├── Darwin-demetrios/         # Submodule: Demetrios language compiler (Rust)
+├── Darwin-sounio/         # Submodule: Sounio language compiler (Rust)
 ├── apps/api/                 # FastAPI REST endpoints
 ├── data/                     # Datasets and embeddings
 ├── models/                   # Trained model checkpoints
@@ -74,10 +74,10 @@ cargo clippy
 cargo fmt
 ```
 
-### Demetrios Compiler (Rust submodule)
+### Sounio Compiler (Rust submodule)
 
 ```bash
-cd Darwin-demetrios/compiler
+cd Darwin-sounio/compiler
 
 cargo build
 cargo test
@@ -143,7 +143,7 @@ feat(component): brief description
 fix(component): brief description
 ```
 
-Components: `julia`, `medlang`, `demetrios`, `api`, `docs`
+Components: `julia`, `medlang`, `sounio`, `api`, `docs`
 
 ## Important Files
 
@@ -155,7 +155,7 @@ Components: `julia`, `medlang`, `demetrios`, `api`, `docs`
 
 This repo contains git submodules:
 - `Darwin-medlang/` - MedLang DSL compiler
-- `Darwin-demetrios/` - Demetrios language compiler
+- `Darwin-sounio/` - Sounio language compiler
 
 After cloning: `git submodule update --init --recursive`
 

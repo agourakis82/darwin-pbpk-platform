@@ -30,7 +30,7 @@
 # - Nature Digital Medicine 2024 - Virtual Hepatic Lobule
 # - Frontiers Pharmacol 2024 - Cross-species CYP zonation
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # ===========================================================================
 

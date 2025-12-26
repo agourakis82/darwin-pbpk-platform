@@ -7,7 +7,7 @@ Tests against 572 drugs from ULTIMATE_DATASET using:
 - First-pass metabolism (Fg, Fh)
 - Bioavailability corrections
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 

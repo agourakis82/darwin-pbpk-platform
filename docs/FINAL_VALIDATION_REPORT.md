@@ -1,7 +1,7 @@
 # Relatório Final de Validação - Dynamic GNN PBPK
 
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Status:** ✅ Validação Completa
 
 ---

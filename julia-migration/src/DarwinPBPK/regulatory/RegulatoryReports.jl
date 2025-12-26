@@ -15,7 +15,7 @@
 # - EMA Guideline: PBPK Modelling (2018)
 # - ICH M12: Drug Interaction Studies (2024)
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================

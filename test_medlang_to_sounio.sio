@@ -1,6 +1,6 @@
 // PBPK One-Compartment Model
-// Generated from MedLang via Demetrios codegen
-// This demonstrates MedLang → Demetrios compilation
+// Generated from MedLang via Sounio codegen
+// This demonstrates MedLang → Sounio compilation
 
 module test_medlang_pk
 

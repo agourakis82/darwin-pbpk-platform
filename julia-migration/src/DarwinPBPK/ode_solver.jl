@@ -11,7 +11,7 @@ Inovações SOTA:
 - Type stability (zero overhead)
 - Validação de conservação de massa
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

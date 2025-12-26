@@ -11,7 +11,7 @@
 # - Bioequivalence assessment
 # - Literature data extraction
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================

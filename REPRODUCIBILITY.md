@@ -248,7 +248,7 @@ If you use this platform, please cite:
 
 ```bibtex
 @software{darwin_pbpk_2025,
-  author = {Agourakis, Demetrios},
+  author = {Agourakis, Sounio},
   title = {Darwin PBPK Platform: AI-Powered Pharmacokinetic Prediction},
   version = {2.11.0},
   year = {2025},

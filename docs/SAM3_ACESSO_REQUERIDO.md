@@ -8,7 +8,7 @@
 ## ✅ STATUS ATUAL
 
 - ✅ **Autenticado no HuggingFace**: chiuratto-AIgourakis
-- ✅ **Login confirmado**: Demetrios Chiuratto Agourakis
+- ✅ **Login confirmado**: Sounio Chiuratto Agourakis
 - ⏳ **Acesso ao modelo**: Pendente (requer aprovação manual)
 
 ---

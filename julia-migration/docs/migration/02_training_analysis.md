@@ -2,7 +2,7 @@
 
 **Arquivo Python:** `scripts/train_dynamic_gnn_pbpk.py`
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 
 ---
 

@@ -9,7 +9,7 @@
 # - OBO Foundry (biomedical ontologies)
 # - PROV-O (provenance)
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

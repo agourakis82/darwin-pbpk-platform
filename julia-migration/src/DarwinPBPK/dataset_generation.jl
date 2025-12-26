@@ -11,7 +11,7 @@ Inovações SOTA:
 - Type-safe data structures
 - Validação de invariantes
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

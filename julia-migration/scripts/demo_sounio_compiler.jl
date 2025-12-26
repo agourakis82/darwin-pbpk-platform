@@ -1,6 +1,6 @@
 #!/usr/bin/env julia
 # =============================================================================
-# MEDLANG-TO-DEMETRIOS COMPILER DEMONSTRATION
+# MEDLANG-TO-SOUNIO COMPILER DEMONSTRATION
 # =============================================================================
 # Shows the novel aspect: Compile-time dimensional analysis for PBPK
 #
@@ -10,22 +10,22 @@
 push!(LOAD_PATH, joinpath(@__DIR__, "../src"))
 
 println("=" ^ 70)
-println("MEDLANG-TO-DEMETRIOS COMPILER DEMONSTRATION")
+println("MEDLANG-TO-SOUNIO COMPILER DEMONSTRATION")
 println("=" ^ 70)
 println()
 
 # Include the compiler module
-include("../src/DarwinPBPK/medlang/medlang_demetrios_compiler.jl")
-using .MedLangDemetriosCompiler
+include("../src/DarwinPBPK/medlang/medlang_sounio_compiler.jl")
+using .MedLangSounioCompiler
 
 # =============================================================================
-# DEMO 1: Generate Demetrios DDI Code
+# DEMO 1: Generate Sounio DDI Code
 # =============================================================================
 println("DEMO 1: DDI PREDICTION CODE WITH TYPE-SAFE UNITS")
 println("-" ^ 50)
 println()
 
-ddi_code = generate_demetrios_ddi(
+ddi_code = generate_sounio_ddi(
     "ketoconazole",
     "midazolam",
     :reversible,
@@ -33,7 +33,7 @@ ddi_code = generate_demetrios_ddi(
     0.94;   # fm
 )
 
-println("Generated Demetrios code for Ketoconazole + Midazolam DDI:")
+println("Generated Sounio code for Ketoconazole + Midazolam DDI:")
 println()
 # Show first 80 lines
 lines = split(ddi_code, '\n')
@@ -44,13 +44,13 @@ println("...")
 println()
 
 # =============================================================================
-# DEMO 2: Generate Demetrios PBPK Model
+# DEMO 2: Generate Sounio PBPK Model
 # =============================================================================
 println("DEMO 2: FULL PBPK MODEL WITH COMPILE-TIME UNIT CHECKING")
 println("-" ^ 50)
 println()
 
-pbpk_code = generate_demetrios_pbpk(
+pbpk_code = generate_sounio_pbpk(
     "Midazolam",
     MW = 325.8,
     ka = 1.5,
@@ -61,7 +61,7 @@ pbpk_code = generate_demetrios_pbpk(
     Q = 25.0
 )
 
-println("Generated Demetrios PBPK code for Midazolam:")
+println("Generated Sounio PBPK code for Midazolam:")
 println()
 # Show first 100 lines
 lines = split(pbpk_code, '\n')
@@ -78,7 +78,7 @@ println("DEMO 3: MBI DDI CODE (Mechanism-Based Inactivation)")
 println("-" ^ 50)
 println()
 
-mbi_code = generate_demetrios_ddi(
+mbi_code = generate_sounio_ddi(
     "clarithromycin",
     "midazolam",
     :mbi,
@@ -88,7 +88,7 @@ mbi_code = generate_demetrios_ddi(
     KI_uM = 5.0
 )
 
-println("Generated Demetrios code for Clarithromycin + Midazolam MBI:")
+println("Generated Sounio code for Clarithromycin + Midazolam MBI:")
 println()
 lines = split(mbi_code, '\n')
 for (i, line) in enumerate(lines[1:min(70, length(lines))])
@@ -120,8 +120,8 @@ CLh = CLint    # Forgot to convert! Should be L/h
 # No error until you get wrong results...
 ```
 
-THE SOLUTION (Demetrios - compile-time):
-```demetrios
+THE SOLUTION (Sounio - compile-time):
+```sounio
 let CLint: uL_per_min_per_mg = 125.0
 let CLh: L_per_h = CLint  // COMPILE ERROR!
 // Error: Cannot assign uL_per_min_per_mg to L_per_h
@@ -153,7 +153,7 @@ println("=" ^ 70)
 println()
 
 println("""
-This MedLang-to-Demetrios compiler could be a significant contribution:
+This MedLang-to-Sounio compiler could be a significant contribution:
 
 1. NOVEL APPROACH: First domain-specific language for PBPK with
    compile-time dimensional analysis

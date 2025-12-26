@@ -1,5 +1,5 @@
 
-# VOICE MANIFESTO – Dr. Demetrios Agourakis
+# VOICE MANIFESTO – Dr. Sounio Agourakis
 
 ## Linguagem & Ritmo
 - Português direto, informal quando fizer sentido, sem floreios.

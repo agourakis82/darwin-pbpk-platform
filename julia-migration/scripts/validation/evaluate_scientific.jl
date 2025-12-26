@@ -4,7 +4,7 @@ Scientific Evaluation Script (Julia version)
 
 Migrado de: scripts/evaluate_dynamic_gnn_scientific.py
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

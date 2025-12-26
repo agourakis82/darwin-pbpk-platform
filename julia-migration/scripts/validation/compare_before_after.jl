@@ -4,7 +4,7 @@ Comparação de Métricas: Antes vs. Depois da Regularização
 
 Compara métricas de modelos treinados com e sem regularização.
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

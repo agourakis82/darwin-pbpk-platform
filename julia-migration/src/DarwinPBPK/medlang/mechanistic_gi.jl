@@ -17,7 +17,7 @@
 # 2. Generates ODE system from MedLang AST
 # 3. Integrates with ML transporter predictions
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # ===========================================================================
 

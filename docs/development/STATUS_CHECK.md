@@ -6,7 +6,7 @@
 
 ## 🔍 SITUAÇÃO ATUAL
 
-### 1. Node DemetriosPCS (RTX 4000 Ada)
+### 1. Node SounioPCS (RTX 4000 Ada)
 
 **Status:** ⚠️ **PROCESSO PARADO**
 

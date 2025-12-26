@@ -19,7 +19,7 @@
 # - Hosea et al. (2009) JPKPD 36:1-19
 # - Tang & Mayersohn (2006) Clin Pharmacokinet 45:1087-1107
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================

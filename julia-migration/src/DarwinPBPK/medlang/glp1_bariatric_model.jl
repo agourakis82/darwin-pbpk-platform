@@ -29,7 +29,7 @@
 # - Troke et al. (2014) - GI adaptations after RYGB
 # - Horowitz et al. (2012) - GLP-1 and gastric emptying
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

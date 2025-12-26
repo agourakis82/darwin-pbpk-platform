@@ -8,7 +8,7 @@ Inovações SOTA Q1 2025:
 - Learning rate scheduling (Cosine Annealing with Warmup) - IMPLEMENTADO
 - Gradient clipping - IMPLEMENTADO
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 Atualizado: 2025-11-28 - LR Scheduling com Cosine Annealing
 """

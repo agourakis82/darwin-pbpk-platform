@@ -1,7 +1,7 @@
 # Relatório de Validação Científica - Julia Implementation
 
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Status:** Implementação Completa (85%)
 
 ---

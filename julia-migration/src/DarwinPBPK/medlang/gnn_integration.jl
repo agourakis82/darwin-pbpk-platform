@@ -8,7 +8,7 @@
 # 2. Uncertainty-aware parameter estimation
 # 3. End-to-end SMILES -> MedLang -> ODE -> Simulation pipeline
 #
-# Author: Dr. Demetrios Agourakis + AI Assistant
+# Author: Dr. Sounio Agourakis + AI Assistant
 # Date: December 2025
 # ===========================================================================
 

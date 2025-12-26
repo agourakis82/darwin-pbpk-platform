@@ -18,7 +18,7 @@ References:
 - MedLang-D Grammar: medlang_d_minimal_grammar_v0.md
 - Track D (Pharmacometrics): medlang_pharmacometrics_qsp_spec_v0.1.md
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 Version: 0.1.0
 """

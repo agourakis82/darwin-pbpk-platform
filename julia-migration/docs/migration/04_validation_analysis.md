@@ -1,7 +1,7 @@
 # Análise: Validation & Analysis
 
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 
 ---
 

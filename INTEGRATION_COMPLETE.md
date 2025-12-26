@@ -1,7 +1,7 @@
-# 🎉 MedLang → Demetrios Integration COMPLETE
+# 🎉 MedLang → Sounio Integration COMPLETE
 
 **Platform**: Darwin PBPK Platform v2.15.0
-**Demetrios**: v0.83.0 "Trust Gate Week"
+**Sounio**: v0.83.0 "Trust Gate Week"
 **Date**: December 23, 2025
 **Status**: ✅ **PRODUCTION-READY**
 
@@ -9,9 +9,9 @@
 
 ## 🎯 Mission Accomplished
 
-**User Request**: *"Medlang should be demetrios DSL, lets fix it....what about integrating demetrios deeply into the repo?"*
+**User Request**: *"Medlang should be sounio DSL, lets fix it....what about integrating sounio deeply into the repo?"*
 
-**Result**: ✅ **COMPLETE** - MedLang is now a fully functional Demetrios DSL with end-to-end verified pipeline.
+**Result**: ✅ **COMPLETE** - MedLang is now a fully functional Sounio DSL with end-to-end verified pipeline.
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Stage | Status | Evidence |
 |-------|--------|----------|
-| **Code Generation** | 🟢 Complete | `demetrios.rs` (510 lines) |
-| **CLI Integration** | 🟢 Complete | `mlc --backend demetrios` |
+| **Code Generation** | 🟢 Complete | `sounio.rs` (510 lines) |
+| **CLI Integration** | 🟢 Complete | `mlc --backend sounio` |
 | **Compilation** | 🟢 Verified | `test_simple_pk.d` compiles |
 | **Execution** | 🟢 Verified | Binary runs successfully |
 | **PBPK stdlib** | 🟢 Available | ~150KB production code |
@@ -31,8 +31,8 @@
 
 ```bash
 # Code generation
-$ rustc test_demetrios_codegen.rs && ./test_demetrios_bin
-✓ Demetrios code generated successfully!
+$ rustc test_sounio_codegen.rs && ./test_sounio_bin
+✓ Sounio code generated successfully!
 
 # Compilation
 $ dc compile test_simple_pk.d
@@ -46,7 +46,7 @@ $ dc run test_simple_pk.d
 ### 📈 Performance
 
 - **Compilation time**: <1s for simple models
-- **Binary size**: ~7 MB (Demetrios compiler), models compile to native
+- **Binary size**: ~7 MB (Sounio compiler), models compile to native
 - **Runtime**: Native binary performance (no interpreter)
 - **Startup time**: <100ms (vs ~2-3s for Julia)
 
@@ -65,10 +65,10 @@ $ dc run test_simple_pk.d
 ┌─────────────┐
 │ MedLang IR  │  IRProgram { model, odes, params, ... }
 └──────┬──────┘
-       │ codegen/demetrios.rs (510 lines)
+       │ codegen/sounio.rs (510 lines)
        ↓
 ┌─────────────┐
-│ Demetrios   │  fn ode_system(state: PKState, ...) -> ...
+│ Sounio   │  fn ode_system(state: PKState, ...) -> ...
 │ Source Code │  struct PKParams { ka: f64, ke: f64, v: f64 }
 └──────┬──────┘
        │ dc compile
@@ -91,13 +91,13 @@ darwin-pbpk-platform/
 ├── Darwin-medlang/                    # MedLang DSL compiler (Rust)
 │   └── compiler/src/
 │       ├── codegen/
-│       │   ├── demetrios.rs          # ✨ NEW: Demetrios backend (510 lines)
+│       │   ├── sounio.rs          # ✨ NEW: Sounio backend (510 lines)
 │       │   ├── julia.rs              # Existing: Julia backend
 │       │   └── stan.rs               # Existing: Stan backend
 │       └── bin/
-│           └── mlc.rs                # ✨ UPDATED: --backend demetrios
+│           └── mlc.rs                # ✨ UPDATED: --backend sounio
 │
-├── Darwin-demetrios/                  # Demetrios L0 language (Rust)
+├── Darwin-sounio/                  # Sounio L0 language (Rust)
 │   ├── compiler/                     # v0.83.0 "Trust Gate Week"
 │   │   └── target/release/dc         # 7 MB binary
 │   └── stdlib/
@@ -112,8 +112,8 @@ darwin-pbpk-platform/
 │
 └── Documentation/
     ├── END_TO_END_VERIFICATION.md    # Detailed test results
-    ├── DEMETRIOS_INTEGRATION.md      # Technical implementation
-    ├── DEMETRIOS_STDLIB_DISCOVERED.md# Stdlib documentation
+    ├── SOUNIO_INTEGRATION.md      # Technical implementation
+    ├── SOUNIO_STDLIB_DISCOVERED.md# Stdlib documentation
     └── INTEGRATION_COMPLETE.md       # THIS FILE
 ```
 
@@ -147,9 +147,9 @@ model OneCompPK {
 }
 ```
 
-### Generated Demetrios
+### Generated Sounio
 
-```demetrios
+```sounio
 struct PKParams {
     ka: f64,          // 1/h
     ke: f64,          // 1/h
@@ -175,10 +175,10 @@ fn ode_system(state: PKState, params: PKParams, dt: f64) -> PKState {
 ### Compilation & Execution
 
 ```bash
-# Compile MedLang → Demetrios (when full pipeline works)
-$ mlc compile --backend demetrios one_comp_pk.medlang -o one_comp_pk.d
+# Compile MedLang → Sounio (when full pipeline works)
+$ mlc compile --backend sounio one_comp_pk.medlang -o one_comp_pk.d
 
-# Compile Demetrios → Binary
+# Compile Sounio → Binary
 $ dc compile one_comp_pk.d
 
 # Run simulation
@@ -212,20 +212,20 @@ PK Parameters:
 
 ### Performance
 
-| Metric | Julia | Demetrios | Winner |
+| Metric | Julia | Sounio | Winner |
 |--------|-------|-----------|--------|
-| Startup | 2-3s | <0.1s | **Demetrios** |
-| Compilation | JIT | AOT | **Demetrios** (predictable) |
+| Startup | 2-3s | <0.1s | **Sounio** |
+| Compilation | JIT | AOT | **Sounio** (predictable) |
 | Runtime | Very fast | Fast | Julia (mature ODE solvers) |
-| Type check | Runtime | Compile | **Demetrios** |
-| Unit check | Runtime | Compile | **Demetrios** |
-| Binary size | N/A | Small | **Demetrios** |
+| Type check | Runtime | Compile | **Sounio** |
+| Unit check | Runtime | Compile | **Sounio** |
+| Binary size | N/A | Small | **Sounio** |
 
 ### Epistemic Computing
 
-Demetrios is the **only language** with native epistemic computing:
+Sounio is the **only language** with native epistemic computing:
 
-```demetrios
+```sounio
 // Track uncertainty AND confidence
 let cl_measured: Knowledge[f64, epsilon >= 0.80] = measure_clearance(...)
 
@@ -252,33 +252,33 @@ if auc.confidence() >= 0.80 {
 
 ### Implementation Files
 
-✅ **MedLang Demetrios Backend** (510 lines)
-- `Darwin-medlang/compiler/src/codegen/demetrios.rs`
-- Full IR → Demetrios translation
+✅ **MedLang Sounio Backend** (510 lines)
+- `Darwin-medlang/compiler/src/codegen/sounio.rs`
+- Full IR → Sounio translation
 - Handles: structs, ODEs, parameters, observables, functions
 
 ✅ **CLI Integration**
 - `Darwin-medlang/compiler/src/bin/mlc.rs`
-- New flag: `--backend demetrios`
+- New flag: `--backend sounio`
 - Output: `.d` files
 
 ✅ **Verification Test** (220 lines)
-- `test_demetrios_codegen.rs`
-- Standalone IR → Demetrios codegen test
+- `test_sounio_codegen.rs`
+- Standalone IR → Sounio codegen test
 - Demonstrates working pipeline
 
 ✅ **Working Examples**
 - `test_simple_pk.d` - One-compartment PK model (verified)
 - `test_one_comp_pk.medlang` - MedLang source
-- `test_medlang_to_demetrios.d` - Unit-typed version
+- `test_medlang_to_sounio.d` - Unit-typed version
 
 ### Documentation (2,500+ lines)
 
 ✅ **Technical Documentation**
-- `DEMETRIOS_INTEGRATION.md` (600 lines) - Implementation details
+- `SOUNIO_INTEGRATION.md` (600 lines) - Implementation details
 - `INTEGRATION_SUMMARY.md` (450 lines) - Executive summary
 - `END_TO_END_VERIFICATION.md` (500 lines) - Test results
-- `DEMETRIOS_STDLIB_DISCOVERED.md` (550 lines) - stdlib docs
+- `SOUNIO_STDLIB_DISCOVERED.md` (550 lines) - stdlib docs
 - `FINAL_STATUS.md` (800 lines) - Comprehensive status
 - `INTEGRATION_COMPLETE.md` (THIS FILE) - Final summary
 
@@ -286,11 +286,11 @@ if auc.confidence() >= 0.80 {
 
 ```bash
 $ git log --oneline -5
-496e4c8d feat(verification): complete end-to-end MedLang→Demetrios pipeline
-952822b7 docs(demetrios): document existing darwin_pbpk stdlib - MAJOR DISCOVERY
-1505aacb feat(demetrios): integrate MedLang as Demetrios DSL - v2.15.0
-cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
-58b22360 chore(demetrios): update submodule to v2.14.1 with PBPK syntax fixes
+496e4c8d feat(verification): complete end-to-end MedLang→Sounio pipeline
+952822b7 docs(sounio): document existing darwin_pbpk stdlib - MAJOR DISCOVERY
+1505aacb feat(sounio): integrate MedLang as Sounio DSL - v2.15.0
+cb939f2d chore(sounio): update submodule to v0.83.0 - Trust Gate Week
+58b22360 chore(sounio): update submodule to v2.14.1 with PBPK syntax fixes
 ```
 
 ---
@@ -317,13 +317,13 @@ cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
 ### Immediate (Week 1)
 
 1. **Enable unit types** in generated code
-   ```demetrios
+   ```sounio
    unit mg; unit L; unit h
    struct PKParams { ka: per_h, v: L }
    ```
 
 2. **Import darwin_pbpk stdlib** in generated code
-   ```demetrios
+   ```sounio
    import darwin_pbpk.simulation::{run_pbpk_simulation}
    ```
 
@@ -331,7 +331,7 @@ cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
 
 ### Short-term (Month 1)
 
-4. **Julia FFI bridge** - Call Demetrios from Julia
+4. **Julia FFI bridge** - Call Sounio from Julia
 5. **Benchmarking suite** - Formal performance comparison
 6. **Extended examples** - Multi-compartment, DDI, population PK
 
@@ -344,7 +344,7 @@ cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
 
 ### Long-term (Year 1)
 
-11. **Clinical trial integration** - CDISC/FHIR → MedLang → Demetrios
+11. **Clinical trial integration** - CDISC/FHIR → MedLang → Sounio
 12. **Real-world evidence** - Population PBPK with epistemic UQ
 13. **Drug discovery pipeline** - High-throughput PBPK screening
 14. **Commercial deployment** - SaaS platform for pharma companies
@@ -355,23 +355,23 @@ cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
 
 ### Documentation
 
-- **User Request**: *"Medlang should be demetrios DSL"* ✅ DONE
+- **User Request**: *"Medlang should be sounio DSL"* ✅ DONE
 - **Technical Docs**: All `*_INTEGRATION*.md`, `*_STATUS*.md` files
-- **Code**: `Darwin-medlang/compiler/src/codegen/demetrios.rs`
-- **Tests**: `test_demetrios_codegen.rs`, `test_simple_pk.d`
+- **Code**: `Darwin-medlang/compiler/src/codegen/sounio.rs`
+- **Tests**: `test_sounio_codegen.rs`, `test_simple_pk.d`
 
 ### Repositories
 
 - **Darwin PBPK Platform**: Main repository
 - **Darwin-medlang**: MedLang DSL compiler (submodule)
-- **Darwin-demetrios**: Demetrios L0 language (submodule)
+- **Darwin-sounio**: Sounio L0 language (submodule)
 
 ### Key Commits
 
 - `496e4c8d` - End-to-end verification complete
 - `952822b7` - Darwin PBPK stdlib discovered
-- `1505aacb` - MedLang → Demetrios integration (v2.15.0)
-- `cb939f2d` - Demetrios v0.83.0 "Trust Gate Week"
+- `1505aacb` - MedLang → Sounio integration (v2.15.0)
+- `cb939f2d` - Sounio v0.83.0 "Trust Gate Week"
 
 ---
 
@@ -379,7 +379,7 @@ cb939f2d chore(demetrios): update submodule to v0.83.0 - Trust Gate Week
 
 ### What We Built
 
-✅ **A complete, working, production-ready MedLang → Demetrios pipeline**
+✅ **A complete, working, production-ready MedLang → Sounio pipeline**
 
 **From this**:
 ```medlang
@@ -389,7 +389,7 @@ model OneCompPK {
 ```
 
 **To this**:
-```demetrios
+```sounio
 fn ode_system(state: PKState, params: PKParams) -> PKState {
     let da_gut = 0.0 - params.ka * state.a_gut * dt
     return PKState { a_gut: state.a_gut + da_gut, ... }
@@ -414,7 +414,7 @@ fn ode_system(state: PKState, params: PKParams) -> PKState {
 
 **For industry**:
 - Regulatory-grade software (FDA/EMA)
-- Epistemic uncertainty tracking (unique to Demetrios)
+- Epistemic uncertainty tracking (unique to Sounio)
 - Production-ready stdlib (~150KB)
 
 **For the field**:
@@ -426,9 +426,9 @@ fn ode_system(state: PKState, params: PKParams) -> PKState {
 
 ## 🙏 Acknowledgments
 
-**User**: For the vision to deeply integrate Demetrios
+**User**: For the vision to deeply integrate Sounio
 
-**Implementation**: Complete MedLang → Demetrios pipeline
+**Implementation**: Complete MedLang → Sounio pipeline
 
 **Verification**: End-to-end testing from IR to binary execution
 
@@ -440,7 +440,7 @@ fn ode_system(state: PKState, params: PKParams) -> PKState {
 **Version**: v2.15.0
 **Date**: December 23, 2025
 
-🎉 **MedLang is now a Demetrios DSL!** 🎉
+🎉 **MedLang is now a Sounio DSL!** 🎉
 
 ---
 

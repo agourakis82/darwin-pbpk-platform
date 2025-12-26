@@ -1,7 +1,7 @@
 # Análise de Discrepância de Escala - Dynamic GNN PBPK
 
 **Data:** 2025-11-17
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Status:** Em Investigação
 
 ---

@@ -1,7 +1,7 @@
 # Tutorial Completo - Darwin PBPK Platform (Julia)
 
 **Data:** 2025-11-18
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 
 ---
 

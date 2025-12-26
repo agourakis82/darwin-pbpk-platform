@@ -442,7 +442,7 @@ julia-migration/
 ## Support
 
 For questions or issues:
-- **Author**: Dr. Demetrios Agourakis
+- **Author**: Dr. Sounio Agourakis
 - **Repository**: darwin-pbpk-platform
 - **Module**: DarwinPBPK.LatticeBoltzmann
 

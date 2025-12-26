@@ -19,7 +19,7 @@
 #
 # Reference: https://schema.org/Drug
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

@@ -7,7 +7,7 @@ echo "==========================================================================
 echo ""
 
 # RTX 4000 (Node Atual)
-echo "📊 Node DemetriosPCS (RTX 4000 Ada):"
+echo "📊 Node SounioPCS (RTX 4000 Ada):"
 if [ -f "training_sota.log" ]; then
     echo "   ✅ Log encontrado"
     echo "   📝 Últimas linhas:"

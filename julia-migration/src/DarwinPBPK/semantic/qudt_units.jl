@@ -11,7 +11,7 @@
 # - QUDT: http://qudt.org/
 # - UO: http://purl.obolibrary.org/obo/uo.owl
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

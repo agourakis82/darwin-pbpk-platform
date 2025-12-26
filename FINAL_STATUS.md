@@ -1,4 +1,4 @@
-# MedLang ↔ Demetrios Integration - FINAL STATUS
+# MedLang ↔ Sounio Integration - FINAL STATUS
 
 **Date**: December 23, 2025
 **Status**: ✅ **PRODUCTION READY**
@@ -8,13 +8,13 @@
 
 ## Executive Summary
 
-**MedLang is now a Demetrios DSL** - complete with production-ready PBPK stdlib.
+**MedLang is now a Sounio DSL** - complete with production-ready PBPK stdlib.
 
 ### What Was Accomplished
 
-1. ✅ **Demetrios Code Generator** - Full MedLang IR → Demetrios transformation
-2. ✅ **CLI Integration** - `mlc compile --backend demetrios`
-3. ✅ **Demetrios PBPK Stdlib** - ~150KB of production code (already existed!)
+1. ✅ **Sounio Code Generator** - Full MedLang IR → Sounio transformation
+2. ✅ **CLI Integration** - `mlc compile --backend sounio`
+3. ✅ **Sounio PBPK Stdlib** - ~150KB of production code (already existed!)
 4. ✅ **Stdlib Integration** - Codegen imports darwin_pbpk modules
 5. ✅ **Documentation** - Complete technical docs
 6. ✅ **Verification** - Working proof-of-concept
@@ -32,9 +32,9 @@ Created the **world's first medical PBPK DSL that compiles to an epistemic syste
 
 ## Technical Implementation
 
-### 1. MedLang → Demetrios Compiler
+### 1. MedLang → Sounio Compiler
 
-**File**: `Darwin-medlang/compiler/src/codegen/demetrios.rs` (510 lines)
+**File**: `Darwin-medlang/compiler/src/codegen/sounio.rs` (510 lines)
 
 **Features**:
 - Full IR expression translation
@@ -82,9 +82,9 @@ fn main() -> effect[IO, Alloc, Mut] {
 }
 ```
 
-### 2. Demetrios PBPK Standard Library (Discovery!)
+### 2. Sounio PBPK Standard Library (Discovery!)
 
-**Location**: `Darwin-demetrios/stdlib/darwin_pbpk/`
+**Location**: `Darwin-sounio/stdlib/darwin_pbpk/`
 
 **Size**: ~150KB of production code
 
@@ -135,10 +135,10 @@ fn main() -> effect[IO] {
 
 **Usage**:
 ```bash
-# Compile MedLang to Demetrios
-mlc compile model.medlang --backend demetrios -o model.d
+# Compile MedLang to Sounio
+mlc compile model.medlang --backend sounio -o model.d
 
-# Compile Demetrios to binary
+# Compile Sounio to binary
 dc build model.d --release
 
 # Run simulation
@@ -148,21 +148,21 @@ dc build model.d --release
 **Supported backends**:
 - ✅ `stan` - Bayesian inference
 - ✅ `julia` - Fast numerical computing
-- ✅ `demetrios` - **NEW** - Epistemic computing with compile-time safety
+- ✅ `sounio` - **NEW** - Epistemic computing with compile-time safety
 
 ### 4. Verification
 
-**Test file**: `test_demetrios_codegen.rs`
+**Test file**: `test_sounio_codegen.rs`
 
 **Result**:
 ```bash
-$ rustc test_demetrios_codegen.rs && ./test_demetrios_codegen
+$ rustc test_sounio_codegen.rs && ./test_sounio_codegen
 
-✓ Demetrios code generated successfully!
+✓ Sounio code generated successfully!
 
 module SimpleOralPK
 
-// Demetrios standard library imports
+// Sounio standard library imports
 import std.math.{exp, log, sqrt, pow}
 import darwin_pbpk.simulation::{SimulationConfig, run_pbpk_simulation}
 
@@ -248,16 +248,16 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 
 ### 4. Performance
 
-| Metric | Julia | Demetrios | Winner |
+| Metric | Julia | Sounio | Winner |
 |--------|-------|-----------|--------|
-| ODE solve (100k steps) | 18.6 ms | ~10 ms | Demetrios 🏆 |
+| ODE solve (100k steps) | 18.6 ms | ~10 ms | Sounio 🏆 |
 | Compile time | JIT (instant) | AOT (1-5s one-time) | Julia |
-| Runtime safety | Partial | Complete | Demetrios 🏆 |
-| Memory | GC | Linear types | Demetrios 🏆 |
-| Unit checking | Runtime | Compile-time | Demetrios 🏆 |
-| Epistemic tracking | Turing.jl | Native | Demetrios 🏆 |
+| Runtime safety | Partial | Complete | Sounio 🏆 |
+| Memory | GC | Linear types | Sounio 🏆 |
+| Unit checking | Runtime | Compile-time | Sounio 🏆 |
+| Epistemic tracking | Turing.jl | Native | Sounio 🏆 |
 
-**Verdict**: Demetrios is faster and safer!
+**Verdict**: Sounio is faster and safer!
 
 ---
 
@@ -265,7 +265,7 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 
 ### Created Files
 
-1. **`DEMETRIOS_INTEGRATION.md`** (600 lines)
+1. **`SOUNIO_INTEGRATION.md`** (600 lines)
    - Complete technical documentation
    - Architecture diagrams
    - Usage examples
@@ -277,7 +277,7 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
    - Next steps
    - Files modified
 
-3. **`DEMETRIOS_STDLIB_DISCOVERED.md`** (550 lines)
+3. **`SOUNIO_STDLIB_DISCOVERED.md`** (550 lines)
    - Darwin PBPK stdlib documentation
    - Module descriptions
    - API examples
@@ -291,13 +291,13 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 
 ### Code Files
 
-1. **`Darwin-medlang/compiler/src/codegen/demetrios.rs`** (510 lines)
-   - Demetrios code generator
+1. **`Darwin-medlang/compiler/src/codegen/sounio.rs`** (510 lines)
+   - Sounio code generator
    - Unit type system
    - Expression translation
    - Tests
 
-2. **`test_demetrios_codegen.rs`** (220 lines)
+2. **`test_sounio_codegen.rs`** (220 lines)
    - Standalone verification
    - Proof of concept
 
@@ -311,8 +311,8 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 |-----------|--------|------------|
 | MedLang parser | ✅ Mature | High (103 tests) |
 | IR generation | ✅ Mature | High |
-| Demetrios codegen | ✅ Complete | High (verified) |
-| Demetrios stdlib | ✅ Production | High (~150KB code) |
+| Sounio codegen | ✅ Complete | High (verified) |
+| Sounio stdlib | ✅ Production | High (~150KB code) |
 | Unit system | ✅ Complete | High (compile-time) |
 | ODE solver | ✅ Production | High (Tsit5 adaptive) |
 | Documentation | ✅ Complete | High (1500+ lines) |
@@ -320,22 +320,22 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 ### ⚠️ Known Limitations
 
 1. **MedLang full compiler** - Has unrelated trial data errors (FHIR/CDISC)
-   - **Impact**: Doesn't affect Demetrios codegen (which works standalone)
+   - **Impact**: Doesn't affect Sounio codegen (which works standalone)
    - **Workaround**: Use codegen module directly
 
 2. **End-to-end testing** - Not yet performed
    - **Impact**: Pipeline components verified separately but not together
-   - **Next**: Test MedLang → Demetrios → Binary → Execute
+   - **Next**: Test MedLang → Sounio → Binary → Execute
 
-3. **Julia ↔ Demetrios FFI** - Not yet implemented
-   - **Impact**: Can't call Demetrios from Julia yet
+3. **Julia ↔ Sounio FFI** - Not yet implemented
+   - **Impact**: Can't call Sounio from Julia yet
    - **Next**: Build bridge module
 
 ### 🎯 Production Use Cases (Ready Now)
 
 1. **PBPK Model Generation** ✅
    ```bash
-   mlc compile midazolam.medlang --backend demetrios -o midazolam.d
+   mlc compile midazolam.medlang --backend sounio -o midazolam.d
    dc build midazolam.d --release
    ./midazolam
    ```
@@ -388,12 +388,12 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 │  └──────────────────────────────────────────────────────────┘  │
 │              ↙         ↓         ↓         ↘                    │
 │  ┌───────┐  ┌────────┐  ┌────────┐  ┌─────────────┐          │
-│  │ Stan  │  │ Julia  │  │  PINN  │  │ Demetrios   │ ⭐ NEW   │
+│  │ Stan  │  │ Julia  │  │  PINN  │  │ Sounio   │ ⭐ NEW   │
 │  │ (.stan)│ │  (.jl) │  │  (.jl) │  │    (.d)     │          │
 │  └───────┘  └────────┘  └────────┘  └─────────────┘          │
 │                                              ↓ dc build         │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Demetrios Compiler (dc)                                  │  │
+│  │  Sounio Compiler (dc)                                  │  │
 │  │  - Lexer → Parser → Type Checker → LLVM                  │  │
 │  │  - Compile-time unit verification                        │  │
 │  │  - Effect system checking                                │  │
@@ -426,14 +426,14 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 
 ### MedLang Submodule
 ```
-fe16fc7 feat(medlang): add Demetrios backend for epistemic PBPK compilation
-6a5b77f feat(demetrios): update codegen to import darwin_pbpk stdlib
+fe16fc7 feat(medlang): add Sounio backend for epistemic PBPK compilation
+6a5b77f feat(sounio): update codegen to import darwin_pbpk stdlib
 ```
 
 ### Main Repository
 ```
-1505aacb feat(demetrios): integrate MedLang as Demetrios DSL - v2.15.0
-952822b7 docs(demetrios): document existing darwin_pbpk stdlib - MAJOR DISCOVERY
+1505aacb feat(sounio): integrate MedLang as Sounio DSL - v2.15.0
+952822b7 docs(sounio): document existing darwin_pbpk stdlib - MAJOR DISCOVERY
 ```
 
 ---
@@ -453,8 +453,8 @@ fe16fc7 feat(medlang): add Demetrios backend for epistemic PBPK compilation
    }
    EOF
 
-   # Compile to Demetrios
-   mlc compile test_model.medlang --backend demetrios
+   # Compile to Sounio
+   mlc compile test_model.medlang --backend sounio
 
    # Compile to binary
    dc build test_model.d --release
@@ -470,17 +470,17 @@ fe16fc7 feat(medlang): add Demetrios backend for epistemic PBPK compilation
 
 ### Short Term (1 week)
 
-1. **Julia ↔ Demetrios FFI**
+1. **Julia ↔ Sounio FFI**
    ```julia
-   # julia-migration/src/DarwinPBPK/demetrios/Demetrios.jl
-   module Demetrios
+   # julia-migration/src/DarwinPBPK/sounio/Sounio.jl
+   module Sounio
 
    function compile_and_run(medlang_file::String)
        # Generate .d file
-       run(`mlc compile $medlang_file --backend demetrios`)
+       run(`mlc compile $medlang_file --backend sounio`)
 
        # Compile to binary
-       run(`dc build $(replace(medlang_file, ".medlang" => ".d"))`)
+       run(`souc build $(replace(medlang_file, ".medlang" => ".sio"))`)
 
        # Read epistemic results
        result = read_epistemic_output()
@@ -498,7 +498,7 @@ fe16fc7 feat(medlang): add Demetrios backend for epistemic PBPK compilation
    ```
 
 2. **Benchmarks**
-   - Compare Julia vs Demetrios performance
+   - Compare Julia vs Sounio performance
    - Verify epistemic tracking overhead
    - Measure compilation times
 
@@ -525,7 +525,7 @@ fe16fc7 feat(medlang): add Demetrios backend for epistemic PBPK compilation
 
 ### ✅ Mission Accomplished
 
-**MedLang is now a Demetrios DSL** with:
+**MedLang is now a Sounio DSL** with:
 - ✅ Full compilation pipeline working
 - ✅ Production-ready PBPK stdlib (~150KB)
 - ✅ Compile-time safety guarantees
@@ -555,11 +555,11 @@ This is the **world's first** medical PBPK DSL that compiles to an epistemic sys
 
 ---
 
-**Authors**: Dr. Demetrios Chiuratto Agourakis + Claude Code
+**Authors**: Dr. Sounio Chiuratto Agourakis + Claude Code
 **Repository**: darwin-pbpk-platform
 **License**: MIT / Apache 2.0
 **Version**: v2.15.0
 **Date**: December 23, 2025
 
 **DOI**: https://doi.org/10.5281/zenodo.17536674 (Darwin PBPK Platform)
-**Demetrios DOI**: https://doi.org/10.5281/zenodo.18004435 (Demetrios Language)
+**Sounio DOI**: https://doi.org/10.5281/zenodo.18004435 (Sounio Language)

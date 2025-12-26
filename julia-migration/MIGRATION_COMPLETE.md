@@ -2,7 +2,7 @@
 
 **Data:** 2025-11-18
 **Status:** ✅ **100% COMPLETA**
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 
 ---
 

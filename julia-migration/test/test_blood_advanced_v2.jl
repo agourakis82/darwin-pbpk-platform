@@ -5,7 +5,7 @@ Test suite for Blood Compartment v2.7.0 modules:
 - Disease State Binding Adjustments
 - mAb PBPK (FcRn, TMDD)
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: December 2025
 """
 

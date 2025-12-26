@@ -349,5 +349,5 @@ Apesar de não atingir R² > 0.30, o trabalho é **cientificamente sólido**, **
 ---
 
 **Última atualização:** 28/10/2025 10:00 UTC  
-**Autor:** Dr. Demetrios Chiuratto Agourakis
+**Autor:** Dr. Sounio Chiuratto Agourakis
 

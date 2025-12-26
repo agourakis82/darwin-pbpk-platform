@@ -1,15 +1,15 @@
 #!/usr/bin/env julia
 # ===========================================================================
-# BUILD DEMETRIOS FROM JULIA
+# BUILD SOUNIO FROM JULIA
 # ===========================================================================
-# Script to build Demetrios compiler and PBPK models from Julia environment.
+# Script to build Sounio compiler and PBPK models from Julia environment.
 #
 # Usage:
-#   julia scripts/build_demetrios.jl                    # Build compiler
-#   julia scripts/build_demetrios.jl --check-all        # Check all PBPK models
-#   julia scripts/build_demetrios.jl --run example.d    # Run specific model
+#   julia scripts/build_sounio.jl                    # Build compiler
+#   julia scripts/build_sounio.jl --check-all        # Check all PBPK models
+#   julia scripts/build_sounio.jl --run example.d    # Run specific model
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # ===========================================================================
 
@@ -21,10 +21,10 @@ using Dates
 # ===========================================================================
 
 const DARWIN_ROOT = dirname(dirname(@__FILE__))
-const DEMETRIOS_ROOT = joinpath(DARWIN_ROOT, "Darwin-demetrios")
-const COMPILER_DIR = joinpath(DEMETRIOS_ROOT, "compiler")
-const PBPK_EXAMPLES = joinpath(DEMETRIOS_ROOT, "examples", "pbpk")
-const JULIA_INTEGRATION = joinpath(DARWIN_ROOT, "julia-migration", "src", "DarwinPBPK", "demetrios")
+const SOUNIO_ROOT = joinpath(DARWIN_ROOT, "Darwin-sounio")
+const COMPILER_DIR = joinpath(SOUNIO_ROOT, "compiler")
+const PBPK_EXAMPLES = joinpath(SOUNIO_ROOT, "examples", "pbpk")
+const JULIA_INTEGRATION = joinpath(DARWIN_ROOT, "julia-migration", "src", "DarwinPBPK", "sounio")
 
 # ===========================================================================
 # Helper Functions
@@ -69,11 +69,11 @@ function run_cmd(cmd; capture=false, dir=nothing)
 end
 
 # ===========================================================================
-# Build Demetrios Compiler
+# Build Sounio Compiler
 # ===========================================================================
 
 function build_compiler(; release=true, features=String[])
-    log_info("Building Demetrios compiler...")
+    log_info("Building Sounio compiler...")
 
     if !isdir(COMPILER_DIR)
         log_error("Compiler directory not found: $COMPILER_DIR")
@@ -164,7 +164,7 @@ function check_all_pbpk_models(; show_types=false)
         return
     end
 
-    models = filter(f -> endswith(f, ".d"), readdir(PBPK_EXAMPLES))
+    models = filter(f -> endswith(f, ".sio"), readdir(PBPK_EXAMPLES))
 
     passed = 0
     failed = 0
@@ -238,7 +238,7 @@ end
 # ===========================================================================
 
 function run_compiler_tests()
-    log_info("Running Demetrios compiler tests...")
+    log_info("Running Sounio compiler tests...")
 
     cd(COMPILER_DIR)
     result = run_cmd(`cargo test`, capture=true)
@@ -265,7 +265,7 @@ function generate_julia_bindings()
     mkpath(joinpath(JULIA_INTEGRATION, "schemas"))
 
     # Check that files exist
-    integration_file = joinpath(JULIA_INTEGRATION, "DemetriosIntegration.jl")
+    integration_file = joinpath(JULIA_INTEGRATION, "SounioIntegration.jl")
     schema_file = joinpath(JULIA_INTEGRATION, "schemas", "pbpk_schema.json")
 
     if isfile(integration_file)
@@ -284,11 +284,11 @@ function generate_julia_bindings()
     darwin_main = joinpath(DARWIN_ROOT, "julia-migration", "src", "DarwinPBPK.jl")
     if isfile(darwin_main)
         content = read(darwin_main, String)
-        if !contains(content, "DemetriosIntegration")
-            log_info("Adding DemetriosIntegration to DarwinPBPK.jl...")
+        if !contains(content, "SounioIntegration")
+            log_info("Adding SounioIntegration to DarwinPBPK.jl...")
             # Would append the include statement
         else
-            log_info("DemetriosIntegration already included in DarwinPBPK.jl")
+            log_info("SounioIntegration already included in DarwinPBPK.jl")
         end
     end
 
@@ -300,17 +300,17 @@ end
 # ===========================================================================
 
 function validate_cross_platform(model_name::String; dose_mg=100.0)
-    log_info("Cross-validating Julia vs Demetrios for: $model_name")
+    log_info("Cross-validating Julia vs Sounio for: $model_name")
 
-    # This would run both Julia and Demetrios implementations
+    # This would run both Julia and Sounio implementations
     # and compare results
 
     log_info("Running Julia implementation...")
     # julia_result = DarwinPBPK.simulate(...)
 
-    log_info("Running Demetrios implementation...")
-    source_file = joinpath(PBPK_EXAMPLES, "$model_name.d")
-    # demetrios_result = run_pbpk_model(source_file)
+    log_info("Running Sounio implementation...")
+    source_file = joinpath(PBPK_EXAMPLES, "$model_name.sio")
+    # sounio_result = run_pbpk_model(source_file)
 
     log_info("Cross-validation complete")
     # Return comparison metrics
@@ -322,19 +322,19 @@ end
 
 function print_usage()
     println("""
-    Darwin PBPK - Demetrios Build Script
+    Darwin PBPK - Sounio Build Script
 
     Usage:
-        julia scripts/build_demetrios.jl [command] [options]
+        julia scripts/build_sounio.jl [command] [options]
 
     Commands:
-        build           Build the Demetrios compiler (default)
+        build           Build the Sounio compiler (default)
         check           Check a specific PBPK model
         check-all       Check all PBPK models
         run             Run a PBPK model
         test            Run compiler tests
         bindings        Generate Julia bindings
-        validate        Cross-validate Julia vs Demetrios
+        validate        Cross-validate Julia vs Sounio
 
     Options:
         --release       Build in release mode (default)
@@ -344,10 +344,10 @@ function print_usage()
         --output FILE   Output JSON file for results
 
     Examples:
-        julia scripts/build_demetrios.jl build
-        julia scripts/build_demetrios.jl check-all
-        julia scripts/build_demetrios.jl run darwin_pbpk_14comp.d
-        julia scripts/build_demetrios.jl check mechanistic_ddi.d --show-types
+        julia scripts/build_sounio.jl build
+        julia scripts/build_sounio.jl check-all
+        julia scripts/build_sounio.jl run darwin_pbpk_14comp.d
+        julia scripts/build_sounio.jl check mechanistic_ddi.d --show-types
     """)
 end
 

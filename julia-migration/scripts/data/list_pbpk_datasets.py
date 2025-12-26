@@ -2,7 +2,7 @@
 """
 Lista e analisa datasets PBPK disponíveis em /mnt/f
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

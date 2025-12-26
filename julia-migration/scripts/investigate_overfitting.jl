@@ -10,7 +10,7 @@ Análise rigorosa Q1+:
 5. Análise de learning curves
 6. Comparação train vs validation metrics
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

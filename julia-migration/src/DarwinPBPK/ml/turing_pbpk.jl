@@ -11,7 +11,7 @@ This module provides proper Bayesian inference for PBPK models using
 Turing.jl, replacing the manual MCMC implementation with gradient-based
 sampling that is ~10× more efficient.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

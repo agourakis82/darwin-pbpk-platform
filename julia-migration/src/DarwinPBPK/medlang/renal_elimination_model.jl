@@ -40,7 +40,7 @@
 # - Nature Reviews Nephrology 2016 - Cystinosis pathogenesis
 # - PMID 37621073 - CTNS-mTORC1 axis in cystinosis (2023)
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # ===========================================================================
 

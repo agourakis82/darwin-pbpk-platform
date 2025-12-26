@@ -2,7 +2,7 @@
 """
 Script completo para executar FASE 6 - Otimização Final
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

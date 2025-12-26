@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://darwin-pbpk.org/schemas/pbpk-exchange-v1.json",
   "title": "Darwin PBPK Exchange Format",
-  "description": "Shared data format for Julia ↔ Demetrios PBPK model exchange",
+  "description": "Shared data format for Julia ↔ Sounio PBPK model exchange",
   "version": "1.0.0",
 
   "definitions": {
@@ -15,7 +15,7 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1,
-          "description": "Epistemic confidence (epsilon in Demetrios)"
+          "description": "Epistemic confidence (epsilon in Sounio)"
         },
         "provenance": {
           "type": "string",
@@ -293,7 +293,7 @@
         "metrics": { "$ref": "#/definitions/PKMetrics" },
 
         "computation_time_ms": { "type": "number" },
-        "demetrios_version": { "type": "string" },
+        "sounio_version": { "type": "string" },
         "provenance": {
           "type": "object",
           "additionalProperties": { "type": "string" }

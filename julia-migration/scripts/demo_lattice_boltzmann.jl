@@ -8,7 +8,7 @@ This script demonstrates the key features of the LBM module including:
 4. Reynolds and Womersley number calculations
 5. Non-Newtonian blood viscosity
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: December 2025
 """
 

@@ -10,7 +10,7 @@ SOTA Q1 2025 Implementation:
 ChemBERTa is a RoBERTa model pre-trained on 77M SMILES strings from ZINC,
 providing superior molecular representations compared to character-level models.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

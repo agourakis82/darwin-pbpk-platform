@@ -12,7 +12,7 @@ Proper uncertainty calibration is essential for regulatory acceptance.
 A well-calibrated model's 95% credible intervals should contain 95%
 of true values.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

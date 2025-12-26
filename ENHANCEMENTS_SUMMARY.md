@@ -1,4 +1,4 @@
-# MedLang → Demetrios Integration: Enhanced Features
+# MedLang → Sounio Integration: Enhanced Features
 
 **Date**: December 23, 2025
 **Version**: v2.16.0
@@ -12,8 +12,8 @@ Building on the complete end-to-end pipeline (v2.15.0), we've added:
 
 ### 1. ✅ Enhanced Unit Type System
 
-**Proper Demetrios Syntax**:
-```demetrios
+**Proper Sounio Syntax**:
+```sounio
 // Base units
 unit mg      // milligram (mass)
 unit L       // liter (volume)
@@ -27,20 +27,20 @@ unit mg_h_per_L = mg * h / L // AUC
 ```
 
 **Refinement Types with Constraints**:
-```demetrios
+```sounio
 type Fraction = { x: f64 | x >= 0.0 && x <= 1.0 }
 type PhysioVolume = { v: f64 | v > 0.0 && v < 2000.0 }
 type PhysioClearance = { cl: f64 | cl > 0.0 && cl < 5000.0 }
 ```
 
 **Before** (generic syntax):
-```demetrios
+```sounio
 type mg = Mass<mg>
 type L = Volume<L>
 ```
 
-**After** (proper Demetrios v0.83.0 syntax):
-```demetrios
+**After** (proper Sounio v0.83.0 syntax):
+```sounio
 unit mg
 unit L
 ```
@@ -56,7 +56,7 @@ unit L
 - Physical constraints (non-negative amounts)
 
 **Structure**:
-```demetrios
+```sounio
 struct PKParams {
     ka: f64,     // Absorption rate
     cl: f64,     // Clearance
@@ -92,7 +92,7 @@ $ dc run test_two_comp_pk.d
 - Refusal gates for low-confidence results
 
 **Epistemic Types** (documented in code):
-```demetrios
+```sounio
 // In full epistemic mode:
 ka: Knowledge[f64, epsilon >= 0.95]  // High confidence (direct measurement)
 ke: Knowledge[f64, epsilon >= 0.80]  // Medium (fitted from data)
@@ -122,7 +122,7 @@ $ dc run test_epistemic_pk.d
 - Added complete PK unit library
 - Added refinement types with physiological constraints
 
-### Enhanced `dimension_to_demetrios_type()`
+### Enhanced `dimension_to_sounio_type()`
 
 **New Mappings**:
 ```rust
@@ -138,13 +138,13 @@ $ dc run test_epistemic_pk.d
 ### Simplified Function Signatures
 
 **Before**:
-```demetrios
+```sounio
 fn ode_system(state: &State, params: &Params, t: h) -> StateDerivatives
 fn solve_ode(params: &Params, t_max: h, dt: h) -> effect[Alloc, Mut] Results
 ```
 
 **After**:
-```demetrios
+```sounio
 fn ode_system(state: &State, params: &Params, t: f64) -> StateDerivatives
 fn solve_ode(params: &Params, t_max: f64, dt: f64) -> Results
 ```
@@ -168,7 +168,7 @@ fn solve_ode(params: &Params, t_max: f64, dt: f64) -> Results
 ### Compile-Time Safety
 
 ✅ **Unit Type Definitions**:
-- Proper `unit` syntax matching Demetrios v0.83.0
+- Proper `unit` syntax matching Sounio v0.83.0
 - Complete PK unit library (mass, volume, time, derived)
 
 ✅ **Refinement Types**:
@@ -188,7 +188,7 @@ fn solve_ode(params: &Params, t_max: f64, dt: f64) -> Results
 - Demonstrates confidence propagation
 - Shows regulatory compliance gates
 
-🟡 **Next Steps** (when Demetrios stdlib supports it):
+🟡 **Next Steps** (when Sounio stdlib supports it):
 - Add `Knowledge` type wrapper in codegen
 - Implement confidence propagation
 - Add refusal gates for low confidence
@@ -207,7 +207,7 @@ test_enhanced_pk.d      (unit demo) - Unit syntax exploration
 
 ### Updated Code
 ```
-Darwin-medlang/compiler/src/codegen/demetrios.rs
+Darwin-medlang/compiler/src/codegen/sounio.rs
   - Enhanced unit type generation
   - Improved dimension mapping
   - Simplified function signatures
@@ -273,7 +273,7 @@ Darwin-medlang/compiler/src/codegen/demetrios.rs
 1. **First epistemic PBPK platform** - Unique capability
 2. **Compile-time units** - Prevents dimensional errors
 3. **Refinement types** - Physiological constraints
-4. **Type-safe medical DSL** - MedLang → Demetrios
+4. **Type-safe medical DSL** - MedLang → Sounio
 
 ---
 
@@ -282,17 +282,17 @@ Darwin-medlang/compiler/src/codegen/demetrios.rs
 ### Commits
 
 ```bash
-7cd456a6  feat(medlang): update submodule with enhanced Demetrios codegen
-4d60242   feat(codegen): enhance Demetrios backend with proper unit syntax
+7cd456a6  feat(medlang): update submodule with enhanced Sounio codegen
+4d60242   feat(codegen): enhance Sounio backend with proper unit syntax
 cfb84d91  docs(integration): add comprehensive completion summary
-496e4c8d  feat(verification): complete end-to-end MedLang→Demetrios pipeline
+496e4c8d  feat(verification): complete end-to-end MedLang→Sounio pipeline
 ```
 
 ### Statistics
 
 - **3 working PBPK models** (1-comp, 2-comp, epistemic)
 - **~150 lines** of codegen enhancements
-- **78 lines** changed in demetrios.rs
+- **78 lines** changed in sounio.rs
 - **100% compilation success rate**
 - **100% execution success rate**
 
@@ -314,7 +314,7 @@ The integration is **production-ready** and **enhanced** with:
 **Status**: ✅ **ENHANCED**
 **Date**: December 23, 2025
 
-🎉 **MedLang → Demetrios: Enhanced and Production-Ready!** 🎉
+🎉 **MedLang → Sounio: Enhanced and Production-Ready!** 🎉
 
 ---
 

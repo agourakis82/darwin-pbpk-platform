@@ -322,7 +322,7 @@ pbpk_fractal = create_fractal_pbpk_params(
 
 ## Contact & Support
 
-- **Maintainer**: Dr. Demetrios Agourakis
+- **Maintainer**: Dr. Sounio Agourakis
 - **Repository**: darwin-pbpk-platform
 - **Documentation**: `julia-migration/docs/FRACTALBLOOD_INTEGRATION.md`
 - **Tests**: `julia-migration/test/test_fractalblood_integration.jl`
