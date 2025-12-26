@@ -265,17 +265,17 @@ find . -type f -name "*.d" | while read f; do mv "$f" "${f%.d}.sio"; done
 
 ### darwin-pbpk-platform Repository
 
-- [ ] Rename `DEMETRIOS_INTEGRATION.md` → `SOUNIO_INTEGRATION.md`
-- [ ] Rename `DEMETRIOS_STDLIB_DISCOVERED.md` → `SOUNIO_STDLIB.md`
-- [ ] Update `CLAUDE.md` references
-- [ ] Rename `julia-migration/src/DarwinPBPK/demetrios/` → `sounio/`
-- [ ] Rename `DemetriosIntegration.jl` → `SounioIntegration.jl`
-- [ ] Update Julia code (struct names, function names)
-- [ ] Rename `medlang_demetrios_compiler.jl` → `medlang_sounio_compiler.jl`
-- [ ] Update MedLang codegen (`demetrios.rs` → `sounio.rs`)
-- [ ] Update MedLang CLI (`--backend sounio`)
-- [ ] Convert all `.d` files to `.sio`
-- [ ] Update submodule reference
+- [x] Rename `DEMETRIOS_INTEGRATION.md` → `SOUNIO_INTEGRATION.md`
+- [x] Rename `DEMETRIOS_STDLIB_DISCOVERED.md` → `SOUNIO_STDLIB.md`
+- [x] Update `CLAUDE.md` references
+- [x] Rename `julia-migration/src/DarwinPBPK/demetrios/` → `sounio/`
+- [x] Rename `DemetriosIntegration.jl` → `SounioIntegration.jl`
+- [x] Update Julia code (struct names, function names)
+- [x] Rename `medlang_demetrios_compiler.jl` → `medlang_sounio_compiler.jl`
+- [ ] Update MedLang codegen (`demetrios.rs` → `sounio.rs`) *(in Darwin-medlang submodule)*
+- [ ] Update MedLang CLI (`--backend sounio`) *(in Darwin-medlang submodule)*
+- [x] Convert all `.d` files to `.sio`
+- [x] Update submodule reference (.gitmodules)
 - [ ] Run tests
 - [ ] Update version numbers
 
@@ -287,6 +287,14 @@ find . -type f -name "*.d" | while read f; do mv "$f" "${f%.d}.sio"; done
 - [ ] Create migration guide from Demetrios
 - [ ] Tag v1.0.0 release
 - [ ] Archive Demetrios repository
+
+---
+
+## Migration Status
+
+**Completed**: December 26, 2025
+**Commit**: `c439da24`
+**Files Changed**: 187
 
 ---
 
