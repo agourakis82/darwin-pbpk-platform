@@ -1,486 +1,315 @@
-# Demetrios → Sounio Merge Plan
+# Demetrios → Sounio Rebrand Migration Plan
 
 **Status**: PLANNING
 **Date**: December 26, 2025
-**Scope**: Massive architectural merge of two epistemic programming languages
+**Scope**: Rebrand migration - Demetrios is being renamed to Sounio
 
 ---
 
 ## Executive Summary
 
-This document outlines the strategy for merging **Demetrios** (v0.83.0) into **Sounio** (github.com/sounio-lang/sounio). Both are Rust-based epistemic programming languages created for scientific computing with uncertainty propagation.
-
-### Merge Direction
+**Sounio IS Demetrios** - this is a rebrand, not a merge of two separate codebases.
 
 ```
-Demetrios ──────────────────────────────────▶ Sounio
-(PBPK-focused,    MERGE INTO    (Broader scientific,
- ~150KB stdlib)                  151k+ lines stdlib)
+Demetrios v0.83.0  ──────rebrand──────▶  Sounio
+     │                                      │
+     └── Same language                      │
+     └── Same compiler                      │
+     └── Same stdlib                        │
+     └── New name, new identity ────────────┘
 ```
 
-**Rationale**: Sounio has a larger, more comprehensive stdlib covering multiple domains (fMRI, causal inference, GPU, signal processing). Demetrios has a mature PBPK stdlib that should be integrated.
+**Author**: Demetrios Chiuratto Agourakis
+**Repositories**:
+- Legacy: `github.com/chiuratto-AI/demetrios`
+- New: `github.com/sounio-lang/sounio`
 
 ---
 
-## Project Comparison
+## Migration Scope
 
-### Core Statistics
-
-| Attribute | Demetrios | Sounio |
-|-----------|-----------|--------|
-| Version | v0.83.0 | - |
-| Language | Rust | Rust 1.70+ |
-| License | MIT/Apache 2.0 | MIT |
-| Primary Domain | PBPK/Pharmacology | Multi-domain Scientific |
-| Stdlib Size | ~150KB | 151,000+ lines |
-| Repository | github.com/chiuratto-AI/demetrios | github.com/sounio-lang/sounio |
-
-### Feature Comparison
-
-| Feature | Demetrios | Sounio | Merge Strategy |
-|---------|-----------|--------|----------------|
-| Knowledge<T> type | ✅ | ✅ | Unify APIs |
-| Unit type system | ✅ Phantom types | ✅ | Port Demetrios M·L·T |
-| Algebraic effects | ✅ effect[IO,Mut,Alloc] | ? | Port to Sounio |
-| Refinement types | ✅ SMT-verified | ? | Port to Sounio |
-| Linear types | ✅ | ? | Port to Sounio |
-| Provenance tracking | ✅ | ✅ | Unify APIs |
-| GUM compliance | ✅ | ✅ | Already aligned |
-| ISO 17025 | Partial | ✅ | Use Sounio's |
-| PBPK stdlib | ✅ 150KB | ✅ 9,800 lines | Merge both |
-| ODE solver | ✅ Tsit5 native | ? | Port Demetrios |
-| fMRI processing | ❌ | ✅ 5,073 lines | Keep Sounio |
-| Causal inference | ❌ | ✅ 3,773 lines | Keep Sounio |
-| GPU acceleration | ? | ✅ 2,487 lines | Keep Sounio |
-
----
-
-## Merge Work Packages
-
-### Package 1: Repository Setup & Infrastructure
-
-**Estimated Effort**: 2-3 days
-**Dependencies**: None
-
-#### Tasks:
-
-1. **Fork Sounio repository**
-   ```bash
-   git clone https://github.com/sounio-lang/sounio
-   cd sounio
-   git checkout -b merge/demetrios-v0.83.0
-   ```
-
-2. **Add Demetrios as submodule for reference**
-   ```bash
-   git submodule add https://github.com/chiuratto-AI/demetrios demetrios-reference
-   ```
-
-3. **Set up CI/CD for merge branch**
-   - Configure GitHub Actions
-   - Add cross-project test suite
-   - Set up benchmark comparisons
-
-4. **Create feature flags for incremental merge**
-   ```toml
-   # Cargo.toml
-   [features]
-   demetrios-effects = []
-   demetrios-refinement = []
-   demetrios-pbpk = []
-   ```
-
----
-
-### Package 2: Compiler Core Alignment
-
-**Estimated Effort**: 2-3 weeks
-**Dependencies**: Package 1
-
-#### 2.1 Lexer/Parser Comparison
-
-Compare token sets and grammar:
+### What Changes
 
 | Component | Demetrios | Sounio | Action |
 |-----------|-----------|--------|--------|
-| Lexer lib | logos | ? | Align to common |
-| Parser lib | nom | ? | Align to common |
-| Diagnostics | miette | ? | Align to common |
+| Language name | Demetrios | Sounio | Rename |
+| File extension | `.d` | `.sou` (TBD) | Convert all |
+| Compiler binary | `dc` | `souc` (TBD) | Rename |
+| CLI commands | `dc build` | `souc build` | Update |
+| Module imports | `import demetrios.*` | `import sounio.*` | Sed replace |
+| Stdlib path | `darwin_pbpk/` | Keep or rename? | TBD |
 
-#### 2.2 Type System Unification
+### What Stays the Same
 
-**Critical**: Both have Knowledge<T> but potentially different implementations.
-
-```rust
-// Demetrios Knowledge type
-struct EpistemicValue<T> {
-    value: T,
-    uncertainty: f64,
-    confidence: f64,
-    source: Source,
-}
-
-// Sounio Knowledge type (from docs)
-struct Knowledge<T> {
-    value: T,
-    uncertainty: UncertaintyBounds,
-    provenance: ProvenanceChain,
-    confidence: ConfidenceLevel,
-}
-```
-
-**Action**: Create unified `Knowledge<T>` that supports both APIs.
-
-#### 2.3 Unit Type System
-
-Port Demetrios' M·L·T dimensional analysis:
-
-```d
-// Demetrios phantom types
-type Mass<U>
-type Volume<U>
-type Time<U>
-
-// Derived
-type Clearance = Volume<L> / Time<h>
-type Concentration = Mass<mg> / Volume<L>
-```
-
-**Files to port**:
-- `Darwin-demetrios/compiler/src/types/units.rs`
-- `Darwin-demetrios/compiler/src/types/dimensional.rs`
-
-#### 2.4 Algebraic Effects System
-
-Port Demetrios' effect tracking:
-
-```d
-fn simulate() -> effect[IO, Mut, Alloc, GPU] Result
-```
-
-**Files to port**:
-- `Darwin-demetrios/compiler/src/effects/mod.rs`
-- `Darwin-demetrios/compiler/src/effects/io.rs`
-- `Darwin-demetrios/compiler/src/effects/mut.rs`
-
-#### 2.5 Refinement Types
-
-Port SMT-verified constraints:
-
-```d
-type Fraction = Real where { 0.0 <= self <= 1.0 }
-type Age = Real where { 0.0 <= self <= 120.0 }
-```
-
-**Integration**: May require Z3 or similar SMT solver binding.
+- ✅ Type system (phantom types, M·L·T units)
+- ✅ Algebraic effects (`effect[IO, Mut, Alloc]`)
+- ✅ Refinement types (SMT-verified)
+- ✅ Knowledge<T> / EpistemicValue<T>
+- ✅ ODE solvers (Tsit5)
+- ✅ PBPK stdlib (~150KB)
+- ✅ Compiler architecture (Rust, logos, nom, miette)
 
 ---
 
-### Package 3: Standard Library Migration
+## Migration Work Packages
 
-**Estimated Effort**: 3-4 weeks
-**Dependencies**: Package 2 (type system)
+### Package 1: darwin-pbpk-platform Updates
 
-#### 3.1 Sounio Stdlib Structure (Target)
+**Scope**: Update all Demetrios references in this repository
 
-```
-sounio/stdlib/
-├── epistemic/      (7,780 lines) - Keep as-is
-├── medlang/        (9,800 lines) - Enhance with Demetrios
-├── fmri/           (5,073 lines) - Keep as-is
-├── causal/         (3,773 lines) - Keep as-is
-├── connectivity/   (3,792 lines) - Keep as-is
-├── signal/         (3,068 lines) - Keep as-is
-├── gpu/            (2,487 lines) - Keep as-is
-└── [NEW] darwin_pbpk/  - Port from Demetrios
-```
+#### 1.1 Documentation Updates
 
-#### 3.2 Demetrios PBPK Stdlib to Port
-
-```
-Darwin-demetrios/stdlib/darwin_pbpk/
-├── simulation.d        (23KB, 680 lines)  → stdlib/darwin_pbpk/simulation.sou
-├── tsit5_pbpk14.d      (23.9KB)           → stdlib/darwin_pbpk/solvers/tsit5.sou
-├── compartments/
-│   ├── brain.d         (25.1KB)           → stdlib/darwin_pbpk/organs/brain.sou
-│   ├── liver.d         (16.7KB)           → stdlib/darwin_pbpk/organs/liver.sou
-│   └── kidney.d        (23.7KB)           → stdlib/darwin_pbpk/organs/kidney.sou
-├── ddi/
-│   └── mechanistic_ddi.d (17KB)           → stdlib/darwin_pbpk/ddi/mechanistic.sou
-└── pbpk/
-    ├── types.d         (7.8KB)            → stdlib/darwin_pbpk/types.sou
-    ├── covariate.d     (13.2KB)           → stdlib/darwin_pbpk/patient/covariate.sou
-    ├── population.d    (15.6KB)           → stdlib/darwin_pbpk/population/mod.sou
-    ├── error_models.d  (15.6KB)           → stdlib/darwin_pbpk/statistics/error_models.sou
-    └── regulatory.d    (35.4KB)           → stdlib/darwin_pbpk/validation/regulatory.sou
-```
-
-#### 3.3 Stdlib Reconciliation Strategy
-
-For `medlang/` (both have implementations):
-
-| Sounio (9,800 lines) | Demetrios (~150KB) | Resolution |
-|---------------------|-------------------|------------|
-| pk_models.sou | simulation.d | Merge: Demetrios has Tsit5 |
-| pd_models.sou | - | Keep Sounio |
-| pbpk.sou | tsit5_pbpk14.d | Replace with Demetrios |
-| - | compartments/*.d | Add from Demetrios |
-| - | ddi/mechanistic_ddi.d | Add from Demetrios |
-| - | regulatory.d | Add from Demetrios |
-
----
-
-### Package 4: ODE Solver Migration
-
-**Estimated Effort**: 1-2 weeks
-**Dependencies**: Package 3 (types)
-
-#### 4.1 Demetrios Tsit5 Implementation
-
-Native adaptive ODE solver (0.02-0.20ms per step):
-
-```d
-// tsit5_pbpk14.d structure
-struct Tsit5Solver {
-    butcher_tableau: ButcherCoeffs,
-    error_control: AdaptiveStepControl,
-    state: SolverState,
-}
-
-fn tsit5_step(
-    f: fn(&State, f64) -> StateDerivatives,
-    state: &State,
-    t: f64,
-    dt: f64
-) -> (State, f64)  // (new_state, error_estimate)
-```
-
-#### 4.2 Port Strategy
-
-1. Extract Tsit5 as standalone module
-2. Adapt to Sounio's type conventions
-3. Add GPU acceleration hooks (Sounio has GPU stdlib)
-4. Benchmark against existing Sounio ODE solvers
-
----
-
-### Package 5: MedLang Integration
-
-**Estimated Effort**: 1 week
-**Dependencies**: Packages 2, 3
-
-#### 5.1 Current State
-
-Darwin-medlang can compile to:
-- Stan (.stan)
-- Julia (.jl)
-- Julia PINN (.jl)
-- **Demetrios (.d)** ← Needs updating for Sounio
-
-#### 5.2 Migration Tasks
-
-1. **Create Sounio backend** (`codegen/sounio.rs`)
-   - Fork from `codegen/demetrios.rs`
-   - Update syntax for Sounio conventions
-   - Update stdlib imports
-
-2. **Update CLI**
-   ```bash
-   mlc compile model.medlang --backend sounio -o model.sou
-   ```
-
-3. **Golden tests**
-   - Port Demetrios golden tests
-   - Add Sounio-specific test cases
-
----
-
-### Package 6: Julia FFI Bridge
-
-**Estimated Effort**: 1-2 weeks
-**Dependencies**: Package 4
-
-#### 6.1 Current Julia Integration
-
-```julia
-# DemetriosIntegration.jl (679 lines)
-struct DemetriosCompiler ... end
-struct DemetriosModel ... end
-compile_demetrios(compiler, source_file; target)
-run_demetrios_pbpk(model, request)
-```
-
-#### 6.2 Migration Tasks
-
-1. **Create SounioIntegration.jl**
-   - Port from DemetriosIntegration.jl
-   - Update binary names (`dc` → `souc`)
-   - Update output formats
-
-2. **Update medlang_demetrios_compiler.jl**
-   - Rename to `medlang_sounio_compiler.jl`
-   - Update UNIT_MAPPING for Sounio syntax
-   - Update code generation templates
-
----
-
-### Package 7: Testing & Validation
-
-**Estimated Effort**: 2-3 weeks
-**Dependencies**: All previous packages
-
-#### 7.1 Test Suite Migration
-
-| Test Type | Demetrios Location | Sounio Location | Status |
-|-----------|-------------------|-----------------|--------|
-| Unit tests | compiler/tests/ | compiler/tests/ | Merge |
-| Golden tests | compiler/tests/golden/ | compiler/tests/golden/ | Port |
-| End-to-end | test/*.d | tests/*.sou | Create |
-| Fuzzing | - | compiler/fuzz/ | Extend |
-| Benchmarks | - | compiler/benches/ | Add |
-
-#### 7.2 Validation Criteria
-
-1. **Compiler correctness**
-   - All Demetrios programs compile with Sounio
-   - Equivalent semantics for shared features
-
-2. **Performance**
-   - ODE solver: ≤0.25ms/step (match Demetrios)
-   - Compilation: <5 seconds for PBPK models
-   - Memory: No regression from Demetrios
-
-3. **Regulatory compliance**
-   - GMFE <2.0 for PBPK predictions
-   - 90% within 2-fold of observed
-   - Maintain ISO 17025 compliance
-
----
-
-## Timeline Overview
-
-```
-Week 1-2:   Package 1 - Repository Setup
-Week 3-5:   Package 2 - Compiler Core Alignment
-Week 6-9:   Package 3 - Standard Library Migration
-Week 10-11: Package 4 - ODE Solver Migration
-Week 12:    Package 5 - MedLang Integration
-Week 13-14: Package 6 - Julia FFI Bridge
-Week 15-17: Package 7 - Testing & Validation
-Week 18:    Final integration and release
-
-Total: ~4.5 months
-```
-
----
-
-## Risk Analysis
-
-### High Risk
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Type system incompatibility | Blocks all | Start with type unification |
-| Effect system conflicts | Major refactoring | Feature-flag incremental merge |
-| Performance regression | User adoption | Continuous benchmarking |
-
-### Medium Risk
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Stdlib API breaks | User migration | Provide compatibility layer |
-| Build system changes | CI/CD issues | Parallel build pipelines |
-| Documentation gaps | User confusion | Document as we merge |
-
-### Low Risk
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| License compatibility | Legal | Both MIT-compatible |
-| Test coverage gaps | Quality | Comprehensive test plan |
-
----
-
-## Open Questions for Clarification
-
-1. **Type System**
-   - Does Sounio have phantom types for units?
-   - How does Sounio's Knowledge<T> differ from Demetrios' EpistemicValue<T>?
-
-2. **Effects**
-   - Does Sounio have an algebraic effect system?
-   - If not, is there appetite to add one?
-
-3. **Refinement Types**
-   - Does Sounio support SMT-verified constraints?
-   - What solver would be used?
-
-4. **ODE Solvers**
-   - What ODE solvers does Sounio currently have?
-   - Is there existing GPU-accelerated ODE support?
-
-5. **Governance**
-   - Who maintains Sounio?
-   - What's the PR/review process?
-   - Release cadence?
-
----
-
-## Immediate Next Steps
-
-1. **Clone Sounio repository** and perform deep analysis
-2. **Create feature comparison matrix** at compiler level
-3. **Identify breaking changes** required
-4. **Draft API compatibility layer** for gradual migration
-5. **Set up development environment** with both codebases
-6. **Begin Package 1** (Repository Setup)
-
----
-
-## Files in darwin-pbpk-platform to Update
-
-After merge, these files need updating:
-
-| File | Changes Required |
-|------|-----------------|
+| File | Action |
+|------|--------|
 | `CLAUDE.md` | Update Demetrios → Sounio references |
-| `DEMETRIOS_INTEGRATION.md` | Deprecate, redirect to Sounio |
-| `DEMETRIOS_STDLIB_DISCOVERED.md` | Merge into Sounio docs |
+| `DEMETRIOS_INTEGRATION.md` | Rename to `SOUNIO_INTEGRATION.md` |
+| `DEMETRIOS_STDLIB_DISCOVERED.md` | Rename to `SOUNIO_STDLIB.md` |
+
+#### 1.2 Julia Integration Updates
+
+| File | Action |
+|------|--------|
 | `julia-migration/src/DarwinPBPK/demetrios/` | Rename to `sounio/` |
-| `julia-migration/src/DarwinPBPK/medlang/medlang_demetrios_compiler.jl` | Port to Sounio |
-| `Darwin-demetrios/` | Remove submodule after merge |
+| `DemetriosIntegration.jl` | Rename to `SounioIntegration.jl` |
+| `medlang_demetrios_compiler.jl` | Rename to `medlang_sounio_compiler.jl` |
+
+**Code changes in Julia files**:
+```julia
+# Before
+struct DemetriosCompiler ... end
+compile_demetrios(source_file)
+run(`dc build model.d`)
+
+# After
+struct SounioCompiler ... end
+compile_sounio(source_file)
+run(`souc build model.sou`)
+```
+
+#### 1.3 MedLang Compiler Updates
+
+| File | Action |
+|------|--------|
 | `Darwin-medlang/compiler/src/codegen/demetrios.rs` | Rename to `sounio.rs` |
-| `*.d` example files | Convert to `.sou` |
+| `Darwin-medlang/compiler/src/codegen/mod.rs` | Update exports |
+| `Darwin-medlang/compiler/src/bin/mlc.rs` | Update CLI (`--backend sounio`) |
+
+**CLI change**:
+```bash
+# Before
+mlc compile model.medlang --backend demetrios -o model.d
+
+# After
+mlc compile model.medlang --backend sounio -o model.sou
+```
+
+#### 1.4 Example File Conversions
+
+| Current | New |
+|---------|-----|
+| `test_simple_pk.d` | `test_simple_pk.sou` |
+| `test_two_comp_pk.d` | `test_two_comp_pk.sou` |
+| `test_enhanced_pk.d` | `test_enhanced_pk.sou` |
+| `test_epistemic_pk.d` | `test_epistemic_pk.sou` |
+| `test_medlang_to_demetrios.d` | `test_medlang_to_sounio.sou` |
+
+#### 1.5 Submodule Update
+
+```bash
+# Remove old submodule
+git submodule deinit Darwin-demetrios
+git rm Darwin-demetrios
+
+# Add new submodule
+git submodule add https://github.com/sounio-lang/sounio Darwin-sounio
+```
 
 ---
 
-## Appendix A: Sounio Stdlib Domains
+### Package 2: Sounio Repository Setup (github.com/sounio-lang/sounio)
 
-| Domain | Lines | Description |
-|--------|-------|-------------|
-| epistemic/ | 7,780 | Core types & provenance |
-| medlang/ | 9,800 | PK/PD models + PBPK |
-| fmri/ | 5,073 | Neuroimaging pipelines |
-| causal/ | 3,773 | Causal discovery |
-| connectivity/ | 3,792 | Graph metrics |
-| signal/ | 3,068 | DSP & spectral analysis |
-| gpu/ | 2,487 | CUDA kernels |
+#### 2.1 Repository Structure
 
-## Appendix B: Demetrios PBPK Stdlib Modules
+```
+sounio/
+├── compiler/
+│   ├── src/
+│   │   ├── lexer/
+│   │   ├── parser/
+│   │   ├── typechecker/
+│   │   ├── ir/
+│   │   └── codegen/
+│   ├── benches/
+│   ├── tests/
+│   └── Cargo.toml
+├── stdlib/
+│   ├── std/           # Core library
+│   ├── epistemic/     # Knowledge<T>, uncertainty
+│   ├── medlang/       # PK/PD models
+│   ├── darwin_pbpk/   # PBPK stdlib
+│   ├── fmri/          # Neuroimaging
+│   ├── causal/        # Causal inference
+│   ├── signal/        # DSP
+│   └── gpu/           # CUDA kernels
+├── runtime/
+├── spec/              # Language specification
+├── examples/
+├── docs/
+└── editors/
+    └── vscode/        # Syntax highlighting
+```
 
-| Module | Size | Key Functions |
-|--------|------|---------------|
-| simulation.d | 23KB | run_pbpk_simulation() |
-| tsit5_pbpk14.d | 23.9KB | Adaptive ODE solver |
-| compartments/brain.d | 25.1KB | BBB transport |
-| compartments/liver.d | 16.7KB | CYP metabolism |
-| compartments/kidney.d | 23.7KB | Renal elimination |
-| ddi/mechanistic_ddi.d | 17KB | DDI prediction |
-| pbpk/regulatory.d | 35.4KB | FDA/EMA metrics |
+#### 2.2 Compiler Binary
+
+```bash
+# Build
+cd compiler && cargo build --release
+
+# Install
+cargo install --path .
+
+# Verify
+souc --version
+# Sounio Compiler v1.0.0 (formerly Demetrios v0.83.0)
+```
+
+#### 2.3 File Extension Registration
+
+- Extension: `.sou`
+- MIME type: `text/x-sounio`
+- VSCode language ID: `sounio`
 
 ---
 
-**Document Version**: 1.0
+### Package 3: Search & Replace Operations
+
+#### 3.1 Global Renames
+
+```bash
+# In darwin-pbpk-platform
+find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" -o -name "*.toml" \) \
+  -exec sed -i 's/Demetrios/Sounio/g' {} \;
+
+find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" -o -name "*.toml" \) \
+  -exec sed -i 's/demetrios/sounio/g' {} \;
+
+find . -type f -name "*.d" -exec rename 's/\.d$/.sou/' {} \;
+```
+
+#### 3.2 Specific Replacements
+
+| Pattern | Replacement |
+|---------|-------------|
+| `Demetrios` | `Sounio` |
+| `demetrios` | `sounio` |
+| `DEMETRIOS` | `SOUNIO` |
+| `.d` (extension) | `.sou` |
+| `dc` (compiler) | `souc` |
+| `Darwin-demetrios` | `Darwin-sounio` |
+
+---
+
+## Timeline
+
+| Phase | Duration | Tasks |
+|-------|----------|-------|
+| Phase 1 | 1 day | Rename files and directories |
+| Phase 2 | 1 day | Search & replace content |
+| Phase 3 | 1 day | Update submodules |
+| Phase 4 | 1 day | Test compilation & examples |
+| Phase 5 | 1 day | Update documentation |
+
+**Total**: ~1 week (vs. 4.5 months for a full merge)
+
+---
+
+## Open Questions
+
+1. **File extension**: Is `.sou` correct, or different?
+2. **Compiler binary**: Is `souc` the name, or something else?
+3. **Stdlib namespace**: Keep `darwin_pbpk` or rename to `sounio.pbpk`?
+4. **Version**: Start at v1.0.0 or continue from v0.83.x?
+
+---
+
+## Checklist
+
+### darwin-pbpk-platform Repository
+
+- [ ] Rename `DEMETRIOS_INTEGRATION.md` → `SOUNIO_INTEGRATION.md`
+- [ ] Rename `DEMETRIOS_STDLIB_DISCOVERED.md` → `SOUNIO_STDLIB.md`
+- [ ] Update `CLAUDE.md` references
+- [ ] Rename `julia-migration/src/DarwinPBPK/demetrios/` → `sounio/`
+- [ ] Rename `DemetriosIntegration.jl` → `SounioIntegration.jl`
+- [ ] Update Julia code (struct names, function names)
+- [ ] Rename `medlang_demetrios_compiler.jl` → `medlang_sounio_compiler.jl`
+- [ ] Update MedLang codegen (`demetrios.rs` → `sounio.rs`)
+- [ ] Update MedLang CLI (`--backend sounio`)
+- [ ] Convert all `.d` files to `.sou`
+- [ ] Update submodule reference
+- [ ] Run tests
+- [ ] Update version numbers
+
+### Sounio Repository (github.com/sounio-lang/sounio)
+
+- [ ] Verify compiler builds
+- [ ] Verify stdlib compiles
+- [ ] Update README
+- [ ] Create migration guide from Demetrios
+- [ ] Tag v1.0.0 release
+- [ ] Archive Demetrios repository
+
+---
+
+## Migration Script (Draft)
+
+```bash
+#!/bin/bash
+# migrate_demetrios_to_sounio.sh
+
+set -e
+
+echo "=== Demetrios → Sounio Migration ==="
+
+# 1. Rename documentation
+mv DEMETRIOS_INTEGRATION.md SOUNIO_INTEGRATION.md
+mv DEMETRIOS_STDLIB_DISCOVERED.md SOUNIO_STDLIB.md
+
+# 2. Rename Julia directories
+mv julia-migration/src/DarwinPBPK/demetrios julia-migration/src/DarwinPBPK/sounio
+mv julia-migration/src/DarwinPBPK/sounio/DemetriosIntegration.jl \
+   julia-migration/src/DarwinPBPK/sounio/SounioIntegration.jl
+
+# 3. Rename MedLang codegen
+mv Darwin-medlang/compiler/src/codegen/demetrios.rs \
+   Darwin-medlang/compiler/src/codegen/sounio.rs
+
+# 4. Convert .d files to .sou
+find . -name "*.d" -type f | while read f; do
+  mv "$f" "${f%.d}.sou"
+done
+
+# 5. Global search & replace
+find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
+  -exec sed -i 's/Demetrios/Sounio/g' {} \;
+find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
+  -exec sed -i 's/demetrios/sounio/g' {} \;
+find . -type f \( -name "*.jl" -o -name "*.md" -o -name "*.rs" \) \
+  -exec sed -i 's/\.d"/.sou"/g' {} \;
+
+# 6. Update submodule
+git submodule deinit -f Darwin-demetrios || true
+git rm -f Darwin-demetrios || true
+git submodule add https://github.com/sounio-lang/sounio Darwin-sounio
+
+echo "=== Migration Complete ==="
+echo "Run tests to verify: julia --project=julia-migration -e 'using Pkg; Pkg.test()'"
+```
+
+---
+
+**Document Version**: 2.0
+**Change**: Revised from "merge plan" to "rebrand migration plan"
 **Authors**: Claude Code
 **Repository**: darwin-pbpk-platform
 **Branch**: claude/plan-demetrios-sounio-merge-UTnPQ
