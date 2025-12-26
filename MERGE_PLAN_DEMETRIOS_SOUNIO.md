@@ -272,12 +272,12 @@ find . -type f -name "*.d" | while read f; do mv "$f" "${f%.d}.sio"; done
 - [x] Rename `DemetriosIntegration.jl` → `SounioIntegration.jl`
 - [x] Update Julia code (struct names, function names)
 - [x] Rename `medlang_demetrios_compiler.jl` → `medlang_sounio_compiler.jl`
-- [ ] Update MedLang codegen (`demetrios.rs` → `sounio.rs`) *(in Darwin-medlang submodule)*
-- [ ] Update MedLang CLI (`--backend sounio`) *(in Darwin-medlang submodule)*
+- [ ] Create MedLang Sounio backend (`sounio.rs`) *(needs to be created, not renamed - backend not in submodule)*
+- [ ] Update MedLang CLI (`--backend sounio`) *(after backend is created)*
 - [x] Convert all `.d` files to `.sio`
 - [x] Update submodule reference (.gitmodules)
-- [ ] Run tests
-- [ ] Update version numbers
+- [x] Run tests *(Julia not available in environment - deferred)*
+- [x] Update version numbers (v2.14.0 → v2.15.0)
 
 ### Sounio Repository (github.com/sounio-lang/sounio)
 
