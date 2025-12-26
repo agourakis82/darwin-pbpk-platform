@@ -11,7 +11,7 @@ D-MPNN from Yang et al. 2019 (Chemprop) is SOTA for molecular property
 prediction, outperforming standard GNNs by using directed edges to prevent
 information from immediately returning to sender atoms.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

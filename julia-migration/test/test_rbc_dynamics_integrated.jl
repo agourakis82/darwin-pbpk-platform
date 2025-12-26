@@ -4,7 +4,7 @@
 # Tests for closed-loop RBC dynamics with hematopoiesis, EPO feedback,
 # organ clearance, and transporter expression.
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # ===========================================================================
 

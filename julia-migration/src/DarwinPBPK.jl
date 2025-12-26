@@ -4,7 +4,7 @@ Darwin PBPK Platform - Julia Implementation
 SOTA + Disruptive + Nature-tier PBPK modeling platform.
 First Real Implementation of MedLang DSL (github.com/agourakis82/medlang)
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 
@@ -85,8 +85,8 @@ include("DarwinPBPK/regulatory/RegulatoryReports.jl")  # FDA/EMA report generati
 # Mechanistic DDI (Q1 2025)
 include("DarwinPBPK/ddi/MechanisticDDI.jl")  # IVIVE-DDI, multi-inhibitor, Monte Carlo UQ ✅
 
-# Demetrios Integration (Q1 2025)
-include("DarwinPBPK/demetrios/DemetriosIntegration.jl")  # Julia↔Demetrios FFI ✅
+# Sounio Integration (Q1 2025)
+include("DarwinPBPK/sounio/SounioIntegration.jl")  # Julia↔Sounio FFI ✅
 
 # Re-export principais
 using .PatientProfile
@@ -142,7 +142,7 @@ using .ClinicalDataIntegration
 using .AllometricScaling
 using .RegulatoryReports
 using .MechanisticDDI
-using .DemetriosIntegration
+using .SounioIntegration
 
 # Export MedLang DSL functions
 export parse_medlang, compile_model, compile_file, simulate_medlang

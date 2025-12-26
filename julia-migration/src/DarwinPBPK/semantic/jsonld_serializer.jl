@@ -10,7 +10,7 @@
 # - PK parameter serialization with QUDT/PATO alignment
 # - Simulation result serialization
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

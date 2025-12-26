@@ -11,7 +11,7 @@
 #
 # Reference: https://www.w3.org/TR/prov-o/
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

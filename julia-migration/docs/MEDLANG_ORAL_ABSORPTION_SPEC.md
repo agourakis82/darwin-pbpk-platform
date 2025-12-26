@@ -1,7 +1,7 @@
 # MedLang Track D: Oral Absorption & First-Pass Metabolism Specification
 
 **Version:** 0.2.0  
-**Author:** Dr. Demetrios Agourakis  
+**Author:** Dr. Sounio Agourakis  
 **Date:** November 2025  
 **Status:** Implemented in Darwin PBPK Platform
 

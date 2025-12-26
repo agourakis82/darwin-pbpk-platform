@@ -5,13 +5,13 @@
 # Supports CPU and GPU (CUDA) inference
 #
 # Version: 2.11.0
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # ===========================================================================
 
 # Stage 1: Julia base with dependencies
 FROM julia:1.10.4-bookworm AS julia-base
 
-LABEL maintainer="Dr. Demetrios Agourakis <agourakis82@darwin-pbpk.org>"
+LABEL maintainer="Dr. Sounio Agourakis <agourakis82@darwin-pbpk.org>"
 LABEL version="2.11.0"
 LABEL description="Darwin PBPK Platform - AI-powered PBPK prediction"
 

@@ -3,7 +3,7 @@
   "description": "Complete migration to Julia for Physiologically-Based Pharmacokinetic (PBPK) modeling with Graph Neural Networks. 100% Julia codebase with 4× performance improvement over Python implementation.",
   "creators": [
     {
-      "name": "Agourakis, Demetrios",
+      "name": "Agourakis, Sounio",
       "affiliation": "Independent Researcher"
     }
   ],

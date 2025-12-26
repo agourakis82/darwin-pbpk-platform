@@ -38,7 +38,7 @@
 # - Vieira et al. (2014) - Transporter DDI
 # - Fahmi et al. (2009) - CYP induction prediction
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

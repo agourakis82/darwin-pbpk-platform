@@ -3,7 +3,7 @@
 # =============================================================================
 # Tests for JSON-LD serialization and OBO Foundry ontology integration.
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # =============================================================================
 

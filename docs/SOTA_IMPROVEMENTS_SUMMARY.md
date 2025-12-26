@@ -1,7 +1,7 @@
 # Resumo Executivo - Melhorias SOTA Implementadas
 
 **Data:** 2025-11-17
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Status:** Implementação Completa dos 5 Passos Recomendados
 
 ---

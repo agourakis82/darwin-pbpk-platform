@@ -11,7 +11,7 @@ Neural ODEs provide an alternative to discrete GNN message passing,
 modeling concentration dynamics as continuous-time evolution learned
 from data while respecting physical constraints.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

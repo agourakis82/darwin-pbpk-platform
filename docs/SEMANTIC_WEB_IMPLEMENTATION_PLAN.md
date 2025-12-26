@@ -2,7 +2,7 @@
 ## Darwin PBPK Platform — SOTA Semantic Web Layer
 
 **Version:** 1.0.0  
-**Author:** Dr. Demetrios Agourakis + Claude AI  
+**Author:** Dr. Sounio Agourakis + Claude AI  
 **Date:** December 2025  
 **Status:** Planning Phase
 

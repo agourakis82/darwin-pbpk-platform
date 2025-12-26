@@ -44,7 +44,7 @@ if [ ! -f "$DATA_PATH" ]; then
     echo ""
     echo "Opções:"
     echo "1. Copiar do node atual (se workspace não for compartilhado):"
-    echo "   scp DemetriosPCS:~/workspace/darwin-pbpk-platform/$DATA_PATH $DATA_PATH"
+    echo "   scp SounioPCS:~/workspace/darwin-pbpk-platform/$DATA_PATH $DATA_PATH"
     echo ""
     echo "2. Gerar novo dataset:"
     echo "   python3 scripts/generate_dynamic_gnn_training_data.py \\"

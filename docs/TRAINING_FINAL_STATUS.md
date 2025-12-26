@@ -7,7 +7,7 @@
 
 ## 🚀 TREINAMENTOS EM ANDAMENTO
 
-### 1. Node DemetriosPCS (RTX 4000 Ada Generation)
+### 1. Node SounioPCS (RTX 4000 Ada Generation)
 
 **Status:** ✅ Rodando em background  
 **GPU:** NVIDIA RTX 4000 Ada (19.2 GB)  

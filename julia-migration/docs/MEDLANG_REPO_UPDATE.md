@@ -215,5 +215,5 @@ end
 
 For questions about the implementation:
 - Repository: darwin-pbpk-platform
-- Author: Dr. Demetrios Agourakis
+- Author: Dr. Sounio Agourakis
 - Date: November 2025

@@ -104,7 +104,7 @@ Obrigado por usar o Darwin PBPK Platform! A migração para Julia traz melhorias
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis
+**Autor:** Dr. Sounio Agourakis
 **Data:** 2025-11-18
 
 

@@ -173,7 +173,7 @@ Training datasets for Darwin PBPK Platform v1.0.0, including:
 
 **Name:**
 ```
-Demetrios Chiuratto Agourakis
+Sounio Chiuratto Agourakis
 ```
 
 **Affiliation:**

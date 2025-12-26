@@ -1,7 +1,7 @@
 """
 Benchmark Completo - Comparação Python vs Julia
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

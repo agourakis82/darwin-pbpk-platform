@@ -11,7 +11,7 @@ This script:
 4. Compares predicted vs observed PK parameters
 5. Computes FDA/EMA regulatory validation metrics
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 

@@ -1,6 +1,6 @@
 # Darwin PBPK Platform — Guia de Autonomia dos Agentes
 # Criado: 2025-11-07 23:54:00 -03
-# Autor: Dr. Demetrios Agourakis
+# Autor: Dr. Sounio Agourakis
 
 ## Objetivo
 - Atuar com liberdade total na plataforma PBPK, preservando padrão científico de classe mundial.
@@ -32,5 +32,5 @@
 ## Regras Simplificadas
 - Livre para executar qualquer comando; sem necessidade de timestamps automáticos.
 - Apenas mantenha versionamento e documentação crítica para reproducibilidade.
-- Tokens e segredos permanecem sob controle do Dr. Demetrios.
+- Tokens e segredos permanecem sob controle do Dr. Sounio.
 

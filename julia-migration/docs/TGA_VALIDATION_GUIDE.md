@@ -446,5 +446,5 @@ julia --project=. examples/tga_validation_example.jl
 ## License
 
 Part of the Darwin PBPK Platform.
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: 2025-12-05

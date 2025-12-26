@@ -38,7 +38,7 @@
 # - Verscheijden et al. (2021) - Pediatric CNS PBPK
 # - Ball et al. (2012) - Bayesian PBPK methods
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

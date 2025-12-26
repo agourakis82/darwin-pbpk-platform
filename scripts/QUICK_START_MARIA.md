@@ -73,7 +73,7 @@ ls -lh models/dynamic_gnn_maria/training_curve.png
 ### Dataset não encontrado:
 ```bash
 # Copiar do node atual
-scp DemetriosPCS:~/workspace/darwin-pbpk-platform/data/dynamic_gnn_training_full/training_data.npz \
+scp SounioPCS:~/workspace/darwin-pbpk-platform/data/dynamic_gnn_training_full/training_data.npz \
     data/dynamic_gnn_training_full/
 ```
 

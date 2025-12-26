@@ -13,7 +13,7 @@
 # - simulate_oral() for concentration-time profiles
 # - validate_model() for model checking
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # ===========================================================================
 

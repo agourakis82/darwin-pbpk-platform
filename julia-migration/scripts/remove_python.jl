@@ -5,7 +5,7 @@ Remove todos os arquivos Python após migração completa.
 ⚠️ ATENÇÃO: Este script remove permanentemente arquivos Python!
 Use apenas após confirmar que toda funcionalidade foi migrada.
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

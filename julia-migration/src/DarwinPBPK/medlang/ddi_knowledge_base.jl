@@ -30,7 +30,7 @@
 # - Food-drug and herb-drug interactions
 # - Disease-state DDI modifiers
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

@@ -4,7 +4,7 @@ Análise de Overfitting a partir de Resultados JSON Existentes
 
 Analisa resultados de validação existentes para detectar overfitting.
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

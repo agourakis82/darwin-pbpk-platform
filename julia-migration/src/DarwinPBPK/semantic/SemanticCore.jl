@@ -15,7 +15,7 @@
 # - QUDT: http://qudt.org/
 # - PROV-O: https://www.w3.org/TR/prov-o/
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # =============================================================================

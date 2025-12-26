@@ -2,7 +2,7 @@
 
 ## A Domain-Specific Language for Physiologically-Based Pharmacokinetic Modeling
 
-**Authors:** Dr. Demetrios Agourakis  
+**Authors:** Dr. Sounio Agourakis  
 **Date:** November 2025  
 **Status:** Draft Specification
 
@@ -13,8 +13,8 @@
 MedLang is a domain-specific language (DSL) designed for expressing pharmacokinetic and pharmacodynamic (PK/PD) models with:
 
 1. **Domain expressiveness** - Syntax mirrors how pharmacologists think
-2. **Type safety** - Compile-time unit checking via Demetrios backend
-3. **Multi-target compilation** - Julia (dev), Demetrios (production), PharmML (regulatory)
+2. **Type safety** - Compile-time unit checking via Sounio backend
+3. **Multi-target compilation** - Julia (dev), Sounio (production), PharmML (regulatory)
 4. **Formal semantics** - Unambiguous interpretation for regulatory submission
 
 ### 1.1 Design Philosophy
@@ -392,9 +392,9 @@ population Healthy_Adults {
 
 ## 6. Compilation Targets
 
-### 6.1 Demetrios Backend (Primary)
+### 6.1 Sounio Backend (Primary)
 
-MedLang → Demetrios provides:
+MedLang → Sounio provides:
 - **Compile-time unit checking**
 - **GPU acceleration** for population simulations
 - **Algebraic effects** for controlled side effects
@@ -405,8 +405,8 @@ MedLang → Demetrios provides:
 param CL: Clearance = 25 L/h varies LogNormal(CV: 30%)
 ```
 
-```demetrios
-// Generated Demetrios
+```sounio
+// Generated Sounio
 let CL: L_per_h = sample(LogNormal { 
     mean: 25.0, 
     cv: 0.30 
@@ -653,7 +653,7 @@ model Midazolam_Ketoconazole_DDI {
            ┌──────────────────┼──────────────────┐
            ▼                  ▼                  ▼
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ Demetrios       │ │ Julia           │ │ PharmML         │
+│ Sounio       │ │ Julia           │ │ PharmML         │
 │ Backend         │ │ Backend         │ │ Backend         │
 │                 │ │                 │ │                 │
 │ - Unit types    │ │ - Quick dev     │ │ - Regulatory    │
@@ -664,7 +664,7 @@ model Midazolam_Ketoconazole_DDI {
          ▼                  ▼                  ▼
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
 │   .d files      │ │   .jl files     │ │   .xml files    │
-│   (Demetrios)   │ │   (Julia)       │ │   (PharmML)     │
+│   (Sounio)   │ │   (Julia)       │ │   (PharmML)     │
 └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
@@ -680,9 +680,9 @@ model Midazolam_Ketoconazole_DDI {
 - **Bayesian Inference**: MCMC/VI for parameter estimation
 - **Optimal Design**: D-optimal, adaptive dosing
 
-### 10.2 Demetrios-Specific Features
+### 10.2 Sounio-Specific Features
 
-When targeting Demetrios, MedLang can leverage:
+When targeting Sounio, MedLang can leverage:
 
 ```medlang
 // GPU-accelerated population simulation

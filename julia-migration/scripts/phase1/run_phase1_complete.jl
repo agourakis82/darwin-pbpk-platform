@@ -8,7 +8,7 @@ Implementações:
 3. GRU para temporal evolution (implementado)
 4. Investigação de overfitting (script criado)
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

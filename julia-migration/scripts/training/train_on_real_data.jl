@@ -5,7 +5,7 @@ Train Dynamic GNN on Real Drug Data
 Uses validation_drugs_100.json with experimental Cmax/AUC observations
 to train the model on real pharmaceutical data.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: November 2025
 """
 

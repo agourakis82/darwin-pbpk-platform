@@ -214,7 +214,7 @@ See `examples/` directory for complete model definitions:
 
 ## Author
 
-Dr. Demetrios Agourakis
+Dr. Sounio Agourakis
 
 ## Version
 

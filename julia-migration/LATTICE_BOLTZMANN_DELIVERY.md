@@ -372,6 +372,6 @@ julia --project=. scripts/demo_lattice_boltzmann.jl
 
 **Ready for**: Drug distribution modeling, hemodynamic simulations, PBPK integration
 
-**Author**: Dr. Demetrios Agourakis  
+**Author**: Dr. Sounio Agourakis  
 **Date**: December 5, 2025  
 **Version**: 2.5.0

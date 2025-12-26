@@ -9,7 +9,7 @@ Tests for the newly implemented SOTA features:
 5. Calibration Metrics
 6. External Validation Protocol
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 """
 

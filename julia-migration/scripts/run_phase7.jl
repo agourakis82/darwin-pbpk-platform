@@ -2,7 +2,7 @@
 """
 Script para executar FASE 7 - Validação Científica e Produção
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

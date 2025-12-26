@@ -9,7 +9,7 @@ Tests:
 4. Concentration constraints
 5. Gradient flow verification
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: November 2025
 """
 

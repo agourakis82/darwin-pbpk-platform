@@ -130,6 +130,6 @@ Esta release representa um marco importante na validação científica do modelo
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 **Data:** 2025-11-18
 

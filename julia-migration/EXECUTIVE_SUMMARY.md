@@ -2,7 +2,7 @@
 
 **Data:** 2025-11-18
 **Status:** 85% Completo
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 
 ---
 

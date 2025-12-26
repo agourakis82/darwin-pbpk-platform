@@ -7,7 +7,7 @@
 // - Gut-wall and hepatic contributions
 // - Population simulation
 //
-// Compiles to: Demetrios (production), Julia (dev), PharmML (regulatory)
+// Compiles to: Sounio (production), Julia (dev), PharmML (regulatory)
 // =============================================================================
 
 /// Midazolam PBPK model with CYP3A4 DDI
@@ -332,8 +332,8 @@ model Midazolam_Ketoconazole_DDI {
 // COMPILATION TARGETS
 // =============================================================================
 
-/// Compile to Demetrios (production - type-safe, GPU-accelerated)
-@target(demetrios)
+/// Compile to Sounio (production - type-safe, GPU-accelerated)
+@target(sounio)
 compile {
     output: "midazolam_ddi.d"
     optimize: true

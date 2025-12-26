@@ -156,5 +156,5 @@ A migração está **85% completa** com todas as fases principais implementadas.
 ---
 
 **Última atualização:** 2025-11-18
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 

@@ -10,7 +10,7 @@ Testa todos os componentes antes de executar o treinamento:
 5. Criação de modelo
 6. Funções de treinamento
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-22
 """
 

@@ -7,7 +7,7 @@ Script Master - Executa Todos os Passos da Fase 1
 3. Treina com regularização (se dados disponíveis)
 4. Compara métricas
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

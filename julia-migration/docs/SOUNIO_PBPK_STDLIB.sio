@@ -1,15 +1,15 @@
 // =============================================================================
-// DEMETRIOS PBPK STANDARD LIBRARY
+// SOUNIO PBPK STANDARD LIBRARY
 // =============================================================================
 // Core types and functions for Physiologically-Based Pharmacokinetic Modeling
 //
-// This library leverages Demetrios' unique features:
+// This library leverages Sounio' unique features:
 // - Compile-time dimensional analysis (units of measure)
 // - Algebraic effects for controlled side effects (GPU, Prob, Mut)
 // - Refinement types for valid parameter ranges
 // - Linear types for resource safety
 //
-// Author: Dr. Demetrios Agourakis
+// Author: Dr. Sounio Agourakis
 // Version: 0.1.0
 // =============================================================================
 
@@ -427,7 +427,7 @@ fn calculate_hepatic_inlet(
 // =============================================================================
 // SECTION 7: ODE SYSTEM FOR PBPK
 // =============================================================================
-// Uses Demetrios algebraic effects for controlled mutation
+// Uses Sounio algebraic effects for controlled mutation
 
 /// State vector for 2-compartment model
 struct TwoCompState {
@@ -478,7 +478,7 @@ fn two_comp_ode(
 // =============================================================================
 // SECTION 8: GPU-ACCELERATED POPULATION SIMULATION
 // =============================================================================
-// Leverage Demetrios' first-class GPU support
+// Leverage Sounio' first-class GPU support
 
 /// Population parameters with variability
 struct PopulationParams {

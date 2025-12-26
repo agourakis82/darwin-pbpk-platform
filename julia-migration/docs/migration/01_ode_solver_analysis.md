@@ -2,7 +2,7 @@
 
 **Arquivo Python:** `apps/pbpk_core/simulation/ode_pbpk_solver.py`
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 
 ---
 

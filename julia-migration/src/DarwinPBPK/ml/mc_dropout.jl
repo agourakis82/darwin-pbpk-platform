@@ -11,7 +11,7 @@ MC-Dropout (Gal & Ghahramani, 2016) provides a Bayesian approximation
 by keeping dropout active during inference and running multiple forward
 passes to estimate predictive uncertainty.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: December 2025
 
 References:

@@ -19,7 +19,7 @@
 # - Obach et al. (2006) Mechanism-based inhibition
 # - Fahmi et al. (2009) Induction prediction
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # Version: 1.0.0
 # ===========================================================================

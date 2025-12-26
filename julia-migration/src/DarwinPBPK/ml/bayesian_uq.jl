@@ -11,7 +11,7 @@ This module provides Bayesian inference capabilities for PBPK parameter
 estimation and uncertainty quantification, complementing the evidential
 learning approach with full posterior inference.
 
-Author: Dr. Demetrios Agourakis + AI Assistant
+Author: Dr. Sounio Agourakis + AI Assistant
 Date: November 2025
 
 References:

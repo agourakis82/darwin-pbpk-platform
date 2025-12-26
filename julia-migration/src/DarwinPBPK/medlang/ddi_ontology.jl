@@ -44,7 +44,7 @@
 # - ChEBI: Hastings et al. (2016) Nucleic Acids Res
 # - Disease Ontology: Schriml et al. (2019) Nucleic Acids Res
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

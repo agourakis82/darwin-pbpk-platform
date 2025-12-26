@@ -9,7 +9,7 @@ Inovações SOTA:
 - GPU acceleration (CUDA.jl)
 - Type-stable batching (zero overhead)
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

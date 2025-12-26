@@ -4,7 +4,7 @@ Migração Completa: Python → Julia (100%)
 
 Remove todos os arquivos Python e migra funcionalidades para Julia.
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

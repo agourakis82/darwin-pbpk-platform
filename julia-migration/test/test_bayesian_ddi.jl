@@ -14,7 +14,7 @@
 # - Clinical significance assessment
 # - Model validation against known DDIs
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 

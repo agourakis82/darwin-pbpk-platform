@@ -4,7 +4,7 @@ MedLang DSL Tests for Darwin PBPK Platform
 Tests the first real implementation of MedLang DSL.
 Reference: github.com/agourakis82/medlang
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 

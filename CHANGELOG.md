@@ -118,7 +118,7 @@ All notable changes to Darwin PBPK Platform will be documented in this file.
 
 ### Added
 - MedLang DDI example
-- Demetrios demo integration
+- Sounio demo integration
 - DDI/MedLang enhancements
 
 ---

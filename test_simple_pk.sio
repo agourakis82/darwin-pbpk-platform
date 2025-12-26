@@ -1,5 +1,5 @@
 // Simple One-Compartment PK Model
-// Demonstrates MedLang → Demetrios code generation
+// Demonstrates MedLang → Sounio code generation
 
 struct PKParams {
     ka: f64,          // Absorption rate constant (1/h)

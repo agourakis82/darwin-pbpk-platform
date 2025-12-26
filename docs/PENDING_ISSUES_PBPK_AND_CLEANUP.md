@@ -346,7 +346,7 @@ packages/
 
 ---
 
-**Dr. Demetrios Agourakis**  
+**Dr. Sounio Agourakis**  
 **Darwin Platform**  
 **2025-11-02**
 

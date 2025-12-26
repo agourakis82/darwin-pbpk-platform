@@ -14,7 +14,7 @@ Implements:
 Grammar Reference: medlang_d_minimal_grammar_v0.md
 Core Spec Reference: medlang_core_spec_v0.1.md
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 

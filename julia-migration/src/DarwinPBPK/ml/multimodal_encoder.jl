@@ -15,7 +15,7 @@ This module provides the complete multimodal molecular encoder stack:
 3. Quantum descriptors for electronic properties
 4. Cross-attention fusion for unified representation
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 Atualizado: 2025-12-07 - ChemBERTa + D-MPNN integration
 """

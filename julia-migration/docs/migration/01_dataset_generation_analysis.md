@@ -2,7 +2,7 @@
 
 **Arquivo Python:** `scripts/analysis/build_dynamic_gnn_dataset_from_enriched.py`
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 
 ---
 

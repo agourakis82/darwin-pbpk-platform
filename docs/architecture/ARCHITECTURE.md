@@ -767,5 +767,5 @@ kubectl scale deployment/darwin-pbpk-platform --replicas=5 -n darwin-pbpk-platfo
 
 **Last Updated:** 05 de Novembro de 2025  
 **Version:** 2.0.0  
-**Author:** Dr. Demetrios Agourakis
+**Author:** Dr. Sounio Agourakis
 

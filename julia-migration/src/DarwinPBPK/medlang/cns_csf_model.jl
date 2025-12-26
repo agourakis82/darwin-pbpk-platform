@@ -30,7 +30,7 @@
 # - Uchida et al. 2011 (J Cereb Blood Flow Metab) - BBB transporters
 # - Wijnholds et al. 2000 (JCI) - BCSFB MRP1
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # ===========================================================================
 

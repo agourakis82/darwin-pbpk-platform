@@ -1,7 +1,7 @@
 # Análise Completa do Codebase - FASE 0
 
 **Data:** 2025-11-18
-**Autor:** AI Assistant + Dr. Demetrios Agourakis
+**Autor:** AI Assistant + Dr. Sounio Agourakis
 **Objetivo:** Mapear cada linha de código, dependências e fluxos de dados
 
 ---

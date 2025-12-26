@@ -12,7 +12,7 @@ Features:
 - Timeline → dosing schedule
 - Oral absorption and first-pass metabolism
 
-Author: Dr. Demetrios Agourakis
+Author: Dr. Sounio Agourakis
 Date: November 2025
 """
 

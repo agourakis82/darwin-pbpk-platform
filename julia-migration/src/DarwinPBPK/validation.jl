@@ -6,7 +6,7 @@ Inovações SOTA:
 - Visualização científica de alta qualidade (Plots.jl, Makie.jl)
 - Relatórios automatizados (Weave.jl ou Documenter.jl)
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: Novembro 2025
 """
 

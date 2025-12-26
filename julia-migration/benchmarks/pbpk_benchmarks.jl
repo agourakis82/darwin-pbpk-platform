@@ -2,7 +2,7 @@
 # PBPK Benchmark Suite - Julia Reference Implementation
 # =============================================================================
 #
-# Benchmark Targets (matching Demetrios):
+# Benchmark Targets (matching Sounio):
 # 1. ODE System Evaluation (14-compartment PBPK)
 # 2. RK4 Integration (1000 steps)
 # 3. Validation Metrics (GMFE, AAFE, R², fold errors)
@@ -152,7 +152,7 @@ const LUNG_COMP = TissueComposition(0.802, 0.022, 0.176, 0.0060, 0.003, 7.4)
 # -----------------------------------------------------------------------------
 
 """
-14-compartment PBPK ODE system - matches Demetrios pbpk_ode_system()
+14-compartment PBPK ODE system - matches Sounio pbpk_ode_system()
 
 Arguments:
 - du: derivative vector (modified in-place)
@@ -330,7 +330,7 @@ end
 
 """
 Bootstrap confidence interval for GMFE
-Uses simple LCG for reproducibility matching Demetrios
+Uses simple LCG for reproducibility matching Sounio
 """
 function bootstrap_gmfe_ci(pred::Vector{Float64}, obs::Vector{Float64},
                            n_bootstrap::Int, seed::Int)

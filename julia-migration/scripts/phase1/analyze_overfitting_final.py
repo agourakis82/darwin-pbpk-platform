@@ -2,7 +2,7 @@
 """
 Análise de Overfitting - Versão Python (mais robusta)
 
-Autor: Dr. Demetrios Agourakis + AI Assistant
+Autor: Dr. Sounio Agourakis + AI Assistant
 Data: 2025-11-18
 """
 

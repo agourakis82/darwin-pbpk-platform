@@ -4,7 +4,7 @@
 # Tests for IVIVE-DDI, multi-inhibitor saturation, MBI, transporter DDI,
 # and Monte Carlo uncertainty quantification.
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: December 2025
 # ===========================================================================
 

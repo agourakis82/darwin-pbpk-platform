@@ -183,7 +183,7 @@ Migração realizada com rigor científico e foco em performance, mantendo 100% 
 
 ---
 
-**Autor:** Dr. Demetrios Agourakis + AI Assistant
+**Autor:** Dr. Sounio Agourakis + AI Assistant
 **Data:** 2025-11-18
 
 

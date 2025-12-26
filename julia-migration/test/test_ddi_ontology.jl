@@ -13,7 +13,7 @@
 # - Clinical DDI database
 # - RDF export functionality
 #
-# Author: Dr. Demetrios Agourakis
+# Author: Dr. Sounio Agourakis
 # Date: November 2025
 # =============================================================================
 
