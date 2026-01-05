@@ -676,7 +676,27 @@ When `use_stdlib=false`, generates standalone Sounio code with full ODE system.
 """
 function compile_to_sounio(source::String; use_stdlib::Bool=true)::String
     model = parse_medlang_to_model(source)
-    return compile_medlang_to_sounio(model; use_stdlib=use_stdlib)
+    result = compile_medlang_to_sounio(model; use_stdlib=use_stdlib)
+    # Handle both String (stdlib) and SounioCode (legacy) return types
+    if result isa String
+        return result
+    else
+        # Convert SounioCode to String
+        return sounio_code_to_string(result)
+    end
+end
+
+"""Convert SounioCode struct to a complete source string."""
+function sounio_code_to_string(code::MedLangSounioCompiler.SounioCode)::String
+    return join([
+        code.preamble,
+        code.types,
+        code.parameters,
+        code.state,
+        code.functions,
+        code.effects,
+        code.main
+    ], "\n\n")
 end
 
 export compile_to_sounio

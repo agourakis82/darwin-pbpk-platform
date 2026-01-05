@@ -27,8 +27,12 @@
 
 module MedLangSounioCompiler
 
+# Import parser for AST conversion
+using ..MedLangParser: parse_medlang, MedLangAST
+
 export compile_medlang_to_sounio, MedLangAST, SounioCode
 export generate_sounio_pbpk, generate_sounio_ddi
+export parse_medlang_to_model
 
 # =============================================================================
 # UNIT SYSTEM MAPPING
@@ -206,6 +210,135 @@ struct MedLangDDI <: MedLangNode
 end
 
 # =============================================================================
+# AST CONVERSION: MedLangAST → MedLangModel
+# =============================================================================
+
+"""
+    parse_medlang_to_model(source::String) -> MedLangModel
+
+Parse MedLang source code and convert to MedLangModel for Sounio code generation.
+
+# Arguments
+- `source::String`: MedLang source code
+
+# Returns
+- `MedLangModel`: Structured model for Sounio compilation
+"""
+function parse_medlang_to_model(source::String)::MedLangModel
+    # Parse MedLang source to AST
+    ast = parse_medlang(source)
+
+    if isempty(ast.models)
+        error("No models found in MedLang source")
+    end
+
+    # Convert first model from AST to MedLangModel
+    model_def = ast.models[1]
+
+    # Convert parameters
+    parameters = MedLangNode[]
+    for p in model_def.params
+        # Extract value from default expression
+        value = extract_numeric_value(p.default)
+        # Extract unit from type
+        unit = extract_unit(p.type)
+        push!(parameters, MedLangParameter(p.name, value, unit, ""))
+    end
+
+    # Convert states (compartments)
+    compartments = MedLangNode[]
+    for s in model_def.states
+        # Extract initial value
+        initial = extract_numeric_value(s.initial)
+        # Extract unit from type
+        unit = extract_unit(s.type)
+        push!(compartments, MedLangState(s.name, initial, unit))
+    end
+
+    # Convert ODEs (equations)
+    equations = MedLangNode[]
+    for ode in model_def.odes
+        # Convert RHS expression to string
+        expr_str = expr_to_string(ode.rhs)
+        push!(equations, MedLangODE(ode.state, expr_str, ""))
+    end
+
+    # Convert observables
+    observables = MedLangNode[]
+    for obs in model_def.observables
+        # Convert expression to string
+        expr_str = expr_to_string(obs.expr)
+        unit = extract_unit(obs.type)
+        push!(observables, MedLangObservable(obs.name, expr_str, unit))
+    end
+
+    # Extract drug name from model name or default
+    drug_name = replace(model_def.name, "_pbpk" => "")
+    drug_name = replace(drug_name, "_PBPK" => "")
+
+    return MedLangModel(
+        model_def.name,
+        drug_name,
+        compartments,
+        parameters,
+        equations,
+        observables
+    )
+end
+
+"""Extract numeric value from an Expr, returning 0.0 if not available."""
+function extract_numeric_value(expr)::Float64
+    expr === nothing && return 0.0
+    # Handle LiteralExpr
+    if hasfield(typeof(expr), :value) && expr.value isa Number
+        return Float64(expr.value)
+    end
+    return 0.0
+end
+
+"""Extract unit string from TypeExpr."""
+function extract_unit(type_expr)::String
+    type_expr === nothing && return ""
+    if hasfield(typeof(type_expr), :unit) && type_expr.unit !== nothing
+        # UnitExpr has a name or string representation
+        if hasfield(typeof(type_expr.unit), :name)
+            return type_expr.unit.name
+        end
+        return string(type_expr.unit)
+    end
+    return ""
+end
+
+"""Convert expression AST to string representation."""
+function expr_to_string(expr)::String
+    expr === nothing && return ""
+
+    # Handle different expression types
+    if hasfield(typeof(expr), :value)
+        # LiteralExpr
+        return string(expr.value)
+    elseif hasfield(typeof(expr), :name) && !hasfield(typeof(expr), :args)
+        # IdentifierExpr or similar
+        return expr.name
+    elseif hasfield(typeof(expr), :op) && hasfield(typeof(expr), :left) && hasfield(typeof(expr), :right)
+        # BinaryExpr
+        left = expr_to_string(expr.left)
+        right = expr_to_string(expr.right)
+        return "$left $(expr.op) $right"
+    elseif hasfield(typeof(expr), :op) && hasfield(typeof(expr), :operand)
+        # UnaryExpr
+        return "$(expr.op)$(expr_to_string(expr.operand))"
+    elseif hasfield(typeof(expr), :name) && hasfield(typeof(expr), :args)
+        # CallExpr (function call)
+        args = join([expr_to_string(a) for a in expr.args], ", ")
+        return "$(expr.name)($args)"
+    end
+
+    # Fallback
+    return string(expr)
+end
+
+# =============================================================================
 # SOUNIO CODE GENERATION
 # =============================================================================
 
@@ -277,7 +410,7 @@ end
 """
 Generate Sounio ODE function.
 """
-function generate_ode_function(equations::Vector{MedLangODE}, model_name::String)::String
+function generate_ode_function(equations::Vector{<:MedLangNode}, model_name::String)::String
     buf = IOBuffer()
 
     println(buf, """
@@ -290,11 +423,13 @@ fn ode_system(
 ) -> effect[Mut] {""")
 
     for eq in equations
-        # Parse RHS and add type annotations
-        rhs = eq.rhs
-        println(buf, "    // d$(eq.state_name)/dt")
-        println(buf, "    state.d_$(eq.state_name) = $(rhs)")
-        println(buf)
+        if eq isa MedLangODE
+            # Parse RHS and add type annotations
+            rhs = eq.rhs
+            println(buf, "    // d$(eq.state_name)/dt")
+            println(buf, "    state.d_$(eq.state_name) = $(rhs)")
+            println(buf)
+        end
     end
 
     println(buf, "}")
@@ -305,7 +440,7 @@ end
 """
 Generate Sounio struct for PBPK parameters.
 """
-function generate_params_struct(params::Vector{MedLangParameter})::String
+function generate_params_struct(params::Vector{<:MedLangNode})::String
     buf = IOBuffer()
 
     println(buf, """
@@ -313,8 +448,10 @@ function generate_params_struct(params::Vector{MedLangParameter})::String
 struct PBPKParams {""")
 
     for param in params
-        unit_type = medlang_unit_to_sounio(param.unit)
-        println(buf, "    $(param.name): $(unit_type),  // $(param.description)")
+        if param isa MedLangParameter
+            unit_type = medlang_unit_to_sounio(param.unit)
+            println(buf, "    $(param.name): $(unit_type),  // $(param.description)")
+        end
     end
 
     println(buf, "}")
@@ -325,7 +462,7 @@ end
 """
 Generate Sounio struct for state variables.
 """
-function generate_state_struct(states::Vector{MedLangState})::String
+function generate_state_struct(states::Vector{<:MedLangNode})::String
     buf = IOBuffer()
 
     println(buf, """
@@ -333,141 +470,16 @@ function generate_state_struct(states::Vector{MedLangState})::String
 struct PBPKState {""")
 
     for state in states
-        unit_type = medlang_unit_to_sounio(state.unit)
-        println(buf, "    $(state.name): $(unit_type),")
-        println(buf, "    d_$(state.name): $(unit_type)_per_h,  // derivative")
+        if state isa MedLangState
+            unit_type = medlang_unit_to_sounio(state.unit)
+            println(buf, "    $(state.name): $(unit_type),")
+            println(buf, "    d_$(state.name): $(unit_type)_per_h,  // derivative")
+        end
     end
 
     println(buf, "}")
 
     return String(take!(buf))
-end
-
-# =============================================================================
-# MAIN COMPILER FUNCTIONS
-# =============================================================================
-
-"""
-Compile a complete MedLang model to Sounio code.
-"""
-function compile_medlang_to_sounio(model::MedLangModel)::SounioCode
-
-    # Extract components
-    params = filter(x -> x isa MedLangParameter, model.parameters)
-    states = filter(x -> x isa MedLangState, model.compartments)
-    equations = filter(x -> x isa MedLangODE, model.equations)
-    observables = filter(x -> x isa MedLangObservable, model.observables)
-
-    # Generate preamble
-    preamble = """
-// =============================================================================
-// $(uppercase(model.name))
-// =============================================================================
-// Generated by Darwin PBPK Platform - MedLang to Sounio Compiler
-// Drug: $(model.drug_name)
-//
-// COMPILE-TIME SAFETY:
-// - All units are type-checked at compile time
-// - Unit mismatches cause compile errors, not runtime bugs
-// - Refinement types ensure valid parameter ranges
-// =============================================================================
-
-import std.math.{exp, log, sqrt}
-import std.effects.{Mut, IO, GPU}
-import darwin.pbpk.{OdeSolver, Tsit5}
-"""
-
-    # Generate types
-    types = SOUNIO_UNIT_TYPES
-
-    # Generate parameters struct
-    parameters = generate_params_struct(params)
-
-    # Generate state struct
-    state = generate_state_struct(states)
-
-    # Generate ODE function
-    functions = generate_ode_function(equations, model.name)
-
-    # Generate effect handlers
-    effects = """
-/// Effect handler for ODE integration
-effect OdeIntegration {
-    fn step(dt: h) -> PBPKState
-    fn observe(name: String) -> Real
-}
-
-/// Handler using Tsit5 (Runge-Kutta 5th order)
-handler Tsit5Handler for OdeIntegration {
-    fn step(dt: h) -> PBPKState {
-        // Tsit5 adaptive step
-        ode_system(self.t, &mut self.state, &self.params)
-        self.t += dt
-        self.state
-    }
-}
-"""
-
-    # Generate main simulation function
-    main = """
-/// Main PBPK simulation
-/// Returns concentration-time profile
-fn simulate_pbpk(
-    params: PBPKParams,
-    dose: mg,
-    t_max: h,
-    dt: h
-) -> effect[IO, Mut] Vec<(h, uM)> {
-
-    // Initialize state
-    var state = PBPKState::new()
-    state.A_gut = dose  // Oral dose in gut
-
-    // Time course storage
-    var results: Vec<(h, uM)> = Vec::new()
-
-    // Integration loop with algebraic effects
-    var t: h = 0.0
-
-    while t <= t_max {
-        // Record plasma concentration
-        results.push((t, state.C_plasma))
-
-        // ODE step (uses Tsit5Handler effect)
-        with Tsit5Handler {
-            state = step(dt)
-        }
-
-        t += dt
-    }
-
-    results
-}
-
-/// Entry point
-fn main() -> effect[IO] {
-    // Example: Midazolam PBPK simulation
-    let params = PBPKParams {
-        ka: 1.5,          // h⁻¹
-        Fg: 0.57,         // fraction
-        Fh: 0.77,         // fraction
-        Vc: 30.0,         // L
-        Vp: 50.0,         // L
-        Q: 25.0,          // L/h
-        CL: 25.0,         // L/h
-    }
-
-    let dose: mg = 7.5
-    let results = simulate_pbpk(params, dose, 24.0, 0.1)
-
-    // Print results
-    for (t, c) in results {
-        println!("t={t:.1} h, Cp={c:.3} µM")
-    }
-}
-"""
-
-    return SounioCode(preamble, types, parameters, state, functions, effects, main)
 end
 
 # =============================================================================
