@@ -234,6 +234,20 @@ export OBO_FOUNDRY_PREFIXES, UBERON_TERMS, CL_TERMS, GO_TERMS, PR_TERMS
 export ICD_CLASSIFICATIONS, DOID_PEDIATRIC_CONDITIONS
 export export_transporter_to_jsonld
 
+# Export Sounio Integration functions (Q1 2025 - v0.97.0)
+export SounioCompiler, SounioModel, SounioResult
+export compile_sounio, run_sounio_pbpk, load_sounio_result
+export drug_to_sounio, patient_to_sounio, params_to_sounio
+export SounioDataFormat, export_for_sounio, import_from_sounio
+export compile_and_run_medlang, compile_and_run_medlang_file
+export MedLangPipelineResult, MedLangPipelineOptions
+export run_sounio_pbpk_gated, EpistemicSimulationResult
+
+# Export Epistemic Types (Sounio v0.97.0 Knowledge<T>)
+export Knowledge, Provenance, ConfidenceLevel
+export propagate_confidence, to_epistemic_value, from_epistemic_value
+export bayesian_to_knowledge, mcdropout_to_knowledge, evidential_to_knowledge
+
 # Export Platelet functions
 export PlateletCompartment, PlateletGranules, PlateletActivation
 export create_platelet_compartment, activate_platelets!, aggregate_platelets!
@@ -242,19 +256,21 @@ export simulate_platelet_dynamics, NORMAL_PLATELET_COUNT, NORMAL_MPV
 
 # Export Coagulation functions
 export CoagulationFactors, CoagulationSystem, AnticoagulantState
-export create_coagulation_system, simulate_coagulation!
+export create_coagulation_system, simulate_coagulation!, simulate_coagulation_stiff!
 export apply_warfarin!, apply_doac!, apply_heparin!
 export calculate_pt_inr, calculate_aptt, calculate_anti_xa
 export thrombin_generation_assay, get_coagulation_state
 export NORMAL_FACTOR_CONCENTRATIONS, FACTOR_HALF_LIVES
+export create_coagulation_jacobian_prototype, CoagulationSolverConfig
 
 # Export Fibrinolysis functions
 export FibrinolyticSystem, PlasminogenState, FibrinDegradation
-export create_fibrinolytic_system, simulate_fibrinolysis!
+export create_fibrinolytic_system, simulate_fibrinolysis!, simulate_fibrinolysis_stiff!
 export apply_tpa_therapy!, apply_antifibrinolytic!
 export calculate_d_dimer, calculate_lysis_time
 export get_fibrinolysis_state, plasmin_generation_assay
 export NORMAL_PLASMINOGEN, NORMAL_TPA, NORMAL_PAI1
+export create_fibrinolysis_jacobian_prototype, FibrinolysisSolverConfig
 
 # Export Blood Binding functions (PK-Sim style)
 export BloodComposition, DrugProperties, BloodPartitioning

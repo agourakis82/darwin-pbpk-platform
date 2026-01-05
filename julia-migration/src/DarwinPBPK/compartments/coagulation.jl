@@ -22,13 +22,16 @@ module Coagulation
 
 using LinearAlgebra
 using Statistics
+using SparseArrays
+using DifferentialEquations: ODEFunction, ODEProblem, solve, Rodas4, Tsit5, FBDF, CallbackSet, DiscreteCallback
 
 export CoagulationFactors, CoagulationSystem, AnticoagulantState
-export create_coagulation_system, simulate_coagulation!
+export create_coagulation_system, simulate_coagulation!, simulate_coagulation_stiff!
 export apply_warfarin!, apply_doac!, apply_heparin!
 export calculate_pt_inr, calculate_aptt, calculate_anti_xa
 export thrombin_generation_assay, get_coagulation_state
 export NORMAL_FACTOR_CONCENTRATIONS, FACTOR_HALF_LIVES
+export create_coagulation_jacobian_prototype, CoagulationSolverConfig
 
 # ============================================================================
 # CONSTANTS - From SOTA Literature (Wajima, Hockin-Mann)
@@ -531,6 +534,329 @@ function coagulation_ode!(du, u, p, t)
     du[25] = rate_ATIII_Xa  # dATIII_Xa/dt
 
     return nothing
+end
+
+# ============================================================================
+# SOLVER CONFIGURATION AND SPARSE JACOBIAN
+# ============================================================================
+
+"""
+CoagulationSolverConfig - Configuration for stiff ODE solvers
+
+# Fields
+- `algorithm`: ODE solver algorithm (:rodas4, :fbdf, :tsit5)
+- `reltol`: Relative tolerance (default 1e-6)
+- `abstol`: Absolute tolerance (default 1e-8)
+- `maxiters`: Maximum iterations (default 100000)
+- `use_sparse`: Use sparse Jacobian (default true)
+- `save_everystep`: Save all solver steps (default false)
+- `saveat`: Time points to save at (default Float64[])
+"""
+Base.@kwdef struct CoagulationSolverConfig
+    algorithm::Symbol = :rodas4
+    reltol::Float64 = 1e-6
+    abstol::Float64 = 1e-8
+    maxiters::Int = 100000
+    use_sparse::Bool = true
+    save_everystep::Bool = false
+    saveat::Vector{Float64} = Float64[]
+end
+
+"""
+create_coagulation_jacobian_prototype()
+
+Create sparse Jacobian prototype for the coagulation ODE system.
+
+The 25-state coagulation system has a sparse dependency structure:
+- Zymogens (1-10): affected by their own consumption/synthesis
+- Activated factors (11-19): depend on zymogens and inhibitors
+- Fibrin (20): depends on thrombin and fibrinogen
+- Anticoagulants (21-23): depend on activated factors
+- Complexes (24-25): depend on inhibitors and activated factors
+
+Returns SparseMatrixCSC with ~80 non-zeros (vs 625 dense).
+"""
+function create_coagulation_jacobian_prototype()::SparseMatrixCSC{Float64, Int64}
+    n = 25
+
+    # Build sparsity pattern based on ODE dependencies
+    # (i, j) means ∂du[i]/∂u[j] ≠ 0
+    I = Int64[]
+    J = Int64[]
+
+    # State indices:
+    # 1-10: II, V, VII, VIII, IX, X, XI, XII, XIII, Fg (zymogens)
+    # 11-19: IIa, Va, VIIa, VIIIa, IXa, Xa, XIa, XIIa, XIIIa (activated)
+    # 20: Fibrin
+    # 21-23: ATIII, TFPI, APC
+    # 24-25: TAT, ATIII_Xa
+
+    # du[1] = rate_syn_II - rate_prothrombinase
+    # Depends on: II(1), Va(12), Xa(16)
+    append!(I, [1, 1, 1])
+    append!(J, [1, 12, 16])
+
+    # du[2] = -rate_IIa_Va
+    # Depends on: V(2), IIa(11)
+    append!(I, [2, 2])
+    append!(J, [2, 11])
+
+    # du[3] = rate_syn_VII (just turnover)
+    # Depends on: VII(3)
+    push!(I, 3); push!(J, 3)
+
+    # du[4] = -rate_IIa_VIIIa
+    # Depends on: VIII(4), IIa(11)
+    append!(I, [4, 4])
+    append!(J, [4, 11])
+
+    # du[5] = rate_syn_IX - rate_VIIa_IXa - rate_XIa_IXa
+    # Depends on: IX(5), VIIa(13), XIa(17)
+    append!(I, [5, 5, 5])
+    append!(J, [5, 13, 17])
+
+    # du[6] = rate_syn_X - rate_VIIa_Xa - rate_tenase_Xa
+    # Depends on: X(6), VIIa(13), IXa(15), VIIIa(14)
+    append!(I, [6, 6, 6, 6])
+    append!(J, [6, 13, 15, 14])
+
+    # du[7] = -rate_IIa_XIa
+    # Depends on: XI(7), IIa(11)
+    append!(I, [7, 7])
+    append!(J, [7, 11])
+
+    # du[8] = 0 (XII constant)
+    push!(I, 8); push!(J, 8)
+
+    # du[9] = -rate_IIa_XIIIa
+    # Depends on: XIII(9), IIa(11)
+    append!(I, [9, 9])
+    append!(J, [9, 11])
+
+    # du[10] = -rate_fibrin
+    # Depends on: Fg(10), IIa(11)
+    append!(I, [10, 10])
+    append!(J, [10, 11])
+
+    # du[11] = rate_prothrombinase - rate_ATIII_IIa (dIIa/dt)
+    # Depends on: II(1), Va(12), Xa(16), IIa(11), ATIII(21)
+    append!(I, [11, 11, 11, 11, 11])
+    append!(J, [1, 12, 16, 11, 21])
+
+    # du[12] = rate_IIa_Va - rate_APC_Va (dVa/dt)
+    # Depends on: V(2), IIa(11), Va(12), APC(23)
+    append!(I, [12, 12, 12, 12])
+    append!(J, [2, 11, 12, 23])
+
+    # du[13] = 0 (VIIa constant)
+    push!(I, 13); push!(J, 13)
+
+    # du[14] = rate_IIa_VIIIa - rate_APC_VIIIa (dVIIIa/dt)
+    # Depends on: VIII(4), IIa(11), VIIIa(14), APC(23)
+    append!(I, [14, 14, 14, 14])
+    append!(J, [4, 11, 14, 23])
+
+    # du[15] = rate_VIIa_IXa + rate_XIa_IXa (dIXa/dt)
+    # Depends on: IX(5), VIIa(13), XIa(17), IXa(15)
+    append!(I, [15, 15, 15, 15])
+    append!(J, [5, 13, 17, 15])
+
+    # du[16] = rate_VIIa_Xa + rate_tenase_Xa - rate_ATIII_Xa - rate_TFPI_Xa (dXa/dt)
+    # Depends on: X(6), VIIa(13), IXa(15), VIIIa(14), Xa(16), ATIII(21), TFPI(22)
+    append!(I, [16, 16, 16, 16, 16, 16, 16])
+    append!(J, [6, 13, 15, 14, 16, 21, 22])
+
+    # du[17] = rate_IIa_XIa (dXIa/dt)
+    # Depends on: XI(7), IIa(11), XIa(17)
+    append!(I, [17, 17, 17])
+    append!(J, [7, 11, 17])
+
+    # du[18] = 0 (XIIa constant)
+    push!(I, 18); push!(J, 18)
+
+    # du[19] = rate_IIa_XIIIa (dXIIIa/dt)
+    # Depends on: XIII(9), IIa(11), XIIIa(19)
+    append!(I, [19, 19, 19])
+    append!(J, [9, 11, 19])
+
+    # du[20] = rate_fibrin (dFibrin/dt)
+    # Depends on: Fg(10), IIa(11), fibrin(20)
+    append!(I, [20, 20, 20])
+    append!(J, [10, 11, 20])
+
+    # du[21] = -rate_ATIII_IIa - rate_ATIII_Xa (dATIII/dt)
+    # Depends on: ATIII(21), IIa(11), Xa(16)
+    append!(I, [21, 21, 21])
+    append!(J, [21, 11, 16])
+
+    # du[22] = -rate_TFPI_Xa (dTFPI/dt)
+    # Depends on: TFPI(22), Xa(16)
+    append!(I, [22, 22])
+    append!(J, [22, 16])
+
+    # du[23] = rate_APC_formation (dAPC/dt)
+    # Depends on: IIa(11), APC(23), protein_C (parameter)
+    append!(I, [23, 23])
+    append!(J, [11, 23])
+
+    # du[24] = rate_ATIII_IIa (dTAT/dt)
+    # Depends on: ATIII(21), IIa(11), TAT(24)
+    append!(I, [24, 24, 24])
+    append!(J, [21, 11, 24])
+
+    # du[25] = rate_ATIII_Xa (dATIII_Xa/dt)
+    # Depends on: ATIII(21), Xa(16), ATIII_Xa(25)
+    append!(I, [25, 25, 25])
+    append!(J, [21, 16, 25])
+
+    # Create sparse matrix with placeholder values
+    V = ones(Float64, length(I))
+
+    return sparse(I, J, V, n, n)
+end
+
+"""
+simulate_coagulation_stiff!(system, tspan; config, tissue_factor_pulse)
+
+Simulate coagulation cascade using stiff ODE solver (Rodas4).
+
+This is the preferred method for coagulation models due to:
+- Stiffness ratio ~1000:1 (fast reactions vs slow factor turnover)
+- Adaptive time stepping (10-100x fewer function evaluations)
+- Better accuracy with unconditional stability
+
+# Arguments
+- `system`: CoagulationSystem to simulate
+- `tspan`: (t_start, t_end) in seconds
+- `config`: CoagulationSolverConfig (optional)
+- `tissue_factor_pulse`: Function(t) → TF concentration (nM)
+
+# Returns
+- times: Vector of time points
+- results: Vector of state dictionaries
+"""
+function simulate_coagulation_stiff!(
+    system::CoagulationSystem,
+    tspan::Tuple{Float64, Float64};
+    config::CoagulationSolverConfig=CoagulationSolverConfig(),
+    tissue_factor_pulse::Union{Function, Nothing}=nothing
+)
+    t_start, t_end = tspan
+
+    # Initialize state vector
+    f = system.factors
+    u0 = [
+        f.factor_II, f.factor_V, f.factor_VII, f.factor_VIII, f.factor_IX,
+        f.factor_X, f.factor_XI, f.factor_XII, f.factor_XIII, f.fibrinogen,
+        f.factor_IIa, f.factor_Va, f.factor_VIIa, f.factor_VIIIa, f.factor_IXa,
+        f.factor_Xa, f.factor_XIa, f.factor_XIIa, f.factor_XIIIa,
+        f.fibrin,
+        f.antithrombin, f.tfpi, f.protein_C_active,
+        f.ATIII_IIa, f.ATIII_Xa
+    ]
+
+    # Build parameters (potentially time-varying TF)
+    base_tf = system.tissue_factor
+    tf_func = isnothing(tissue_factor_pulse) ? (t -> base_tf) : tissue_factor_pulse
+
+    params = (
+        tissue_factor_func = tf_func,
+        thrombomodulin = system.thrombomodulin,
+        protein_C = system.factors.protein_C,
+        kinetics = KINETIC_PARAMS,
+        xa_inhibition = system.anticoagulant.xa_inhibition,
+        iia_inhibition = system.anticoagulant.iia_inhibition,
+        atiii_potentiation = system.anticoagulant.atiii_potentiation,
+        vk_synthesis_rate = system.anticoagulant.vk_synthesis_rate
+    )
+
+    # ODE function wrapper for time-varying TF
+    function coagulation_ode_wrapper!(du, u, p, t)
+        # Create params with current TF value
+        params_t = merge(p, (tissue_factor = p.tissue_factor_func(t),))
+        coagulation_ode!(du, u, params_t, t)
+    end
+
+    # Build ODE function with optional sparse Jacobian
+    if config.use_sparse
+        jac_prototype = create_coagulation_jacobian_prototype()
+        odefunc = ODEFunction(coagulation_ode_wrapper!; jac_prototype=jac_prototype)
+    else
+        odefunc = ODEFunction(coagulation_ode_wrapper!)
+    end
+
+    # Create ODE problem
+    prob = ODEProblem(odefunc, u0, tspan, params)
+
+    # Select solver algorithm
+    alg = if config.algorithm == :rodas4
+        Rodas4()
+    elseif config.algorithm == :fbdf
+        FBDF()
+    elseif config.algorithm == :tsit5
+        Tsit5()
+    else
+        Rodas4()  # Default to Rodas4 for stiff systems
+    end
+
+    # Build saveat points
+    saveat = if !isempty(config.saveat)
+        config.saveat
+    else
+        # Default: save at 0.5s intervals like Euler version
+        collect(t_start:0.5:t_end)
+    end
+
+    # Solve with non-negativity constraint via callback
+    function condition(u, t, integrator)
+        any(u .< 0)
+    end
+    function affect!(integrator)
+        integrator.u .= max.(integrator.u, 0.0)
+    end
+    cb = DiscreteCallback(condition, affect!)
+
+    sol = solve(
+        prob, alg;
+        reltol=config.reltol,
+        abstol=config.abstol,
+        maxiters=config.maxiters,
+        save_everystep=config.save_everystep,
+        saveat=saveat,
+        callback=cb
+    )
+
+    # Convert solution to result format
+    times = sol.t
+    n_steps = length(times)
+    results = Vector{Dict{String, Float64}}(undef, n_steps)
+
+    for (i, t) in enumerate(times)
+        u = sol.u[i]
+        results[i] = Dict(
+            "time" => t,
+            "thrombin_nM" => max(0.0, u[11]),
+            "fibrin_nM" => max(0.0, u[20]),
+            "factor_Xa_nM" => max(0.0, u[16]),
+            "factor_IXa_nM" => max(0.0, u[15]),
+            "factor_Va_nM" => max(0.0, u[12]),
+            "factor_VIIIa_nM" => max(0.0, u[14]),
+            "prothrombin_nM" => max(0.0, u[1]),
+            "fibrinogen_nM" => max(0.0, u[10]),
+            "ATIII_nM" => max(0.0, u[21]),
+            "TAT_nM" => max(0.0, u[24]),
+            "APC_nM" => max(0.0, u[23])
+        )
+    end
+
+    # Update system with final state
+    final_u = max.(sol.u[end], 0.0)
+    update_system_from_state!(system, final_u)
+
+    # Calculate thrombin generation parameters
+    calculate_tg_parameters!(system, collect(times), results)
+
+    return times, results
 end
 
 """

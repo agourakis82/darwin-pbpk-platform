@@ -22,13 +22,16 @@ module Fibrinolysis
 
 using LinearAlgebra
 using Statistics
+using SparseArrays
+using DifferentialEquations: ODEFunction, ODEProblem, solve, Rodas4, FBDF, Tsit5, DiscreteCallback
 
 export FibrinolyticSystem, PlasminogenState, FibrinDegradation
-export create_fibrinolytic_system, simulate_fibrinolysis!
+export create_fibrinolytic_system, simulate_fibrinolysis!, simulate_fibrinolysis_stiff!
 export apply_tpa_therapy!, apply_antifibrinolytic!
 export calculate_d_dimer, calculate_lysis_time
 export get_fibrinolysis_state, plasmin_generation_assay
 export NORMAL_PLASMINOGEN, NORMAL_TPA, NORMAL_PAI1
+export create_fibrinolysis_jacobian_prototype, FibrinolysisSolverConfig
 
 # ============================================================================
 # CONSTANTS - From SOTA Literature
@@ -431,6 +434,286 @@ function fibrinolysis_ode!(du, u, p, t)
     du[16] = rate_d_dimer  # D-dimer accumulation
 
     return nothing
+end
+
+# ============================================================================
+# SOLVER CONFIGURATION AND SPARSE JACOBIAN
+# ============================================================================
+
+"""
+FibrinolysisSolverConfig - Configuration for stiff ODE solvers
+
+Fibrinolysis has extreme stiffness (360,000:1):
+- Plasmin half-life: ~0.3 seconds
+- D-dimer half-life: ~8 hours
+
+# Fields
+- `algorithm`: ODE solver algorithm (:rodas4, :fbdf, :tsit5)
+- `reltol`: Relative tolerance (default 1e-6)
+- `abstol`: Absolute tolerance (default 1e-9, tighter due to fast dynamics)
+- `maxiters`: Maximum iterations (default 100000)
+- `use_sparse`: Use sparse Jacobian (default true)
+- `save_everystep`: Save all solver steps (default false)
+- `saveat`: Time points to save at (default Float64[])
+"""
+Base.@kwdef struct FibrinolysisSolverConfig
+    algorithm::Symbol = :rodas4
+    reltol::Float64 = 1e-6
+    abstol::Float64 = 1e-9  # Tighter for plasmin dynamics
+    maxiters::Int = 100000
+    use_sparse::Bool = true
+    save_everystep::Bool = false
+    saveat::Vector{Float64} = Float64[]
+end
+
+"""
+create_fibrinolysis_jacobian_prototype()
+
+Create sparse Jacobian prototype for the fibrinolysis ODE system.
+
+The 16-state system has sparse structure:
+- Plasminogen (1-2): converted to plasmin
+- Plasmin (3-4): fast inhibition dynamics
+- Activators (5-7): tPA, uPA binding/inhibition
+- Inhibitors (8-10): PAI-1, α2-AP, TAFI consumption
+- Complexes (11-13): accumulate from inhibition
+- Fibrin (14-16): degradation cascade
+
+Returns SparseMatrixCSC with ~50 non-zeros (vs 256 dense).
+"""
+function create_fibrinolysis_jacobian_prototype()::SparseMatrixCSC{Float64, Int64}
+    n = 16
+
+    # Build sparsity pattern based on ODE dependencies
+    I = Int64[]
+    J = Int64[]
+
+    # State indices:
+    # 1-2: Glu-Plg, Lys-Plg
+    # 3-4: Plasmin (free, bound)
+    # 5-7: tPA (free, bound), uPA
+    # 8-10: PAI-1, α2-AP, TAFIa
+    # 11-13: PAI-tPA, PAI-uPA, PAP complexes
+    # 14-16: Fibrin (intact, degraded, D-dimer)
+
+    # du[1] = -0.1*glu_plg - plasmin_generation*(glu_plg/plg_total)
+    # Depends on: glu_plg(1), lys_plg(2), tpa(5,6), upa(7)
+    append!(I, [1, 1, 1, 1, 1])
+    append!(J, [1, 2, 5, 6, 7])
+
+    # du[2] = 0.1*glu_plg - plasmin_generation*(lys_plg/plg_total)
+    # Depends on: glu_plg(1), lys_plg(2), tpa(5,6), upa(7)
+    append!(I, [2, 2, 2, 2, 2])
+    append!(J, [1, 2, 5, 6, 7])
+
+    # du[3] = plasmin_generation*0.3 - rate_a2ap_plasmin (free plasmin)
+    # Depends on: plg(1,2), tpa(5,6), upa(7), plasmin(3), a2ap(9)
+    append!(I, [3, 3, 3, 3, 3, 3, 3])
+    append!(J, [1, 2, 5, 6, 7, 3, 9])
+
+    # du[4] = plasmin_generation*0.7 - 0.1*plasmin_bound (bound plasmin)
+    # Depends on: plg(1,2), tpa(5,6), upa(7), plasmin_bound(4)
+    append!(I, [4, 4, 4, 4, 4, 4])
+    append!(J, [1, 2, 5, 6, 7, 4])
+
+    # du[5] = -rate_pai_tpa - rate_tpa_bind + rate_tpa_unbind (tPA free)
+    # Depends on: tpa_free(5), pai1(8), fibrin(14), tpa_bound(6)
+    append!(I, [5, 5, 5, 5])
+    append!(J, [5, 8, 14, 6])
+
+    # du[6] = rate_tpa_bind - rate_tpa_unbind - lysis*0.01 (tPA bound)
+    # Depends on: tpa_free(5), fibrin(14), tpa_bound(6), plasmin(3,4)
+    append!(I, [6, 6, 6, 6, 6])
+    append!(J, [5, 14, 6, 3, 4])
+
+    # du[7] = -rate_pai_upa (uPA)
+    # Depends on: upa(7), pai1(8)
+    append!(I, [7, 7])
+    append!(J, [7, 8])
+
+    # du[8] = -rate_pai_tpa - rate_pai_upa (PAI-1)
+    # Depends on: pai1(8), tpa(5), upa(7)
+    append!(I, [8, 8, 8])
+    append!(J, [8, 5, 7])
+
+    # du[9] = -rate_a2ap_plasmin (α2-AP)
+    # Depends on: a2ap(9), plasmin(3)
+    append!(I, [9, 9])
+    append!(J, [9, 3])
+
+    # du[10] = -0.001*tafia (TAFIa decay)
+    # Depends on: tafia(10)
+    push!(I, 10); push!(J, 10)
+
+    # du[11] = rate_pai_tpa (PAI-tPA complex)
+    # Depends on: pai1(8), tpa(5)
+    append!(I, [11, 11])
+    append!(J, [8, 5])
+
+    # du[12] = rate_pai_upa (PAI-uPA complex)
+    # Depends on: pai1(8), upa(7)
+    append!(I, [12, 12])
+    append!(J, [8, 7])
+
+    # du[13] = rate_a2ap_plasmin (PAP complex)
+    # Depends on: a2ap(9), plasmin(3)
+    append!(I, [13, 13])
+    append!(J, [9, 3])
+
+    # du[14] = -rate_fibrin_lysis (fibrin intact)
+    # Depends on: fibrin(14), plasmin(3,4), tafia(10)
+    append!(I, [14, 14, 14, 14])
+    append!(J, [14, 3, 4, 10])
+
+    # du[15] = rate_fibrin_lysis - rate_d_dimer (fibrin degraded)
+    # Depends on: fibrin(14), fibrin_deg(15), plasmin(3,4), tafia(10)
+    append!(I, [15, 15, 15, 15, 15])
+    append!(J, [14, 15, 3, 4, 10])
+
+    # du[16] = rate_d_dimer (D-dimer)
+    # Depends on: fibrin(14), plasmin(3,4), tafia(10), d_dimer(16)
+    append!(I, [16, 16, 16, 16, 16])
+    append!(J, [14, 3, 4, 10, 16])
+
+    V = ones(Float64, length(I))
+    return sparse(I, J, V, n, n)
+end
+
+"""
+simulate_fibrinolysis_stiff!(system, tspan; config, thrombin_conc)
+
+Simulate fibrinolysis using stiff ODE solver (Rodas4 or FBDF).
+
+This is the preferred method due to extreme stiffness:
+- Plasmin half-life: ~0.3 seconds (very fast inhibition)
+- D-dimer half-life: ~8 hours (slow accumulation)
+- Stiffness ratio: 360,000:1
+
+Using Euler with 1s timesteps misses critical plasmin dynamics.
+Rodas4/FBDF capture sub-second dynamics with ~100-1000 adaptive steps.
+
+# Arguments
+- `system`: FibrinolyticSystem to simulate
+- `tspan`: (t_start, t_end) in seconds
+- `config`: FibrinolysisSolverConfig (optional)
+- `thrombin_conc`: Thrombin for TAFI activation (nM)
+
+# Returns
+- times: Vector of time points
+- results: Vector of state dictionaries
+"""
+function simulate_fibrinolysis_stiff!(
+    system::FibrinolyticSystem,
+    tspan::Tuple{Float64, Float64};
+    config::FibrinolysisSolverConfig=FibrinolysisSolverConfig(),
+    thrombin_conc::Float64=0.0
+)
+    t_start, t_end = tspan
+
+    plg = system.plasminogen
+    fib = system.fibrin
+
+    # Initialize state vector
+    u0 = [
+        plg.glu_plasminogen, plg.lys_plasminogen,
+        plg.plasmin_free, plg.plasmin_fibrin_bound,
+        plg.tpa_free, plg.tpa_fibrin_bound, plg.upa_free,
+        plg.pai1_active, plg.alpha2_antiplasmin, plg.tafi_active,
+        plg.pai1_tpa_complex, plg.pai1_upa_complex, plg.a2ap_plasmin_complex,
+        fib.fibrin_intact, fib.fibrin_partially_degraded, fib.d_dimer
+    ]
+
+    # Calculate tPA therapy rate
+    tpa_therapy_rate = calculate_tpa_therapy_rate(system)
+
+    # Activate TAFI if thrombin present
+    if thrombin_conc > 0
+        tafi_activation = thrombin_conc / (thrombin_conc + 10.0) * plg.tafi * 0.1
+        u0[10] = tafi_activation
+    end
+
+    params = (
+        kinetics = KINETIC_FIBRINOLYSIS,
+        tpa_therapy_rate = tpa_therapy_rate,
+        fibrinolysis_inhibition = system.fibrinolysis_inhibition
+    )
+
+    # Build ODE function with optional sparse Jacobian
+    if config.use_sparse
+        jac_prototype = create_fibrinolysis_jacobian_prototype()
+        odefunc = ODEFunction(fibrinolysis_ode!; jac_prototype=jac_prototype)
+    else
+        odefunc = ODEFunction(fibrinolysis_ode!)
+    end
+
+    # Create ODE problem
+    prob = ODEProblem(odefunc, u0, tspan, params)
+
+    # Select solver - FBDF often better for extreme stiffness
+    alg = if config.algorithm == :fbdf
+        FBDF()
+    elseif config.algorithm == :rodas4
+        Rodas4()
+    elseif config.algorithm == :tsit5
+        Tsit5()
+    else
+        Rodas4()
+    end
+
+    # Build saveat points
+    saveat = if !isempty(config.saveat)
+        config.saveat
+    else
+        collect(t_start:1.0:t_end)  # 1s intervals
+    end
+
+    # Non-negativity callback
+    function condition(u, t, integrator)
+        any(u .< 0)
+    end
+    function affect!(integrator)
+        integrator.u .= max.(integrator.u, 0.0)
+    end
+    cb = DiscreteCallback(condition, affect!)
+
+    sol = solve(
+        prob, alg;
+        reltol=config.reltol,
+        abstol=config.abstol,
+        maxiters=config.maxiters,
+        save_everystep=config.save_everystep,
+        saveat=saveat,
+        callback=cb
+    )
+
+    # Convert solution to result format
+    times = sol.t
+    n_steps = length(times)
+    results = Vector{Dict{String, Float64}}(undef, n_steps)
+    initial_fibrin = u0[14]
+
+    for (i, t) in enumerate(times)
+        u = sol.u[i]
+        results[i] = Dict(
+            "time" => t,
+            "plasminogen_nM" => max(0.0, u[1] + u[2]),
+            "plasmin_nM" => max(0.0, u[3] + u[4]),
+            "tpa_nM" => max(0.0, u[5] + u[6]),
+            "pai1_nM" => max(0.0, u[8]),
+            "fibrin_nM" => max(0.0, u[14]),
+            "fibrin_degraded_nM" => max(0.0, u[15]),
+            "d_dimer_nM" => max(0.0, u[16]),
+            "pap_complex_nM" => max(0.0, u[13]),
+            "lysis_percent" => initial_fibrin > 0 ? (1.0 - max(0.0, u[14]) / initial_fibrin) * 100 : 0.0
+        )
+    end
+
+    # Update system with final state
+    final_u = max.(sol.u[end], 0.0)
+    update_fibrinolytic_system!(system, final_u)
+    calculate_lysis_parameters!(system, collect(times), results)
+
+    return times, results
 end
 
 """

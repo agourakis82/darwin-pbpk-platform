@@ -47,6 +47,7 @@ include("bayesian_ddi_model.jl")
 include("ddi_ontology.jl")
 include("ddi_knowledge_base.jl")
 include("gnn_integration.jl")
+include("medlang_sounio_compiler.jl")
 
 # Re-export parser types
 using .MedLangParser
@@ -315,6 +316,13 @@ export predict_pk_params, predict_pk_params_with_uq
 export generate_medlang_from_gnn, simulate_from_smiles
 export create_population_medlang, GNNPBPKPipeline
 export generate_medlang_with_uncertainty
+
+# Re-export Sounio compiler (MedLang → Sounio codegen)
+using .MedLangSounioCompiler
+export MedLangModel, MedLangParameter, MedLangState, MedLangODE
+export MedLangPopulation, MedLangTimeline, MedLangObservable
+export parse_medlang_to_model, compile_medlang_to_sounio
+export generate_sounio_stdlib_model
 
 #=============================================================================
   High-Level API
@@ -631,6 +639,134 @@ function simulate_oral_ode(
         [organ => results[organ] for organ in ODEPBPKSolver.PBPK_ORGANS]...
     )
 end
+
+#=============================================================================
+  Sounio Compilation API
+=============================================================================#
+
+"""
+    compile_to_sounio(source::String; use_stdlib::Bool=true) -> String
+
+Compile MedLang source to Sounio code.
+
+# Arguments
+- `source::String`: MedLang source code
+- `use_stdlib::Bool`: Use darwin_pbpk stdlib imports (default: true)
+
+# Returns
+- `String`: Generated Sounio code
+
+# Example
+```julia
+source = \"\"\"
+model MyDrug {
+    clearance hepatic: 10.0_L/h
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 2.5 }
+}
+\"\"\"
+sounio_code = compile_to_sounio(source)
+```
+
+# Notes
+When `use_stdlib=true`, generates code using darwin_pbpk stdlib:
+- `import darwin_pbpk.simulation::{SimulationConfig, run_pbpk_simulation}`
+- `import darwin_pbpk.core.pbpk_params::{PBPKParams, PatientData, DrugProperties}`
+
+When `use_stdlib=false`, generates standalone Sounio code with full ODE system.
+"""
+function compile_to_sounio(source::String; use_stdlib::Bool=true)::String
+    model = parse_medlang_to_model(source)
+    return compile_medlang_to_sounio(model; use_stdlib=use_stdlib)
+end
+
+export compile_to_sounio
+
+"""
+    compile_file_to_sounio(filepath::String; use_stdlib::Bool=true, output::Union{String,Nothing}=nothing) -> String
+
+Compile a MedLang file to Sounio code.
+
+# Arguments
+- `filepath::String`: Path to .medlang file
+- `use_stdlib::Bool`: Use darwin_pbpk stdlib imports (default: true)
+- `output::Union{String,Nothing}`: Optional output file path
+
+# Returns
+- `String`: Generated Sounio code
+
+# Example
+```julia
+# Compile and return code
+sounio_code = compile_file_to_sounio("models/drug_x.medlang")
+
+# Compile and write to file
+compile_file_to_sounio("models/drug_x.medlang"; output="drug_x.sounio")
+```
+"""
+function compile_file_to_sounio(
+    filepath::String;
+    use_stdlib::Bool=true,
+    output::Union{String,Nothing}=nothing
+)::String
+    if !isfile(filepath)
+        throw(ArgumentError("File not found: $filepath"))
+    end
+
+    source = read(filepath, String)
+    sounio_code = compile_to_sounio(source; use_stdlib=use_stdlib)
+
+    # Write to output file if specified
+    if output !== nothing
+        write(output, sounio_code)
+        @info "Sounio code written to: $output"
+    end
+
+    return sounio_code
+end
+
+export compile_file_to_sounio
+
+"""
+    sounio_code_info(code::String) -> NamedTuple
+
+Analyze generated Sounio code and return information.
+
+# Returns
+NamedTuple with:
+- `uses_stdlib::Bool`: Whether code uses darwin_pbpk stdlib
+- `imports::Vector{String}`: List of import statements
+- `functions::Vector{String}`: List of function names
+- `line_count::Int`: Total line count
+"""
+function sounio_code_info(code::String)::NamedTuple
+    lines = split(code, '\n')
+
+    uses_stdlib = occursin("darwin_pbpk", code)
+
+    imports = String[]
+    for line in lines
+        if startswith(strip(line), "import ")
+            push!(imports, strip(line))
+        end
+    end
+
+    functions = String[]
+    for line in lines
+        m = match(r"^fn\s+(\w+)", strip(line))
+        if m !== nothing
+            push!(functions, m.captures[1])
+        end
+    end
+
+    return (
+        uses_stdlib = uses_stdlib,
+        imports = imports,
+        functions = functions,
+        line_count = length(lines)
+    )
+end
+
+export sounio_code_info
 
 #=============================================================================
   Validation & Inspection

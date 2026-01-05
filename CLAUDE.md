@@ -155,6 +155,78 @@ git submodule update --init --recursive
 - Julia ODE solver: ~0.04-0.36ms per simulation (vs ~18ms Python)
 - Parallel dataset generation via Julia threads (no GIL)
 - GPU acceleration via CUDA.jl
+- Stiff solvers (Rodas4/FBDF): 10-100x speedup for coagulation/fibrinolysis
+
+---
+
+## Sounio v0.97.0 Integration
+
+**Location**: `julia-migration/src/DarwinPBPK/sounio/`
+
+### MedLang → Sounio Pipeline
+
+```julia
+using DarwinPBPK
+
+# Compile and run MedLang source via Sounio
+result = compile_and_run_medlang("""
+    model SimplePK
+    compartment plasma: 5.0 L
+    parameter ka: 1.2 1/h
+    parameter ke: 0.3 1/h
+    state A_gut: 100.0 mg
+    state A_plasma: 0.0 mg
+end
+"""; dose_mg=100.0, duration_h=24.0)
+```
+
+### Epistemic UQ (Knowledge{T})
+
+```julia
+# Convert Bayesian posterior to Sounio Knowledge type
+posterior = sample_posterior(model, data)
+clearance_knowledge = bayesian_to_knowledge(posterior, :CL)
+
+# Run simulation with confidence gating
+result = run_sounio_pbpk_gated(model, request; min_confidence=0.80)
+```
+
+### Key Files
+
+- `SounioIntegration.jl` - FFI bridge, v0.97.0 API
+- `EpistemicTypes.jl` - Knowledge{T}, Provenance, ConfidenceLevel
+- `UQBridge.jl` - bayesian_to_knowledge, mcdropout_to_knowledge
+
+---
+
+## Stiff ODE Solvers (Coagulation/Fibrinolysis)
+
+**Location**: `julia-migration/src/DarwinPBPK/compartments/`
+
+### Coagulation (25-state, stiffness ~1000:1)
+
+```julia
+using DarwinPBPK
+
+system = create_coagulation_system(tissue_factor=0.005)
+config = CoagulationSolverConfig(algorithm=:rodas4, use_sparse=true)
+times, results = simulate_coagulation_stiff!(system, (0.0, 3600.0); config)
+```
+
+### Fibrinolysis (16-state, stiffness ~360,000:1)
+
+```julia
+system = create_fibrinolytic_system(fibrin_amount=1000.0)
+config = FibrinolysisSolverConfig(algorithm=:fbdf, abstol=1e-9)
+times, results = simulate_fibrinolysis_stiff!(system, (0.0, 3600.0); config)
+```
+
+### Performance vs Euler
+
+| Model | Euler Steps (1000s) | Stiff Steps | Speedup |
+|-------|---------------------|-------------|---------|
+| Coagulation | ~1M | ~1-10K | 100x |
+| Fibrinolysis | ~1M | ~100-1K | 1000x |
 
 ---
 

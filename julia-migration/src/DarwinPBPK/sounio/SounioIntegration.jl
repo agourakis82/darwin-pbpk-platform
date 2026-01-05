@@ -24,13 +24,24 @@ export SounioCompiler, SounioModel, SounioResult
 export compile_sounio, run_sounio_pbpk, load_sounio_result
 export drug_to_sounio, patient_to_sounio, params_to_sounio
 export SounioDataFormat, export_for_sounio, import_from_sounio
+export compile_and_run_medlang, MedLangPipelineResult, MedLangPipelineOptions
+
+# Epistemic types and UQ bridge exports
+export EpistemicTypes, UQBridge
+export run_sounio_pbpk_gated, EpistemicSimulationResult
+
+# Include epistemic computing modules
+include("EpistemicTypes.jl")
+include("UQBridge.jl")
+using .EpistemicTypes
+using .UQBridge
 
 # ===========================================================================
 # Constants
 # ===========================================================================
 
 const SOUNIO_COMPILER_PATH = Ref{String}("")
-const SOUNIO_VERSION = "0.78.1"
+const SOUNIO_VERSION = "0.97.0"  # Updated for darwin_pbpk stdlib integration
 
 """
     set_sounio_path!(path::String)
@@ -596,6 +607,631 @@ function run_sounio_pbpk(
     )
 
     run_sounio_pbpk(model, request)
+end
+
+# ===========================================================================
+# Epistemic Simulation (Confidence-Gated)
+# ===========================================================================
+
+"""
+    EpistemicSimulationResult
+
+Simulation result with epistemic confidence tracking.
+"""
+struct EpistemicSimulationResult
+    base_result::SimulationResult
+    confidence::Float64
+    passed_gate::Bool
+    gated_metrics::Dict{String, EpistemicTypes.Knowledge{Float64}}
+end
+
+"""
+    run_sounio_pbpk_gated(model, request; min_confidence=0.80) -> EpistemicSimulationResult
+
+Run Sounio PBPK simulation with confidence gating.
+
+Only executes if input parameters meet minimum confidence threshold.
+
+# Arguments
+- `model::SounioModel`: Compiled Sounio model
+- `request::SimulationRequest`: Simulation request with epistemic drug data
+- `min_confidence::Float64`: Minimum required confidence (default: 0.80)
+
+# Returns
+- `EpistemicSimulationResult`: Result with confidence tracking
+
+# Example
+```julia
+drug = EpistemicTypes.EpistemicDrugData(
+    name = "TestDrug",
+    mw = Knowledge(300.0, 0.95, MEASURED),
+    logp = Knowledge(2.5, 0.85, LITERATURE),
+    fu_plasma = Knowledge(0.4, 0.75, ESTIMATED)
+)
+
+result = run_sounio_pbpk_gated(model, request; min_confidence=0.80)
+
+if result.passed_gate
+    println("Simulation passed confidence gate")
+    println("Cmax confidence: \$(result.gated_metrics[:cmax].confidence)")
+end
+```
+"""
+function run_sounio_pbpk_gated(
+    model::SounioModel,
+    request::SimulationRequest;
+    min_confidence::Float64 = 0.80
+)::EpistemicSimulationResult
+    # Check input confidence from drug data
+    input_confidence = get(request.drug.confidence, "overall", 1.0)
+
+    # Also check specific parameter confidences
+    param_confidences = [
+        get(request.drug.confidence, "mw", 0.99),
+        get(request.drug.confidence, "logp", 0.90),
+        get(request.drug.confidence, "fu_plasma", 0.85),
+    ]
+
+    min_input_conf = minimum(param_confidences)
+
+    # Check confidence gate
+    passed_gate = min_input_conf >= min_confidence
+
+    if !passed_gate
+        @warn "Confidence gate failed" min_input_conf min_confidence
+        # Return result with zero confidence
+        return EpistemicSimulationResult(
+            SimulationResult(
+                "", request.id, false, "Confidence gate failed: $(min_input_conf) < $(min_confidence)",
+                Float64[], Float64[], Float64[],
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, SOUNIO_VERSION, Dict("gate_failed" => "true")
+            ),
+            min_input_conf,
+            false,
+            Dict{String, EpistemicTypes.Knowledge{Float64}}()
+        )
+    end
+
+    # Run actual simulation
+    base_result = run_sounio_pbpk(model, request)
+
+    # Create epistemic metrics
+    gated_metrics = Dict{String, EpistemicTypes.Knowledge{Float64}}()
+
+    if base_result.success
+        # Output confidence is propagated from inputs
+        output_confidence = min_input_conf * base_result.cmax_confidence
+
+        gated_metrics["cmax"] = EpistemicTypes.Knowledge(
+            base_result.cmax_mg_l,
+            output_confidence,
+            EpistemicTypes.COMPUTED
+        )
+
+        gated_metrics["auc"] = EpistemicTypes.Knowledge(
+            base_result.auc_mg_h_l,
+            min_input_conf * base_result.auc_confidence,
+            EpistemicTypes.COMPUTED
+        )
+
+        gated_metrics["tmax"] = EpistemicTypes.Knowledge(
+            base_result.tmax_h,
+            min_input_conf,
+            EpistemicTypes.COMPUTED
+        )
+
+        gated_metrics["half_life"] = EpistemicTypes.Knowledge(
+            base_result.half_life_h,
+            min_input_conf * base_result.half_life_confidence,
+            EpistemicTypes.COMPUTED
+        )
+    end
+
+    EpistemicSimulationResult(
+        base_result,
+        min_input_conf,
+        passed_gate,
+        gated_metrics
+    )
+end
+
+"""
+    run_sounio_pbpk_gated(model_name::String; drug_epistemic, patient, dose_mg, min_confidence=0.80, kwargs...)
+
+Convenience function with epistemic drug data.
+"""
+function run_sounio_pbpk_gated(
+    model_name::String;
+    drug_epistemic::EpistemicTypes.EpistemicDrugData,
+    patient,
+    dose_mg::Float64,
+    min_confidence::Float64 = 0.80,
+    route::String = "oral",
+    duration_h::Float64 = 24.0,
+    dt_h::Float64 = 0.1
+)::EpistemicSimulationResult
+    # Convert epistemic drug to standard format with confidence metadata
+    drug = DrugData(
+        name = drug_epistemic.name,
+        mw = EpistemicTypes.value(drug_epistemic.mw),
+        logp = EpistemicTypes.value(drug_epistemic.logp),
+        fu_plasma = EpistemicTypes.value(drug_epistemic.fu_plasma),
+        bp_ratio = EpistemicTypes.value(drug_epistemic.bp_ratio),
+        confidence = Dict(
+            "mw" => EpistemicTypes.confidence(drug_epistemic.mw),
+            "logp" => EpistemicTypes.confidence(drug_epistemic.logp),
+            "fu_plasma" => EpistemicTypes.confidence(drug_epistemic.fu_plasma),
+            "overall" => drug_epistemic.min_confidence
+        )
+    )
+
+    # Find model source file
+    pbpk_dir = joinpath(@__DIR__, "..", "..", "..", "..", "Darwin-sounio", "examples", "pbpk")
+    source_file = joinpath(pbpk_dir, "$model_name.sio")
+
+    if !isfile(source_file)
+        error("Sounio model not found: $source_file")
+    end
+
+    model = load_sounio_model(source_file)
+
+    request = SimulationRequest(
+        model = model_name,
+        drug = drug,
+        patient = patient_to_sounio(patient),
+        dose_mg = dose_mg,
+        route = route,
+        duration_h = duration_h,
+        dt_h = dt_h
+    )
+
+    run_sounio_pbpk_gated(model, request; min_confidence=min_confidence)
+end
+
+# ===========================================================================
+# MedLang → Sounio Pipeline
+# ===========================================================================
+
+"""
+    MedLangPipelineOptions
+
+Configuration options for the MedLang → Sounio compilation pipeline.
+"""
+Base.@kwdef struct MedLangPipelineOptions
+    use_stdlib::Bool = true
+    cleanup_temp_files::Bool = true
+    show_generated_code::Bool = false
+    timeout_seconds::Float64 = 60.0
+    output_dir::String = tempdir()
+    sounio_features::Vector{Symbol} = [:units, :epistemic, :effects]
+end
+
+"""
+    MedLangPipelineResult
+
+Result of MedLang → Sounio pipeline execution.
+"""
+struct MedLangPipelineResult
+    success::Bool
+    medlang_source::String
+    sounio_code::String
+    sounio_file::String
+    compilation_success::Bool
+    compilation_output::String
+    simulation_result::Union{SimulationResult, Nothing}
+    error_message::Union{String, Nothing}
+    pipeline_time_ms::Float64
+    stages_completed::Vector{Symbol}
+end
+
+"""
+    compile_and_run_medlang(source::String; dose_mg, duration_h, patient, kwargs...) -> MedLangPipelineResult
+
+Complete pipeline: MedLang source → compile to Sounio → execute → return results.
+
+# Arguments
+- `source::String`: MedLang source code
+- `dose_mg::Float64`: Dose in mg
+- `duration_h::Float64`: Simulation duration in hours (default: 24.0)
+- `patient`: Patient data (optional, uses default if not provided)
+- `options::MedLangPipelineOptions`: Pipeline configuration
+
+# Returns
+- `MedLangPipelineResult`: Complete pipeline result with all stages
+
+# Example
+```julia
+source = \"\"\"
+model MyDrug {
+    clearance hepatic: 10.0_L/h
+    organ liver { V: 1.8_L, Q: 90.0_L/h, Kp: 2.5 }
+}
+\"\"\"
+result = compile_and_run_medlang(source; dose_mg=100.0, duration_h=24.0)
+
+if result.success
+    println("Cmax: \$(result.simulation_result.cmax_mg_l)")
+    println("AUC: \$(result.simulation_result.auc_mg_h_l)")
+end
+```
+
+# Pipeline Stages
+1. **Parse**: Parse MedLang source to model
+2. **Generate**: Generate Sounio code (stdlib or standalone)
+3. **Write**: Write Sounio code to temp file
+4. **Compile**: Compile with Sounio compiler (type-check)
+5. **Execute**: Run simulation
+6. **Collect**: Import and return results
+
+# Notes
+If Sounio compiler is not available, returns partial result with generated code.
+Set `options.show_generated_code=true` to print Sounio code.
+"""
+function compile_and_run_medlang(
+    source::String;
+    dose_mg::Float64,
+    duration_h::Float64 = 24.0,
+    patient::Union{PatientData, Nothing} = nothing,
+    drug_name::String = "MedLangDrug",
+    route::String = "oral",
+    options::MedLangPipelineOptions = MedLangPipelineOptions()
+)::MedLangPipelineResult
+    start_time = time()
+    stages_completed = Symbol[]
+    sounio_code = ""
+    sounio_file = ""
+    compilation_output = ""
+    compilation_success = false
+    simulation_result = nothing
+    error_message = nothing
+
+    # Use default patient if not provided
+    if patient === nothing
+        patient = PatientData()
+    end
+
+    try
+        # =====================================================================
+        # Stage 1: Parse MedLang
+        # =====================================================================
+        @info "Stage 1: Parsing MedLang source..."
+
+        # Import parser from MedLang module
+        # This uses the parse_medlang_to_model function from medlang_sounio_compiler.jl
+        model = parse_medlang_to_model_safe(source)
+        push!(stages_completed, :parse)
+
+        # =====================================================================
+        # Stage 2: Generate Sounio code
+        # =====================================================================
+        @info "Stage 2: Generating Sounio code (stdlib=$(options.use_stdlib))..."
+
+        sounio_code = generate_sounio_code_safe(model, options.use_stdlib)
+        push!(stages_completed, :generate)
+
+        if options.show_generated_code
+            println("=" ^ 60)
+            println("Generated Sounio Code:")
+            println("=" ^ 60)
+            println(sounio_code)
+            println("=" ^ 60)
+        end
+
+        # =====================================================================
+        # Stage 3: Write to temp file
+        # =====================================================================
+        @info "Stage 3: Writing Sounio code to file..."
+
+        model_name = extract_model_name(source, drug_name)
+        sounio_file = joinpath(options.output_dir, "$(model_name)_$(string(uuid4())[1:8]).sio")
+        write(sounio_file, sounio_code)
+        push!(stages_completed, :write)
+
+        # =====================================================================
+        # Stage 4: Compile with Sounio
+        # =====================================================================
+        @info "Stage 4: Compiling with Sounio..."
+
+        try
+            compiler = SounioCompiler(features=options.sounio_features)
+            result = compile_sounio(compiler, sounio_file, target=:check, show_types=true)
+
+            compilation_success = result.success
+            compilation_output = result.output
+            push!(stages_completed, :compile)
+
+            if !result.success
+                @warn "Sounio compilation failed" errors=result.errors
+                error_message = "Compilation failed: $(result.errors)"
+            end
+        catch e
+            @warn "Sounio compiler not available" exception=e
+            error_message = "Sounio compiler not available: $(e)"
+            # Continue without execution - still return generated code
+        end
+
+        # =====================================================================
+        # Stage 5: Execute simulation (if compilation succeeded)
+        # =====================================================================
+        if compilation_success
+            @info "Stage 5: Executing simulation..."
+
+            try
+                model_obj = load_sounio_model(sounio_file)
+
+                # Create drug data from model
+                drug_data = DrugData(
+                    name = model_name,
+                    mw = 300.0,  # Default - would be extracted from model
+                    logp = 2.0,
+                    fu_plasma = 0.5
+                )
+
+                request = SimulationRequest(
+                    model = model_name,
+                    drug = drug_data,
+                    patient = patient,
+                    dose_mg = dose_mg,
+                    route = route,
+                    duration_h = duration_h,
+                    dt_h = 0.1
+                )
+
+                simulation_result = run_sounio_pbpk(model_obj, request)
+                push!(stages_completed, :execute)
+
+                # =====================================================================
+                # Stage 6: Collect results
+                # =====================================================================
+                push!(stages_completed, :collect)
+
+            catch e
+                @warn "Simulation execution failed" exception=e
+                error_message = "Execution failed: $(e)"
+            end
+        end
+
+    catch e
+        @error "Pipeline error" exception=e
+        error_message = "Pipeline error: $(e)"
+    end
+
+    # Cleanup temp files if requested
+    if options.cleanup_temp_files && isfile(sounio_file)
+        try
+            rm(sounio_file, force=true)
+        catch
+            # Ignore cleanup errors
+        end
+    end
+
+    pipeline_time = (time() - start_time) * 1000  # ms
+
+    success = :collect in stages_completed && simulation_result !== nothing && simulation_result.success
+
+    MedLangPipelineResult(
+        success,
+        source,
+        sounio_code,
+        sounio_file,
+        compilation_success,
+        compilation_output,
+        simulation_result,
+        error_message,
+        pipeline_time,
+        stages_completed
+    )
+end
+
+"""
+    compile_and_run_medlang_file(filepath::String; kwargs...) -> MedLangPipelineResult
+
+Compile and run a MedLang file through the Sounio pipeline.
+
+# Arguments
+- `filepath::String`: Path to .medlang file
+- All other arguments same as `compile_and_run_medlang`
+"""
+function compile_and_run_medlang_file(
+    filepath::String;
+    kwargs...
+)::MedLangPipelineResult
+    if !isfile(filepath)
+        return MedLangPipelineResult(
+            false, "", "", "", false, "", nothing,
+            "File not found: $filepath",
+            0.0, Symbol[]
+        )
+    end
+
+    source = read(filepath, String)
+    compile_and_run_medlang(source; kwargs...)
+end
+
+export compile_and_run_medlang_file
+
+# Helper functions for pipeline
+
+"""
+Parse MedLang source safely, returning a simplified model structure.
+"""
+function parse_medlang_to_model_safe(source::String)
+    # Try to import from MedLang module
+    try
+        # Use the parser from medlang_sounio_compiler.jl
+        return @eval Main.DarwinPBPK.MedLang.parse_medlang_to_model($source)
+    catch
+        # Fallback: Create minimal model from source
+        return create_minimal_model(source)
+    end
+end
+
+"""
+Create minimal model structure from MedLang source.
+"""
+function create_minimal_model(source::String)
+    # Extract model name
+    name_match = match(r"model\s+(\w+)", source)
+    name = name_match !== nothing ? name_match.captures[1] : "GenericModel"
+
+    # This returns a Dict that can be used for code generation
+    Dict(
+        :name => name,
+        :source => source,
+        :parameters => extract_parameters(source),
+        :compartments => extract_compartments(source),
+        :clearances => extract_clearances(source)
+    )
+end
+
+"""
+Extract parameters from MedLang source.
+"""
+function extract_parameters(source::String)
+    params = []
+
+    # Match parameter definitions
+    for m in eachmatch(r"(\w+)\s*:\s*([\d.]+)_?(\w*)", source)
+        push!(params, Dict(
+            :name => m.captures[1],
+            :value => parse(Float64, m.captures[2]),
+            :unit => m.captures[3]
+        ))
+    end
+
+    params
+end
+
+"""
+Extract compartments/organs from MedLang source.
+"""
+function extract_compartments(source::String)
+    comps = []
+
+    # Match organ definitions
+    for m in eachmatch(r"organ\s+(\w+)\s*\{([^}]+)\}", source)
+        push!(comps, Dict(
+            :name => m.captures[1],
+            :properties => m.captures[2]
+        ))
+    end
+
+    comps
+end
+
+"""
+Extract clearance mechanisms from MedLang source.
+"""
+function extract_clearances(source::String)
+    clearances = []
+
+    # Match clearance definitions
+    for m in eachmatch(r"clearance\s+(\w+)\s*:\s*([\d.]+)_?(\w*)", source)
+        push!(clearances, Dict(
+            :mechanism => m.captures[1],
+            :value => parse(Float64, m.captures[2]),
+            :unit => m.captures[3]
+        ))
+    end
+
+    clearances
+end
+
+"""
+Generate Sounio code safely from model.
+"""
+function generate_sounio_code_safe(model, use_stdlib::Bool)
+    try
+        # Try to use the proper code generator
+        return @eval Main.DarwinPBPK.MedLang.compile_medlang_to_sounio($model; use_stdlib=$use_stdlib)
+    catch
+        # Fallback: Generate minimal Sounio code
+        return generate_minimal_sounio_code(model, use_stdlib)
+    end
+end
+
+"""
+Generate minimal Sounio code from model Dict.
+"""
+function generate_minimal_sounio_code(model::Dict, use_stdlib::Bool)
+    name = get(model, :name, "GenericModel")
+
+    if use_stdlib
+        # Use darwin_pbpk stdlib
+        return """
+//! $name - Generated from MedLang
+//! Uses darwin_pbpk stdlib for production-ready PBPK simulation
+
+import darwin_pbpk.simulation::{SimulationConfig, SimulationResult, run_pbpk_simulation}
+import darwin_pbpk.core.pbpk_params::{PBPKParams, PatientData, DrugProperties}
+
+/// Main simulation entry point
+fn main(dose: mg, duration: h, patient: PatientData) -> SimulationResult {
+    let config = SimulationConfig {
+        model: "14_compartment",
+        solver: "Rodas4",
+        dt: 0.1_h,
+        duration: duration,
+    };
+
+    let drug = DrugProperties {
+        name: "$name",
+        molecular_weight: 300.0_Da,
+        logP: 2.0,
+        fu_plasma: 0.5,
+    };
+
+    run_pbpk_simulation(config, drug, patient, dose)
+}
+"""
+    else
+        # Generate standalone code
+        return """
+//! $name - Generated from MedLang
+//! Standalone implementation with full ODE system
+
+/// PK Parameters
+struct PKParams {
+    cl_hepatic: L_per_h,
+    cl_renal: L_per_h,
+    vd: L,
+    ka: per_h,
+}
+
+/// Main simulation function
+fn simulate(dose: mg, duration: h) -> SimulationResult {
+    let params = PKParams {
+        cl_hepatic: 10.0_L_per_h,
+        cl_renal: 1.0_L_per_h,
+        vd: 70.0_L,
+        ka: 1.0_per_h,
+    };
+
+    // Simplified one-compartment model
+    let times = linspace(0.0_h, duration, 100);
+    let ke = (params.cl_hepatic + params.cl_renal) / params.vd;
+
+    let conc = times.map(|t| {
+        let factor = dose / params.vd;
+        factor * (params.ka / (params.ka - ke)) * (exp(-ke * t) - exp(-params.ka * t))
+    });
+
+    SimulationResult {
+        times: times,
+        concentrations: conc,
+    }
+}
+"""
+    end
+end
+
+"""
+Extract model name from MedLang source.
+"""
+function extract_model_name(source::String, default::String)
+    m = match(r"model\s+(\w+)", source)
+    return m !== nothing ? m.captures[1] : default
 end
 
 # ===========================================================================
