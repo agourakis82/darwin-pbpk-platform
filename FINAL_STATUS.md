@@ -1,20 +1,22 @@
+> **Historical document (archived).** This file records an internal integration milestone from the DARWIN PBPK project. It is not a statement of production readiness. Sounio is a research language; its current status is Sounio 3.0 (pre-release). See https://www.souniolang.org/ for the official status.
+
 # MedLang ↔ Sounio Integration - FINAL STATUS
 
 **Date**: December 23, 2025
-**Status**: ✅ **PRODUCTION READY**
+**Status**: Historical integration milestone (research prototype)
 **Version**: Darwin PBPK Platform v2.15.0
 
 ---
 
 ## Executive Summary
 
-**MedLang is now a Sounio DSL** - complete with production-ready PBPK stdlib.
+**MedLang is now a Sounio DSL** - complete with PBPK stdlib.
 
 ### What Was Accomplished
 
 1. ✅ **Sounio Code Generator** - Full MedLang IR → Sounio transformation
 2. ✅ **CLI Integration** - `mlc compile --backend sounio`
-3. ✅ **Sounio PBPK Stdlib** - ~150KB of production code (already existed!)
+3. ✅ **Sounio PBPK Stdlib** - ~150KB of code (already existed!)
 4. ✅ **Stdlib Integration** - Codegen imports darwin_pbpk modules
 5. ✅ **Documentation** - Complete technical docs
 6. ✅ **Verification** - Working proof-of-concept
@@ -76,7 +78,7 @@ fn ode_system(state: &State, params: &Params) -> StateDerivatives {
 }
 
 fn main() -> effect[IO, Alloc, Mut] {
-    // Use production-ready stdlib
+    // Use stdlib
     let result = run_pbpk_simulation(config, patient, drug)
     println!("Cmax = {}", result.cmax_plasma)
 }
@@ -86,7 +88,7 @@ fn main() -> effect[IO, Alloc, Mut] {
 
 **Location**: `Darwin-sounio/stdlib/darwin_pbpk/`
 
-**Size**: ~150KB of production code
+**Size**: ~150KB of code
 
 **Modules**:
 
@@ -103,7 +105,7 @@ fn main() -> effect[IO, Alloc, Mut] {
 
 **API Example**:
 ```d
-// High-level API - production ready!
+// High-level API
 fn main() -> effect[IO] {
     let patient = PatientData {
         weight: 70.0@kg,
@@ -248,16 +250,7 @@ fn simulate_pbpk(params: Params) -> effect[IO, Mut, Alloc] Results {
 
 ### 4. Performance
 
-| Metric | Julia | Sounio | Winner |
-|--------|-------|-----------|--------|
-| ODE solve (100k steps) | 18.6 ms | ~10 ms | Sounio 🏆 |
-| Compile time | JIT (instant) | AOT (1-5s one-time) | Julia |
-| Runtime safety | Partial | Complete | Sounio 🏆 |
-| Memory | GC | Linear types | Sounio 🏆 |
-| Unit checking | Runtime | Compile-time | Sounio 🏆 |
-| Epistemic tracking | Turing.jl | Native | Sounio 🏆 |
-
-**Verdict**: Sounio is faster and safer!
+Performance comparisons from this milestone were not independently benchmarked and have been removed.
 
 ---
 
@@ -527,7 +520,7 @@ fe16fc7 feat(medlang): add Sounio backend for epistemic PBPK compilation
 
 **MedLang is now a Sounio DSL** with:
 - ✅ Full compilation pipeline working
-- ✅ Production-ready PBPK stdlib (~150KB)
+- ✅ PBPK stdlib (~150KB)
 - ✅ Compile-time safety guarantees
 - ✅ Epistemic computing support
 - ✅ Performance superior to Julia
